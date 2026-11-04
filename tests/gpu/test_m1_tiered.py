@@ -8,6 +8,8 @@ bitwise equal, tokens equal, restored K/V byte-identical. The M0 tolerance is
 not used here. Full-recompute comparisons are reported by scripts/m1_run.py.
 Every request must also make exactly STEPS model forward calls (1 prefill +
 STEPS-1 decode steps): cache failures never repeat or abort inference (M1.1).
+M3: the `harness` fixture is parametrized over both restore backends, so every scenario
+here also runs through the batched restore path (kvlab/tiered_cache.py, D30).
 """
 
 import kvlab.model as km  # first: sets HF_HOME before transformers import
@@ -56,13 +58,13 @@ def prompts(model_tok):
 
 
 class Harness:
-    def __init__(self, model, root, host_chunks, disk_files, write_fn=cf.default_write):
+    def __init__(self, model, root, host_chunks, disk_files, write_fn=cf.default_write, backend="baseline"):
         self.model = model
         self.ns = namespace_for(model, km.MODEL_ID, km.MODEL_REVISION, C)
         cb = cf.payload_len(self.ns)
         self.host = HostStore((host_chunks + 1) * cb, cb, max_entries=64, pin=True)
         self.disk = DiskStore(root, disk_files * cf.file_size(self.ns), max_entries=64, write_fn=write_fn)
-        self.tiered = TieredKVCache(self.ns, self.host, self.disk)
+        self.tiered = TieredKVCache(self.ns, self.host, self.disk, restore_backend=backend)
         self.engine = AlwaysRestoreEngine(model, self.tiered)
         self.ref = ResidentReference(model, self.ns.digest(), C)
 
@@ -94,12 +96,12 @@ class Harness:
         return self.disk.root / f"{key.hex()}.kvc"
 
 
-@pytest.fixture
-def harness(model_tok, tmp_path):
+@pytest.fixture(params=["baseline", "batched"])
+def harness(model_tok, tmp_path, request):
     made = []
 
     def make(host_chunks, disk_files, **kw):
-        h = Harness(model_tok[0], tmp_path / f"disk{len(made)}", host_chunks, disk_files, **kw)
+        h = Harness(model_tok[0], tmp_path / f"disk{len(made)}", host_chunks, disk_files, backend=request.param, **kw)
         made.append(h)
         return h
     yield make

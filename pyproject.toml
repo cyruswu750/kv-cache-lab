@@ -12,5 +12,6 @@ markers = [
     "m0_strict: original M0 acceptance suite, criteria unchanged (known FAIL: nat_long greedy tie)",
     "m0_1: M0.1 audit regressions (resident vs restored, negative controls)",
     "m1: M1 tiered-cache GPU integration suite",
+    "m3: M3 batched-restore GPU checks",
 ]
 addopts = "-m 'not gpu'"
