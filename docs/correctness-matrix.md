@@ -239,3 +239,27 @@ Added after M3. These run the production validator (`kvlab/m3_validate.py`) and 
 | Warmup timings inflated 100× | valid; every case statistic and the decision unchanged | PASS | `test_warmup_timings_never_enter_the_statistics` |
 | Complete original evidence | `valid`, exit 0: 5,400 samples, 900 block and 180 process warmups, 50 strict and 50 A/B checks; all historical values equal; adoption false | PASS | `test_complete_valid_report_reproduces_the_historical_analysis` |
 | Existing output, or a missing run directory | refused; nothing written | PASS | `test_refuses_to_overwrite_and_writes_nothing` |
+
+## M4-A trace replay (CPU only; `tests/test_traces.py` 30 tests, `tests/test_trace_replay_cpu.py` 50 tests; tiny random model; correctness, not performance)
+| Scenario | Expected | Actual | Test |
+|---|---|---|---|
+| Each generator: same seed gives the same trace and digest, another seed a different one; tokens in range; labeled synthetic | as stated | PASS (4) | `test_generation_is_deterministic_and_seed_sensitive` |
+| JSONL round trip; no overwrite; tampered token or missing request | equal; refused; rejected | PASS (4) | `test_dump_load_round_trip_refuses_overwrite_and_detects_tampering` |
+| Structures: T0 distinct first tokens; T1 shares exactly the prefix; T2 turn-major, each turn extends the last, conversations disjoint; T3 same document vs instruction only | as stated | PASS | `test_generator_structures` |
+| Oracle reuse vs a brute-force common-prefix oracle, 4 traces × C ∈ {1, 2, 4, 8} | equal | PASS (16) | `test_oracle_reuse_equals_a_brute_force_prefix_oracle` |
+| No-reuse control vs reuse traces | zero reuse vs some | PASS | `test_no_reuse_control_has_zero_reuse_and_reuse_traces_have_some` |
+| First-token rule at exact chunk multiples; hand-worked LRU sequences (capacities 0, 2, 3, unbounded; storing does not refresh present chunks) | as hand-computed | PASS (2) | `test_first_token_rule_at_exact_chunk_multiples`, `test_lru_restore_lengths_on_hand_worked_sequences` |
+| Working set, capacities, ρ; invalid generator parameters | as computed; refused | PASS (2) | `test_stats_working_set_budgets_and_rho`, `test_generators_reject_inconsistent_parameters` |
+| C0, C1 (ample, 2 chunks), C2 (baseline, batched; host 2 slots spilling to disk) × 4 traces: every request bitwise equal to a resident replay of the same configuration's decisions; exactly 1 prefill + 2 decode calls; restore lengths eligible; reuse traces actually restore | as stated | PASS (20) | `test_every_configuration_matches_a_resident_replay_of_its_own_decisions` |
+| Negative controls for the strict check: one greedy token or one logit off | detected | PASS | `test_the_strict_check_detects_a_wrong_output` |
+| Identical requests across C0/C1/C2; equal request KV bytes (N × per-token bytes) | as stated | PASS | `test_compared_configurations_replay_identical_requests` |
+| C1 restore lengths vs the independent key-level LRU model, capacities 0/1/2/3/100 × 3 reuse traces; capacity 100 equals the oracle | equal | PASS (15) | `test_gpu_only_restores_follow_the_independent_key_level_lru_model` |
+| C1 budgets 0, 1 chunk − 1 B, 1 chunk, 3 chunks − 1 B, 3 chunks: capacity, retained storage ≤ budget and = entries × chunk bytes, one owned contiguous storage per entry, evictions, zero-capacity skips | as stated | PASS (5) | `test_capacity_is_a_hard_bound_on_owned_retained_storage` |
+| C1 with capacity 0 vs C0 | bitwise equal | PASS | `test_zero_capacity_gpu_only_is_bitwise_the_no_cache_path` |
+| No aliasing between the cache and the request KV (after restore and after prefill); in-place writes to the request KV leave every entry unchanged | as stated | PASS | `test_cached_prefixes_are_never_aliased_or_mutated_by_continuation` |
+| Partial prefix, exact multiple (L ≤ N−1), full eligible restore; C1 and C2 | L = 0, 4, 4, 8 | PASS | `test_partial_prefix_exact_multiple_and_full_eligible_restores` |
+| Storing skips present chunks without refreshing them (hand-worked; C1 and the key-level model) | 0, 4, 0, 4 | PASS | `test_storing_does_not_refresh_present_chunks` |
+| Corrupted entry identity; model KV not matching the namespace | raise (not a miss) | PASS | `test_identity_and_model_mismatches_raise_instead_of_missing` |
+| C2 wrapper vs `AlwaysRestoreEngine.run()` | identical records and outputs | PASS | `test_tiered_configuration_is_the_unchanged_engine` |
+| Resource terms per configuration, both C2 backends: zeros for C0; C1 persistent ≤ budget, scratch = L × per-token bytes; C2 host slab, scratch = destination (+ batched staging), disk within budget | as stated | PASS (2) | `test_resource_terms_are_reported_separately` |
+| CUDA never initialised by these tests | not initialised | PASS | module fixture `cpu_only` |

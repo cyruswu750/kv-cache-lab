@@ -390,3 +390,31 @@ chunked prefill (which has no CPU round trip).
     missing or incomplete evidence, measured samples and retained warmups alike. It now validates against the frozen spec first, and the
     reanalysis reproduces every number. `supports_adoption` remains false for the same
     (1024, 1) reason, and the default stays `baseline`. See BUGLOG VAL-006.
+
+## D32. (M4-A, CPU only) Request-trace replay with a separate, bounded GPU-only baseline; unequal resources are accounted, not equalized
+Numbering note: D31 is used by the M3_CONFIRM_V1 preparation on `main`, which this branch
+(`m4a-trace-replay`, from `858f952`) does not contain.
+- **Problem:** every timing so far is a single-request microbenchmark. A workload-level
+  comparison needs identical request traces, a GPU-only baseline that makes its own decisions,
+  and honest resource accounting.
+- **Choice:**
+  - **Traces:** synthetic, seeded traces (T0–T3, design §12), identified by digest and labeled
+    synthetic.
+  - **C1:** a new `GPUPrefixCache` with the tiered engine's identity, lookup, first-token and
+    storage rules, and plain LRU. Only the storage location differs.
+  - **Ownership:** entries are owned contiguous copies, measured by actual storage.
+  - **Strictness:** each configuration is checked bitwise against a resident replay of its own
+    decisions.
+  - **Resources:** reported as separate terms. C1's persistent device KV and C2's pinned host,
+    disk and (uncounted) page cache are different resources, never summed or called equal.
+- **Rejected:**
+  - extending `ResidentReference` into the baseline (the oracle would check itself);
+  - storing slices of the request's KV (hidden retention of the whole request KV);
+  - a single "matched total budget" (GPU memory and pinned host memory are not
+    interchangeable);
+  - a store that refreshes present chunks (the host tier does not; the policies should differ
+    only in storage location).
+- **Scope:**
+  - CPU correctness only;
+  - no GPU execution, timing, calibration, runtime policy or framework integration;
+  - GPU validation is deferred to M4-B.

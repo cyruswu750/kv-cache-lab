@@ -1,4 +1,4 @@
-# Design (M1 scope, with M1.1 fixes; M2 measurement additions in §10; M3 restore backends in §11)
+# Design (M1 scope, with M1.1 fixes; M2 measurement additions in §10; M3 restore backends in §11; M4-A CPU-only trace replay in §12)
 
 This is the authoritative design for what is implemented. Anything not described here is
 not implemented; planned but unimplemented work is listed under **Excluded** in §1.
@@ -276,3 +276,77 @@ current/peak host and disk bytes.
   destination/scratch sizes of the latest restore (diagnostic, not a counter).
 - Details and the options considered: `docs/M3_DESIGN.md`; decision D30; results
   `docs/results.md` (M3).
+
+
+## 12. M4-A: synthetic traces, a GPU-only prefix cache and trace replay (CPU only; no GPU validation yet)
+Status: implemented and tested on CPU with a tiny random model only. Nothing here has run on a
+GPU. No timing, calibration or performance claim comes from it. Decision D32.
+
+- **Traces** (`kvlab/traces.py`):
+  - **Synthetic, seeded token sequences.** They model the structure of prefix reuse, not
+    natural language or production traffic.
+  - **T0 `no_reuse`:** a distinct first token per request, so there is no shared prefix at any
+    chunk size.
+  - **T1 `shared_prefix`:** one shared prefix, then unique suffixes.
+  - **T2 `multi_turn`:** conversations interleaved turn by turn. Each prompt extends the
+    previous turn's prompt by a generated "answer" and a new user turn. The answers are drawn
+    by the generator, not produced by a model.
+  - **T3 `doc_reuse`:** a shared instruction, a Zipf-weighted document and a unique question.
+  - **Identity and files:** a trace is identified by the SHA-256 of its canonical JSON. Files
+    are JSONL, never overwritten, and checked on load.
+  - **Offline statistics:**
+    - the oracle reusable prefix under an unbounded cache (first-token rule; every complete
+      prompt chunk is stored);
+    - the unique-chunk working set;
+    - per budget: the capacity, ρ = working set / budget, and the key-level LRU restore lengths
+      of the C1 policy.
+- **C1, the GPU-only baseline** (`kvlab/gpu_prefix_cache.py`): a bounded cache on the model's
+  device.
+  - **Shared with the tiered engine:** the namespace, the chain keys, the longest leading run
+    of eligible present chunks (first-token rule, §2), storage of every complete prompt chunk
+    after prefill, and chunk-granular LRU (hits touched in order; storing skips present chunks
+    without touching them).
+  - **Capacity:** `budget // chunk_bytes`. With 0, nothing is stored.
+  - **Identity mismatch on a hit:** raises (an invariant, as for the host tier). It is never a
+    miss.
+  - **Ownership:**
+    - each entry is one owned contiguous tensor in the payload layout (§4), filled by copy;
+    - `retained_bytes()` sums the actual storages, so views cannot hide retained memory;
+    - a hit gathers with `torch.cat` (temporary scratch, L tokens), then the D4 constructor
+      copies again;
+    - so a request never holds a stored tensor, and continuing the request cannot modify the
+      cache.
+- **C1 is not the correctness oracle:** `ResidentReference` is unbounded and replays another
+  configuration's decisions. It stays separate, and it checks C1.
+- **Replay** (`kvlab/trace_replay.py`): one interface for three configurations.
+  - **The configurations:**
+    - C0 no cache (full prefill; no keys, lookup or admission; D28 `full_nocache` semantics);
+    - C1;
+    - C2, the unchanged always-restore engine, driven through `prefill_request()` and
+      `greedy_continue()` exactly as `run()` does. Its backend is the one its `TieredKVCache`
+      was built with: `baseline` by default, `batched` only when selected.
+  - **Per request:** exactly one prefill and `steps − 1` decode calls (checked), the restore
+    length and sources, the stored chunks, the tokens and step logits.
+  - **Resource terms, reported separately and never summed:**
+    - persistent device cache (C1);
+    - the request's own prompt KV;
+    - temporary restore scratch;
+    - the host slab and its logical occupancy (C2);
+    - disk used and peak (C2).
+  - **Not counted anywhere:** the OS page cache serving warm disk reads.
+  - **Unequal resources:** the configurations do not use equal total resources.
+- **Strict check** (`strict_mismatches`): each configuration's outputs must be bitwise equal to
+  a `ResidentReference` replay of the **same** configuration's restore lengths and stored chunks
+  (D12).
+  - Different configurations are not compared bitwise where their splits differ (D10).
+  - The check verifies outputs *given* the declared decisions. The decisions themselves are
+    checked separately, against the key-level LRU model and the first-token rule.
+  - A declared split one chunk shorter may give bitwise-equal outputs (it does on the tiny test
+    model).
+- **Deferred to GPU validation (M4-B; not done):**
+  - a strict C1 smoke on the real model;
+  - device-memory measurement (allocator-rounded blocks, activation peaks);
+  - pinned-host registration;
+  - any timing;
+  - budget selection from trace statistics;
+  - the evaluation protocol.
