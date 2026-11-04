@@ -2,6 +2,13 @@
 
 Date: 2026-11-03.
 
+> **M3 qualification note (2026-11-03).** The frozen M2 cost model, its predictions
+> and every M2 timing describe the **baseline** restore backend (56 blocking H2D copies per
+> chunk). M3 added an opt-in `batched` backend. Measured, it lowers the restore-phase time
+> 1.5–5.2× and median e2e 1.07–2.29× in its own sample (`docs/M3_REVIEW.md`). The M2 model was
+> not refitted, and it does not describe the batched backend. Restore-vs-recompute
+> conclusions here hold for the baseline backend only.
+
 > **M2.1 qualification note (2026-11-03).** The audit in
 > `docs/M2_1_REVIEW.md` qualifies the following claims below. The data,
 > model and predictions are unchanged.

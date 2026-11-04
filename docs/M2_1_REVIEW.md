@@ -2,6 +2,13 @@
 
 Date: 2026-11-03.
 
+> **M3 qualification note (2026-11-03).** The next task recommended in §11 (fewer CUDA
+> calls on the restore path) was implemented in M3 as an opt-in backend. The statistical
+> directions below are conditional on the M2.1 sample, analysis and the baseline backend.
+> M3 measured the batched backend separately (`docs/M3_REVIEW.md`). With it, the slow mode
+> remains (similar slow shares), now mostly through the suffix forward's launches. The
+> cause is still not established.
+
 **Status: M2.1 done.** The M2 timing code is sound. The M2 *scoring*
 overstated its certainty (BUGLOG VAL-005), and several M2 claims are
 qualified: see the note at the top of `docs/M2_REVIEW.md`.
