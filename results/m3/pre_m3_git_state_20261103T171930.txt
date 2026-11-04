@@ -1,0 +1,13 @@
+git state at 20261103T171930 (before any M3 edit)
+branch: main
+HEAD: 362ee40aeaaae204b2b1dc88398b46bc5826f410
+HEAD tree: b6c079306be9b8630893fbb4877ab01c2365b4f2
+HEAD subject: docs: add README with status, layout and reproduction commands
+commits: 51
+index entries staged vs HEAD: 0
+git status --porcelain lines: 1
+tracked files: 271
+backup branch: backup/one-file-commits-20261103T170624 -> 8657d13736fe63aef13150d8584414c8cbd09e94
+history bundle: c113585829119b9a85e748711aa8e4bb8fd0a8d8698e70369f6ea3650eb5c9ec  backups/kvlab-history-one-file-commits-20261103T170624.bundle
+remotes: 0
+note: the 1 porcelain line is '?? results/m3/', i.e. this new results/m3/ directory (manifest written just before this file); the 271 tracked files were unmodified (git diff --stat HEAD: '')

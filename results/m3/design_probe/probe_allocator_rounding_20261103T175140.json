@@ -1,0 +1,26 @@
+{
+ "1024": {
+  "tensor_bytes_each": 524288,
+  "payload_bytes_56": 29360128,
+  "allocated_bytes_delta": 29360128,
+  "requested_bytes_delta": 29360128
+ },
+ "1536": {
+  "tensor_bytes_each": 786432,
+  "payload_bytes_56": 44040192,
+  "allocated_bytes_delta": 44040192,
+  "requested_bytes_delta": 44040192
+ },
+ "3072": {
+  "tensor_bytes_each": 1572864,
+  "payload_bytes_56": 88080384,
+  "allocated_bytes_delta": 90177536,
+  "requested_bytes_delta": 88080384
+ },
+ "4096": {
+  "tensor_bytes_each": 2097152,
+  "payload_bytes_56": 117440512,
+  "allocated_bytes_delta": 117440512,
+  "requested_bytes_delta": 117440512
+ }
+}

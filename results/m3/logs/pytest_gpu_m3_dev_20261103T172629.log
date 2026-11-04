@@ -1,0 +1,70 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.2.0, pluggy-1.7.0 -- /home/cyrus/projects/kv-cache-lab/.venv/bin/python
+rootdir: /home/cyrus/projects/kv-cache-lab
+configfile: pyproject.toml
+plugins: anyio-4.16.0
+collecting ... collected 17 items
+
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[1-host] PASSED [  5%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[1-disk] SKIPPED [ 11%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[1-mixed] PASSED [ 17%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[3-host] PASSED [ 23%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[3-disk] PASSED [ 29%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[3-mixed] PASSED [ 35%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[5-host] PASSED [ 41%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[5-disk] PASSED [ 47%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[5-mixed] PASSED [ 52%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[6-host] PASSED [ 58%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[6-disk] PASSED [ 64%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[6-mixed] PASSED [ 70%]
+tests/gpu/test_m3_restore.py::test_disk_reads_reuse_the_staging_slot_with_distinct_payloads PASSED [ 76%]
+tests/gpu/test_m3_restore.py::test_every_chunk_transfer_is_one_synchronizing_copy FAILED [ 82%]
+tests/gpu/test_m3_restore.py::test_returned_cache_is_not_changed_by_later_requests_or_buffer_reuse PASSED [ 88%]
+tests/gpu/test_m3_restore.py::test_transient_device_memory_is_bounded PASSED [ 94%]
+tests/gpu/test_m3_restore.py::test_copy_failure_on_gpu_releases_leases_and_staging PASSED [100%]
+
+=================================== FAILURES ===================================
+_____________ test_every_chunk_transfer_is_one_synchronizing_copy ______________
+
+rig = <function rig.<locals>.make at 0x773f7c3122a0>
+long_ids = [785, 326, 57909, 53416, 44419, 279, ...]
+
+    def test_every_chunk_transfer_is_one_synchronizing_copy(rig, long_ids):
+        """Guard for the synchronization strategy: each chunk is one blocking H2D (memcpy + stream
+        sync, reported by torch's sync debug mode), so leases and the staging slot are released only
+        after their transfer has finished. A non_blocking copy here would make these counts drop."""
+        h = rig(host_chunks=2, disk_files=8)
+        ids = long_ids[:6 * C + 1]
+        h.run(ids)  # disk x4, host x2
+        keys = chain_keys(h.ns.digest(), ids, C)
+        counts = {}
+        for backend in ("baseline", "batched"):
+            h.tiered.restore_backend = backend
+            torch.cuda.synchronize()
+            with warnings.catch_warnings(record=True) as w:
+                warnings.simplefilter("always")
+                torch.cuda.set_sync_debug_mode("warn")
+                try:
+                    cache, L, sources, _ = h.tiered.restore(ids, keys[:6], h.engine.device, h.model.config)
+                finally:
+                    torch.cuda.set_sync_debug_mode(0)
+            assert sources == ["disk"] * 4 + ["host"] * 2
+            counts[backend] = sum("synchroniz" in str(x.message) for x in w)
+            del cache
+>       assert counts == {"baseline": 6 * 2 * 28, "batched": 6}, counts
+E       AssertionError: {'baseline': 337, 'batched': 6}
+E       assert {'baseline': ... 'batched': 6} == {'baseline': ... 'batched': 6}
+E         
+E         Omitting 1 identical items, use -vv to show
+E         Differing items:
+E         {'baseline': 337} != {'baseline': 336}
+E         
+E         Full diff: (-: missing in left side, +: extra in left side)
+E           {...
+E         
+E         ...Full output truncated, use '-vv' to show
+
+tests/gpu/test_m3_restore.py:147: AssertionError
+=========================== short test summary info ============================
+FAILED tests/gpu/test_m3_restore.py::test_every_chunk_transfer_is_one_synchronizing_copy
+=================== 1 failed, 15 passed, 1 skipped in 42.50s ===================

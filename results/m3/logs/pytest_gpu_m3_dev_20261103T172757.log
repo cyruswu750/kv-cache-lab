@@ -1,0 +1,26 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.2.0, pluggy-1.7.0 -- /home/cyrus/projects/kv-cache-lab/.venv/bin/python
+rootdir: /home/cyrus/projects/kv-cache-lab
+configfile: pyproject.toml
+plugins: anyio-4.16.0
+collecting ... collected 17 items
+
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[1-host] PASSED [  5%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[1-disk] SKIPPED [ 11%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[1-mixed] PASSED [ 17%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[3-host] PASSED [ 23%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[3-disk] PASSED [ 29%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[3-mixed] PASSED [ 35%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[5-host] PASSED [ 41%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[5-disk] PASSED [ 47%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[5-mixed] PASSED [ 52%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[6-host] PASSED [ 58%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[6-disk] PASSED [ 64%]
+tests/gpu/test_m3_restore.py::test_batched_matches_baseline_on_identical_state[6-mixed] PASSED [ 70%]
+tests/gpu/test_m3_restore.py::test_disk_reads_reuse_the_staging_slot_with_distinct_payloads PASSED [ 76%]
+tests/gpu/test_m3_restore.py::test_every_chunk_transfer_is_one_synchronizing_copy PASSED [ 82%]
+tests/gpu/test_m3_restore.py::test_returned_cache_is_not_changed_by_later_requests_or_buffer_reuse PASSED [ 88%]
+tests/gpu/test_m3_restore.py::test_transient_device_memory_is_bounded PASSED [ 94%]
+tests/gpu/test_m3_restore.py::test_copy_failure_on_gpu_releases_leases_and_staging PASSED [100%]
+
+======================== 16 passed, 1 skipped in 38.45s ========================

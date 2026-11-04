@@ -1,0 +1,91 @@
+{
+ "torch": "2.14.1+cu130",
+ "baseline_copies_n1": {
+  "api": {
+   "cudaStreamIsCapturing": 56,
+   "cudaMemcpyAsync": 56,
+   "cudaStreamSynchronize": 56
+  },
+  "gpu_ops": {
+   "memcpy": 56
+  }
+ },
+ "strided_copy_per_chunk_n1": {
+  "api": {
+   "cudaStreamIsCapturing": 1,
+   "cudaMemcpyAsync": 1,
+   "cudaStreamSynchronize": 1
+  },
+  "gpu_ops": {
+   "memcpy": 1
+  }
+ },
+ "chunk_major_n1": {
+  "api": {
+   "cudaStreamIsCapturing": 1,
+   "cudaMemcpyAsync": 2,
+   "cudaStreamSynchronize": 1
+  },
+  "gpu_ops": {
+   "memcpy": 2
+  }
+ },
+ "bytes_equal_B_vs_baseline_n1": true,
+ "bytes_equal_A_vs_baseline_n1": true,
+ "dynamic_cache_constructor_n1": {
+  "api": {
+   "cudaLaunchKernel": 56
+  },
+  "gpu_ops": {
+   "kernel": 56
+  }
+ },
+ "constructor_owns_copy_n1": true,
+ "baseline_copies_n4": {
+  "api": {
+   "cudaStreamIsCapturing": 224,
+   "cudaMemcpyAsync": 224,
+   "cudaStreamSynchronize": 224,
+   "cudaLaunchKernel": 224
+  },
+  "gpu_ops": {
+   "memcpy": 224,
+   "kernel": 224
+  }
+ },
+ "strided_copy_per_chunk_n4": {
+  "api": {
+   "cudaStreamIsCapturing": 4,
+   "cudaMemcpyAsync": 4,
+   "cudaStreamSynchronize": 4,
+   "cudaLaunchKernel": 4
+  },
+  "gpu_ops": {
+   "memcpy": 4,
+   "kernel": 4
+  }
+ },
+ "chunk_major_n4": {
+  "api": {
+   "cudaStreamIsCapturing": 4,
+   "cudaMemcpyAsync": 4,
+   "cudaStreamSynchronize": 4,
+   "cudaLaunchKernel": 1
+  },
+  "gpu_ops": {
+   "memcpy": 4,
+   "kernel": 1
+  }
+ },
+ "bytes_equal_B_vs_baseline_n4": true,
+ "bytes_equal_A_vs_baseline_n4": true,
+ "dynamic_cache_constructor_n4": {
+  "api": {
+   "cudaLaunchKernel": 56
+  },
+  "gpu_ops": {
+   "kernel": 56
+  }
+ },
+ "constructor_owns_copy_n4": true
+}
