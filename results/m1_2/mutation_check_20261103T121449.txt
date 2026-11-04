@@ -1,0 +1,21 @@
+KILLED    header CRC not checked                        1 failed, 5 passed in 1.23s
+KILLED    payload CRC not checked                       1 failed, 6 passed in 1.20s
+KILLED    tmp bytes not reserved                        1 failed in 1.17s
+KILLED    tmp not cleaned on failure                    1 failed, 2 passed in 1.19s
+KILLED    pins ignored by eviction                      1 failed, 3 passed in 1.14s
+KILLED    lease not released on error                   1 failed, 4 passed in 1.12s
+KILLED    restore continues past invalid chunk          1 failed, 2 passed in 1.18s
+KILLED    parent not hashed into key                    1 failed, 16 passed in 6.90s
+KILLED    M1.1 bytes released although the file remains 1 failed, 14 passed in 1.18s
+KILLED    M1.1 temp reservation released although the temp file remains 1 failed, 19 passed in 1.18s
+KILLED    M1.1 unlink OSError escapes the store         1 failed in 4.43s
+KILLED    M1.1 undeletable victim kept readable and retried 1 failed, 14 passed in 1.19s
+KILLED    M1.1 marker symlink followed                  1 failed, 23 passed in 1.20s
+KILLED    M1.1 chunk read follows symlinks              1 failed, 27 passed in 1.18s
+KILLED    M1.1 host peak resident not tracked           1 failed in 1.13s
+KILLED    M1.2 request count reported as records + 1    1 failed in 1.30s
+SURVIVED  M1.2 logits compared with zip() only          19 passed in 6.23s
+KILLED    M1.2 forward calls not part of acceptance     1 failed, 1 passed in 3.01s
+KILLED    M1.2 acceptance = strict_pass of present records only 1 failed, 1 passed in 3.08s
+KILLED    M1.2 fault occurrence not checked             1 failed, 10 passed in 6.19s
+KILLED    namespace field ignored (attn_implementation) 1 failed, 12 passed in 6.79s

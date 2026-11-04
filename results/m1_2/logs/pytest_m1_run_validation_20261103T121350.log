@@ -1,0 +1,17 @@
+..................F                                                      [100%]
+=================================== FAILURES ===================================
+___________ test_historical_evidence_lacks_the_enospc_strict_record ____________
+
+    def test_historical_evidence_lacks_the_enospc_strict_record():
+        """The gap, shown on preserved raw evidence (read only): the M1.1 run reported
+        19 requests but has only 18 request records, none for ENOSPC."""
+        old = json.loads((ROOT / "results/m1_1/m1_run_20261103T112930.json").read_text())
+        assert old["summary"]["requests"] == 19 and old["summary"]["strict_pass_all"] is True
+        assert sum(len(sc.get("records", [])) for sc in old["scenarios"].values()) == 18
+>       assert "records" not in old["scenarios"]["fault_enospc"]
+E       AssertionError: assert 'records' not in {'forward_calls_for_request': 8, 'expected_forward_calls': 8, 'stored_chunks': [0, 1, 2], 'restore_len': 0, ...}
+
+tests/test_m1_run_validation.py:185: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_m1_run_validation.py::test_historical_evidence_lacks_the_enospc_strict_record
+1 failed, 18 passed in 8.81s

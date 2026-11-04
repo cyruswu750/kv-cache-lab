@@ -1,0 +1,28 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.2.0, pluggy-1.7.0 -- /home/cyrus/projects/kv-cache-lab/.venv/bin/python
+rootdir: /home/cyrus/projects/kv-cache-lab
+configfile: pyproject.toml
+plugins: anyio-4.16.0
+collecting ... collected 19 items
+
+tests/test_m1_run_validation.py::test_valid_complete_report_passes_in_memory_and_after_json_round_trip PASSED [  5%]
+tests/test_m1_run_validation.py::test_incorrect_enospc_forward_call_count_fails_including_exit_code PASSED [ 10%]
+tests/test_m1_run_validation.py::test_token_or_step_logit_mismatch_fails[token] PASSED [ 15%]
+tests/test_m1_run_validation.py::test_token_or_step_logit_mismatch_fails[step_logit_value] PASSED [ 21%]
+tests/test_m1_run_validation.py::test_token_or_step_logit_mismatch_fails[step_logit_shape] PASSED [ 26%]
+tests/test_m1_run_validation.py::test_truncated_token_or_logit_sequences_fail[both_tokens] PASSED [ 31%]
+tests/test_m1_run_validation.py::test_truncated_token_or_logit_sequences_fail[engine_logits] PASSED [ 36%]
+tests/test_m1_run_validation.py::test_truncated_token_or_logit_sequences_fail[ref_logits] PASSED [ 42%]
+tests/test_m1_run_validation.py::test_truncated_token_or_logit_sequences_fail[both_logits] PASSED [ 47%]
+tests/test_m1_run_validation.py::test_missing_enospc_record_or_scenario_fails PASSED [ 52%]
+tests/test_m1_run_validation.py::test_fault_scenario_without_its_miss_fails[fault_corrupt_middle] PASSED [ 57%]
+tests/test_m1_run_validation.py::test_fault_scenario_without_its_miss_fails[fault_incompatible_layout] PASSED [ 63%]
+tests/test_m1_run_validation.py::test_fault_scenario_without_its_miss_fails[fault_incompatible_namespace] PASSED [ 68%]
+tests/test_m1_run_validation.py::test_fault_scenario_without_its_miss_fails[fault_missing_file] PASSED [ 73%]
+tests/test_m1_run_validation.py::test_enospc_scenario_without_the_injected_fault_fails[no_injection] PASSED [ 78%]
+tests/test_m1_run_validation.py::test_enospc_scenario_without_the_injected_fault_fails[no_spill_failure] PASSED [ 84%]
+tests/test_m1_run_validation.py::test_enospc_scenario_without_the_injected_fault_fails[files_left] PASSED [ 89%]
+tests/test_m1_run_validation.py::test_restore_without_kv_byte_check_fails PASSED [ 94%]
+tests/test_m1_run_validation.py::test_historical_evidence_lacks_the_enospc_strict_record PASSED [100%]
+
+============================== 19 passed in 6.56s ==============================

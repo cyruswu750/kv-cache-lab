@@ -1,0 +1,19 @@
+== --validate results/m1_2/m1_run_20261103T121800.json
+exit 0
+{'requests': 19, 'strict_records': 19, 'acceptance': True}
+  ... problems total 0
+== --validate <scratch>/edited_800.json
+exit 1
+{'requests': 19, 'strict_records': 19, 'acceptance': False}
+  problem: fault_enospc[0] 'L3 ENOSPC on spill': forward_calls=800, expected_forward_calls=8, expected 8
+  ... problems total 1
+== --validate results/m1_1/m1_run_20261103T112930.json
+exit 1
+{'requests': 18, 'strict_records': 18, 'acceptance': False}
+  problem: sequence[0] 'X': strict checks not true: ['lengths_ok', 'restored_kv_ok', 'forward_calls_ok']
+  problem: sequence[0] 'X': num_tokens=None, expected 8
+  problem: sequence[0] 'X': num_step_logits=None, expected 8
+  problem: sequence[0] 'X': num_ref_tokens=None, expected 8
+  problem: sequence[0] 'X': num_ref_step_logits=None, expected 8
+  problem: sequence[0] 'X': expected_steps=None, expected 8
+  ... problems total 128
