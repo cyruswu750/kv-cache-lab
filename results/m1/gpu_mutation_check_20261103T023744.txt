@@ -1,0 +1,6 @@
+[lsb] E       AssertionError: tiered != resident (bitwise)
+[lsb] tests/gpu/test_m1_tiered.py:75: AssertionError
+[lsb] 2 failed, 8 deselected in 8.01s
+[kv] tests/gpu/test_m1_tiered.py:74: AssertionError
+[kv] tests/gpu/test_m1_tiered.py:74: AssertionError
+[kv] 2 failed, 8 deselected in 6.37s

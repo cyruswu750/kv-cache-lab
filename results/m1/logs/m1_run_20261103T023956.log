@@ -1,0 +1,28 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  58%|█████▊    | 197/338 [00:00<00:00, 1969.02it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2950.24it/s]
+== sequence (host 2 slots + 1 staging, disk 2 files)
+  X                      N= 622 L=   0/ 512 src=-               miss=absent stored=[0, 1] STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'host']
+  Y                      N= 642 L= 512/ 512 src=host,host       miss=None stored=[] STRICT=PASS | vs full: max_abs=0.312 greedy=8/8 | tiers=['host', 'host']
+  W                      N= 600 L=   0/ 512 src=-               miss=absent stored=[0, 1] STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'host']
+  Z                      N= 366 L= 256/ 256 src=disk            miss=None stored=[] STRICT=PASS | vs full: max_abs=0.312 greedy=8/8 | tiers=['disk']
+  X                      N= 622 L= 512/ 512 src=disk,disk       miss=None stored=[] STRICT=PASS | vs full: max_abs=0.281 greedy=4/8 (div step 4 margin 0.000) | tiers=['disk', 'disk']
+  L3                     N= 779 L= 512/ 768 src=disk,disk       miss=absent stored=[2] STRICT=PASS | vs full: max_abs=0.281 greedy=4/8 (div step 4 margin 0.125) | tiers=[None, 'disk', 'host']
+  Y                      N= 642 L=   0/ 512 src=-               miss=absent stored=[0, 1] STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'host']
+  W                      N= 600 L=   0/ 512 src=-               miss=absent stored=[0, 1] STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'host']
+  X                      N= 622 L= 512/ 512 src=disk,disk       miss=None stored=[] STRICT=PASS | vs full: max_abs=0.281 greedy=4/8 (div step 4 margin 0.000) | tiers=['disk', 'disk']
+== fault: corrupt middle chunk (one payload bit)
+  L3 cold                N= 779 L=   0/ 768 src=-               miss=absent stored=[0, 1, 2] STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['disk', 'disk', 'host']
+  L3 chunk1 corrupt      N= 779 L= 256/ 768 src=disk            miss=disk_payload_crc stored=[1] STRICT=PASS | vs full: max_abs=0.266 greedy=8/8 | tiers=['disk', 'host', 'disk']
+  L3 again               N= 779 L= 768/ 768 src=disk,host,disk  miss=None stored=[] STRICT=PASS | vs full: max_abs=0.375 greedy=4/8 (div step 4 margin 0.125) | tiers=['disk', 'host', 'disk']
+== fault: missing file
+  X cold                 N= 622 L=   0/ 512 src=-               miss=absent stored=[0, 1] STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['disk', 'host']
+  Y chunk0 file deleted  N= 642 L=   0/ 512 src=-               miss=disk_file_missing stored=[0] STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'disk']
+== fault: incompatible namespace
+  X cold                 N= 622 L=   0/ 512 src=-               miss=absent stored=[0, 1] STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['disk', 'host']
+  Y namespace incompatible N= 642 L=   0/ 512 src=-               miss=disk_namespace_mismatch:attn_implementation stored=[0] STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'disk']
+== fault: incompatible layout
+  X cold                 N= 622 L=   0/ 512 src=-               miss=absent stored=[0, 1] STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['disk', 'host']
+  Y layout incompatible  N= 642 L=   0/ 512 src=-               miss=disk_layout_mismatch:num_layers stored=[0] STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'disk']
+== fault: ENOSPC on every disk write (spill)
+  forward calls 8 (expected 8); spill_failures {'write_oserror:ENOSPC': 2}
+{"requests": 19, "strict_pass_all": true, "restored_requests": 7, "report_only_full_recompute_greedy_identical": 3, "elapsed_s": 19.0}
+wrote results/m1/m1_run_20261103T023956.json

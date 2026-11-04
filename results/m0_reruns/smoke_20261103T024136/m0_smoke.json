@@ -1,0 +1,145 @@
+{
+ "milestone": "M0",
+ "mode": "smoke",
+ "overall": "PASS",
+ "versions": {
+  "torch": "2.14.1+cu130",
+  "torch_cuda": "13.0",
+  "transformers": "5.22.1",
+  "python": "3.14.4"
+ },
+ "gpu": "NVIDIA GeForce RTX 4080 Laptop GPU",
+ "model": {
+  "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+  "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "dtype": "torch.bfloat16",
+  "attn_implementation": "sdpa",
+  "num_hidden_layers": 28,
+  "num_key_value_heads": 2,
+  "head_dim": 128,
+  "layer_types": [
+   "full_attention"
+  ],
+  "rope_parameters": {
+   "rope_theta": 1000000.0,
+   "rope_type": "default"
+  },
+  "vocab_size": 151936
+ },
+ "chunk_size": 256,
+ "greedy_steps": 8,
+ "tolerances": {
+  "atol": 1.45,
+  "rtol": 0.02
+ },
+ "cases": [
+  {
+   "name": "boundary_257",
+   "prompt_len": 257,
+   "chunk_size": 256,
+   "eligible_restore_lens": [
+    256
+   ],
+   "restores": [
+    {
+     "restore_len": 256,
+     "suffix_len": 1,
+     "partial": false,
+     "restore_check": {
+      "tensors_checked": 56,
+      "all_bytes_equal": true,
+      "total_bytes": 7340032,
+      "tensor_kinds": [
+       {
+        "shape": [
+         1,
+         2,
+         256,
+         128
+        ],
+        "dtype": "torch.bfloat16",
+        "nbytes": 131072,
+        "count": 56
+       }
+      ],
+      "mismatches": []
+     },
+     "first_logits": {
+      "ref_finite": true,
+      "test_finite": true,
+      "max_abs_err": 0.1875,
+      "rel_l2_err": 0.011678546667098999,
+      "allclose": true,
+      "atol": 1.45,
+      "rtol": 0.02,
+      "ref_argmax": 1030,
+      "test_argmax": 1030,
+      "ref_top2_margin": 0.75,
+      "argmax_equal": true
+     },
+     "all_step_logits_finite": true,
+     "greedy_tokens": [
+      1030,
+      1012,
+      264,
+      326,
+      57909,
+      53416,
+      369,
+      26127
+     ],
+     "greedy": {
+      "steps": 8,
+      "matching_positions": 8,
+      "identical": true,
+      "first_divergence": null
+     },
+     "bitwise_equal_to_gpu_resident_chunked": true,
+     "negative_control_zero_kv": {
+      "max_abs_err": 18.3203125,
+      "allclose": false,
+      "argmax_equal": false
+     }
+    }
+   ],
+   "full": {
+    "first_logits_finite": true,
+    "all_step_logits_finite": true,
+    "greedy_tokens": [
+     1030,
+     1012,
+     264,
+     326,
+     57909,
+     53416,
+     369,
+     26127
+    ]
+   },
+   "restore_len_max": 256,
+   "export_check": {
+    "tensors_checked": 56,
+    "all_bytes_equal": true,
+    "total_bytes": 7340032,
+    "tensor_kinds": [
+     {
+      "shape": [
+       1,
+       2,
+       256,
+       128
+      ],
+      "dtype": "torch.bfloat16",
+      "nbytes": 131072,
+      "count": 56
+     }
+    ],
+    "mismatches": []
+   },
+   "snapshot_bytes": 7340032,
+   "snapshot_unchanged": true,
+   "status": "PASS"
+  }
+ ],
+ "diagnostic_timings_not_benchmarks": []
+}

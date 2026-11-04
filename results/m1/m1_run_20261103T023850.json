@@ -1,0 +1,1081 @@
+{
+ "versions": {
+  "torch": "2.14.1+cu130",
+  "transformers": "5.22.1"
+ },
+ "gpu": "NVIDIA GeForce RTX 4080 Laptop GPU",
+ "model": {
+  "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+  "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "dtype": "torch.bfloat16",
+  "attn_implementation": "sdpa",
+  "num_hidden_layers": 28,
+  "num_key_value_heads": 2,
+  "head_dim": 128,
+  "layer_types": [
+   "full_attention"
+  ],
+  "rope_parameters": {
+   "rope_theta": 1000000.0,
+   "rope_type": "default"
+  },
+  "vocab_size": 151936
+ },
+ "chunk_size": 256,
+ "steps": 8,
+ "namespace": {
+  "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+  "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "kv_dtype": "bfloat16",
+  "num_layers": 28,
+  "num_kv_heads": 2,
+  "head_dim": 128,
+  "chunk_size": 256,
+  "rope_parameters": {
+   "rope_theta": 1000000.0,
+   "rope_type": "default"
+  },
+  "layer_types": [
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention",
+   "full_attention"
+  ],
+  "use_sliding_window": false,
+  "sliding_window": null,
+  "attn_implementation": "sdpa",
+  "transformers_version": "5.22.1",
+  "torch_version": "2.14.1+cu130",
+  "layout_schema": "kvlab-kv-layout-v1"
+ },
+ "scenarios": {
+  "sequence": {
+   "records": [
+    {
+     "label": "X",
+     "N": 622,
+     "eligible_L": 512,
+     "L": 0,
+     "restore_used": false,
+     "sources": [],
+     "miss_reason": "absent",
+     "stored_chunks": [
+      0,
+      1
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": null,
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.0,
+      "rel_l2_err": 0.0,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 22020096,
+     "disk_used_bytes": 0,
+     "tiers_after": [
+      "host",
+      "host"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "Y",
+     "N": 642,
+     "eligible_L": 512,
+     "L": 512,
+     "restore_used": true,
+     "sources": [
+      "host",
+      "host"
+     ],
+     "miss_reason": null,
+     "stored_chunks": [],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": {
+      "tensors_checked": 112,
+      "mismatched": 0,
+      "all_bytes_equal": true
+     },
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.3125,
+      "rel_l2_err": 0.01861363835632801,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 22020096,
+     "disk_used_bytes": 0,
+     "tiers_after": [
+      "host",
+      "host"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "W",
+     "N": 600,
+     "eligible_L": 512,
+     "L": 0,
+     "restore_used": false,
+     "sources": [],
+     "miss_reason": "absent",
+     "stored_chunks": [
+      0,
+      1
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": null,
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.0,
+      "rel_l2_err": 0.0,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 22020096,
+     "disk_used_bytes": 14684242,
+     "tiers_after": [
+      "host",
+      "host"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "Z",
+     "N": 366,
+     "eligible_L": 256,
+     "L": 256,
+     "restore_used": true,
+     "sources": [
+      "disk"
+     ],
+     "miss_reason": null,
+     "stored_chunks": [],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": {
+      "tensors_checked": 56,
+      "mismatched": 0,
+      "all_bytes_equal": true
+     },
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.3125,
+      "rel_l2_err": 0.019275235012173653,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 22020096,
+     "disk_used_bytes": 14684242,
+     "tiers_after": [
+      "disk"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "X",
+     "N": 622,
+     "eligible_L": 512,
+     "L": 512,
+     "restore_used": true,
+     "sources": [
+      "disk",
+      "disk"
+     ],
+     "miss_reason": null,
+     "stored_chunks": [],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": {
+      "tensors_checked": 112,
+      "mismatched": 0,
+      "all_bytes_equal": true
+     },
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.28125,
+      "rel_l2_err": 0.020641915500164032,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 4,
+       "identical": false,
+       "first_divergence": 4
+      }
+     },
+     "host_used_bytes": 22020096,
+     "disk_used_bytes": 14684242,
+     "tiers_after": [
+      "disk",
+      "disk"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "L3",
+     "N": 779,
+     "eligible_L": 768,
+     "L": 512,
+     "restore_used": true,
+     "sources": [
+      "disk",
+      "disk"
+     ],
+     "miss_reason": "absent",
+     "stored_chunks": [
+      2
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": {
+      "tensors_checked": 112,
+      "mismatched": 0,
+      "all_bytes_equal": true
+     },
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.28125,
+      "rel_l2_err": 0.015562179498374462,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 4,
+       "identical": false,
+       "first_divergence": 4
+      }
+     },
+     "host_used_bytes": 22020096,
+     "disk_used_bytes": 14684242,
+     "tiers_after": [
+      null,
+      "disk",
+      "host"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "Y",
+     "N": 642,
+     "eligible_L": 512,
+     "L": 0,
+     "restore_used": false,
+     "sources": [],
+     "miss_reason": "absent",
+     "stored_chunks": [
+      0,
+      1
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": null,
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.0,
+      "rel_l2_err": 0.0,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 22020096,
+     "disk_used_bytes": 14684242,
+     "tiers_after": [
+      "host",
+      "host"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "W",
+     "N": 600,
+     "eligible_L": 512,
+     "L": 0,
+     "restore_used": false,
+     "sources": [],
+     "miss_reason": "absent",
+     "stored_chunks": [
+      0,
+      1
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": null,
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.0,
+      "rel_l2_err": 0.0,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 22020096,
+     "disk_used_bytes": 14684242,
+     "tiers_after": [
+      "host",
+      "host"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "X",
+     "N": 622,
+     "eligible_L": 512,
+     "L": 512,
+     "restore_used": true,
+     "sources": [
+      "disk",
+      "disk"
+     ],
+     "miss_reason": null,
+     "stored_chunks": [],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": {
+      "tensors_checked": 112,
+      "mismatched": 0,
+      "all_bytes_equal": true
+     },
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.28125,
+      "rel_l2_err": 0.019603189080953598,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 4,
+       "identical": false,
+       "first_divergence": 4
+      }
+     },
+     "host_used_bytes": 22020096,
+     "disk_used_bytes": 14684242,
+     "tiers_after": [
+      "disk",
+      "disk"
+     ],
+     "strict_pass": true
+    }
+   ],
+   "counters": {
+    "requests": 9,
+    "restored_requests": 5,
+    "full_recompute_requests": 4,
+    "host_hits": 2,
+    "disk_hits": 7,
+    "chunk_misses": 5,
+    "miss_reasons": {
+     "absent": 5
+    },
+    "recovered_prefix_tokens": 2304,
+    "chunks_stored": 9,
+    "write_skips": {},
+    "host_spills_to_disk": 7,
+    "spill_failures": {},
+    "bytes_d2h": 66060288,
+    "bytes_h2d": 66060288,
+    "disk_file_bytes_read": 51394847,
+    "disk_file_bytes_written": 51394847
+   },
+   "budgets": {
+    "host": {
+     "budget_bytes": 22020096,
+     "slab_bytes": 22020096,
+     "slots": 2,
+     "staging_bytes": 7340032,
+     "resident_bytes": 14680064,
+     "used_bytes": 22020096,
+     "peak_bytes": 22020096,
+     "entries": 2,
+     "max_entries": 64,
+     "metadata_bytes_estimate": 2256,
+     "evictions": 7,
+     "pinned": true
+    },
+    "disk": {
+     "budget_bytes": 14684242,
+     "committed_bytes": 14684242,
+     "tmp_bytes": 0,
+     "peak_bytes": 14684242,
+     "entries": 2,
+     "max_entries": 64,
+     "evictions": 5,
+     "dir_bytes_scanned": 14684242
+    }
+   }
+  },
+  "fault_corrupt_middle": {
+   "records": [
+    {
+     "label": "L3 cold",
+     "N": 779,
+     "eligible_L": 768,
+     "L": 0,
+     "restore_used": false,
+     "sources": [],
+     "miss_reason": "absent",
+     "stored_chunks": [
+      0,
+      1,
+      2
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": null,
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.0,
+      "rel_l2_err": 0.0,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 14680064,
+     "disk_used_bytes": 14684242,
+     "tiers_after": [
+      "disk",
+      "disk",
+      "host"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "L3 chunk1 corrupt",
+     "N": 779,
+     "eligible_L": 768,
+     "L": 256,
+     "restore_used": true,
+     "sources": [
+      "disk"
+     ],
+     "miss_reason": "disk_payload_crc",
+     "stored_chunks": [
+      1
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": {
+      "tensors_checked": 56,
+      "mismatched": 0,
+      "all_bytes_equal": true
+     },
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.265625,
+      "rel_l2_err": 0.013801994733512402,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 14680064,
+     "disk_used_bytes": 14684242,
+     "tiers_after": [
+      "disk",
+      "host",
+      "disk"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "L3 again",
+     "N": 779,
+     "eligible_L": 768,
+     "L": 768,
+     "restore_used": true,
+     "sources": [
+      "disk",
+      "host",
+      "disk"
+     ],
+     "miss_reason": null,
+     "stored_chunks": [],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": {
+      "tensors_checked": 168,
+      "mismatched": 0,
+      "all_bytes_equal": true
+     },
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.375,
+      "rel_l2_err": 0.01896965503692627,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 4,
+       "identical": false,
+       "first_divergence": 4
+      }
+     },
+     "host_used_bytes": 14680064,
+     "disk_used_bytes": 14684242,
+     "tiers_after": [
+      "disk",
+      "host",
+      "disk"
+     ],
+     "strict_pass": true
+    }
+   ],
+   "counters": {
+    "requests": 3,
+    "restored_requests": 2,
+    "full_recompute_requests": 1,
+    "host_hits": 1,
+    "disk_hits": 3,
+    "chunk_misses": 2,
+    "miss_reasons": {
+     "absent": 1,
+     "disk_payload_crc": 1
+    },
+    "recovered_prefix_tokens": 1024,
+    "chunks_stored": 4,
+    "write_skips": {},
+    "host_spills_to_disk": 3,
+    "spill_failures": {},
+    "bytes_d2h": 29360128,
+    "bytes_h2d": 29360128,
+    "disk_file_bytes_read": 22026363,
+    "disk_file_bytes_written": 22026363
+   },
+   "budgets": {
+    "host": {
+     "budget_bytes": 14680064,
+     "slab_bytes": 14680064,
+     "slots": 1,
+     "staging_bytes": 7340032,
+     "resident_bytes": 7340032,
+     "used_bytes": 14680064,
+     "peak_bytes": 14680064,
+     "entries": 1,
+     "max_entries": 64,
+     "metadata_bytes_estimate": 1128,
+     "evictions": 3,
+     "pinned": true
+    },
+    "disk": {
+     "budget_bytes": 58736968,
+     "committed_bytes": 14684242,
+     "tmp_bytes": 0,
+     "peak_bytes": 14684242,
+     "entries": 2,
+     "max_entries": 64,
+     "evictions": 0,
+     "dir_bytes_scanned": 14684242
+    }
+   }
+  },
+  "fault_missing_file": {
+   "records": [
+    {
+     "label": "X cold",
+     "N": 622,
+     "eligible_L": 512,
+     "L": 0,
+     "restore_used": false,
+     "sources": [],
+     "miss_reason": "absent",
+     "stored_chunks": [
+      0,
+      1
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": null,
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.0,
+      "rel_l2_err": 0.0,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 14680064,
+     "disk_used_bytes": 7342121,
+     "tiers_after": [
+      "disk",
+      "host"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "Y chunk0 file deleted",
+     "N": 642,
+     "eligible_L": 512,
+     "L": 0,
+     "restore_used": false,
+     "sources": [],
+     "miss_reason": "disk_file_missing",
+     "stored_chunks": [
+      0
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": null,
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.0,
+      "rel_l2_err": 0.0,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 14680064,
+     "disk_used_bytes": 7342121,
+     "tiers_after": [
+      "host",
+      "disk"
+     ],
+     "strict_pass": true
+    }
+   ],
+   "counters": {
+    "requests": 2,
+    "restored_requests": 0,
+    "full_recompute_requests": 2,
+    "host_hits": 0,
+    "disk_hits": 0,
+    "chunk_misses": 2,
+    "miss_reasons": {
+     "absent": 1,
+     "disk_file_missing": 1
+    },
+    "recovered_prefix_tokens": 0,
+    "chunks_stored": 3,
+    "write_skips": {},
+    "host_spills_to_disk": 2,
+    "spill_failures": {},
+    "bytes_d2h": 22020096,
+    "bytes_h2d": 0,
+    "disk_file_bytes_read": 0,
+    "disk_file_bytes_written": 14684242
+   },
+   "budgets": {
+    "host": {
+     "budget_bytes": 14680064,
+     "slab_bytes": 14680064,
+     "slots": 1,
+     "staging_bytes": 7340032,
+     "resident_bytes": 7340032,
+     "used_bytes": 14680064,
+     "peak_bytes": 14680064,
+     "entries": 1,
+     "max_entries": 64,
+     "metadata_bytes_estimate": 1128,
+     "evictions": 2,
+     "pinned": true
+    },
+    "disk": {
+     "budget_bytes": 58736968,
+     "committed_bytes": 7342121,
+     "tmp_bytes": 0,
+     "peak_bytes": 7342121,
+     "entries": 1,
+     "max_entries": 64,
+     "evictions": 0,
+     "dir_bytes_scanned": 7342121
+    }
+   }
+  },
+  "fault_incompatible_namespace": {
+   "records": [
+    {
+     "label": "X cold",
+     "N": 622,
+     "eligible_L": 512,
+     "L": 0,
+     "restore_used": false,
+     "sources": [],
+     "miss_reason": "absent",
+     "stored_chunks": [
+      0,
+      1
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": null,
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.0,
+      "rel_l2_err": 0.0,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 14680064,
+     "disk_used_bytes": 7342121,
+     "tiers_after": [
+      "disk",
+      "host"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "Y namespace incompatible",
+     "N": 642,
+     "eligible_L": 512,
+     "L": 0,
+     "restore_used": false,
+     "sources": [],
+     "miss_reason": "disk_namespace_mismatch:attn_implementation",
+     "stored_chunks": [
+      0
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": null,
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.0,
+      "rel_l2_err": 0.0,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 14680064,
+     "disk_used_bytes": 7342121,
+     "tiers_after": [
+      "host",
+      "disk"
+     ],
+     "strict_pass": true
+    }
+   ],
+   "counters": {
+    "requests": 2,
+    "restored_requests": 0,
+    "full_recompute_requests": 2,
+    "host_hits": 0,
+    "disk_hits": 0,
+    "chunk_misses": 2,
+    "miss_reasons": {
+     "absent": 1,
+     "disk_namespace_mismatch:attn_implementation": 1
+    },
+    "recovered_prefix_tokens": 0,
+    "chunks_stored": 3,
+    "write_skips": {},
+    "host_spills_to_disk": 2,
+    "spill_failures": {},
+    "bytes_d2h": 22020096,
+    "bytes_h2d": 0,
+    "disk_file_bytes_read": 0,
+    "disk_file_bytes_written": 14684242
+   },
+   "budgets": {
+    "host": {
+     "budget_bytes": 14680064,
+     "slab_bytes": 14680064,
+     "slots": 1,
+     "staging_bytes": 7340032,
+     "resident_bytes": 7340032,
+     "used_bytes": 14680064,
+     "peak_bytes": 14680064,
+     "entries": 1,
+     "max_entries": 64,
+     "metadata_bytes_estimate": 1128,
+     "evictions": 2,
+     "pinned": true
+    },
+    "disk": {
+     "budget_bytes": 58736968,
+     "committed_bytes": 7342121,
+     "tmp_bytes": 0,
+     "peak_bytes": 7342121,
+     "entries": 1,
+     "max_entries": 64,
+     "evictions": 0,
+     "dir_bytes_scanned": 7342121
+    }
+   }
+  },
+  "fault_incompatible_layout": {
+   "records": [
+    {
+     "label": "X cold",
+     "N": 622,
+     "eligible_L": 512,
+     "L": 0,
+     "restore_used": false,
+     "sources": [],
+     "miss_reason": "absent",
+     "stored_chunks": [
+      0,
+      1
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": null,
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.0,
+      "rel_l2_err": 0.0,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 14680064,
+     "disk_used_bytes": 7342121,
+     "tiers_after": [
+      "disk",
+      "host"
+     ],
+     "strict_pass": true
+    },
+    {
+     "label": "Y layout incompatible",
+     "N": 642,
+     "eligible_L": 512,
+     "L": 0,
+     "restore_used": false,
+     "sources": [],
+     "miss_reason": "disk_layout_mismatch:num_layers",
+     "stored_chunks": [
+      0
+     ],
+     "strict_tokens_equal_resident": true,
+     "strict_all_step_logits_bitwise_equal_resident": true,
+     "strict_restored_kv_bytes": null,
+     "all_logits_finite": true,
+     "report_only_vs_full_recompute": {
+      "max_abs_err": 0.0,
+      "rel_l2_err": 0.0,
+      "argmax_equal": true,
+      "allclose_m0_tolerance": true,
+      "greedy": {
+       "steps": 8,
+       "matching_positions": 8,
+       "identical": true,
+       "first_divergence": null
+      }
+     },
+     "host_used_bytes": 14680064,
+     "disk_used_bytes": 7342121,
+     "tiers_after": [
+      "host",
+      "disk"
+     ],
+     "strict_pass": true
+    }
+   ],
+   "counters": {
+    "requests": 2,
+    "restored_requests": 0,
+    "full_recompute_requests": 2,
+    "host_hits": 0,
+    "disk_hits": 0,
+    "chunk_misses": 2,
+    "miss_reasons": {
+     "absent": 1,
+     "disk_layout_mismatch:num_layers": 1
+    },
+    "recovered_prefix_tokens": 0,
+    "chunks_stored": 3,
+    "write_skips": {},
+    "host_spills_to_disk": 2,
+    "spill_failures": {},
+    "bytes_d2h": 22020096,
+    "bytes_h2d": 0,
+    "disk_file_bytes_read": 0,
+    "disk_file_bytes_written": 14684242
+   },
+   "budgets": {
+    "host": {
+     "budget_bytes": 14680064,
+     "slab_bytes": 14680064,
+     "slots": 1,
+     "staging_bytes": 7340032,
+     "resident_bytes": 7340032,
+     "used_bytes": 14680064,
+     "peak_bytes": 14680064,
+     "entries": 1,
+     "max_entries": 64,
+     "metadata_bytes_estimate": 1128,
+     "evictions": 2,
+     "pinned": true
+    },
+    "disk": {
+     "budget_bytes": 58736968,
+     "committed_bytes": 7342121,
+     "tmp_bytes": 0,
+     "peak_bytes": 7342121,
+     "entries": 1,
+     "max_entries": 64,
+     "evictions": 0,
+     "dir_bytes_scanned": 7342121
+    }
+   }
+  },
+  "fault_enospc": {
+   "forward_calls_for_request": 8,
+   "expected_forward_calls": 8,
+   "stored_chunks": [
+    0,
+    1,
+    2
+   ],
+   "restore_len": 0,
+   "dir_after": [
+    0,
+    []
+   ],
+   "records": [],
+   "counters": {
+    "requests": 1,
+    "restored_requests": 0,
+    "full_recompute_requests": 1,
+    "host_hits": 0,
+    "disk_hits": 0,
+    "chunk_misses": 1,
+    "miss_reasons": {
+     "absent": 1
+    },
+    "recovered_prefix_tokens": 0,
+    "chunks_stored": 3,
+    "write_skips": {},
+    "host_spills_to_disk": 0,
+    "spill_failures": {
+     "write_oserror:ENOSPC": 2
+    },
+    "bytes_d2h": 22020096,
+    "bytes_h2d": 0,
+    "disk_file_bytes_read": 0,
+    "disk_file_bytes_written": 0
+   },
+   "budgets": {
+    "host": {
+     "budget_bytes": 14680064,
+     "slab_bytes": 14680064,
+     "slots": 1,
+     "staging_bytes": 7340032,
+     "resident_bytes": 7340032,
+     "used_bytes": 14680064,
+     "peak_bytes": 14680064,
+     "entries": 1,
+     "max_entries": 64,
+     "metadata_bytes_estimate": 1128,
+     "evictions": 2,
+     "pinned": true
+    },
+    "disk": {
+     "budget_bytes": 58736968,
+     "committed_bytes": 0,
+     "tmp_bytes": 0,
+     "peak_bytes": 7342121,
+     "entries": 0,
+     "max_entries": 64,
+     "evictions": 0,
+     "dir_bytes_scanned": 0
+    }
+   }
+  }
+ },
+ "summary": {
+  "requests": 19,
+  "strict_pass_all": true,
+  "restored_requests": 7,
+  "report_only_full_recompute_greedy_identical": 3,
+  "elapsed_s": 14.0
+ }
+}
