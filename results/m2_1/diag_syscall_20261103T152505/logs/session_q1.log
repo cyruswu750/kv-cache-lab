@@ -1,0 +1,9 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   9%|▉         | 31/338 [00:00<00:01, 264.08it/s]Loading weights:  19%|█▉        | 64/338 [00:00<00:00, 294.81it/s]Loading weights:  28%|██▊       | 94/338 [00:00<00:00, 270.93it/s]Loading weights:  47%|████▋     | 159/338 [00:00<00:00, 390.62it/s]Loading weights:  59%|█████▉    | 199/338 [00:00<00:00, 281.93it/s]Loading weights:  68%|██████▊   | 231/338 [00:00<00:00, 263.23it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 395.17it/s]
+block 0 L=512 S=1 done (0.3 min)
+block 1 L=4096 S=64 done (1.0 min)
+block 2 L=1024 S=64 done (1.2 min)
+block 3 L=512 S=1 done (1.4 min)
+block 4 L=4096 S=64 done (2.1 min)
+block 5 L=1024 S=64 done (2.4 min)
+{"n_samples": 1686, "n_measured": 1296, "n_excluded": 0, "elapsed_min": 2.3736046592394513, "correctness_all": true, "spike_probe_audit_pass": true}
+failures []; wrote results/m2_1/diag_syscall_20261103T152505/session_q1.json

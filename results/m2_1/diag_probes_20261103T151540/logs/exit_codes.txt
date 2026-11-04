@@ -1,0 +1,2 @@
+p1 exit 0
+p2 exit 0

@@ -1,0 +1,1 @@
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/m2_1_diagnose.py --out-dir results/m2_1/diag_syscall_20261103T152505 --session q1 --config baseline+probes+syscall --probes --seed 21501

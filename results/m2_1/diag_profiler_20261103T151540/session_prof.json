@@ -1,0 +1,8315 @@
+{
+ "meta": {
+  "session": "prof",
+  "config": "baseline",
+  "args": {
+   "out_dir": "results/m2_1/diag_profiler_20261103T151540",
+   "session": "prof",
+   "config": "baseline",
+   "cases": "512:1,1024:64,4096:64",
+   "blocks": 2,
+   "warmup": 3,
+   "reps": 12,
+   "seed": 21401,
+   "no_monitor": false,
+   "cuda_schedule": null,
+   "profile": true,
+   "profile_reps": 40,
+   "probes": false
+  },
+  "seed": 21401,
+  "started_at": "2026-11-03T15:22:54-0800",
+  "started_unix": 1793748174.9616778,
+  "gpu_monitor_csv": "session_prof.gpu_monitor.csv",
+  "finished_at": "2026-11-03T15:23:35-0800",
+  "elapsed_min": 0.6220677177111308,
+  "n_samples": 120,
+  "n_measured": 120,
+  "n_excluded": 0,
+  "correctness_all": true,
+  "spike_probe_audit_pass": null
+ },
+ "environment": {
+  "torch": "2.14.1+cu130",
+  "transformers": "5.22.1",
+  "cuda": "13.0",
+  "python": "3.14.4",
+  "gpu": "NVIDIA GeForce RTX 4080 Laptop GPU",
+  "gpu_static": "name, driver_version, power.limit [W], clocks.max.sm [MHz], clocks.max.memory [MHz], memory.total [MiB]\nNVIDIA GeForce RTX 4080 Laptop GPU, 596.49, [N/A], 3105 MHz, 9001 MHz, 12282 MiB",
+  "cpu": "AMD Ryzen 9 7945HX with Radeon Graphics",
+  "kernel": "6.18.54.1-microsoft-standard-WSL2",
+  "disk_root": "/home/cyrus/projects/kv-cache-lab/.kvcache/m2_1/diag_profiler_20261103T151540/prof",
+  "filesystem_df": [
+   "Filesystem     Type  1K-blocks     Used Available Use% Mounted on",
+   "/dev/sdd       ext4 1055762868 18553340 983506056   2% /"
+  ],
+  "root_mount": [
+   "/dev/sdd / ext4 rw,relatime,discard,errors=remount-ro,data=ordered 0 0"
+  ],
+  "page_size": 4096,
+  "source_manifest": {
+   "kvlab/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "kvlab/always_restore.py": "a704b63bf6496c71fc5a6a7731463706ded366d45c96c17ddf73dc792aa1f7a3",
+   "kvlab/boundaries.py": "022a11e11ff03b9296391920dc58e715baab0560b77c164a5adda8e5df3e9e6d",
+   "kvlab/chunk_format.py": "55a9ab997cbe3190641a5ad332e007c974d0abe2433d52071e9f43b4c288b894",
+   "kvlab/diag_harness.py": "07e44eb06e27be5c548aa674dfd78bc81f7a2503a869109de017b37f8450786b",
+   "kvlab/disk_store.py": "f56a935c524613a54473430bf79b58822760a0d29b53d277b333bda9e7476736",
+   "kvlab/experiment.py": "546a8307ab76e6237ea432603aaa8c5be45d769781e9981d1a6c50fd5b354bf9",
+   "kvlab/fixtures.py": "5dd353014dbde98c18ab87a445ab02a39ae4d14d4392a4acc62e441c1b83a277",
+   "kvlab/host_store.py": "ceba0f739d9e661b02f13a1e3d0f24664acc1abde63ec4c4ca3738a5129aeb8b",
+   "kvlab/identity.py": "e016ad9fda3383cf1cd55e254be5913bfe0299a7737587ed8afbc1921cc20fd0",
+   "kvlab/kv_snapshot.py": "d97f2ea2624530f91c2d496c754377b97a5e99dc7414fe3e0fb7dcc6fb6e9b2f",
+   "kvlab/metrics.py": "1563d82427e3a440d8cf3c251d4f50dfc07bc997fcace0b3322fe423bcf5e556",
+   "kvlab/model.py": "821e0e5bbf0f1ec3eda1e62acb9542cc43c4c4383c5d37f23714d598de2bfb0a",
+   "kvlab/perf.py": "a263c948f19f20650a0e4b8ce0c998e6f21e9a9f3d1968eb61246f777e1b1f58",
+   "kvlab/perf_harness.py": "d2a76ff12d1acf02345d36fb19b676b649bac884a15ffdf5de2d74463c81ece8",
+   "kvlab/perf_stats.py": "8b3d8bd37f798ab85472b639167215d10875148afc27b4b88a186d5619e1e77d",
+   "kvlab/resident_reference.py": "b14da5c95ffad3af4d122b459d7bd2085e6485183a4f8fc9b3e367b5223546f0",
+   "kvlab/tiered_cache.py": "840fd65f292198a099065d6e66d3a6fb1ed4a9cb13e35642f177c8ddb4ff193f",
+   "kvlab/tolerances.py": "35afa3f52b002b4a3af7be968639ee64e7c946cc73e9fd3174ee487db6add9ae",
+   "scripts/m2_1_analyze_diag.py": "891a6fb8d9bbb6ae67096333d9433a15ea9098f4c353617fa7f4934d6f77f76f",
+   "scripts/m2_1_diagnose.py": "a0bf0ecfe11f955c19ae1a9ac5b270dc0d30b0b61403fa231027e545a5562ce8",
+   "scripts/m2_1_reanalyze.py": "c7274246aa59d6eeb1b3b38081442aafeb9f84811ba76e8509211781d06cbb01",
+   "scripts/m2_fit_predict.py": "c363114161d613c979f704a7a3a4d477dc9c8792789a28491bef9484e19672e4",
+   "scripts/m2_measure.py": "2e07b48533987bf0b93fb8bd5438836841747782c1ec9cbc3ff0713ae9efff38",
+   "scripts/m2_score.py": "81ad78d30f236dfb5183e6e39aeac0e351f877a14fd98923d3ed4b5af8d45f2d",
+   "scripts/m2_spike_probe.py": "3967488edff29bfe0fa01383c6d23574da83063027306c78e8d34f7396343519"
+  }
+ },
+ "packages": {
+  "huggingface_hub": "2.4.0",
+  "numpy": "2.5.4",
+  "nvidia-cublas": "13.1.1.3",
+  "nvidia-cuda-cupti": "13.0.85",
+  "nvidia-cuda-nvrtc": "13.0.88",
+  "nvidia-cuda-runtime": "13.0.96",
+  "nvidia-cudnn-cu13": "9.24.0.43",
+  "nvidia-cufft": "12.0.0.61",
+  "nvidia-cufile": "1.15.1.6",
+  "nvidia-curand": "10.4.0.35",
+  "nvidia-cusolver": "12.0.4.66",
+  "nvidia-cusparse": "12.6.3.3",
+  "nvidia-cusparselt-cu13": "0.8.1",
+  "nvidia-nccl-cu13": "2.30.7",
+  "nvidia-nvjitlink": "13.4.92",
+  "nvidia-nvshmem-cu13": "3.4.5",
+  "nvidia-nvtx": "13.0.85",
+  "safetensors": "0.8.0",
+  "tokenizers": "0.23.3",
+  "torch": "2.14.1+cu130",
+  "transformers": "5.22.1",
+  "triton": "3.8.0"
+ },
+ "weights": {
+  ".gitattributes": {
+   "blob": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+   "bytes": 1519
+  },
+  "LICENSE": {
+   "blob": "6634c8cc3133b3848ec74b9f275acaaa1ea618ab",
+   "bytes": 11343
+  },
+  "README.md": {
+   "blob": "b3327a17e2ffa52e0fd941a2810b18a9fd0e7d94",
+   "bytes": 4917
+  },
+  "config.json": {
+   "blob": "f81ead14ab072d65a07817f83a3ee0e5a1890d10",
+   "bytes": 660
+  },
+  "generation_config.json": {
+   "blob": "dfc11073787daf1b0f9c0f1499487ab5f4c93738",
+   "bytes": 242
+  },
+  "merges.txt": {
+   "blob": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0",
+   "bytes": 1671839
+  },
+  "model.safetensors": {
+   "blob": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+   "bytes": 3087467144
+  },
+  "tokenizer.json": {
+   "blob": "443909a61d429dff23010e5bddd28ff530edda00",
+   "bytes": 7031645
+  },
+  "tokenizer_config.json": {
+   "blob": "07bfe0640cb5a0037f9322287fbfc682806cf672",
+   "bytes": 7305
+  },
+  "vocab.json": {
+   "blob": "4783fe10ac3adce15ac8f358ef5462739852c569",
+   "bytes": 2776833
+  }
+ },
+ "process": {
+  "pid": 70924,
+  "nice": 0,
+  "affinity_n": 32,
+  "nproc": 32,
+  "torch_num_threads": 16,
+  "torch_num_interop_threads": 32,
+  "env": {
+   "OMP_NUM_THREADS": null,
+   "MKL_NUM_THREADS": null,
+   "CUDA_LAUNCH_BLOCKING": null,
+   "PYTORCH_CUDA_ALLOC_CONF": null,
+   "CUDA_MODULE_LOADING": null,
+   "HF_HUB_OFFLINE": "1"
+  },
+  "rlimit_memlock": [
+   67108864,
+   67108864
+  ],
+  "loadavg": "1.06 1.01 0.89 1/761 71021",
+  "meminfo_head": [
+   "MemTotal:        7720156 kB",
+   "MemFree:          346704 kB",
+   "MemAvailable:    5100800 kB",
+   "Buffers:           19672 kB",
+   "Cached:          4942608 kB",
+   "SwapCached:        55380 kB"
+  ],
+  "status_threads": "Threads:\t37",
+  "cpufreq_visible": false,
+  "sdpa_backends": {
+   "flash": true,
+   "mem_efficient": true,
+   "math": true,
+   "cudnn": true
+  },
+  "tf32_matmul": false,
+  "cudnn_benchmark": false
+ },
+ "model": {
+  "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+  "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "dtype": "torch.bfloat16",
+  "attn_implementation": "sdpa",
+  "num_hidden_layers": 28,
+  "num_key_value_heads": 2,
+  "head_dim": 128,
+  "layer_types": [
+   "full_attention"
+  ],
+  "rope_parameters": {
+   "rope_theta": 1000000.0,
+   "rope_type": "default"
+  },
+  "vocab_size": 151936
+ },
+ "gpu_state": [
+  {
+   "when": "start",
+   "time": "2026-11-03T15:22:58-0800",
+   "temperature.gpu": "76",
+   "power.draw": "45.00 W",
+   "clocks.sm": "2370 MHz",
+   "clocks.mem": "9001 MHz",
+   "clocks.max.sm": "3105 MHz",
+   "pstate": "P0",
+   "utilization.gpu": "0 %",
+   "memory.used": "3766 MiB"
+  },
+  {
+   "when": "end",
+   "time": "2026-11-03T15:23:35-0800",
+   "temperature.gpu": "64",
+   "power.draw": "3.23 W",
+   "clocks.sm": "210 MHz",
+   "clocks.mem": "405 MHz",
+   "clocks.max.sm": "3105 MHz",
+   "pstate": "P8",
+   "utilization.gpu": "0 %",
+   "memory.used": "3790 MiB"
+  }
+ ],
+ "checks": {},
+ "samples": [
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 42272624,
+   "t_wall": 1793748179.0279453,
+   "t0_mono_ns": 15254342524020,
+   "thread_cpu_ns": 41553769,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03685800000000006,
+    "ru_stime": 0.008415000000000061,
+    "ru_nvcsw": 6,
+    "ru_nivcsw": 1,
+    "ru_minflt": 1308,
+    "ru_majflt": 5,
+    "sched_run_ns": 45273091,
+    "sched_runqueue_wait_ns": 9639,
+    "sched_timeslices": 7
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 0,
+   "label": "m21_sample_0",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 45984555,
+   "t_wall": 1793748179.0708387,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03544299999999989,
+    "ru_stime": 0.007761000000000129,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 378,
+    "ru_majflt": 0,
+    "sched_run_ns": 43203875,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 0,
+   "label": "m21_sample_1",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 39878433,
+   "t_wall": 1793748179.246528,
+   "t0_mono_ns": 15254561106894,
+   "thread_cpu_ns": 39878588,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.036664999999999726,
+    "ru_stime": 0.004313999999999929,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 263,
+    "ru_majflt": 0,
+    "sched_run_ns": 40979342,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 1,
+   "label": "m21_sample_2",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 38239137,
+   "t_wall": 1793748179.2868483,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03130500000000014,
+    "ru_stime": 0.0037169999999999703,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 406,
+    "ru_majflt": 0,
+    "sched_run_ns": 35021102,
+    "sched_runqueue_wait_ns": 7294,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 1,
+   "label": "m21_sample_3",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 39538448,
+   "t_wall": 1793748179.4497075,
+   "t0_mono_ns": 15254764285985,
+   "thread_cpu_ns": 39538724,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03467399999999987,
+    "ru_stime": 0.005128000000000021,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 262,
+    "ru_majflt": 0,
+    "sched_run_ns": 39800801,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 2,
+   "label": "m21_sample_4",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 38154141,
+   "t_wall": 1793748179.4897068,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.029110999999999887,
+    "ru_stime": 0.00688600000000017,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 379,
+    "ru_majflt": 0,
+    "sched_run_ns": 35997641,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 2,
+   "label": "m21_sample_5",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 39905266,
+   "t_wall": 1793748179.6526902,
+   "t0_mono_ns": 15254967269283,
+   "thread_cpu_ns": 39802014,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03418600000000005,
+    "ru_stime": 0.008879000000000081,
+    "ru_nvcsw": 1,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1263,
+    "ru_majflt": 0,
+    "sched_run_ns": 43064731,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 3,
+   "label": "m21_sample_6",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 38816076,
+   "t_wall": 1793748179.693124,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.02573099999999995,
+    "ru_stime": 0.011094999999999855,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 369,
+    "ru_majflt": 0,
+    "sched_run_ns": 36826009,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 3,
+   "label": "m21_sample_7",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 40175684,
+   "t_wall": 1793748179.8650231,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.0266759999999997,
+    "ru_stime": 0.011487999999999943,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 368,
+    "ru_majflt": 0,
+    "sched_run_ns": 38162778,
+    "sched_runqueue_wait_ns": 1834564,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 4,
+   "label": "m21_sample_8",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 38739326,
+   "t_wall": 1793748179.9056494,
+   "t0_mono_ns": 15255220226957,
+   "thread_cpu_ns": 38739071,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.034127999999999936,
+    "ru_stime": 0.0048320000000001695,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 237,
+    "ru_majflt": 0,
+    "sched_run_ns": 38960270,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 4,
+   "label": "m21_sample_9",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37663291,
+   "t_wall": 1793748180.0837595,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.028740000000000876,
+    "ru_stime": 0.011255999999999933,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 373,
+    "ru_majflt": 0,
+    "sched_run_ns": 39996461,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 5,
+   "label": "m21_sample_10",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 39116273,
+   "t_wall": 1793748180.1218667,
+   "t0_mono_ns": 15255436444305,
+   "thread_cpu_ns": 39115784,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03059199999999951,
+    "ru_stime": 0.008963000000000054,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 261,
+    "ru_majflt": 0,
+    "sched_run_ns": 39554114,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 5,
+   "label": "m21_sample_11",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 39224163,
+   "t_wall": 1793748180.2874038,
+   "t0_mono_ns": 15255601982890,
+   "thread_cpu_ns": 38741094,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03341499999999975,
+    "ru_stime": 0.007302999999999837,
+    "ru_nvcsw": 3,
+    "ru_nivcsw": 1,
+    "ru_minflt": 1272,
+    "ru_majflt": 0,
+    "sched_run_ns": 40718037,
+    "sched_runqueue_wait_ns": 7023,
+    "sched_timeslices": 4
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 6,
+   "label": "m21_sample_12",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37641809,
+   "t_wall": 1793748180.3270955,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.027109000000000272,
+    "ru_stime": 0.007684999999999942,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 366,
+    "ru_majflt": 0,
+    "sched_run_ns": 34793722,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 6,
+   "label": "m21_sample_13",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 38522171,
+   "t_wall": 1793748180.492534,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.02800099999999972,
+    "ru_stime": 0.011995999999999896,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 367,
+    "ru_majflt": 0,
+    "sched_run_ns": 39997343,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 7,
+   "label": "m21_sample_14",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 39082967,
+   "t_wall": 1793748180.531519,
+   "t0_mono_ns": 15255846096680,
+   "thread_cpu_ns": 39083523,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03686100000000003,
+    "ru_stime": 0.004314000000000151,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 235,
+    "ru_majflt": 0,
+    "sched_run_ns": 41174622,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 7,
+   "label": "m21_sample_15",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 38078714,
+   "t_wall": 1793748180.6968052,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.0202599999999995,
+    "ru_stime": 0.01973899999999995,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 364,
+    "ru_majflt": 0,
+    "sched_run_ns": 39998094,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 8,
+   "label": "m21_sample_16",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40045249,
+   "t_wall": 1793748180.7353203,
+   "t0_mono_ns": 15256049897777,
+   "thread_cpu_ns": 40044953,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03743600000000047,
+    "ru_stime": 0.004501000000000088,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 261,
+    "ru_majflt": 0,
+    "sched_run_ns": 41936895,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 8,
+   "label": "m21_sample_17",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40652507,
+   "t_wall": 1793748180.9011738,
+   "t0_mono_ns": 15256215752850,
+   "thread_cpu_ns": 40576299,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03668300000000002,
+    "ru_stime": 0.007639999999999869,
+    "ru_nvcsw": 1,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1284,
+    "ru_majflt": 0,
+    "sched_run_ns": 44322481,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 9,
+   "label": "m21_sample_18",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37568235,
+   "t_wall": 1793748180.942291,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03168599999999966,
+    "ru_stime": 0.003909000000000162,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 367,
+    "ru_majflt": 0,
+    "sched_run_ns": 35595349,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 9,
+   "label": "m21_sample_19",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 38426364,
+   "t_wall": 1793748181.1122193,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.035988000000000575,
+    "ru_stime": 0.004010000000000069,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 342,
+    "ru_majflt": 0,
+    "sched_run_ns": 39997904,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 10,
+   "label": "m21_sample_20",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40185213,
+   "t_wall": 1793748181.1510792,
+   "t0_mono_ns": 15256465657004,
+   "thread_cpu_ns": 40185770,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03339299999999934,
+    "ru_stime": 0.008444999999999814,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 235,
+    "ru_majflt": 0,
+    "sched_run_ns": 41836986,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 10,
+   "label": "m21_sample_21",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40710520,
+   "t_wall": 1793748181.3212538,
+   "t0_mono_ns": 15256635833046,
+   "thread_cpu_ns": 40710864,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03680000000000039,
+    "ru_stime": 0.007738000000000023,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 236,
+    "ru_majflt": 0,
+    "sched_run_ns": 44537578,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 11,
+   "label": "m21_sample_22",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37548898,
+   "t_wall": 1793748181.3624375,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.027584000000000053,
+    "ru_stime": 0.007873000000000019,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 403,
+    "ru_majflt": 0,
+    "sched_run_ns": 35457318,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 11,
+   "label": "m21_sample_23",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 38871243,
+   "t_wall": 1793748181.528648,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03199600000000036,
+    "ru_stime": 0.008002000000000065,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 403,
+    "ru_majflt": 0,
+    "sched_run_ns": 39997473,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 12,
+   "label": "m21_sample_24",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 41777156,
+   "t_wall": 1793748181.5679848,
+   "t0_mono_ns": 15256882562251,
+   "thread_cpu_ns": 41581432,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.04009499999999999,
+    "ru_stime": 0.004042999999999797,
+    "ru_nvcsw": 2,
+    "ru_nivcsw": 1,
+    "ru_minflt": 1257,
+    "ru_majflt": 0,
+    "sched_run_ns": 44138042,
+    "sched_runqueue_wait_ns": 33263,
+    "sched_timeslices": 3
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 12,
+   "label": "m21_sample_25",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40729247,
+   "t_wall": 1793748181.7356873,
+   "t0_mono_ns": 15257050265839,
+   "thread_cpu_ns": 39158856,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.04021399999999975,
+    "ru_stime": 0.0012050000000001226,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 236,
+    "ru_majflt": 0,
+    "sched_run_ns": 41418694,
+    "sched_runqueue_wait_ns": 1567127,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 13,
+   "label": "m21_sample_26",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 36772309,
+   "t_wall": 1793748181.7769496,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03700600000000076,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 340,
+    "ru_majflt": 0,
+    "sched_run_ns": 37005619,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 13,
+   "label": "m21_sample_27",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40654060,
+   "t_wall": 1793748181.9460511,
+   "t0_mono_ns": 15257260629688,
+   "thread_cpu_ns": 40655088,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03761300000000034,
+    "ru_stime": 0.0036650000000000293,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 237,
+    "ru_majflt": 0,
+    "sched_run_ns": 41277897,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 14,
+   "label": "m21_sample_28",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37372261,
+   "t_wall": 1793748181.9871752,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.026997999999999855,
+    "ru_stime": 0.007717999999999892,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 386,
+    "ru_majflt": 0,
+    "sched_run_ns": 34716967,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 14,
+   "label": "m21_sample_29",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 38679177,
+   "t_wall": 1793748182.152622,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.02400800000000025,
+    "ru_stime": 0.01598900000000003,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 402,
+    "ru_majflt": 0,
+    "sched_run_ns": 39997353,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 15,
+   "label": "m21_sample_30",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40106619,
+   "t_wall": 1793748182.1917326,
+   "t0_mono_ns": 15257506310778,
+   "thread_cpu_ns": 39960142,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03777000000000008,
+    "ru_stime": 0.0044960000000000555,
+    "ru_nvcsw": 2,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1263,
+    "ru_majflt": 0,
+    "sched_run_ns": 42265627,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 2
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 15,
+   "label": "m21_sample_31",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40938795,
+   "t_wall": 1793748182.3586898,
+   "t0_mono_ns": 15257673269016,
+   "thread_cpu_ns": 40939657,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.04220200000000052,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 233,
+    "ru_majflt": 0,
+    "sched_run_ns": 42202487,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 16,
+   "label": "m21_sample_32",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 36971779,
+   "t_wall": 1793748182.4000945,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.033793000000000184,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 342,
+    "ru_majflt": 0,
+    "sched_run_ns": 33792947,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 16,
+   "label": "m21_sample_33",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40876574,
+   "t_wall": 1793748182.5626745,
+   "t0_mono_ns": 15257877253107,
+   "thread_cpu_ns": 40849436,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.034094999999999764,
+    "ru_stime": 0.008001999999999843,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 235,
+    "ru_majflt": 0,
+    "sched_run_ns": 42096988,
+    "sched_runqueue_wait_ns": 27422,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 17,
+   "label": "m21_sample_34",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37323296,
+   "t_wall": 1793748182.6040087,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03030799999999978,
+    "ru_stime": 0.0035640000000001226,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 387,
+    "ru_majflt": 0,
+    "sched_run_ns": 33871315,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 17,
+   "label": "m21_sample_35",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37099248,
+   "t_wall": 1793748182.7707644,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.02799900000000033,
+    "ru_stime": 0.00799900000000009,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 403,
+    "ru_majflt": 0,
+    "sched_run_ns": 35997280,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 18,
+   "label": "m21_sample_36",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 39969320,
+   "t_wall": 1793748182.8083184,
+   "t0_mono_ns": 15258122896553,
+   "thread_cpu_ns": 39775633,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.038119000000000014,
+    "ru_stime": 0.004547000000000079,
+    "ru_nvcsw": 1,
+    "ru_nivcsw": 1,
+    "ru_minflt": 1274,
+    "ru_majflt": 0,
+    "sched_run_ns": 42666576,
+    "sched_runqueue_wait_ns": 48391,
+    "sched_timeslices": 2
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 18,
+   "label": "m21_sample_37",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40861805,
+   "t_wall": 1793748182.9740286,
+   "t0_mono_ns": 15258288607351,
+   "thread_cpu_ns": 40863994,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.04146500000000053,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 234,
+    "ru_majflt": 0,
+    "sched_run_ns": 41465322,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 19,
+   "label": "m21_sample_38",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 65636373,
+   "t_wall": 1793748183.0155728,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.05504799999999932,
+    "ru_stime": 0.007460999999999718,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 342,
+    "ru_majflt": 0,
+    "sched_run_ns": 62508701,
+    "sched_runqueue_wait_ns": 19407,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 19,
+   "label": "m21_sample_39",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 41014233,
+   "t_wall": 1793748183.2352726,
+   "t0_mono_ns": 15258549851835,
+   "thread_cpu_ns": 41014309,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.042294000000000054,
+    "ru_stime": 0.0005660000000000664,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 236,
+    "ru_majflt": 0,
+    "sched_run_ns": 42860093,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 20,
+   "label": "m21_sample_40",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37486836,
+   "t_wall": 1793748183.2767186,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.02969299999999997,
+    "ru_stime": 0.007442999999999866,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 376,
+    "ru_majflt": 0,
+    "sched_run_ns": 37134843,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 20,
+   "label": "m21_sample_41",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 39467719,
+   "t_wall": 1793748183.4422684,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03197500000000009,
+    "ru_stime": 0.007994000000000057,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 377,
+    "ru_majflt": 0,
+    "sched_run_ns": 39969199,
+    "sched_runqueue_wait_ns": 28244,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 21,
+   "label": "m21_sample_42",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40186835,
+   "t_wall": 1793748183.4821723,
+   "t0_mono_ns": 15258796750015,
+   "thread_cpu_ns": 40186281,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.036748999999999477,
+    "ru_stime": 0.00418200000000013,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 261,
+    "ru_majflt": 0,
+    "sched_run_ns": 40930890,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 21,
+   "label": "m21_sample_43",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 111996500,
+   "t_wall": 1793748183.6464233,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.09785500000000003,
+    "ru_stime": 0.011327000000000087,
+    "ru_nvcsw": 5,
+    "ru_nivcsw": 1,
+    "ru_minflt": 1390,
+    "ru_majflt": 0,
+    "sched_run_ns": 109181122,
+    "sched_runqueue_wait_ns": 2213801,
+    "sched_timeslices": 6
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 22,
+   "label": "m21_sample_44",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 63509974,
+   "t_wall": 1793748183.7588751,
+   "t0_mono_ns": 15259073453128,
+   "thread_cpu_ns": 63508685,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.05277699999999985,
+    "ru_stime": 0.01217899999999994,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 238,
+    "ru_majflt": 0,
+    "sched_run_ns": 64956095,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 22,
+   "label": "m21_sample_45",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 64267766,
+   "t_wall": 1793748183.96626,
+   "t0_mono_ns": 15259280838781,
+   "thread_cpu_ns": 64267020,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.05703399999999981,
+    "ru_stime": 0.008065999999999907,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 234,
+    "ru_majflt": 0,
+    "sched_run_ns": 65098935,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 23,
+   "label": "m21_sample_46",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 112255556,
+   "t_wall": 1793748184.0310388,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.09112600000000004,
+    "ru_stime": 0.019803000000000015,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 366,
+    "ru_majflt": 0,
+    "sched_run_ns": 110929692,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 23,
+   "label": "m21_sample_47",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 62634893,
+   "t_wall": 1793748184.2739081,
+   "t0_mono_ns": 15259588486767,
+   "thread_cpu_ns": 62634219,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.04655400000000043,
+    "ru_stime": 0.016561000000000048,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 257,
+    "ru_majflt": 0,
+    "sched_run_ns": 63114599,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 24,
+   "label": "m21_sample_48",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 111985067,
+   "t_wall": 1793748184.3370488,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.08546399999999998,
+    "ru_stime": 0.023428000000000004,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 377,
+    "ru_majflt": 0,
+    "sched_run_ns": 108892946,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 24,
+   "label": "m21_sample_49",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 53546360,
+   "t_wall": 1793748184.5751097,
+   "t0_mono_ns": 15259889688478,
+   "thread_cpu_ns": 53407421,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.046516000000000446,
+    "ru_stime": 0.008555999999999786,
+    "ru_nvcsw": 1,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1262,
+    "ru_majflt": 0,
+    "sched_run_ns": 55071482,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 25,
+   "label": "m21_sample_50",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37590878,
+   "t_wall": 1793748184.62913,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.02534599999999898,
+    "ru_stime": 0.011406999999999945,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 369,
+    "ru_majflt": 0,
+    "sched_run_ns": 36753742,
+    "sched_runqueue_wait_ns": 11973,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 25,
+   "label": "m21_sample_51",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40903739,
+   "t_wall": 1793748184.799181,
+   "t0_mono_ns": 15260113759759,
+   "thread_cpu_ns": 40904100,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03418499999999902,
+    "ru_stime": 0.00847399999999987,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 238,
+    "ru_majflt": 0,
+    "sched_run_ns": 42658100,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 26,
+   "label": "m21_sample_52",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37474131,
+   "t_wall": 1793748184.8405564,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03733700000000084,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 365,
+    "ru_majflt": 0,
+    "sched_run_ns": 37337067,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 26,
+   "label": "m21_sample_53",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37911396,
+   "t_wall": 1793748185.0053384,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.02844499999999961,
+    "ru_stime": 0.011552000000000007,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 370,
+    "ru_majflt": 0,
+    "sched_run_ns": 39997373,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 27,
+   "label": "m21_sample_54",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40277393,
+   "t_wall": 1793748185.0436668,
+   "t0_mono_ns": 15260358244871,
+   "thread_cpu_ns": 40265000,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03805999999999976,
+    "ru_stime": 0.004445000000000032,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 261,
+    "ru_majflt": 0,
+    "sched_run_ns": 42504440,
+    "sched_runqueue_wait_ns": 11922,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 27,
+   "label": "m21_sample_55",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40695710,
+   "t_wall": 1793748185.2097497,
+   "t0_mono_ns": 15260524328688,
+   "thread_cpu_ns": 40557542,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03713899999999981,
+    "ru_stime": 0.003742000000000134,
+    "ru_nvcsw": 1,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1274,
+    "ru_majflt": 0,
+    "sched_run_ns": 40879552,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 28,
+   "label": "m21_sample_56",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 38529855,
+   "t_wall": 1793748185.250958,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03514999999999979,
+    "ru_stime": 0.003825999999999885,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 368,
+    "ru_majflt": 0,
+    "sched_run_ns": 38975879,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 28,
+   "label": "m21_sample_57",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40947042,
+   "t_wall": 1793748185.419499,
+   "t0_mono_ns": 15260734077923,
+   "thread_cpu_ns": 40947602,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.042495000000000616,
+    "ru_stime": 0.0005250000000001087,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 235,
+    "ru_majflt": 0,
+    "sched_run_ns": 43019374,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 29,
+   "label": "m21_sample_58",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37018700,
+   "t_wall": 1793748185.4609022,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.029481999999999786,
+    "ru_stime": 0.007478999999999791,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 342,
+    "ru_majflt": 0,
+    "sched_run_ns": 36962006,
+    "sched_runqueue_wait_ns": 13756,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 29,
+   "label": "m21_sample_59",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40951521,
+   "t_wall": 1793748185.624066,
+   "t0_mono_ns": 15260938644443,
+   "thread_cpu_ns": 40921402,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03495999999999988,
+    "ru_stime": 0.008599999999999941,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 246,
+    "ru_majflt": 0,
+    "sched_run_ns": 43559807,
+    "sched_runqueue_wait_ns": 30638,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 30,
+   "label": "m21_sample_60",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37145969,
+   "t_wall": 1793748185.665611,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.029014000000000095,
+    "ru_stime": 0.006984000000000101,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 378,
+    "ru_majflt": 0,
+    "sched_run_ns": 35997731,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 30,
+   "label": "m21_sample_61",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 40238447,
+   "t_wall": 1793748185.8322618,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.026842999999999506,
+    "ru_stime": 0.012563999999999798,
+    "ru_nvcsw": 2,
+    "ru_nivcsw": 1,
+    "ru_minflt": 1423,
+    "ru_majflt": 0,
+    "sched_run_ns": 39406345,
+    "sched_runqueue_wait_ns": 368036,
+    "sched_timeslices": 3
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 31,
+   "label": "m21_sample_62",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40202746,
+   "t_wall": 1793748185.8729794,
+   "t0_mono_ns": 15261187556983,
+   "thread_cpu_ns": 40193093,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.0391130000000004,
+    "ru_stime": 0.004630000000000134,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 235,
+    "ru_majflt": 0,
+    "sched_run_ns": 43743434,
+    "sched_runqueue_wait_ns": 9809,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 31,
+   "label": "m21_sample_63",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40550426,
+   "t_wall": 1793748186.050208,
+   "t0_mono_ns": 15261364786916,
+   "thread_cpu_ns": 40551192,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.02972300000000061,
+    "ru_stime": 0.011606999999999923,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 233,
+    "ru_majflt": 0,
+    "sched_run_ns": 41331309,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 32,
+   "label": "m21_sample_64",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37805669,
+   "t_wall": 1793748186.0912275,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.030884000000000356,
+    "ru_stime": 0.0037800000000001166,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 340,
+    "ru_majflt": 0,
+    "sched_run_ns": 34663725,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 32,
+   "label": "m21_sample_65",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 38085416,
+   "t_wall": 1793748186.2550106,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03199699999999872,
+    "ru_stime": 0.004000999999999921,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 369,
+    "ru_majflt": 0,
+    "sched_run_ns": 35997892,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 33,
+   "label": "m21_sample_66",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 39640156,
+   "t_wall": 1793748186.2935407,
+   "t0_mono_ns": 15261608117770,
+   "thread_cpu_ns": 39639676,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.031131000000000242,
+    "ru_stime": 0.008611999999999842,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 260,
+    "ru_majflt": 0,
+    "sched_run_ns": 39741970,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 33,
+   "label": "m21_sample_67",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40442395,
+   "t_wall": 1793748186.4612281,
+   "t0_mono_ns": 15261775807036,
+   "thread_cpu_ns": 40442816,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.04424299999999981,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 262,
+    "ru_majflt": 0,
+    "sched_run_ns": 44242740,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 34,
+   "label": "m21_sample_68",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 45789670,
+   "t_wall": 1793748186.5021398,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.035830999999999946,
+    "ru_stime": 0.007308000000000092,
+    "ru_nvcsw": 3,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1409,
+    "ru_majflt": 0,
+    "sched_run_ns": 43139520,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 3
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 34,
+   "label": "m21_sample_69",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40665633,
+   "t_wall": 1793748186.680318,
+   "t0_mono_ns": 15261994898660,
+   "thread_cpu_ns": 40666901,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.04297599999999946,
+    "ru_stime": 0.0005720000000000169,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 236,
+    "ru_majflt": 0,
+    "sched_run_ns": 43547795,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 35,
+   "label": "m21_sample_70",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37421318,
+   "t_wall": 1793748186.721445,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.033002999999999005,
+    "ru_stime": 0.003434000000000159,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 340,
+    "ru_majflt": 0,
+    "sched_run_ns": 36436782,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 35,
+   "label": "m21_sample_71",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 38194489,
+   "t_wall": 1793748186.8886418,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03999200000000158,
+    "ru_stime": 4.999999999810711e-06,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 366,
+    "ru_majflt": 0,
+    "sched_run_ns": 39997042,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 36,
+   "label": "m21_sample_72",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40016733,
+   "t_wall": 1793748186.9272702,
+   "t0_mono_ns": 15262241847519,
+   "thread_cpu_ns": 40016178,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.03356699999999968,
+    "ru_stime": 0.008291000000000048,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 253,
+    "ru_majflt": 0,
+    "sched_run_ns": 41857965,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 36,
+   "label": "m21_sample_73",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 40708565,
+   "t_wall": 1793748187.0959604,
+   "t0_mono_ns": 15262410540429,
+   "thread_cpu_ns": 40709802,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.04301199999999916,
+    "ru_stime": 0.00023200000000000998,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 261,
+    "ru_majflt": 0,
+    "sched_run_ns": 43243239,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 37,
+   "label": "m21_sample_74",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 41624749,
+   "t_wall": 1793748187.1371703,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03700599999999987,
+    "ru_stime": 0.0034530000000001504,
+    "ru_nvcsw": 2,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1412,
+    "ru_majflt": 0,
+    "sched_run_ns": 40459227,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 2
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 37,
+   "label": "m21_sample_75",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 43136443,
+   "t_wall": 1793748187.3126786,
+   "t0_mono_ns": 15262627256948,
+   "thread_cpu_ns": 43136606,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.042020000000000834,
+    "ru_stime": 0.0043679999999999275,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 234,
+    "ru_majflt": 0,
+    "sched_run_ns": 46387311,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 38,
+   "label": "m21_sample_76",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 37338526,
+   "t_wall": 1793748187.3563151,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03397099999999931,
+    "ru_stime": 0.0036360000000001946,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 340,
+    "ru_majflt": 0,
+    "sched_run_ns": 37607258,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 38,
+   "label": "m21_sample_77",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 52161061,
+   "t_wall": 1793748187.5357912,
+   "t0_mono_ns": 15262850369986,
+   "thread_cpu_ns": 51999615,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.04200799999999916,
+    "ru_stime": 0.012354000000000198,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 235,
+    "ru_majflt": 0,
+    "sched_run_ns": 54362789,
+    "sched_runqueue_wait_ns": 161987,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 39,
+   "label": "m21_sample_78",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 42878960,
+   "t_wall": 1793748187.5886397,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.037850000000000605,
+    "ru_stime": 0.003618999999999817,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 381,
+    "ru_majflt": 0,
+    "sched_run_ns": 41468589,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "rep": 39,
+   "label": "m21_sample_79",
+   "warmup": false,
+   "stage": "profiled"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 88286036,
+   "t_wall": 1793748190.2643747,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.07961599999999969,
+    "ru_stime": 0.007926000000000322,
+    "ru_nvcsw": 2,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1,
+    "ru_majflt": 1,
+    "sched_run_ns": 87542395,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 2
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 146060747,
+   "t_wall": 1793748190.353018,
+   "t0_mono_ns": 15265667595812,
+   "thread_cpu_ns": 145777327,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.13712500000000105,
+    "ru_stime": 0.012242999999999782,
+    "ru_nvcsw": 2,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1,
+    "ru_majflt": 1,
+    "sched_run_ns": 149367444,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 2
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 32932160,
+   "t_wall": 1793748190.633135,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03226499999999888,
+    "ru_stime": 0.0037329999999999863,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 35997430,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 106999118,
+   "t_wall": 1793748190.6664095,
+   "t0_mono_ns": 15265980986900,
+   "thread_cpu_ns": 106994700,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.10729500000000058,
+    "ru_stime": 0.0006809999999997096,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1,
+    "ru_majflt": 0,
+    "sched_run_ns": 107993271,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 42241404,
+   "t_wall": 1793748190.9078572,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.04064999999999941,
+    "ru_stime": 0.0033460000000005152,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 43996745,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 71717257,
+   "t_wall": 1793748190.9504652,
+   "t0_mono_ns": 15266265042909,
+   "thread_cpu_ns": 71715573,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.06862300000000054,
+    "ru_stime": 0.004129999999999967,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1,
+    "ru_majflt": 0,
+    "sched_run_ns": 72752947,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 93575410,
+   "t_wall": 1793748191.1519375,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.08413799999999938,
+    "ru_stime": 0.01189299999999971,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 96031126,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 67562081,
+   "t_wall": 1793748191.245979,
+   "t0_mono_ns": 15266560557149,
+   "thread_cpu_ns": 67560355,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.06805499999999931,
+    "ru_stime": 2.0000000000131024e-05,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 68074639,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 94051491,
+   "t_wall": 1793748191.4484303,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.0680139999999998,
+    "ru_stime": 0.027979000000000198,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 95994066,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 67157499,
+   "t_wall": 1793748191.5428536,
+   "t0_mono_ns": 15266857431658,
+   "thread_cpu_ns": 67155509,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.06448199999999993,
+    "ru_stime": 0.0040999999999997705,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 68581369,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 31059217,
+   "t_wall": 1793748191.7472942,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.028409999999999158,
+    "ru_stime": 0.003587000000000007,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31998019,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 64119348,
+   "t_wall": 1793748191.7786546,
+   "t0_mono_ns": 15267093232074,
+   "thread_cpu_ns": 64117457,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.057124999999999204,
+    "ru_stime": 0.008218999999999976,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 65344039,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 31539717,
+   "t_wall": 1793748191.9677138,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03199799999999975,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31997628,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 64157723,
+   "t_wall": 1793748191.9995987,
+   "t0_mono_ns": 15267314176208,
+   "thread_cpu_ns": 64156492,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.05815300000000079,
+    "ru_stime": 0.008173999999999904,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 66327331,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 31326309,
+   "t_wall": 1793748192.2007298,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.024357999999999436,
+    "ru_stime": 0.007640000000000313,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31997728,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 63898596,
+   "t_wall": 1793748192.2324052,
+   "t0_mono_ns": 15267546983040,
+   "thread_cpu_ns": 63896789,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.062414000000000414,
+    "ru_stime": 0.0044599999999999085,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 66873996,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 31795847,
+   "t_wall": 1793748192.4286342,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.02845600000000026,
+    "ru_stime": 0.0035609999999999253,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 32017245,
+    "sched_runqueue_wait_ns": 4378,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 64457431,
+   "t_wall": 1793748192.4607816,
+   "t0_mono_ns": 15267775362242,
+   "thread_cpu_ns": 64451070,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.059181999999999846,
+    "ru_stime": 0.008595999999999826,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 67777756,
+    "sched_runqueue_wait_ns": 8627,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 30919604,
+   "t_wall": 1793748192.665192,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.020588999999999302,
+    "ru_stime": 0.011409000000000002,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31997989,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 63981057,
+   "t_wall": 1793748192.6964772,
+   "t0_mono_ns": 15268011055090,
+   "thread_cpu_ns": 63979596,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.06654900000000019,
+    "ru_stime": 0.00048000000000003595,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 67028869,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 30732048,
+   "t_wall": 1793748192.8889215,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.02845800000000054,
+    "ru_stime": 0.0035400000000000986,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31998009,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 64068197,
+   "t_wall": 1793748192.9199953,
+   "t0_mono_ns": 15268234572917,
+   "thread_cpu_ns": 64066370,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.05822500000000019,
+    "ru_stime": 0.008407999999999749,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 66633671,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 31059798,
+   "t_wall": 1793748193.110532,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.028394000000000474,
+    "ru_stime": 0.0036040000000001626,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31998209,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 63800645,
+   "t_wall": 1793748193.1419423,
+   "t0_mono_ns": 15268456519671,
+   "thread_cpu_ns": 63798784,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.060261000000000564,
+    "ru_stime": 0.004052000000000167,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 64313068,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 30359378,
+   "t_wall": 1793748193.3331776,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.02802300000000102,
+    "ru_stime": 0.003962000000000021,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31985034,
+    "sched_runqueue_wait_ns": 13055,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 63813400,
+   "t_wall": 1793748193.3638816,
+   "t0_mono_ns": 15268678459202,
+   "thread_cpu_ns": 63811568,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.06591499999999861,
+    "ru_stime": 0.00035099999999976816,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 66265113,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 29238177,
+   "t_wall": 1793748193.5534248,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.028324999999998823,
+    "ru_stime": 0.0036650000000002514,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31990505,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 64590820,
+   "t_wall": 1793748193.5830762,
+   "t0_mono_ns": 15268897654556,
+   "thread_cpu_ns": 64578170,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.065885999999999,
+    "ru_stime": 0.00034099999999970265,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 66226831,
+    "sched_runqueue_wait_ns": 10780,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 31243117,
+   "t_wall": 1793748193.7734652,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.028322000000002845,
+    "ru_stime": 0.003675000000000317,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31998118,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 64653322,
+   "t_wall": 1793748193.8050642,
+   "t0_mono_ns": 15269119641459,
+   "thread_cpu_ns": 64651619,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.06823699999999988,
+    "ru_stime": 4.999999999988347e-05,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 68287202,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 31261103,
+   "t_wall": 1793748193.996215,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.024031999999998277,
+    "ru_stime": 0.007965999999999696,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31998019,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 66210407,
+   "t_wall": 1793748194.0278215,
+   "t0_mono_ns": 15269342398970,
+   "thread_cpu_ns": 66208697,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.06051199999999923,
+    "ru_stime": 0.008090000000000153,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 68602148,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 29720669,
+   "t_wall": 1793748194.2324524,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.028074000000000154,
+    "ru_stime": 0.003923000000000343,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31997597,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 69443520,
+   "t_wall": 1793748194.2625191,
+   "t0_mono_ns": 15269577096849,
+   "thread_cpu_ns": 68023502,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.06894499999999937,
+    "ru_stime": 0.00016999999999978144,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 69114919,
+    "sched_runqueue_wait_ns": 1417944,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 27863929,
+   "t_wall": 1793748194.4611433,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.027997000000002714,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 27997786,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 68259113,
+   "t_wall": 1793748194.489363,
+   "t0_mono_ns": 15269803941693,
+   "thread_cpu_ns": 68251203,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.07218699999999956,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 72186232,
+    "sched_runqueue_wait_ns": 6673,
+    "sched_timeslices": 1
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 29677636,
+   "t_wall": 1793748194.682705,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.02033800000000241,
+    "ru_stime": 0.00766,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 27998246,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 65949527,
+   "t_wall": 1793748194.712749,
+   "t0_mono_ns": 15270027327001,
+   "thread_cpu_ns": 65948333,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.0610849999999985,
+    "ru_stime": 0.008183999999999969,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 69269501,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 30598286,
+   "t_wall": 1793748194.9067929,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "mode": "plain",
+   "rusage_delta": {
+    "ru_utime": 0.03199799999999797,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31998399,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "around_call",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  },
+  {
+   "path": "full_nocache",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "mode": "plain",
+   "e2e_ns": 65957632,
+   "t_wall": 1793748194.937757,
+   "t0_mono_ns": 15270252334541,
+   "thread_cpu_ns": 65955326,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "no_cache_system",
+   "first_token": 7354,
+   "rusage_delta": {
+    "ru_utime": 0.058125000000000426,
+    "ru_stime": 0.008159000000000027,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 66284239,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "rusage_scope": "timed_region",
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "prof",
+   "warmup": false,
+   "stage": "unprofiled_reference"
+  }
+ ],
+ "correctness": [],
+ "failures": [],
+ "blocks": [],
+ "profile": {
+  "per_sample": {
+   "m21_sample_0": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      11313.510000000417
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.5129999999771826
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      60.47799999997369
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      4072.363000000012
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      33.57999999972526
+     ],
+     "cudaMemsetAsync": [
+      57,
+      343.48299999994924
+     ],
+     "cuLaunchKernel": [
+      28,
+      360.13099999999395
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      62.33400000006077
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      153.31499999997322
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.7189999999827705
+     ]
+    },
+    "kernel_us": 35147.52099999928,
+    "n_kernels": 1147,
+    "memcpy_us": 23.7149999999383
+   },
+   "m21_sample_1": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      71.29399999996531
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      1574.5640000000712
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4468.8179999997665
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      12549.999000000273
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      49.64899999994668
+     ],
+     "cudaMemsetAsync": [
+      1,
+      10.78100000001723
+     ]
+    },
+    "kernel_us": 9840.821999999753,
+    "n_kernels": 1343,
+    "memcpy_us": 1266.9969999999448
+   },
+   "m21_sample_2": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8661.603999999526
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.603000000002794
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      62.23199999995995
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      12324.27099999995
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.85500000003958
+     ],
+     "cudaMemsetAsync": [
+      57,
+      232.32599999988452
+     ],
+     "cuLaunchKernel": [
+      28,
+      278.91400000004796
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      55.09800000011455
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      115.09500000003027
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.387999999977183
+     ]
+    },
+    "kernel_us": 35143.09800000163,
+    "n_kernels": 1147,
+    "memcpy_us": 32.7379999999539
+   },
+   "m21_sample_3": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      36.078999999852385
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      993.9740000003367
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4814.5600000002305
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10443.723000000173
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      47.184000000183005
+     ],
+     "cudaMemsetAsync": [
+      1,
+      10.130000000004657
+     ]
+    },
+    "kernel_us": 9847.183000000194,
+    "n_kernels": 1343,
+    "memcpy_us": 1252.8230000000913
+   },
+   "m21_sample_4": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8500.579000001657
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.753000000026077
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      68.07300000009127
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      12459.123999999953
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.80699999863282
+     ],
+     "cudaMemsetAsync": [
+      57,
+      244.53799999994226
+     ],
+     "cuLaunchKernel": [
+      28,
+      256.64999999990687
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      48.70499999995809
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      122.27000000001863
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.660000000032596
+     ]
+    },
+    "kernel_us": 35137.041999998735,
+    "n_kernels": 1147,
+    "memcpy_us": 22.371999999624677
+   },
+   "m21_sample_5": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      34.47400000039488
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      1003.2510000001639
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4739.398999999976
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10580.830000001704
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      45.6390000001993
+     ],
+     "cudaMemsetAsync": [
+      1,
+      9.888999999966472
+     ]
+    },
+    "kernel_us": 9844.596000000485,
+    "n_kernels": 1343,
+    "memcpy_us": 1247.7989999993006
+   },
+   "m21_sample_6": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      13391.854999998002
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.964000000152737
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      63.24400000006426
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      3394.9409999999916
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      29.721000000135973
+     ],
+     "cudaMemsetAsync": [
+      57,
+      283.6129999997793
+     ],
+     "cuLaunchKernel": [
+      28,
+      306.3810000005178
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      52.472000000067055
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      139.81299999984913
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      5.530999999959022
+     ]
+    },
+    "kernel_us": 35134.66000000085,
+    "n_kernels": 1147,
+    "memcpy_us": 32.67299999995157
+   },
+   "m21_sample_7": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      34.54799999925308
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      979.5979999997653
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4976.9679999999935
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10555.01100000285
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.864000000292435
+     ],
+     "cudaMemsetAsync": [
+      1,
+      13.285999999963678
+     ]
+    },
+    "kernel_us": 9839.501000000862,
+    "n_kernels": 1343,
+    "memcpy_us": 1252.8459999994375
+   },
+   "m21_sample_8": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      34.93500000052154
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      975.8100000004051
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      4836.346999999718
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      12125.06600000069
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.853999999701045
+     ],
+     "cudaMemsetAsync": [
+      1,
+      13.837000000057742
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.798999999999069
+     ]
+    },
+    "kernel_us": 9814.544999999343,
+    "n_kernels": 1343,
+    "memcpy_us": 1241.0150000001304
+   },
+   "m21_sample_9": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8328.863000000827
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.4710000000195578
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      31.65099999983795
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      12123.847999999998
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      25.951999999699183
+     ],
+     "cudaMemsetAsync": [
+      57,
+      230.33100000035483
+     ],
+     "cuLaunchKernel": [
+      28,
+      236.7699999999022
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.11999999999534
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      115.26599999971222
+     ]
+    },
+    "kernel_us": 35137.61599999922,
+    "n_kernels": 1147,
+    "memcpy_us": 23.01100000005681
+   },
+   "m21_sample_10": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      33.13300000084564
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      992.3739999982063
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      4581.378000000725
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10092.770000000019
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.75499999965541
+     ],
+     "cudaMemsetAsync": [
+      1,
+      11.722999999998137
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.669999999925494
+     ]
+    },
+    "kernel_us": 9841.458000000799,
+    "n_kernels": 1343,
+    "memcpy_us": 1247.871000001207
+   },
+   "m21_sample_11": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8255.82099999534
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.4209999998565763
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      27.563000000081956
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      12682.641000000294
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.383000001311302
+     ],
+     "cudaMemsetAsync": [
+      57,
+      239.14999999990687
+     ],
+     "cuLaunchKernel": [
+      28,
+      245.87100000027567
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.261999999405816
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      121.67500000074506
+     ]
+    },
+    "kernel_us": 35144.71200000681,
+    "n_kernels": 1147,
+    "memcpy_us": 22.68900000001304
+   },
+   "m21_sample_12": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8755.593000001274
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.8440000000409782
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      52.36300000012852
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      8999.79899999965
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      25.611999998101965
+     ],
+     "cudaMemsetAsync": [
+      57,
+      242.16800000099465
+     ],
+     "cuLaunchKernel": [
+      28,
+      240.8130000003148
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.56899999920279
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      118.95399999967776
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.699000000022352
+     ]
+    },
+    "kernel_us": 35139.80300000333,
+    "n_kernels": 1147,
+    "memcpy_us": 22.7249999998603
+   },
+   "m21_sample_13": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      34.396999997552484
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      938.4319999977015
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4558.649999999441
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10084.502999994904
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      45.506999999983236
+     ],
+     "cudaMemsetAsync": [
+      1,
+      9.107000000076368
+     ]
+    },
+    "kernel_us": 9843.057999999728,
+    "n_kernels": 1343,
+    "memcpy_us": 1261.1780000000726
+   },
+   "m21_sample_14": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      34.0110000022687
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      1028.8280000011437
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      5140.746999998577
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10114.675999999745
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      49.10699999984354
+     ],
+     "cudaMemsetAsync": [
+      1,
+      13.115999999921769
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.408999999985099
+     ]
+    },
+    "kernel_us": 9816.603000003146,
+    "n_kernels": 1343,
+    "memcpy_us": 1270.239999998128
+   },
+   "m21_sample_15": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8314.320999999996
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.5310000001918525
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      26.37099999981001
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      12405.94999999972
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      25.78099999972619
+     ],
+     "cudaMemsetAsync": [
+      57,
+      243.01800000108778
+     ],
+     "cuLaunchKernel": [
+      28,
+      248.2979999994859
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.83199999970384
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      118.52900000079535
+     ]
+    },
+    "kernel_us": 35142.66399999615,
+    "n_kernels": 1147,
+    "memcpy_us": 22.781999999424443
+   },
+   "m21_sample_16": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      36.32199999829754
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      997.8809999986552
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      5193.370000000577
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10114.266000004485
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      66.4679999994114
+     ],
+     "cudaMemsetAsync": [
+      1,
+      12.423999999882653
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.3280000002123415
+     ]
+    },
+    "kernel_us": 9926.074999997625,
+    "n_kernels": 1343,
+    "memcpy_us": 1248.1489999985788
+   },
+   "m21_sample_17": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8416.167999999132
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.8909999998286366
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      30.168999999994412
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      13217.025999999838
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.601000000257045
+     ],
+     "cudaMemsetAsync": [
+      57,
+      242.6039999993518
+     ],
+     "cuLaunchKernel": [
+      28,
+      261.4739999992307
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.95300000044517
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      112.23600000166334
+     ]
+    },
+    "kernel_us": 36356.768000003416,
+    "n_kernels": 1147,
+    "memcpy_us": 28.928000001003966
+   },
+   "m21_sample_18": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8498.830999998143
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.531999999890104
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      59.166000000201166
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      10720.88500000001
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.359999999869615
+     ],
+     "cudaMemsetAsync": [
+      57,
+      259.50400000205263
+     ],
+     "cuLaunchKernel": [
+      28,
+      2796.662000000011
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.82499999902211
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      114.71699999878183
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.879999999888241
+     ]
+    },
+    "kernel_us": 36251.65300000296,
+    "n_kernels": 1147,
+    "memcpy_us": 33.34399999957532
+   },
+   "m21_sample_19": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      46.56300000054762
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      886.6349999988452
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4616.227000000887
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10030.50899999775
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.2269999999553
+     ],
+     "cudaMemsetAsync": [
+      1,
+      8.757999999914318
+     ]
+    },
+    "kernel_us": 9922.155000000494,
+    "n_kernels": 1343,
+    "memcpy_us": 1247.4080000019167
+   },
+   "m21_sample_20": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      35.152999996207654
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      962.757999997586
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      4766.433999999892
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10079.474999997765
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.19099999964237
+     ],
+     "cudaMemsetAsync": [
+      1,
+      13.76699999999255
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.41800000006333
+     ]
+    },
+    "kernel_us": 9892.932000004686,
+    "n_kernels": 1343,
+    "memcpy_us": 1250.5779999997467
+   },
+   "m21_sample_21": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8734.572999994736
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.5010000001639128
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      32.2730000000447
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      12896.600000000093
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.47100000269711
+     ],
+     "cudaMemsetAsync": [
+      57,
+      235.7269999999553
+     ],
+     "cuLaunchKernel": [
+      28,
+      272.68500000052154
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.84300000080839
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      115.43800000054762
+     ]
+    },
+    "kernel_us": 36255.351000010036,
+    "n_kernels": 1147,
+    "memcpy_us": 23.43099999940023
+   },
+   "m21_sample_22": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8418.163999996614
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.8739999998360872
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      55.58799999952316
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      14161.623000000138
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.627000000793487
+     ],
+     "cudaMemsetAsync": [
+      57,
+      235.08600000012666
+     ],
+     "cuLaunchKernel": [
+      28,
+      248.24200000008568
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      47.08000000193715
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      114.95600000396371
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.90999999968335
+     ]
+    },
+    "kernel_us": 36253.755000007804,
+    "n_kernels": 1147,
+    "memcpy_us": 33.34599999990314
+   },
+   "m21_sample_23": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      34.8549999948591
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      966.9250000007451
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4659.5539999934845
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10388.994999996852
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.50800000037998
+     ],
+     "cudaMemsetAsync": [
+      1,
+      10.480999999679625
+     ]
+    },
+    "kernel_us": 9922.226000015624,
+    "n_kernels": 1343,
+    "memcpy_us": 1257.8130000010133
+   },
+   "m21_sample_24": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      34.9089999999851
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      1034.2489999979734
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      5035.874000000302
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10537.665000006557
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      47.30299999937415
+     ],
+     "cudaMemsetAsync": [
+      1,
+      13.726000000257045
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.96999999973923
+     ]
+    },
+    "kernel_us": 9895.97200000193,
+    "n_kernels": 1343,
+    "memcpy_us": 1247.4829999986105
+   },
+   "m21_sample_25": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      11541.496999994386
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.4410000001080334
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      24.717999999877065
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      11292.43200000003
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      25.299000000115484
+     ],
+     "cudaMemsetAsync": [
+      57,
+      242.69399999966845
+     ],
+     "cuLaunchKernel": [
+      28,
+      254.285000001546
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      58.68400000454858
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      117.63899999810383
+     ]
+    },
+    "kernel_us": 36253.47100001387,
+    "n_kernels": 1147,
+    "memcpy_us": 22.725000000093132
+   },
+   "m21_sample_26": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      10682.613000004087
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.8740000003017485
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      77.07099999999627
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      9027.705999999773
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      29.12699999846518
+     ],
+     "cudaMemsetAsync": [
+      57,
+      269.6979999989271
+     ],
+     "cuLaunchKernel": [
+      28,
+      283.2219999972731
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      52.1589999999851
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      127.07500000018626
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      5.109999999869615
+     ]
+    },
+    "kernel_us": 36260.737999999896,
+    "n_kernels": 1147,
+    "memcpy_us": 33.31299999821931
+   },
+   "m21_sample_27": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      32.54800000041723
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      998.5830000001006
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4367.882000001147
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10137.994999998715
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.954000000376254
+     ],
+     "cudaMemsetAsync": [
+      1,
+      13.386000000406057
+     ]
+    },
+    "kernel_us": 9925.419999997132,
+    "n_kernels": 1343,
+    "memcpy_us": 1256.3420000015758
+   },
+   "m21_sample_28": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8334.53699999582
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.8930000001564622
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      61.450000000186265
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      13342.51099999994
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      27.432000001892447
+     ],
+     "cudaMemsetAsync": [
+      57,
+      240.90000000223517
+     ],
+     "cuLaunchKernel": [
+      28,
+      267.1129999998957
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      48.06200000131503
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      111.59700000239536
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      5.149999999906868
+     ]
+    },
+    "kernel_us": 36244.01900000777,
+    "n_kernels": 1147,
+    "memcpy_us": 22.913999998942018
+   },
+   "m21_sample_29": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      33.47499999823049
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      872.7400000016205
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4681.129000000656
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10126.154999995138
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      45.4980000006035
+     ],
+     "cudaMemsetAsync": [
+      1,
+      9.507999999914318
+     ]
+    },
+    "kernel_us": 9924.984999996144,
+    "n_kernels": 1343,
+    "memcpy_us": 1253.5320000061765
+   },
+   "m21_sample_30": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      35.80599999986589
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      1016.2069999971427
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      4878.596999997739
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10486.37500001071
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      49.186000001616776
+     ],
+     "cudaMemsetAsync": [
+      1,
+      12.683999999891967
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.28899999987334
+     ]
+    },
+    "kernel_us": 9893.17600000184,
+    "n_kernels": 1343,
+    "memcpy_us": 1244.9549999986775
+   },
+   "m21_sample_31": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      11301.977000005078
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.46100000012665987
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      32.52400000067428
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      9668.947999999858
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.701999998185784
+     ],
+     "cudaMemsetAsync": [
+      57,
+      241.6940000001341
+     ],
+     "cuLaunchKernel": [
+      28,
+      267.0529999989085
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      47.43299999926239
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      130.23900000099093
+     ]
+    },
+    "kernel_us": 36256.30299999844,
+    "n_kernels": 1147,
+    "memcpy_us": 22.818999998271465
+   },
+   "m21_sample_32": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8413.19600000605
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.843999999575317
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      55.60900000017136
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      13341.518999999389
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      25.24299999885261
+     ],
+     "cudaMemsetAsync": [
+      57,
+      235.757999998983
+     ],
+     "cuLaunchKernel": [
+      28,
+      252.12299999874085
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      48.7140000006184
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      126.61699999962002
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      5.078999999910593
+     ]
+    },
+    "kernel_us": 36256.34300000174,
+    "n_kernels": 1147,
+    "memcpy_us": 22.686999999918044
+   },
+   "m21_sample_33": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      32.70999999763444
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      920.2700000004843
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      3996.0500000026077
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10423.450000017416
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      45.737999997567385
+     ],
+     "cudaMemsetAsync": [
+      1,
+      10.331000000238419
+     ]
+    },
+    "kernel_us": 9925.74300001096,
+    "n_kernels": 1343,
+    "memcpy_us": 1239.0640000002459
+   },
+   "m21_sample_34": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8685.883999995422
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.824000000488013
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      58.153999999631196
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      13233.669000000227
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      29.140999999362975
+     ],
+     "cudaMemsetAsync": [
+      57,
+      234.90800000121817
+     ],
+     "cuLaunchKernel": [
+      28,
+      259.54200000083074
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      47.1820000000298
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      116.34699999913573
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.669000000227243
+     ]
+    },
+    "kernel_us": 36252.45900000539,
+    "n_kernels": 1147,
+    "memcpy_us": 33.28000000072643
+   },
+   "m21_sample_35": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      33.87600000342354
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      978.0220000022091
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4681.238999998663
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10311.462000012398
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      45.658999998122454
+     ],
+     "cudaMemsetAsync": [
+      1,
+      9.337999999988824
+     ]
+    },
+    "kernel_us": 9922.006999994162,
+    "n_kernels": 1343,
+    "memcpy_us": 1260.632999998983
+   },
+   "m21_sample_36": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      35.942999999504536
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      884.7469999990426
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      3708.099000002723
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10465.325999990571
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      45.30000000074506
+     ],
+     "cudaMemsetAsync": [
+      1,
+      18.15499999979511
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.6289999997243285
+     ]
+    },
+    "kernel_us": 9897.168000013568,
+    "n_kernels": 1343,
+    "memcpy_us": 1233.3329999991693
+   },
+   "m21_sample_37": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      9022.748000003397
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.4109999998472631
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      30.90100000007078
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      9366.746999999974
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      27.264000000897795
+     ],
+     "cudaMemsetAsync": [
+      57,
+      254.58000000054017
+     ],
+     "cuLaunchKernel": [
+      28,
+      277.01200000103563
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      47.72200000053272
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      131.20200000191107
+     ]
+    },
+    "kernel_us": 36254.076999986544,
+    "n_kernels": 1147,
+    "memcpy_us": 22.53000000026077
+   },
+   "m21_sample_38": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8528.305000001565
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.5730000003241003
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      64.78699999954551
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      12793.447000000626
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      25.62999999895692
+     ],
+     "cudaMemsetAsync": [
+      57,
+      239.42900000000373
+     ],
+     "cuLaunchKernel": [
+      28,
+      261.9590000002645
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      48.13400000054389
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      119.64600000204518
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.53899999987334
+     ]
+    },
+    "kernel_us": 36254.19700000202,
+    "n_kernels": 1147,
+    "memcpy_us": 33.56899999920279
+   },
+   "m21_sample_39": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      57.68299999833107
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      1699.6040000002831
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4352.0140000013635
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      18214.686000003014
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      113.72400000039488
+     ],
+     "cudaMemsetAsync": [
+      1,
+      12.123999999836087
+     ]
+    },
+    "kernel_us": 9934.025999996811,
+    "n_kernels": 1343,
+    "memcpy_us": 1260.5669999979436
+   },
+   "m21_sample_40": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8844.43800001964
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.6930000009015203
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      58.33400000073016
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      12452.270999999717
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      27.145000003278255
+     ],
+     "cudaMemsetAsync": [
+      57,
+      249.81799999717623
+     ],
+     "cuLaunchKernel": [
+      28,
+      265.2370000006631
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      48.175000003539026
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      171.8110000062734
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.419000000692904
+     ]
+    },
+    "kernel_us": 36251.198999987915,
+    "n_kernels": 1147,
+    "memcpy_us": 23.044999999925494
+   },
+   "m21_sample_41": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      33.59400000330061
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      995.2260000025854
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4178.707999994047
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10528.65200002212
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      77.6000000005588
+     ],
+     "cudaMemsetAsync": [
+      1,
+      12.114000000059605
+     ]
+    },
+    "kernel_us": 9922.278999996372,
+    "n_kernels": 1343,
+    "memcpy_us": 1235.2530000032857
+   },
+   "m21_sample_42": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      35.919999999925494
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      1084.2570000123233
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      4767.361999992281
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10974.69099999126
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.52000000234693
+     ],
+     "cudaMemsetAsync": [
+      1,
+      12.48399999924004
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.26799999922514
+     ]
+    },
+    "kernel_us": 9896.95699998457,
+    "n_kernels": 1343,
+    "memcpy_us": 1260.8809999981895
+   },
+   "m21_sample_43": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8828.219999988563
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.39099999982863665
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      25.048999999649823
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      12826.611999999732
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.854999996721745
+     ],
+     "cudaMemsetAsync": [
+      57,
+      240.98200000450015
+     ],
+     "cuLaunchKernel": [
+      28,
+      251.16799999587238
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      47.00100000016391
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      115.51499999593943
+     ]
+    },
+    "kernel_us": 36268.25300000515,
+    "n_kernels": 1147,
+    "memcpy_us": 23.107999999076128
+   },
+   "m21_sample_44": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      55.13100000098348
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      1951.8160000005737
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      6234.488000000827
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      34957.126000008546
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      61.02000000141561
+     ],
+     "cudaMemsetAsync": [
+      1,
+      13.025000000372529
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.5290000000968575
+     ]
+    },
+    "kernel_us": 9926.153000007384,
+    "n_kernels": 1343,
+    "memcpy_us": 1257.5929999994114
+   },
+   "m21_sample_45": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      19186.327999997884
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.7620000001043081
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      71.87000000011176
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      1674.6160000003874
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      30.061999996192753
+     ],
+     "cudaMemsetAsync": [
+      57,
+      274.6570000052452
+     ],
+     "cuLaunchKernel": [
+      28,
+      366.6470000008121
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      56.0279999980703
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      243.2299999995157
+     ]
+    },
+    "kernel_us": 36257.48199999705,
+    "n_kernels": 1147,
+    "memcpy_us": 23.325000001117587
+   },
+   "m21_sample_46": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      19748.450999975204
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      2.4040000000968575
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      72.9429999999702
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      1660.957999999635
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      31.70200000051409
+     ],
+     "cudaMemsetAsync": [
+      57,
+      261.5700000040233
+     ],
+     "cuLaunchKernel": [
+      28,
+      432.0130000002682
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      174.97000000160187
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      278.22699999436736
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.559000000357628
+     ]
+    },
+    "kernel_us": 36269.544000015594,
+    "n_kernels": 1147,
+    "memcpy_us": 33.34799999836832
+   },
+   "m21_sample_47": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      75.27600000146776
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      1807.4529999997467
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      8046.741000006907
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      30739.95000000391
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      61.36199999880046
+     ],
+     "cudaMemsetAsync": [
+      1,
+      12.493999999947846
+     ]
+    },
+    "kernel_us": 9922.612999997102,
+    "n_kernels": 1343,
+    "memcpy_us": 1267.231000000611
+   },
+   "m21_sample_48": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      19695.4630000107
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.993999999947846
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      65.17699999921024
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      1548.7290000002831
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      30.701999994926155
+     ],
+     "cudaMemsetAsync": [
+      57,
+      282.781000001356
+     ],
+     "cuLaunchKernel": [
+      28,
+      422.4159999983385
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      55.44900000002235
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      209.16899999510497
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.609000000171363
+     ]
+    },
+    "kernel_us": 36261.4729999993,
+    "n_kernels": 1147,
+    "memcpy_us": 22.850999996066093
+   },
+   "m21_sample_49": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      108.03600000217557
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      1871.8720000004396
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      8103.106999998912
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      31789.373000003397
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      60.10599999688566
+     ],
+     "cudaMemsetAsync": [
+      1,
+      9.748999999836087
+     ]
+    },
+    "kernel_us": 9927.366999994963,
+    "n_kernels": 1343,
+    "memcpy_us": 1264.1850000042468
+   },
+   "m21_sample_50": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      13077.684999986552
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.66300000064075
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      57.4429999999702
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      8877.599000000395
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      28.329000003635883
+     ],
+     "cudaMemsetAsync": [
+      57,
+      248.84700000006706
+     ],
+     "cuLaunchKernel": [
+      28,
+      300.7399999992922
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      54.52899999730289
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      137.199000001885
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.5690000001341105
+     ]
+    },
+    "kernel_us": 36255.170999996364,
+    "n_kernels": 1147,
+    "memcpy_us": 32.958999999798834
+   },
+   "m21_sample_51": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      33.17999999783933
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      1020.7630000011995
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4613.662000001408
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10010.600999983959
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      45.618999999947846
+     ],
+     "cudaMemsetAsync": [
+      1,
+      9.22800000011921
+     ]
+    },
+    "kernel_us": 9925.498999986798,
+    "n_kernels": 1343,
+    "memcpy_us": 1250.7080000014976
+   },
+   "m21_sample_52": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8354.626999997534
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.822999999858439
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      62.08199999947101
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      13158.711000000127
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      27.305999998934567
+     ],
+     "cudaMemsetAsync": [
+      57,
+      233.33299999777228
+     ],
+     "cuLaunchKernel": [
+      28,
+      257.1890000011772
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      49.62800000049174
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      115.67599999997765
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      5.190000000409782
+     ]
+    },
+    "kernel_us": 36260.33300000522,
+    "n_kernels": 1147,
+    "memcpy_us": 22.691999998874962
+   },
+   "m21_sample_53": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      33.321999992243946
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      967.4170000022277
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4746.987000004388
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10042.458999988623
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      45.489000000059605
+     ],
+     "cudaMemsetAsync": [
+      1,
+      10.390000000596046
+     ]
+    },
+    "kernel_us": 9926.653999987058,
+    "n_kernels": 1343,
+    "memcpy_us": 1244.179999996908
+   },
+   "m21_sample_54": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      34.148000000976026
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      970.0139999967068
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      4807.262000001967
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10162.345999998972
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.34000000078231
+     ],
+     "cudaMemsetAsync": [
+      1,
+      12.804999999701977
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.027999999932945
+     ]
+    },
+    "kernel_us": 9893.642000014894,
+    "n_kernels": 1343,
+    "memcpy_us": 1248.1530000101775
+   },
+   "m21_sample_55": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8406.363000018522
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.4410000005736947
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      28.083999999798834
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      13648.989999999292
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.57200000435114
+     ],
+     "cudaMemsetAsync": [
+      57,
+      228.1319999974221
+     ],
+     "cuLaunchKernel": [
+      28,
+      253.9589999979362
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.94300000183284
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      124.03900000359863
+     ]
+    },
+    "kernel_us": 36264.89100000914,
+    "n_kernels": 1147,
+    "memcpy_us": 23.107000001706183
+   },
+   "m21_sample_56": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8608.865000006743
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.822999999858439
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      58.64500000048429
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      10162.042000000365
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.94699999783188
+     ],
+     "cudaMemsetAsync": [
+      57,
+      239.57799999974668
+     ],
+     "cuLaunchKernel": [
+      28,
+      261.6819999990985
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      50.04500000085682
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      115.12500000093132
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.870000000111759
+     ]
+    },
+    "kernel_us": 36256.941000022925,
+    "n_kernels": 1147,
+    "memcpy_us": 23.007999999448657
+   },
+   "m21_sample_57": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      35.00500000361353
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      1056.7379999998957
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      5183.413999997079
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10071.08500000555
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.21199999935925
+     ],
+     "cudaMemsetAsync": [
+      1,
+      10.580000000074506
+     ]
+    },
+    "kernel_us": 9919.345000009052,
+    "n_kernels": 1343,
+    "memcpy_us": 1253.5220000101253
+   },
+   "m21_sample_58": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8239.798000006936
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.4830000000074506
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      59.88700000010431
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      13435.754000000656
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      28.593999999575317
+     ],
+     "cudaMemsetAsync": [
+      57,
+      226.06800000276417
+     ],
+     "cuLaunchKernel": [
+      28,
+      259.2269999999553
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      48.16499999910593
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      114.16200000233948
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.870000000111759
+     ]
+    },
+    "kernel_us": 36257.35900002718,
+    "n_kernels": 1147,
+    "memcpy_us": 32.80299999844283
+   },
+   "m21_sample_59": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      33.036000004038215
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      885.4120000004768
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4779.144999995828
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10003.818000011146
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      44.3680000025779
+     ],
+     "cudaMemsetAsync": [
+      1,
+      9.217999999411404
+     ]
+    },
+    "kernel_us": 9924.93600000348,
+    "n_kernels": 1343,
+    "memcpy_us": 1258.6820000046864
+   },
+   "m21_sample_60": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8330.882000004873
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.6330000003799796
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      54.08600000105798
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      14007.381000000983
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.132000000216067
+     ],
+     "cudaMemsetAsync": [
+      57,
+      243.67000000271946
+     ],
+     "cuLaunchKernel": [
+      28,
+      245.52900000289083
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      45.62899999693036
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      113.75100000575185
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      5.190000000409782
+     ]
+    },
+    "kernel_us": 36252.51699998602,
+    "n_kernels": 1147,
+    "memcpy_us": 22.945000001229346
+   },
+   "m21_sample_61": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      33.74600000586361
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      897.2360000014305
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4669.63300000038
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10173.158000013791
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      45.16899999976158
+     ],
+     "cudaMemsetAsync": [
+      1,
+      9.03800000064075
+     ]
+    },
+    "kernel_us": 9922.8570000045,
+    "n_kernels": 1343,
+    "memcpy_us": 1253.0769999995828
+   },
+   "m21_sample_62": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      34.67099999822676
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      880.222999997437
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      3717.935999999754
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10724.520000020042
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      47.772999997250736
+     ],
+     "cudaMemsetAsync": [
+      1,
+      14.018000000156462
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.718999999575317
+     ]
+    },
+    "kernel_us": 9899.48599999398,
+    "n_kernels": 1343,
+    "memcpy_us": 1233.9109999984503
+   },
+   "m21_sample_63": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8337.203000004403
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.5509999999776483
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      28.855999999679625
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      13298.996000000276
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.301999997347593
+     ],
+     "cudaMemsetAsync": [
+      57,
+      237.51800000108778
+     ],
+     "cuLaunchKernel": [
+      28,
+      252.99099999573082
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.91299999970943
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      114.61199999600649
+     ]
+    },
+    "kernel_us": 36260.56800002046,
+    "n_kernels": 1147,
+    "memcpy_us": 22.82000000216067
+   },
+   "m21_sample_64": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8366.2940000128
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.6129999989643693
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      60.10699999984354
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      12711.006999998353
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      27.115000000223517
+     ],
+     "cudaMemsetAsync": [
+      57,
+      247.8480000011623
+     ],
+     "cuLaunchKernel": [
+      28,
+      260.421999999322
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      47.17300000041723
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      117.93100000638515
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.678999999538064
+     ]
+    },
+    "kernel_us": 36257.927999999374,
+    "n_kernels": 1147,
+    "memcpy_us": 23.45899999793619
+   },
+   "m21_sample_65": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      34.27199999988079
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      1060.1820000028238
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4957.792000000365
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10249.823999999091
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      52.91600000113249
+     ],
+     "cudaMemsetAsync": [
+      1,
+      9.398000000044703
+     ]
+    },
+    "kernel_us": 9924.906000000425,
+    "n_kernels": 1343,
+    "memcpy_us": 1274.0109999943525
+   },
+   "m21_sample_66": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      35.05099999625236
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      1003.0420000003651
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      4630.7599999969825
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10195.574999980628
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.37200000323355
+     ],
+     "cudaMemsetAsync": [
+      1,
+      11.934000000357628
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.438000000081956
+     ]
+    },
+    "kernel_us": 9896.881999962032,
+    "n_kernels": 1343,
+    "memcpy_us": 1252.1580000044778
+   },
+   "m21_sample_67": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8680.690999995917
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.5109999999403954
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      23.867000000551343
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      12682.450999998488
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      27.31599999871105
+     ],
+     "cudaMemsetAsync": [
+      57,
+      266.8639999991283
+     ],
+     "cuLaunchKernel": [
+      28,
+      259.3169999998063
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      50.23100000061095
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      118.3840000052005
+     ]
+    },
+    "kernel_us": 36252.462000017054,
+    "n_kernels": 1147,
+    "memcpy_us": 22.494999998249114
+   },
+   "m21_sample_68": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8423.946999991313
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.703999999910593
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      56.791000000201166
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      13190.875
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      28.58499999344349
+     ],
+     "cudaMemsetAsync": [
+      57,
+      244.79900000151247
+     ],
+     "cuLaunchKernel": [
+      28,
+      267.5719999996945
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      51.26099999900907
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      116.64700000546873
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.379000000655651
+     ]
+    },
+    "kernel_us": 36254.68899999838,
+    "n_kernels": 1147,
+    "memcpy_us": 27.74699999857694
+   },
+   "m21_sample_69": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      33.28099999669939
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      949.1750000026077
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4356.903999993578
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      15353.58200001344
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      49.238000000827014
+     ],
+     "cudaMemsetAsync": [
+      1,
+      11.201999999582767
+     ]
+    },
+    "kernel_us": 9921.684000005946,
+    "n_kernels": 1343,
+    "memcpy_us": 1260.2109999991953
+   },
+   "m21_sample_70": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8486.685000003316
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.9440000001341105
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      79.17499999981374
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      12898.273000000045
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      25.885999999940395
+     ],
+     "cudaMemsetAsync": [
+      57,
+      235.15000000409782
+     ],
+     "cuLaunchKernel": [
+      28,
+      259.41699999850243
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      48.342000000178814
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      113.94300000090152
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      5.110000000335276
+     ]
+    },
+    "kernel_us": 36254.32199999504,
+    "n_kernels": 1147,
+    "memcpy_us": 33.18600000068545
+   },
+   "m21_sample_71": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      33.53099999483675
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      903.8469999991357
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4685.454000002705
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10304.569000001065
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      46.58299999963492
+     ],
+     "cudaMemsetAsync": [
+      1,
+      9.328999999910593
+     ]
+    },
+    "kernel_us": 9921.553000006825,
+    "n_kernels": 1343,
+    "memcpy_us": 1241.6830000020564
+   },
+   "m21_sample_72": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      114,
+      36.09800000023097
+     ],
+     "cudaMemcpyAsync": [
+      115,
+      1004.7149999951944
+     ],
+     "cudaStreamSynchronize": [
+      115,
+      4848.231999997981
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10401.822999991477
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      45.55800000112504
+     ],
+     "cudaMemsetAsync": [
+      1,
+      12.785000000149012
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.739000000059605
+     ]
+    },
+    "kernel_us": 9894.558000002056,
+    "n_kernels": 1343,
+    "memcpy_us": 1267.961000001058
+   },
+   "m21_sample_73": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8541.906999991275
+     ],
+     "cudaStreamIsCapturing": [
+      1,
+      0.5010000001639128
+     ],
+     "cudaMemcpyAsync": [
+      2,
+      30.7710000006482
+     ],
+     "cudaStreamSynchronize": [
+      2,
+      13076.110999999568
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      26.481000003404915
+     ],
+     "cudaMemsetAsync": [
+      57,
+      245.69199999887496
+     ],
+     "cuLaunchKernel": [
+      28,
+      253.17100000102073
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      47.44100000336766
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      112.86799999605864
+     ]
+    },
+    "kernel_us": 36258.33000001218,
+    "n_kernels": 1147,
+    "memcpy_us": 22.815000001341105
+   },
+   "m21_sample_74": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8568.682000010274
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.763000000268221
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      58.0339999999851
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      13076.922000000253
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      25.596999995410442
+     ],
+     "cudaMemsetAsync": [
+      57,
+      234.95999999530613
+     ],
+     "cuLaunchKernel": [
+      28,
+      295.00699999928474
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      51.101999999023974
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      116.09500000160187
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      5.139999999664724
+     ]
+    },
+    "kernel_us": 36256.47200001124,
+    "n_kernels": 1147,
+    "memcpy_us": 33.95599999744445
+   },
+   "m21_sample_75": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      35.68399999849498
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      978.8939999938011
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4197.044000000693
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      14072.21400000155
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      50.751999996602535
+     ],
+     "cudaMemsetAsync": [
+      1,
+      13.427000000141561
+     ]
+    },
+    "kernel_us": 9924.672000000253,
+    "n_kernels": 1343,
+    "memcpy_us": 1231.2459999937564
+   },
+   "m21_sample_76": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      8533.810999974608
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.8739999998360872
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      54.14600000157952
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      12700.224999997765
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      28.555000001564622
+     ],
+     "cudaMemsetAsync": [
+      57,
+      245.46800000220537
+     ],
+     "cuLaunchKernel": [
+      28,
+      274.9820000026375
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      48.45499999821186
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      119.1499999910593
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      5.0599999986588955
+     ]
+    },
+    "kernel_us": 38600.07300000265,
+    "n_kernels": 1147,
+    "memcpy_us": 23.645999995991588
+   },
+   "m21_sample_77": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      33.50799999944866
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      1007.1940000131726
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      4018.384999992326
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10282.750999942422
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      45.899999994784594
+     ],
+     "cudaMemsetAsync": [
+      1,
+      10.881000000983477
+     ]
+    },
+    "kernel_us": 10686.655999986455,
+    "n_kernels": 1343,
+    "memcpy_us": 1242.5180000066757
+   },
+   "m21_sample_78": {
+    "api": {
+     "cudaLaunchKernel": [
+      1119,
+      10589.89900000766
+     ],
+     "cudaStreamIsCapturing": [
+      2,
+      1.882999999448657
+     ],
+     "cudaMemcpyAsync": [
+      3,
+      62.752000000327826
+     ],
+     "cudaStreamSynchronize": [
+      3,
+      14054.324000000954
+     ],
+     "cudaDeviceGetAttribute": [
+      84,
+      28.896000016480684
+     ],
+     "cudaMemsetAsync": [
+      57,
+      264.5290000028908
+     ],
+     "cuLaunchKernel": [
+      28,
+      407.7470000013709
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      51.45100000500679
+     ],
+     "cudaOccupancyMaxActiveBlocksPerMultiprocessor": [
+      112,
+      128.8870000075549
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      4.869999999180436
+     ]
+    },
+    "kernel_us": 47496.85199998692,
+    "n_kernels": 1147,
+    "memcpy_us": 38.62600000016391
+   },
+   "m21_sample_79": {
+    "api": {
+     "cudaStreamIsCapturing": [
+      113,
+      47.78100000694394
+     ],
+     "cudaMemcpyAsync": [
+      114,
+      1385.1830000150949
+     ],
+     "cudaStreamSynchronize": [
+      114,
+      6178.552999984473
+     ],
+     "cudaLaunchKernel": [
+      1343,
+      10665.442999986932
+     ],
+     "cudaFuncSetAttribute": [
+      28,
+      44.44599999114871
+     ],
+     "cudaMemsetAsync": [
+      1,
+      10.199999999254942
+     ],
+     "cudaDeviceSynchronize": [
+      1,
+      3.787000000476837
+     ]
+    },
+    "kernel_us": 10748.10699999705,
+    "n_kernels": 1343,
+    "memcpy_us": 1264.8579999934882
+   }
+  },
+  "ranges_us": {
+   "m21_sample_0": [
+    131460.569,
+    173377.33
+   ],
+   "m21_sample_1": [
+    174133.127,
+    219994.899
+   ],
+   "m21_sample_2": [
+    349999.27,
+    389574.683
+   ],
+   "m21_sample_3": [
+    390163.236,
+    428257.681
+   ],
+   "m21_sample_4": [
+    553169.855,
+    592413.18
+   ],
+   "m21_sample_5": [
+    593019.399,
+    631032.718
+   ],
+   "m21_sample_6": [
+    756172.844,
+    795753.025
+   ],
+   "m21_sample_7": [
+    796460.082,
+    835110.021
+   ],
+   "m21_sample_8": [
+    968487.941,
+    1008370.287
+   ],
+   "m21_sample_9": [
+    1008935.094,
+    1047556.488
+   ],
+   "m21_sample_10": [
+    1187204.575,
+    1224595.386
+   ],
+   "m21_sample_11": [
+    1225155.425,
+    1264151.405
+   ],
+   "m21_sample_12": [
+    1390851.993,
+    1429796.961
+   ],
+   "m21_sample_13": [
+    1430380.522,
+    1467909.518
+   ],
+   "m21_sample_14": [
+    1596028.35,
+    1634229.298
+   ],
+   "m21_sample_15": [
+    1634806.266,
+    1673769.059
+   ],
+   "m21_sample_16": [
+    1800253.28,
+    1838058.361
+   ],
+   "m21_sample_17": [
+    1838654.082,
+    1878534.124
+   ],
+   "m21_sample_18": [
+    2004663.248,
+    2044996.473
+   ],
+   "m21_sample_19": [
+    2045570.849,
+    2083032.193
+   ],
+   "m21_sample_20": [
+    2215720.657,
+    2253816.253
+   ],
+   "m21_sample_21": [
+    2254356.643,
+    2294431.003
+   ],
+   "m21_sample_22": [
+    2424733.026,
+    2465133.36
+   ],
+   "m21_sample_23": [
+    2465752.988,
+    2503160.056
+   ],
+   "m21_sample_24": [
+    2632159.237,
+    2670693.232
+   ],
+   "m21_sample_25": [
+    2671279.61,
+    2712932.255
+   ],
+   "m21_sample_26": [
+    2839190.636,
+    2879573.369
+   ],
+   "m21_sample_27": [
+    2880241.767,
+    2916894.287
+   ],
+   "m21_sample_28": [
+    3049557.693,
+    3089872.997
+   ],
+   "m21_sample_29": [
+    3090511.121,
+    3127721.504
+   ],
+   "m21_sample_30": [
+    3256135.588,
+    3294475.298
+   ],
+   "m21_sample_31": [
+    3295038.313,
+    3335011.129
+   ],
+   "m21_sample_32": [
+    3462218.601,
+    3502798.691
+   ],
+   "m21_sample_33": [
+    3503390.445,
+    3540241.378
+   ],
+   "m21_sample_34": [
+    3666135.605,
+    3706706.063
+   ],
+   "m21_sample_35": [
+    3707335.26,
+    3744507.047
+   ],
+   "m21_sample_36": [
+    3874275.818,
+    3911036.409
+   ],
+   "m21_sample_37": [
+    3911613.346,
+    3951460.024
+   ],
+   "m21_sample_38": [
+    4077522.827,
+    4118038.866
+   ],
+   "m21_sample_39": [
+    4118877.069,
+    4184381.398
+   ],
+   "m21_sample_40": [
+    4338788.662,
+    4379460.393
+   ],
+   "m21_sample_41": [
+    4380010.288,
+    4417381.977
+   ],
+   "m21_sample_42": [
+    4545769.36,
+    4584911.799
+   ],
+   "m21_sample_43": [
+    4585465.886,
+    4625533.861
+   ],
+   "m21_sample_44": [
+    4749995.944,
+    4861565.79
+   ],
+   "m21_sample_45": [
+    4862172.969,
+    4925525.37
+   ],
+   "m21_sample_46": [
+    5069840.915,
+    5133673.189
+   ],
+   "m21_sample_47": [
+    5134337.013,
+    5246440.656
+   ],
+   "m21_sample_48": [
+    5377415.326,
+    5439683.17
+   ],
+   "m21_sample_49": [
+    5440343.088,
+    5552179.449
+   ],
+   "m21_sample_50": [
+    5678628.264,
+    5731825.677
+   ],
+   "m21_sample_51": [
+    5732425.495,
+    5769900.296
+   ],
+   "m21_sample_52": [
+    5902685.429,
+    5943259.617
+   ],
+   "m21_sample_53": [
+    5943876.108,
+    5981207.987
+   ],
+   "m21_sample_54": [
+    6108863.254,
+    6146428.75
+   ],
+   "m21_sample_55": [
+    6146966.387,
+    6187119.329
+   ],
+   "m21_sample_56": [
+    6313245.049,
+    6353619.638
+   ],
+   "m21_sample_57": [
+    6354280.901,
+    6392665.878
+   ],
+   "m21_sample_58": [
+    6522965.204,
+    6563621.605
+   ],
+   "m21_sample_59": [
+    6564220.079,
+    6601100.086
+   ],
+   "m21_sample_60": [
+    6727551.845,
+    6768192.405
+   ],
+   "m21_sample_61": [
+    6768934.409,
+    6805935.737
+   ],
+   "m21_sample_62": [
+    6935729.043,
+    6975680.722
+   ],
+   "m21_sample_63": [
+    6976281.437,
+    7016346.052
+   ],
+   "m21_sample_64": [
+    7153698.675,
+    7193934.567
+   ],
+   "m21_sample_65": [
+    7194520.912,
+    7232214.0
+   ],
+   "m21_sample_66": [
+    7358496.499,
+    7396276.954
+   ],
+   "m21_sample_67": [
+    7396832.513,
+    7436357.602
+   ],
+   "m21_sample_68": [
+    7564727.832,
+    7604847.395
+   ],
+   "m21_sample_69": [
+    7605496.369,
+    7651102.749
+   ],
+   "m21_sample_70": [
+    7783867.397,
+    7824157.898
+   ],
+   "m21_sample_71": [
+    7824731.09,
+    7862043.177
+   ],
+   "m21_sample_72": [
+    7992095.957,
+    8030012.342
+   ],
+   "m21_sample_73": [
+    8030570.94,
+    8070459.622
+   ],
+   "m21_sample_74": [
+    8199472.138,
+    8239842.421
+   ],
+   "m21_sample_75": [
+    8240468.48,
+    8281969.817
+   ],
+   "m21_sample_76": [
+    8416173.189,
+    8458985.912
+   ],
+   "m21_sample_77": [
+    8459612.708,
+    8496825.812
+   ],
+   "m21_sample_78": [
+    8639306.556,
+    8691079.676
+   ],
+   "m21_sample_79": [
+    8692000.892,
+    8734693.864
+   ]
+  },
+  "key_averages_top": "-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \n                                                   Name    Self CPU %      Self CPU   CPU total %     CPU total  CPU time avg     Self CUDA   Self CUDA %    CUDA total  CUDA time avg    # of Calls  \n-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \n                                       cudaLaunchKernel        24.78%     880.114ms        25.22%     895.517ms       9.093us       0.000us         0.00%       0.000us       0.000us         98480  \n                                  cudaStreamSynchronize        18.08%     641.905ms        18.08%     641.905ms     135.997us       0.000us         0.00%       0.000us       0.000us          4720  \n                                              aten::mul         3.59%     127.516ms         8.56%     303.835ms      14.778us      73.642ms         3.87%      73.642ms       3.582us         20560  \n                                               aten::mm         3.20%     113.611ms         6.15%     218.555ms      24.176us        1.452s        76.29%        1.452s     160.657us          9040  \n                                            aten::copy_         2.74%      97.430ms        20.76%     737.311ms      26.714us      87.160ms         4.58%     145.895ms       5.286us         27600  \n                                            aten::addmm         2.42%      85.821ms         4.58%     162.561ms      24.191us     115.107ms         6.05%     115.107ms      17.129us          6720  \n                                              aten::add         2.30%      81.561ms         5.48%     194.617ms      14.395us      29.165ms         1.53%      29.165ms       2.157us         13520  \n                                              aten::cat         1.87%      66.494ms         4.74%     168.373ms      14.927us      40.438ms         2.12%      40.438ms       3.585us         11280  \n                                    aten::empty_strided         1.41%      49.907ms         1.41%      49.907ms       3.043us       0.000us         0.00%       0.000us       0.000us         16400  \n                                        cudaMemcpyAsync         1.34%      47.722ms         1.34%      47.722ms      10.110us       0.000us         0.00%       0.000us       0.000us          4720  \n                                            aten::empty         1.33%      47.402ms         1.33%      47.402ms       2.086us       0.000us         0.00%       0.000us       0.000us         22720  \n                                             aten::mean         1.16%      41.313ms         2.32%      82.324ms      18.054us      15.736ms         0.83%      15.736ms       3.451us          4560  \n                                           aten::linear         1.10%      38.894ms        14.42%     512.145ms      32.497us       0.000us         0.00%        1.567s      99.457us         15760  \n                                              aten::pow         1.04%      36.926ms         2.31%      81.880ms      17.956us      11.806ms         0.62%      11.806ms       2.589us          4560  \n                                Activity Buffer Request         0.95%      33.854ms         0.98%      34.848ms       2.489ms       0.000us         0.00%     911.806us      65.129us            14  \n                                         aten::_to_copy         0.92%      32.562ms         6.22%     220.838ms      15.596us       0.000us         0.00%      28.424ms       2.007us         14160  \n                                        aten::transpose         0.88%      31.256ms         1.32%      46.756ms       1.262us       0.000us         0.00%       0.000us       0.000us         37040  \n                                       aten::as_strided         0.83%      29.424ms         0.83%      29.424ms       0.425us       0.000us         0.00%       0.000us       0.000us         69200  \n                         aten::_flash_attention_forward         0.83%      29.327ms         3.10%     110.122ms      49.162us      47.970ms         2.52%      47.970ms      21.415us          2240  \n                                          m21_sample_49         0.80%      28.415ms         3.16%     112.376ms     112.376ms       0.000us         0.00%      11.192ms      11.192ms             1  \n                                           aten::matmul         0.80%      28.307ms         7.31%     259.690ms      28.727us       0.000us         0.00%        1.452s     160.657us          9040  \n                                          m21_sample_47         0.78%      27.837ms         3.17%     112.698ms     112.698ms       0.000us         0.00%      11.190ms      11.190ms             1  \n                                          m21_sample_44         0.74%      26.226ms         3.17%     112.628ms     112.628ms       0.000us         0.00%      11.184ms      11.184ms             1  \n                                            aten::rsqrt         0.70%      24.779ms         1.77%      62.965ms      13.808us       5.603ms         0.29%       5.603ms       1.229us          4560  \n                                              aten::neg         0.68%      24.324ms         1.84%      65.206ms      14.555us       9.567ms         0.50%       9.567ms       2.136us          4480  \n-------------------------------------------------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  ------------  \nSelf CPU time total: 3.551s\nSelf CUDA time total: 1.904s\n"
+ },
+ "budgets": {
+  "store_A": {
+   "host": {
+    "budget_bytes": 132120576,
+    "slab_allocated_bytes": 132120576,
+    "cuda_host_registered_bytes": 132120576,
+    "staging_reserved_bytes": 7340032,
+    "resident_slots": 17,
+    "resident_logical_bytes": 14680064,
+    "resident_logical_peak_bytes": 14680064,
+    "entries": 2,
+    "max_entries": 17,
+    "evictions": 0,
+    "metadata_bytes_estimate": 2256,
+    "metadata_note": "estimate of raw identity field bytes; not measured Python heap usage",
+    "pinned": true
+   }
+  },
+  "store_B": {
+   "host": {
+    "budget_bytes": 14680064,
+    "slab_allocated_bytes": 14680064,
+    "cuda_host_registered_bytes": 14680064,
+    "staging_reserved_bytes": 7340032,
+    "resident_slots": 1,
+    "resident_logical_bytes": 0,
+    "resident_logical_peak_bytes": 0,
+    "entries": 0,
+    "max_entries": 1,
+    "evictions": 0,
+    "metadata_bytes_estimate": 0,
+    "metadata_note": "estimate of raw identity field bytes; not measured Python heap usage",
+    "pinned": true
+   },
+   "disk": {
+    "budget_bytes": 124816057,
+    "used_bytes": 14684242,
+    "peak_used_bytes": 14684242,
+    "committed_bytes": 14684242,
+    "tmp_bytes": 0,
+    "undeletable_bytes": 0,
+    "undeletable_files": [],
+    "unlink_failures": {},
+    "entries": 2,
+    "max_entries": 17,
+    "evictions": 0,
+    "dir_bytes_scanned": 14684242
+   }
+  },
+  "source_pageable_slab_bytes": 124780544
+ },
+ "process_end": {
+  "pid": 70924,
+  "nice": 0,
+  "affinity_n": 32,
+  "nproc": 32,
+  "torch_num_threads": 16,
+  "torch_num_interop_threads": 32,
+  "env": {
+   "OMP_NUM_THREADS": null,
+   "MKL_NUM_THREADS": null,
+   "CUDA_LAUNCH_BLOCKING": null,
+   "PYTORCH_CUDA_ALLOC_CONF": null,
+   "CUDA_MODULE_LOADING": null,
+   "HF_HUB_OFFLINE": "1"
+  },
+  "rlimit_memlock": [
+   67108864,
+   67108864
+  ],
+  "loadavg": "1.10 1.03 0.91 1/781 71167",
+  "meminfo_head": [
+   "MemTotal:        7720156 kB",
+   "MemFree:          113580 kB",
+   "MemAvailable:    1632180 kB",
+   "Buffers:           10856 kB",
+   "Cached:          1695420 kB",
+   "SwapCached:        38800 kB"
+  ],
+  "status_threads": "Threads:\t55",
+  "cpufreq_visible": false,
+  "sdpa_backends": {
+   "flash": true,
+   "mem_efficient": true,
+   "math": true,
+   "cudnn": true
+  },
+  "tf32_matmul": false,
+  "cudnn_benchmark": false
+ },
+ "excluded": []
+}

@@ -1,0 +1,5 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  54%|█████▍    | 182/338 [00:00<00:00, 1813.90it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2634.02it/s]
+USDT:2026-11-03 15:22:58 70924:70924 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 15:23:08 70924:70924 SyncActivityProfilerHandler.cpp:46] profiler_stop
+{"n_samples": 120, "n_measured": 120, "n_excluded": 0, "elapsed_min": 0.6220677177111308, "correctness_all": true, "spike_probe_audit_pass": null}
+failures []; wrote results/m2_1/diag_profiler_20261103T151540/session_prof.json
