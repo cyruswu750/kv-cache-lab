@@ -1,0 +1,11 @@
+model sha256 0774b1a2141944592ceab39b1787568368fbe60637ea1df56b4918c657f2a65f
+predictions sha256 1dfb47fab7675bfc97122dcb8024c6bb427b0faa8d98c8489a8a7bf368b5c91b
+  ingest           const=0.0747, N_kt=0.1325   in-sample rel err max 9.3%
+  restore_host     const=0, chunks=3.623   in-sample rel err max 7.2%
+  restore_disk     const=0, chunks=5.749   in-sample rel err max 4.8%
+  prefill_suffix   const=17.19, S_kt=15.53, S_kt*(L_kt+S_kt/2)=8.446   in-sample rel err max 2.4%
+  prefill_full     const=13.39, N_kt=40.27, N_kt^2/2=8.241   in-sample rel err max 13.0%
+  store            const=0.04228, new_chunks=4.51   in-sample rel err max 61.5%
+  restore_skipped  const=0.004318
+  select           const=0.1053
+  offsets {'full': -0.535603750000007, 'host': -0.4170145000000005, 'disk': 0.028358249999993035}

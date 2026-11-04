@@ -1,0 +1,7 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  56%|█████▌    | 190/338 [00:00<00:00, 1891.71it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2755.68it/s]
+L=1024: done (0.5 min)
+L=4096: done (1.6 min)
+L=256: done (1.9 min)
+{"n_samples": 1015, "n_valid": 840, "n_excluded": 0, "elapsed_min": 1.8994277278582254, "correctness_strict_all": true}
+failures [] not_run []
+wrote results/m2/run_20261103T131543/calibration_samples.json

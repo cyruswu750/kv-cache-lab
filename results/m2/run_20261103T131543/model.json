@@ -1,0 +1,216 @@
+{
+ "version": "kvlab-m2-cost-model-v1",
+ "units": "ms; token features in kilotokens (kt); chunk = 256 tokens",
+ "calibration_cases": [
+  [
+   256,
+   1
+  ],
+  [
+   256,
+   256
+  ],
+  [
+   1024,
+   1
+  ],
+  [
+   1024,
+   256
+  ],
+  [
+   4096,
+   1
+  ],
+  [
+   4096,
+   256
+  ]
+ ],
+ "components": {
+  "ingest": {
+   "features": [
+    "const",
+    "N_kt"
+   ],
+   "coef_ms": [
+    0.07469568316219583,
+    0.13251082293597832
+   ],
+   "description": "token ids to device + chain keys (SHA-256 over the prompt)",
+   "n_rows": 18,
+   "in_sample_rel_err": [
+    0.00761579053583608,
+    -0.021888105444848857,
+    -0.04812830023230056,
+    -0.06659635585532961,
+    -0.05726969002801945,
+    -0.04325755679126851,
+    0.05789390665073514,
+    -0.08359842678193875,
+    -0.049376951097864136,
+    -0.02902078593288423,
+    0.08426034629844038,
+    0.07733531017553617,
+    0.07769721343905986,
+    0.004034166067942768,
+    0.02542767705431394,
+    -0.09306896185786251,
+    0.04394568362433909,
+    0.054582283681993776
+   ]
+  },
+  "restore_host": {
+   "features": [
+    "const",
+    "chunks"
+   ],
+   "coef_ms": [
+    0.0,
+    3.6233472315619033
+   ],
+   "description": "lookup + per-chunk lease/identity check + H2D + DynamicCache assembly",
+   "n_rows": 6,
+   "in_sample_rel_err": [
+    0.06359757757879439,
+    0.07191440167049477,
+    -0.0555387097858329,
+    -0.06369582499536804,
+    -0.006397286333709492,
+    -0.027008586605258327
+   ]
+  },
+  "restore_disk": {
+   "features": [
+    "const",
+    "chunks"
+   ],
+   "coef_ms": [
+    0.0,
+    5.7490045669808065
+   ],
+   "description": "lookup + per-chunk file read/validation/CRC into staging + H2D + assembly",
+   "n_rows": 6,
+   "in_sample_rel_err": [
+    0.025152516410550742,
+    0.015138076411249904,
+    -0.04774811955980678,
+    -0.04525422191422864,
+    0.022725243639411554,
+    0.023717891953841996
+   ]
+  },
+  "prefill_suffix": {
+   "features": [
+    "const",
+    "S_kt",
+    "S_kt*(L_kt+S_kt/2)"
+   ],
+   "coef_ms": [
+    17.185437944566242,
+    15.525306039283535,
+    8.445650878609865
+   ],
+   "description": "forward over S new tokens with L cached tokens (explicit-mask SDPA path)",
+   "n_rows": 12,
+   "in_sample_rel_err": [
+    0.014927370676842895,
+    -0.005707372661204763,
+    -0.0034115057041973996,
+    0.009121403429094534,
+    -0.02016259772054954,
+    3.075747461920424e-05,
+    0.01129924609339961,
+    -0.0037450331068377713,
+    0.01973968089320165,
+    0.0031622330938726236,
+    -0.024212065734446304,
+    -0.0029350786654230012
+   ]
+  },
+  "prefill_full": {
+   "features": [
+    "const",
+    "N_kt",
+    "N_kt^2/2"
+   ],
+   "coef_ms": [
+    13.39278269061561,
+    40.273324468152154,
+    8.241003291260604
+   ],
+   "description": "forward over all N tokens, empty cache (causal SDPA path)",
+   "n_rows": 6,
+   "in_sample_rel_err": [
+    -0.07098333348911788,
+    0.13041470165755498,
+    -0.06602560706235122,
+    -0.034048923922012996,
+    -0.00033857335134586137,
+    0.013240960451813064
+   ]
+  },
+  "store": {
+   "features": [
+    "const",
+    "new_chunks"
+   ],
+   "coef_ms": [
+    0.04228313344337102,
+    4.510407928088611
+   ],
+   "description": "admission of new complete chunks: D2H into free pinned host slots",
+   "n_rows": 18,
+   "in_sample_rel_err": [
+    0.07059459281861041,
+    0.03098405909232193,
+    0.05625973478981349,
+    0.052492507800481786,
+    -0.044956160155148625,
+    0.037166018999214234,
+    0.016580317678748423,
+    0.019498546792847564,
+    -0.09463774396995855,
+    -0.06987522007800614,
+    -0.615441818572829,
+    -0.07594386286912977,
+    0.11840909482155242,
+    0.020460251750479795,
+    0.09432647342342519,
+    -0.04290666213448128,
+    -0.02273942165227492,
+    0.009644737844239462
+   ]
+  },
+  "restore_skipped": {
+   "features": [
+    "const"
+   ],
+   "coef_ms": [
+    0.00431825
+   ],
+   "description": "full path: restore not attempted",
+   "n_rows": 6
+  },
+  "select": {
+   "features": [
+    "const"
+   ],
+   "coef_ms": [
+    0.105309
+   ],
+   "description": "argmax + transfer of the token id to the host",
+   "n_rows": 18
+  }
+ },
+ "instrumentation_offset_ms": {
+  "full": -0.535603750000007,
+  "host": -0.4170145000000005,
+  "disk": 0.028358249999993035
+ },
+ "sha256": "0774b1a2141944592ceab39b1787568368fbe60637ea1df56b4918c657f2a65f",
+ "calibration_samples_sha256": "e2bfb29a526f70e2c4a278b5adcc459428e875e3a5f18ea4cad6b82a2646bef2",
+ "fitted_at": "2026-11-03T13:18:32-0800",
+ "n_valid_calibration_samples": 840,
+ "n_excluded_calibration_samples": 0
+}

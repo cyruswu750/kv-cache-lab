@@ -1,0 +1,9 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  58%|█████▊    | 197/338 [00:00<00:00, 1959.77it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2833.17it/s]
+L=2048: done (1.4 min)
+L=1024: done (1.8 min)
+L=4096: done (2.6 min)
+L=512: done (3.4 min)
+L=256: done (3.7 min)
+{"n_samples": 1983, "n_valid": 1740, "n_excluded": 0, "elapsed_min": 3.7426248590151467, "correctness_strict_all": true}
+failures [] not_run []
+wrote results/m2/run_20261103T131543/evaluation_samples.json

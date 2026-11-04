@@ -1,0 +1,5 @@
+Slow sample = e2e > 1.3x the minimum of its (path, L, S) case; restore paths host+disk only; 10 s windows.
+calibration [  0s L[1024] 14%] [ 10s L[1024] 29%] [ 30s L[4096] 17%] [ 40s L[4096] 32%] [ 50s L[4096] 14%] [ 90s L[256] 25%]
+  overall slow share 20%; P(slow | previous restore sample slow) 63% (independence would give ~20%)
+evaluation [  0s L[2048] 29%] [ 10s L[2048] 32%] [ 20s L[2048] 31%] [ 30s L[2048] 16%] [ 40s L[2048] 55%] [ 70s L[1024] 63%] [ 80s L[1024] 0%] [ 90s L[4096] 100%] [100s L[4096] 27%] [110s L[4096] 85%] [120s L[4096] 74%] [150s L[512] 44%] [160s L[512] 38%] [170s L[512] 62%] [190s L[256] 2%] [200s L[256] 100%]
+  overall slow share 40%; P(slow | previous restore sample slow) 84% (independence would give ~40%)

@@ -1,0 +1,69 @@
+Change inventory: working tree vs backups/pre-m2-20261103T125219.tar.gz
+(baseline manifest results/m2/pre_m2_manifest_20261103T125219.sha256; current hashes in results/m2/post_m2_manifest.sha256)
+Excluded from both: .git, .venv, .hf_cache, .kvcache, backups/, __pycache__, .pytest_cache.
+This file and post_m2_manifest.sha256 are also added (not self-listed).
+
+MODIFIED (8)
+./README.md
+./docs/correctness-matrix.md
+./docs/decisions.md
+./docs/design.md
+./kvlab/always_restore.py
+./kvlab/host_store.py
+./tests/test_engine_cpu.py
+./tests/test_host_store.py
+
+ADDED (51)
+./docs/M2_PROTOCOL.md
+./docs/M2_REVIEW.md
+./docs/M2_WALKTHROUGH.md
+./kvlab/perf.py
+./kvlab/perf_harness.py
+./results/m2/pre_m2_git_state_20261103T125219.txt
+./results/m2/pre_m2_manifest_20261103T125219.sha256
+./results/m2/pre_m2_snapshot_20261103T125219.sha256
+./results/m2/pre_protocol_probes/NOTES.md
+./results/m2/pre_protocol_probes/probe_clk.py
+./results/m2/pre_protocol_probes/probe_corr.py
+./results/m2/pre_protocol_probes/probe_flow.py
+./results/m2/pre_protocol_probes/probe_flow_pinned.py
+./results/m2/pre_protocol_probes/probe_full.py
+./results/m2/pre_protocol_probes/probe_gap.py
+./results/m2/pre_protocol_probes/probe_harness.py
+./results/m2/pre_protocol_probes/probe_regime.py
+./results/m2/pre_protocol_probes/probe_smi.py
+./results/m2/pytest_cpu_20261103T131401.log
+./results/m2/pytest_cpu_final_20261103T132853.log
+./results/m2/pytest_gpu_m1_after_engine_refactor_20261103T131436.log
+./results/m2/run_20261103T131543/calibration_gpu_monitor.csv
+./results/m2/run_20261103T131543/calibration_samples.json
+./results/m2/run_20261103T131543/evaluation_gpu_monitor.csv
+./results/m2/run_20261103T131543/evaluation_samples.json
+./results/m2/run_20261103T131543/logs/calibration_measure.log
+./results/m2/run_20261103T131543/logs/disk_evicted_paired.txt
+./results/m2/run_20261103T131543/logs/evaluation_measure.log
+./results/m2/run_20261103T131543/logs/fit_predict.log
+./results/m2/run_20261103T131543/logs/score.log
+./results/m2/run_20261103T131543/logs/slow_mode_time_clustering.txt
+./results/m2/run_20261103T131543/logs/spike_probe.log
+./results/m2/run_20261103T131543/model.json
+./results/m2/run_20261103T131543/predictions.json
+./results/m2/run_20261103T131543/results.json
+./results/m2/run_20261103T131543/results.md
+./results/m2/run_20261103T131543/spike_probe.gpu_monitor.csv
+./results/m2/run_20261103T131543/spike_probe.json
+./results/m2/smoke_20261103T125831/logs/measure.log
+./results/m2/smoke_20261103T125910/logs/measure.log
+./results/m2/smoke_20261103T125910/smoke_samples.json
+./results/m2/smoke_20261103T130506/logs/measure.log
+./results/m2/smoke_20261103T130506/smoke_samples.json
+./results/m2/smoke_20261103T131505/logs/measure.log
+./results/m2/smoke_20261103T131505/smoke_gpu_monitor.csv
+./results/m2/smoke_20261103T131505/smoke_samples.json
+./scripts/m2_fit_predict.py
+./scripts/m2_measure.py
+./scripts/m2_score.py
+./scripts/m2_spike_probe.py
+./tests/test_perf.py
+
+DELETED (0)

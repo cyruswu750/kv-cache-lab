@@ -1,0 +1,10 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  53%|█████▎    | 180/338 [00:00<00:00, 1797.60it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2886.52it/s]
+h2d_56_copies_from_registered_slab            median    2.245  min    1.750  max     5.22  slow share 42%
+h2d_56_copies_from_pageable                   median    2.144  min    1.852  max     3.72  slow share 2%
+h2d_single_7MB_copy_from_registered_slab      median    0.611  min    0.604  max     0.94  slow share 0%
+dynamic_cache_assembly_1_chunk                median    0.783  min    0.626  max     2.53  slow share 33%
+disk_read_into_validated_1_chunk              median    1.479  min    1.445  max     1.60  slow share 0%
+dynamic_cache_plus_suffix_prefill_S1_L256     median   17.155  min   16.411  max    66.82  slow share 38%
+host_restore_path_1_chunk_e2e                 median   62.650  min   19.134  max    72.65  slow share 66%
+full_path_N257_e2e                            median   25.594  min   25.202  max    51.70  slow share 10%
+wrote results/m2/run_20261103T131543/spike_probe.json

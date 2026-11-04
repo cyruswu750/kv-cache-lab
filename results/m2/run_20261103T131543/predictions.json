@@ -1,0 +1,2696 @@
+{
+ "model_sha256": "0774b1a2141944592ceab39b1787568368fbe60637ea1df56b4918c657f2a65f",
+ "cases": [
+  [
+   256,
+   64
+  ],
+  [
+   512,
+   1
+  ],
+  [
+   512,
+   64
+  ],
+  [
+   512,
+   256
+  ],
+  [
+   1024,
+   64
+  ],
+  [
+   2048,
+   1
+  ],
+  [
+   2048,
+   64
+  ],
+  [
+   2048,
+   256
+  ],
+  [
+   4096,
+   64
+  ]
+ ],
+ "predictions": [
+  {
+   "path": "full",
+   "L": 256,
+   "S": 64,
+   "predicted_ms": 26.435591668881916,
+   "components_ms": {
+    "ingest": 0.11709914650170888,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 26.702185888936842,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 256,
+   "S": 64,
+   "predicted_ms": 21.80575177958191,
+   "components_ms": {
+    "ingest": 0.11709914650170888,
+    "restore_host": 3.6233472315619033,
+    "prefill_suffix": 18.334727768074927,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 256,
+   "S": 64,
+   "predicted_ms": 24.376781865000808,
+   "components_ms": {
+    "ingest": 0.11709914650170888,
+    "restore_disk": 5.7490045669808065,
+    "prefill_suffix": 18.334727768074927,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 512,
+   "S": 1,
+   "predicted_ms": 34.89636680912827,
+   "components_ms": {
+    "ingest": 0.1426737353283527,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 35.13738644035655,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "predicted_ms": 24.325237478576344,
+   "components_ms": {
+    "ingest": 0.1426737353283527,
+    "restore_host": 7.246694463123807,
+    "prefill_suffix": 17.205291646680813,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "predicted_ms": 29.02192489941414,
+   "components_ms": {
+    "ingest": 0.1426737353283527,
+    "restore_disk": 11.498009133961613,
+    "prefill_suffix": 17.205291646680813,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 512,
+   "S": 64,
+   "predicted_ms": 37.724629688868575,
+   "components_ms": {
+    "ingest": 0.15102191717331934,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 37.95730113825189,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 64,
+   "predicted_ms": 25.601395325810568,
+   "components_ms": {
+    "ingest": 0.15102191717331934,
+    "restore_host": 7.246694463123807,
+    "prefill_suffix": 18.47310131207007,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 64,
+   "predicted_ms": 30.29808274664837,
+   "components_ms": {
+    "ingest": 0.15102191717331934,
+    "restore_disk": 11.498009133961613,
+    "prefill_suffix": 18.47310131207007,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 512,
+   "S": 256,
+   "predicted_ms": 51.05624520149772,
+   "components_ms": {
+    "ingest": 0.17646399517702718,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 46.75306664478872,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 256,
+   "predicted_ms": 34.20779575040709,
+   "components_ms": {
+    "ingest": 0.17646399517702718,
+    "restore_host": 7.246694463123807,
+    "prefill_suffix": 22.54365173057427,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 256,
+   "predicted_ms": 38.904483171244884,
+   "components_ms": {
+    "ingest": 0.17646399517702718,
+    "restore_disk": 11.498009133961613,
+    "prefill_suffix": 22.54365173057427,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1024,
+   "S": 64,
+   "predicted_ms": 61.92295290393006,
+   "components_ms": {
+    "ingest": 0.21886745851654024,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 62.08777881197015,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1024,
+   "S": 64,
+   "predicted_ms": 33.192682418267886,
+   "components_ms": {
+    "ingest": 0.21886745851654024,
+    "restore_host": 14.493388926247613,
+    "prefill_suffix": 18.74984840006036,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1024,
+   "S": 64,
+   "predicted_ms": 42.14068450994349,
+   "components_ms": {
+    "ingest": 0.21886745851654024,
+    "restore_disk": 22.996018267923226,
+    "prefill_suffix": 18.74984840006036,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2048,
+   "S": 1,
+   "predicted_ms": 113.17485974817666,
+   "components_ms": {
+    "ingest": 0.3462103593580154,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 113.21234275537527,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 1,
+   "predicted_ms": 46.281830011726974,
+   "components_ms": {
+    "ingest": 0.3462103593580154,
+    "restore_host": 28.986777852495226,
+    "prefill_suffix": 17.21826416643036,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 1,
+   "predicted_ms": 63.732461445078194,
+   "components_ms": {
+    "ingest": 0.3462103593580154,
+    "restore_disk": 45.99203653584645,
+    "prefill_suffix": 17.21826416643036,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2048,
+   "S": 64,
+   "predicted_ms": 116.80058803440569,
+   "components_ms": {
+    "ingest": 0.3545585412029821,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 116.82972285975934,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "predicted_ms": 48.375256603182514,
+   "components_ms": {
+    "ingest": 0.3545585412029821,
+    "restore_host": 28.986777852495226,
+    "prefill_suffix": 19.303342576040933,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "predicted_ms": 65.82588803653373,
+   "components_ms": {
+    "ingest": 0.3545585412029821,
+    "restore_disk": 45.99203653584645,
+    "prefill_suffix": 19.303342576040933,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2048,
+   "S": 256,
+   "predicted_ms": 132.56257430966704,
+   "components_ms": {
+    "ingest": 0.38000061920668987,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 128.05585912892838,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 256,
+   "predicted_ms": 59.47238081969162,
+   "components_ms": {
+    "ingest": 0.38000061920668987,
+    "restore_host": 28.986777852495226,
+    "prefill_suffix": 25.864616786457727,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 256,
+   "predicted_ms": 76.92301225304284,
+   "components_ms": {
+    "ingest": 0.38000061920668987,
+    "restore_disk": 45.99203653584645,
+    "prefill_suffix": 25.864616786457727,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 4096,
+   "S": 64,
+   "predicted_ms": 252.47981309676757,
+   "components_ms": {
+    "ingest": 0.6259407065758656,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 252.23756575674835,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 4096,
+   "S": 64,
+   "predicted_ms": 78.74040497301178,
+   "components_ms": {
+    "ingest": 0.6259407065758656,
+    "restore_host": 57.97355570499045,
+    "prefill_suffix": 20.410330928002086,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 4096,
+   "S": 64,
+   "predicted_ms": 113.19629508971423,
+   "components_ms": {
+    "ingest": 0.6259407065758656,
+    "restore_disk": 91.9840730716929,
+    "prefill_suffix": 20.410330928002086,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  }
+ ],
+ "created_unix": 1793740712.8005202,
+ "created_at": "2026-11-03T13:18:32-0800",
+ "in_sample_calibration": [
+  {
+   "path": "full",
+   "L": 256,
+   "S": 1,
+   "predicted_ms": 23.740239690223056,
+   "components_ms": {
+    "ingest": 0.10875096465674225,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 24.01518209212295,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 256,
+   "S": 1,
+   "predicted_ms": 20.665805389717903,
+   "components_ms": {
+    "ingest": 0.10875096465674225,
+    "restore_host": 3.6233472315619033,
+    "prefill_suffix": 17.20312956005589,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 256,
+   "S": 1,
+   "predicted_ms": 23.2368354751368,
+   "components_ms": {
+    "ingest": 0.10875096465674225,
+    "restore_disk": 5.7490045669808065,
+    "prefill_suffix": 17.20312956005589,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 256,
+   "S": 256,
+   "predicted_ms": 39.36214538773901,
+   "components_ms": {
+    "ingest": 0.14254122450541673,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 35.09288960170162,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 256,
+   "S": 256,
+   "predicted_ms": 29.997031572192995,
+   "components_ms": {
+    "ingest": 0.14254122450541673,
+    "restore_host": 3.6233472315619033,
+    "prefill_suffix": 21.990157554593694,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 256,
+   "S": 256,
+   "predicted_ms": 32.56806165761189,
+   "components_ms": {
+    "ingest": 0.14254122450541673,
+    "restore_disk": 5.7490045669808065,
+    "prefill_suffix": 21.990157554593694,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1024,
+   "S": 1,
+   "predicted_ms": 58.82886822202684,
+   "components_ms": {
+    "ingest": 0.2105192766715736,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 59.0020423119119,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1024,
+   "S": 1,
+   "predicted_ms": 31.64410165629322,
+   "components_ms": {
+    "ingest": 0.2105192766715736,
+    "restore_host": 14.493388926247613,
+    "prefill_suffix": 17.20961581993066,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1024,
+   "S": 1,
+   "predicted_ms": 40.59210374796883,
+   "components_ms": {
+    "ingest": 0.2105192766715736,
+    "restore_disk": 22.996018267923226,
+    "prefill_suffix": 17.20961581993066,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1024,
+   "S": 256,
+   "predicted_ms": 76.06469200410328,
+   "components_ms": {
+    "ingest": 0.2443095365202481,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 71.69366790605106,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1024,
+   "S": 256,
+   "predicted_ms": 42.62932410683526,
+   "components_ms": {
+    "ingest": 0.2443095365202481,
+    "restore_host": 14.493388926247613,
+    "prefill_suffix": 23.65064008253542,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1024,
+   "S": 256,
+   "predicted_ms": 51.57732619851087,
+   "components_ms": {
+    "ingest": 0.2443095365202481,
+    "restore_disk": 22.996018267923226,
+    "prefill_suffix": 23.65064008253542,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 4096,
+   "S": 1,
+   "predicted_ms": 247.79079760188696,
+   "components_ms": {
+    "ingest": 0.6175925247308991,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 247.5568984437127,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 4096,
+   "S": 1,
+   "predicted_ms": 75.55728672259447,
+   "components_ms": {
+    "ingest": 0.6175925247308991,
+    "restore_host": 57.97355570499045,
+    "prefill_suffix": 17.23556085942975,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 4096,
+   "S": 1,
+   "predicted_ms": 110.01317683929692,
+   "components_ms": {
+    "ingest": 0.6175925247308991,
+    "restore_disk": 91.9840730716929,
+    "prefill_suffix": 17.23556085942975,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 4096,
+   "S": 256,
+   "predicted_ms": 271.4822937222053,
+   "components_ms": {
+    "ingest": 0.6513827845795735,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 266.70419637609376,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 4096,
+   "S": 256,
+   "predicted_ms": 93.15849424540434,
+   "components_ms": {
+    "ingest": 0.6513827845795735,
+    "restore_host": 57.97355570499045,
+    "prefill_suffix": 30.292570194302336,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 4096,
+   "S": 256,
+   "predicted_ms": 127.61438436210679,
+   "components_ms": {
+    "ingest": 0.6513827845795735,
+    "restore_disk": 91.9840730716929,
+    "prefill_suffix": 30.292570194302336,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  }
+ ],
+ "scan": [
+  {
+   "path": "full",
+   "L": 256,
+   "S": 1,
+   "predicted_ms": 23.740239690223056,
+   "components_ms": {
+    "ingest": 0.10875096465674225,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 24.01518209212295,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 256,
+   "S": 1,
+   "predicted_ms": 20.665805389717903,
+   "components_ms": {
+    "ingest": 0.10875096465674225,
+    "restore_host": 3.6233472315619033,
+    "prefill_suffix": 17.20312956005589,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 256,
+   "S": 1,
+   "predicted_ms": 23.2368354751368,
+   "components_ms": {
+    "ingest": 0.10875096465674225,
+    "restore_disk": 5.7490045669808065,
+    "prefill_suffix": 17.20312956005589,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 512,
+   "S": 1,
+   "predicted_ms": 34.89636680912827,
+   "components_ms": {
+    "ingest": 0.1426737353283527,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 35.13738644035655,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "predicted_ms": 24.325237478576344,
+   "components_ms": {
+    "ingest": 0.1426737353283527,
+    "restore_host": 7.246694463123807,
+    "prefill_suffix": 17.205291646680813,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "predicted_ms": 29.02192489941414,
+   "components_ms": {
+    "ingest": 0.1426737353283527,
+    "restore_disk": 11.498009133961613,
+    "prefill_suffix": 17.205291646680813,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 768,
+   "S": 1,
+   "predicted_ms": 46.592576319729524,
+   "components_ms": {
+    "ingest": 0.17659650599996315,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 46.7996731802862,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 768,
+   "S": 1,
+   "predicted_ms": 27.984669567434782,
+   "components_ms": {
+    "ingest": 0.17659650599996315,
+    "restore_host": 10.87004169468571,
+    "prefill_suffix": 17.207453733305737,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 768,
+   "S": 1,
+   "predicted_ms": 34.80701432369148,
+   "components_ms": {
+    "ingest": 0.17659650599996315,
+    "restore_disk": 17.247013700942418,
+    "prefill_suffix": 17.207453733305737,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1024,
+   "S": 1,
+   "predicted_ms": 58.82886822202684,
+   "components_ms": {
+    "ingest": 0.2105192766715736,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 59.0020423119119,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1024,
+   "S": 1,
+   "predicted_ms": 31.64410165629322,
+   "components_ms": {
+    "ingest": 0.2105192766715736,
+    "restore_host": 14.493388926247613,
+    "prefill_suffix": 17.20961581993066,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1024,
+   "S": 1,
+   "predicted_ms": 40.59210374796883,
+   "components_ms": {
+    "ingest": 0.2105192766715736,
+    "restore_disk": 22.996018267923226,
+    "prefill_suffix": 17.20961581993066,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1280,
+   "S": 1,
+   "predicted_ms": 71.6052425160202,
+   "components_ms": {
+    "ingest": 0.24444204734318403,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 71.74449383523365,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1280,
+   "S": 1,
+   "predicted_ms": 35.303533745151654,
+   "components_ms": {
+    "ingest": 0.24444204734318403,
+    "restore_host": 18.116736157809516,
+    "prefill_suffix": 17.211777906555586,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1280,
+   "S": 1,
+   "predicted_ms": 46.377193172246166,
+   "components_ms": {
+    "ingest": 0.24444204734318403,
+    "restore_disk": 28.745022834904034,
+    "prefill_suffix": 17.211777906555586,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1536,
+   "S": 1,
+   "predicted_ms": 84.92169920170961,
+   "components_ms": {
+    "ingest": 0.2783648180147945,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 85.02702775025146,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1536,
+   "S": 1,
+   "predicted_ms": 38.9629658340101,
+   "components_ms": {
+    "ingest": 0.2783648180147945,
+    "restore_host": 21.74008338937142,
+    "prefill_suffix": 17.21393999318051,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1536,
+   "S": 1,
+   "predicted_ms": 52.162282596523504,
+   "components_ms": {
+    "ingest": 0.2783648180147945,
+    "restore_disk": 34.494027401884836,
+    "prefill_suffix": 17.21393999318051,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1792,
+   "S": 1,
+   "predicted_ms": 98.77823827909512,
+   "components_ms": {
+    "ingest": 0.31228758868640494,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 98.84964405696535,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1792,
+   "S": 1,
+   "predicted_ms": 42.62239792286853,
+   "components_ms": {
+    "ingest": 0.31228758868640494,
+    "restore_host": 25.363430620933322,
+    "prefill_suffix": 17.216102079805434,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1792,
+   "S": 1,
+   "predicted_ms": 57.94737202080085,
+   "components_ms": {
+    "ingest": 0.31228758868640494,
+    "restore_disk": 40.243031968865644,
+    "prefill_suffix": 17.216102079805434,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2048,
+   "S": 1,
+   "predicted_ms": 113.17485974817666,
+   "components_ms": {
+    "ingest": 0.3462103593580154,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 113.21234275537527,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 1,
+   "predicted_ms": 46.281830011726974,
+   "components_ms": {
+    "ingest": 0.3462103593580154,
+    "restore_host": 28.986777852495226,
+    "prefill_suffix": 17.21826416643036,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 1,
+   "predicted_ms": 63.732461445078194,
+   "components_ms": {
+    "ingest": 0.3462103593580154,
+    "restore_disk": 45.99203653584645,
+    "prefill_suffix": 17.21826416643036,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2304,
+   "S": 1,
+   "predicted_ms": 128.11156360895424,
+   "components_ms": {
+    "ingest": 0.3801331300296259,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 128.11512384548126,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2304,
+   "S": 1,
+   "predicted_ms": 49.94126210058541,
+   "components_ms": {
+    "ingest": 0.3801331300296259,
+    "restore_host": 32.61012508405713,
+    "prefill_suffix": 17.220426253055283,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2304,
+   "S": 1,
+   "predicted_ms": 69.51755086935553,
+   "components_ms": {
+    "ingest": 0.3801331300296259,
+    "restore_disk": 51.74104110282726,
+    "prefill_suffix": 17.220426253055283,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2560,
+   "S": 1,
+   "predicted_ms": 143.58834986142787,
+   "components_ms": {
+    "ingest": 0.4140559007012363,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 143.55798732728329,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2560,
+   "S": 1,
+   "predicted_ms": 53.60069418944385,
+   "components_ms": {
+    "ingest": 0.4140559007012363,
+    "restore_host": 36.23347231561903,
+    "prefill_suffix": 17.222588339680208,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2560,
+   "S": 1,
+   "predicted_ms": 75.30264029363288,
+   "components_ms": {
+    "ingest": 0.4140559007012363,
+    "restore_disk": 57.49004566980807,
+    "prefill_suffix": 17.222588339680208,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2816,
+   "S": 1,
+   "predicted_ms": 159.60521850559763,
+   "components_ms": {
+    "ingest": 0.4479786713728468,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 159.5409332007814,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2816,
+   "S": 1,
+   "predicted_ms": 57.26012627830228,
+   "components_ms": {
+    "ingest": 0.4479786713728468,
+    "restore_host": 39.85681954718093,
+    "prefill_suffix": 17.224750426305132,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2816,
+   "S": 1,
+   "predicted_ms": 81.08772971791021,
+   "components_ms": {
+    "ingest": 0.4479786713728468,
+    "restore_disk": 63.23905023678887,
+    "prefill_suffix": 17.224750426305132,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 3072,
+   "S": 1,
+   "predicted_ms": 176.16216954146338,
+   "components_ms": {
+    "ingest": 0.48190144204445723,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 176.06396146597555,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 3072,
+   "S": 1,
+   "predicted_ms": 60.919558367160725,
+   "components_ms": {
+    "ingest": 0.48190144204445723,
+    "restore_host": 43.48016677874284,
+    "prefill_suffix": 17.226912512930053,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 3072,
+   "S": 1,
+   "predicted_ms": 86.87281914218755,
+   "components_ms": {
+    "ingest": 0.48190144204445723,
+    "restore_disk": 68.98805480376967,
+    "prefill_suffix": 17.226912512930053,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 3328,
+   "S": 1,
+   "predicted_ms": 193.25920296902518,
+   "components_ms": {
+    "ingest": 0.5158242127160677,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 193.12707212286574,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 3328,
+   "S": 1,
+   "predicted_ms": 64.57899045601916,
+   "components_ms": {
+    "ingest": 0.5158242127160677,
+    "restore_host": 47.10351401030474,
+    "prefill_suffix": 17.229074599554977,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 3328,
+   "S": 1,
+   "predicted_ms": 92.6579085664649,
+   "components_ms": {
+    "ingest": 0.5158242127160677,
+    "restore_disk": 74.73705937075049,
+    "prefill_suffix": 17.229074599554977,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 3584,
+   "S": 1,
+   "predicted_ms": 210.89631878828303,
+   "components_ms": {
+    "ingest": 0.5497469833876781,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 210.73026517145198,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 3584,
+   "S": 1,
+   "predicted_ms": 68.2384225448776,
+   "components_ms": {
+    "ingest": 0.5497469833876781,
+    "restore_host": 50.726861241866644,
+    "prefill_suffix": 17.2312366861799,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 3584,
+   "S": 1,
+   "predicted_ms": 98.44299799074223,
+   "components_ms": {
+    "ingest": 0.5497469833876781,
+    "restore_disk": 80.48606393773129,
+    "prefill_suffix": 17.2312366861799,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 3840,
+   "S": 1,
+   "predicted_ms": 229.07351699923697,
+   "components_ms": {
+    "ingest": 0.5836697540592886,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 228.8735406117343,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 3840,
+   "S": 1,
+   "predicted_ms": 71.89785463373603,
+   "components_ms": {
+    "ingest": 0.5836697540592886,
+    "restore_host": 54.35020847342855,
+    "prefill_suffix": 17.233398772804826,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 3840,
+   "S": 1,
+   "predicted_ms": 104.22808741501959,
+   "components_ms": {
+    "ingest": 0.5836697540592886,
+    "restore_disk": 86.2350685047121,
+    "prefill_suffix": 17.233398772804826,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 4096,
+   "S": 1,
+   "predicted_ms": 247.79079760188696,
+   "components_ms": {
+    "ingest": 0.6175925247308991,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 247.5568984437127,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 4096,
+   "S": 1,
+   "predicted_ms": 75.55728672259447,
+   "components_ms": {
+    "ingest": 0.6175925247308991,
+    "restore_host": 57.97355570499045,
+    "prefill_suffix": 17.23556085942975,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 4096,
+   "S": 1,
+   "predicted_ms": 110.01317683929692,
+   "components_ms": {
+    "ingest": 0.6175925247308991,
+    "restore_disk": 91.9840730716929,
+    "prefill_suffix": 17.23556085942975,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 256,
+   "S": 64,
+   "predicted_ms": 26.435591668881916,
+   "components_ms": {
+    "ingest": 0.11709914650170888,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 26.702185888936842,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 256,
+   "S": 64,
+   "predicted_ms": 21.80575177958191,
+   "components_ms": {
+    "ingest": 0.11709914650170888,
+    "restore_host": 3.6233472315619033,
+    "prefill_suffix": 18.334727768074927,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 256,
+   "S": 64,
+   "predicted_ms": 24.376781865000808,
+   "components_ms": {
+    "ingest": 0.11709914650170888,
+    "restore_disk": 5.7490045669808065,
+    "prefill_suffix": 18.334727768074927,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 512,
+   "S": 64,
+   "predicted_ms": 37.724629688868575,
+   "components_ms": {
+    "ingest": 0.15102191717331934,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 37.95730113825189,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 64,
+   "predicted_ms": 25.601395325810568,
+   "components_ms": {
+    "ingest": 0.15102191717331934,
+    "restore_host": 7.246694463123807,
+    "prefill_suffix": 18.47310131207007,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 64,
+   "predicted_ms": 30.29808274664837,
+   "components_ms": {
+    "ingest": 0.15102191717331934,
+    "restore_disk": 11.498009133961613,
+    "prefill_suffix": 18.47310131207007,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 768,
+   "S": 64,
+   "predicted_ms": 49.553750100551284,
+   "components_ms": {
+    "ingest": 0.1849446878449298,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 49.75249877926299,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 768,
+   "S": 64,
+   "predicted_ms": 29.397038872039225,
+   "components_ms": {
+    "ingest": 0.1849446878449298,
+    "restore_host": 10.87004169468571,
+    "prefill_suffix": 18.611474856065215,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 768,
+   "S": 64,
+   "predicted_ms": 36.21938362829593,
+   "components_ms": {
+    "ingest": 0.1849446878449298,
+    "restore_disk": 17.247013700942418,
+    "prefill_suffix": 18.611474856065215,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1024,
+   "S": 64,
+   "predicted_ms": 61.92295290393006,
+   "components_ms": {
+    "ingest": 0.21886745851654024,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 62.08777881197015,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1024,
+   "S": 64,
+   "predicted_ms": 33.192682418267886,
+   "components_ms": {
+    "ingest": 0.21886745851654024,
+    "restore_host": 14.493388926247613,
+    "prefill_suffix": 18.74984840006036,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1024,
+   "S": 64,
+   "predicted_ms": 42.14068450994349,
+   "components_ms": {
+    "ingest": 0.21886745851654024,
+    "restore_disk": 22.996018267923226,
+    "prefill_suffix": 18.74984840006036,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1280,
+   "S": 64,
+   "predicted_ms": 74.83223809900487,
+   "components_ms": {
+    "ingest": 0.2527902291881507,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 74.96314123637336,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1280,
+   "S": 64,
+   "predicted_ms": 36.98832596449654,
+   "components_ms": {
+    "ingest": 0.2527902291881507,
+    "restore_host": 18.116736157809516,
+    "prefill_suffix": 18.888221944055502,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1280,
+   "S": 64,
+   "predicted_ms": 48.06198539159105,
+   "components_ms": {
+    "ingest": 0.2527902291881507,
+    "restore_disk": 28.745022834904034,
+    "prefill_suffix": 18.888221944055502,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1536,
+   "S": 64,
+   "predicted_ms": 88.28160568577577,
+   "components_ms": {
+    "ingest": 0.2867129998597612,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 88.37858605247264,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1536,
+   "S": 64,
+   "predicted_ms": 40.7839695107252,
+   "components_ms": {
+    "ingest": 0.2867129998597612,
+    "restore_host": 21.74008338937142,
+    "prefill_suffix": 19.026595488050646,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1536,
+   "S": 64,
+   "predicted_ms": 53.983286273238605,
+   "components_ms": {
+    "ingest": 0.2867129998597612,
+    "restore_disk": 34.494027401884836,
+    "prefill_suffix": 19.026595488050646,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1792,
+   "S": 64,
+   "predicted_ms": 102.2710556642427,
+   "components_ms": {
+    "ingest": 0.3206357705313716,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 102.33411326026796,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1792,
+   "S": 64,
+   "predicted_ms": 44.57961305695385,
+   "components_ms": {
+    "ingest": 0.3206357705313716,
+    "restore_host": 25.363430620933322,
+    "prefill_suffix": 19.16496903204579,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1792,
+   "S": 64,
+   "predicted_ms": 59.904587154886165,
+   "components_ms": {
+    "ingest": 0.3206357705313716,
+    "restore_disk": 40.243031968865644,
+    "prefill_suffix": 19.16496903204579,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2048,
+   "S": 64,
+   "predicted_ms": 116.80058803440569,
+   "components_ms": {
+    "ingest": 0.3545585412029821,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 116.82972285975934,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "predicted_ms": 48.375256603182514,
+   "components_ms": {
+    "ingest": 0.3545585412029821,
+    "restore_host": 28.986777852495226,
+    "prefill_suffix": 19.303342576040933,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "predicted_ms": 65.82588803653373,
+   "components_ms": {
+    "ingest": 0.3545585412029821,
+    "restore_disk": 45.99203653584645,
+    "prefill_suffix": 19.303342576040933,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2304,
+   "S": 64,
+   "predicted_ms": 131.8702027962647,
+   "components_ms": {
+    "ingest": 0.3884813118745925,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 131.86541485094673,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2304,
+   "S": 64,
+   "predicted_ms": 52.17090014941117,
+   "components_ms": {
+    "ingest": 0.3884813118745925,
+    "restore_host": 32.61012508405713,
+    "prefill_suffix": 19.441716120036077,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2304,
+   "S": 64,
+   "predicted_ms": 71.7471889181813,
+   "components_ms": {
+    "ingest": 0.3884813118745925,
+    "restore_disk": 51.74104110282726,
+    "prefill_suffix": 19.441716120036077,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2560,
+   "S": 64,
+   "predicted_ms": 147.47989994981984,
+   "components_ms": {
+    "ingest": 0.422404082546203,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 147.44118923383027,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2560,
+   "S": 64,
+   "predicted_ms": 55.96654369563983,
+   "components_ms": {
+    "ingest": 0.422404082546203,
+    "restore_host": 36.23347231561903,
+    "prefill_suffix": 19.58008966403122,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2560,
+   "S": 64,
+   "predicted_ms": 77.66848979982886,
+   "components_ms": {
+    "ingest": 0.422404082546203,
+    "restore_disk": 57.49004566980807,
+    "prefill_suffix": 19.58008966403122,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2816,
+   "S": 64,
+   "predicted_ms": 163.62967949507095,
+   "components_ms": {
+    "ingest": 0.45632685321781336,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 163.55704600840977,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2816,
+   "S": 64,
+   "predicted_ms": 59.76218724186848,
+   "components_ms": {
+    "ingest": 0.45632685321781336,
+    "restore_host": 39.85681954718093,
+    "prefill_suffix": 19.718463208026368,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2816,
+   "S": 64,
+   "predicted_ms": 83.58979068147642,
+   "components_ms": {
+    "ingest": 0.45632685321781336,
+    "restore_disk": 63.23905023678887,
+    "prefill_suffix": 19.718463208026368,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 3072,
+   "S": 64,
+   "predicted_ms": 180.31954143201818,
+   "components_ms": {
+    "ingest": 0.49024962388942384,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 180.2129851746854,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 3072,
+   "S": 64,
+   "predicted_ms": 63.55783078809715,
+   "components_ms": {
+    "ingest": 0.49024962388942384,
+    "restore_host": 43.48016677874284,
+    "prefill_suffix": 19.85683675202151,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 3072,
+   "S": 64,
+   "predicted_ms": 89.51109156312397,
+   "components_ms": {
+    "ingest": 0.49024962388942384,
+    "restore_disk": 68.98805480376967,
+    "prefill_suffix": 19.85683675202151,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 3328,
+   "S": 64,
+   "predicted_ms": 197.54948576066144,
+   "components_ms": {
+    "ingest": 0.5241723945610343,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 197.40900673265705,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 3328,
+   "S": 64,
+   "predicted_ms": 67.3534743343258,
+   "components_ms": {
+    "ingest": 0.5241723945610343,
+    "restore_host": 47.10351401030474,
+    "prefill_suffix": 19.995210296016655,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 3328,
+   "S": 64,
+   "predicted_ms": 95.43239244477154,
+   "components_ms": {
+    "ingest": 0.5241723945610343,
+    "restore_disk": 74.73705937075049,
+    "prefill_suffix": 19.995210296016655,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 3584,
+   "S": 64,
+   "predicted_ms": 215.31951248100074,
+   "components_ms": {
+    "ingest": 0.5580951652326448,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 215.14511068232474,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 3584,
+   "S": 64,
+   "predicted_ms": 71.14911788055446,
+   "components_ms": {
+    "ingest": 0.5580951652326448,
+    "restore_host": 50.726861241866644,
+    "prefill_suffix": 20.1335838400118,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 3584,
+   "S": 64,
+   "predicted_ms": 101.35369332641909,
+   "components_ms": {
+    "ingest": 0.5580951652326448,
+    "restore_disk": 80.48606393773129,
+    "prefill_suffix": 20.1335838400118,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 3840,
+   "S": 64,
+   "predicted_ms": 233.62962159303612,
+   "components_ms": {
+    "ingest": 0.5920179359042552,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 233.4212970236885,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 3840,
+   "S": 64,
+   "predicted_ms": 74.94476142678312,
+   "components_ms": {
+    "ingest": 0.5920179359042552,
+    "restore_host": 54.35020847342855,
+    "prefill_suffix": 20.271957384006942,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 3840,
+   "S": 64,
+   "predicted_ms": 107.27499420806666,
+   "components_ms": {
+    "ingest": 0.5920179359042552,
+    "restore_disk": 86.2350685047121,
+    "prefill_suffix": 20.271957384006942,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 4096,
+   "S": 64,
+   "predicted_ms": 252.47981309676757,
+   "components_ms": {
+    "ingest": 0.6259407065758656,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 252.23756575674835,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 4096,
+   "S": 64,
+   "predicted_ms": 78.74040497301178,
+   "components_ms": {
+    "ingest": 0.6259407065758656,
+    "restore_host": 57.97355570499045,
+    "prefill_suffix": 20.410330928002086,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 4096,
+   "S": 64,
+   "predicted_ms": 113.19629508971423,
+   "components_ms": {
+    "ingest": 0.6259407065758656,
+    "restore_disk": 91.9840730716929,
+    "prefill_suffix": 20.410330928002086,
+    "store": 0.04228313344337102,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 256,
+   "S": 256,
+   "predicted_ms": 39.36214538773901,
+   "components_ms": {
+    "ingest": 0.14254122450541673,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 35.09288960170162,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 256,
+   "S": 256,
+   "predicted_ms": 29.997031572192995,
+   "components_ms": {
+    "ingest": 0.14254122450541673,
+    "restore_host": 3.6233472315619033,
+    "prefill_suffix": 21.990157554593694,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 256,
+   "S": 256,
+   "predicted_ms": 32.56806165761189,
+   "components_ms": {
+    "ingest": 0.14254122450541673,
+    "restore_disk": 5.7490045669808065,
+    "prefill_suffix": 21.990157554593694,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 512,
+   "S": 256,
+   "predicted_ms": 51.05624520149772,
+   "components_ms": {
+    "ingest": 0.17646399517702718,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 46.75306664478872,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 256,
+   "predicted_ms": 34.20779575040709,
+   "components_ms": {
+    "ingest": 0.17646399517702718,
+    "restore_host": 7.246694463123807,
+    "prefill_suffix": 22.54365173057427,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 256,
+   "predicted_ms": 38.904483171244884,
+   "components_ms": {
+    "ingest": 0.17646399517702718,
+    "restore_disk": 11.498009133961613,
+    "prefill_suffix": 22.54365173057427,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 768,
+   "S": 256,
+   "predicted_ms": 63.290427406952475,
+   "components_ms": {
+    "ingest": 0.21038676584863764,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 58.95332607957186,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 768,
+   "S": 256,
+   "predicted_ms": 38.41855992862117,
+   "components_ms": {
+    "ingest": 0.21038676584863764,
+    "restore_host": 10.87004169468571,
+    "prefill_suffix": 23.097145906554843,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 768,
+   "S": 256,
+   "predicted_ms": 45.240904684877876,
+   "components_ms": {
+    "ingest": 0.21038676584863764,
+    "restore_disk": 17.247013700942418,
+    "prefill_suffix": 23.097145906554843,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1024,
+   "S": 256,
+   "predicted_ms": 76.06469200410328,
+   "components_ms": {
+    "ingest": 0.2443095365202481,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 71.69366790605106,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1024,
+   "S": 256,
+   "predicted_ms": 42.62932410683526,
+   "components_ms": {
+    "ingest": 0.2443095365202481,
+    "restore_host": 14.493388926247613,
+    "prefill_suffix": 23.65064008253542,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1024,
+   "S": 256,
+   "predicted_ms": 51.57732619851087,
+   "components_ms": {
+    "ingest": 0.2443095365202481,
+    "restore_disk": 22.996018267923226,
+    "prefill_suffix": 23.65064008253542,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1280,
+   "S": 256,
+   "predicted_ms": 89.37903899295014,
+   "components_ms": {
+    "ingest": 0.27823230719185854,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 84.9740921242263,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1280,
+   "S": 256,
+   "predicted_ms": 46.840088285049355,
+   "components_ms": {
+    "ingest": 0.27823230719185854,
+    "restore_host": 18.116736157809516,
+    "prefill_suffix": 24.204134258515996,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1280,
+   "S": 256,
+   "predicted_ms": 57.913747712143866,
+   "components_ms": {
+    "ingest": 0.27823230719185854,
+    "restore_disk": 28.745022834904034,
+    "prefill_suffix": 24.204134258515996,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1536,
+   "S": 256,
+   "predicted_ms": 103.23346837349307,
+   "components_ms": {
+    "ingest": 0.31215507786346897,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 98.79459873409762,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1536,
+   "S": 256,
+   "predicted_ms": 51.050852463263446,
+   "components_ms": {
+    "ingest": 0.31215507786346897,
+    "restore_host": 21.74008338937142,
+    "prefill_suffix": 24.757628434496574,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1536,
+   "S": 256,
+   "predicted_ms": 64.25016922577686,
+   "components_ms": {
+    "ingest": 0.31215507786346897,
+    "restore_disk": 34.494027401884836,
+    "prefill_suffix": 24.757628434496574,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 1792,
+   "S": 256,
+   "predicted_ms": 117.62798014573204,
+   "components_ms": {
+    "ingest": 0.34607784853507945,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 113.15518773566498,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 1792,
+   "S": 256,
+   "predicted_ms": 55.26161664147753,
+   "components_ms": {
+    "ingest": 0.34607784853507945,
+    "restore_host": 25.363430620933322,
+    "prefill_suffix": 25.31112261047715,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 1792,
+   "S": 256,
+   "predicted_ms": 70.58659073940984,
+   "components_ms": {
+    "ingest": 0.34607784853507945,
+    "restore_disk": 40.243031968865644,
+    "prefill_suffix": 25.31112261047715,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2048,
+   "S": 256,
+   "predicted_ms": 132.56257430966704,
+   "components_ms": {
+    "ingest": 0.38000061920668987,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 128.05585912892838,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 256,
+   "predicted_ms": 59.47238081969162,
+   "components_ms": {
+    "ingest": 0.38000061920668987,
+    "restore_host": 28.986777852495226,
+    "prefill_suffix": 25.864616786457727,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 256,
+   "predicted_ms": 76.92301225304284,
+   "components_ms": {
+    "ingest": 0.38000061920668987,
+    "restore_disk": 45.99203653584645,
+    "prefill_suffix": 25.864616786457727,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2304,
+   "S": 256,
+   "predicted_ms": 148.03725086529815,
+   "components_ms": {
+    "ingest": 0.41392338987830035,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 143.49661291388787,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2304,
+   "S": 256,
+   "predicted_ms": 63.683144997905714,
+   "components_ms": {
+    "ingest": 0.41392338987830035,
+    "restore_host": 32.61012508405713,
+    "prefill_suffix": 26.418110962438302,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2304,
+   "S": 256,
+   "predicted_ms": 83.25943376667584,
+   "components_ms": {
+    "ingest": 0.41392338987830035,
+    "restore_disk": 51.74104110282726,
+    "prefill_suffix": 26.418110962438302,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2560,
+   "S": 256,
+   "predicted_ms": 164.05200981262527,
+   "components_ms": {
+    "ingest": 0.4478461605499108,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 159.4774490905434,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2560,
+   "S": 256,
+   "predicted_ms": 67.8939091761198,
+   "components_ms": {
+    "ingest": 0.4478461605499108,
+    "restore_host": 36.23347231561903,
+    "prefill_suffix": 26.971605138418877,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2560,
+   "S": 256,
+   "predicted_ms": 89.59585528030883,
+   "components_ms": {
+    "ingest": 0.4478461605499108,
+    "restore_disk": 57.49004566980807,
+    "prefill_suffix": 26.971605138418877,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 2816,
+   "S": 256,
+   "predicted_ms": 180.60685115164847,
+   "components_ms": {
+    "ingest": 0.48176893122152126,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 175.99836765889498,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 2816,
+   "S": 256,
+   "predicted_ms": 72.10467335433388,
+   "components_ms": {
+    "ingest": 0.48176893122152126,
+    "restore_host": 39.85681954718093,
+    "prefill_suffix": 27.52509931439945,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 2816,
+   "S": 256,
+   "predicted_ms": 95.93227679394182,
+   "components_ms": {
+    "ingest": 0.48176893122152126,
+    "restore_disk": 63.23905023678887,
+    "prefill_suffix": 27.52509931439945,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 3072,
+   "S": 256,
+   "predicted_ms": 197.70177488236772,
+   "components_ms": {
+    "ingest": 0.5156917018931316,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 193.0593686189426,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 3072,
+   "S": 256,
+   "predicted_ms": 76.31543753254799,
+   "components_ms": {
+    "ingest": 0.5156917018931316,
+    "restore_host": 43.48016677874284,
+    "prefill_suffix": 28.07859349038003,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 3072,
+   "S": 256,
+   "predicted_ms": 102.26869830757481,
+   "components_ms": {
+    "ingest": 0.5156917018931316,
+    "restore_disk": 68.98805480376967,
+    "prefill_suffix": 28.07859349038003,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 3328,
+   "S": 256,
+   "predicted_ms": 215.33678100478303,
+   "components_ms": {
+    "ingest": 0.5496144725647422,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 210.66045197068632,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 3328,
+   "S": 256,
+   "predicted_ms": 80.52620171076207,
+   "components_ms": {
+    "ingest": 0.5496144725647422,
+    "restore_host": 47.10351401030474,
+    "prefill_suffix": 28.632087666360604,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 3328,
+   "S": 256,
+   "predicted_ms": 108.60511982120781,
+   "components_ms": {
+    "ingest": 0.5496144725647422,
+    "restore_disk": 74.73705937075049,
+    "prefill_suffix": 28.632087666360604,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 3584,
+   "S": 256,
+   "predicted_ms": 233.5118695188944,
+   "components_ms": {
+    "ingest": 0.5835372432363526,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 228.80161771412608,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 3584,
+   "S": 256,
+   "predicted_ms": 84.73696588897616,
+   "components_ms": {
+    "ingest": 0.5835372432363526,
+    "restore_host": 50.726861241866644,
+    "prefill_suffix": 29.185581842341183,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 3584,
+   "S": 256,
+   "predicted_ms": 114.94154133484079,
+   "components_ms": {
+    "ingest": 0.5835372432363526,
+    "restore_disk": 80.48606393773129,
+    "prefill_suffix": 29.185581842341183,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 3840,
+   "S": 256,
+   "predicted_ms": 252.22704042470178,
+   "components_ms": {
+    "ingest": 0.617460013907963,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 247.48286584926186,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 3840,
+   "S": 256,
+   "predicted_ms": 88.94773006719025,
+   "components_ms": {
+    "ingest": 0.617460013907963,
+    "restore_host": 54.35020847342855,
+    "prefill_suffix": 29.739076018321757,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 3840,
+   "S": 256,
+   "predicted_ms": 121.2779628484738,
+   "components_ms": {
+    "ingest": 0.617460013907963,
+    "restore_disk": 86.2350685047121,
+    "prefill_suffix": 29.739076018321757,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  },
+  {
+   "path": "full",
+   "L": 4096,
+   "S": 256,
+   "predicted_ms": 271.4822937222053,
+   "components_ms": {
+    "ingest": 0.6513827845795735,
+    "restore_skipped": 0.00431825,
+    "prefill_full": 266.70419637609376,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.535603750000007
+   }
+  },
+  {
+   "path": "host",
+   "L": 4096,
+   "S": 256,
+   "predicted_ms": 93.15849424540434,
+   "components_ms": {
+    "ingest": 0.6513827845795735,
+    "restore_host": 57.97355570499045,
+    "prefill_suffix": 30.292570194302336,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": -0.4170145000000005
+   }
+  },
+  {
+   "path": "disk",
+   "L": 4096,
+   "S": 256,
+   "predicted_ms": 127.61438436210679,
+   "components_ms": {
+    "ingest": 0.6513827845795735,
+    "restore_disk": 91.9840730716929,
+    "prefill_suffix": 30.292570194302336,
+    "store": 4.552691061531982,
+    "select": 0.105309,
+    "instrumentation_offset": 0.028358249999993035
+   }
+  }
+ ],
+ "sha256": "1dfb47fab7675bfc97122dcb8024c6bb427b0faa8d98c8489a8a7bf368b5c91b"
+}

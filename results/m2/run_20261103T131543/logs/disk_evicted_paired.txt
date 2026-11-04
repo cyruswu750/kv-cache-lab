@@ -1,0 +1,6 @@
+disk_evicted (Linux page cache evicted via posix_fadvise; WSL2 host cache unknown) vs full, paired by repetition; diagnostic, not modeled
+calibration  L=  256 S=1: evicted - full    +1.90 CI [-0.72, +18.62] -> tie;  evicted - warm disk    +3.42 CI [+2.17, +9.91]
+calibration  L= 1024 S=1: evicted - full    -8.48 CI [-13.53, -2.44] -> restore;  evicted - warm disk   +13.79 CI [+9.40, +21.30]
+calibration  L= 4096 S=1: evicted - full   -88.61 CI [-93.27, -83.89] -> restore;  evicted - warm disk   +44.78 CI [-23.08, +54.08]
+evaluation   L=  512 S=1: evicted - full    -0.23 CI [-3.70, +7.13] -> tie;  evicted - warm disk    +3.34 CI [-2.25, +5.45]
+evaluation   L= 2048 S=1: evicted - full   -29.87 CI [-35.31, -25.12] -> restore;  evicted - warm disk   +22.98 CI [+17.34, +28.60]
