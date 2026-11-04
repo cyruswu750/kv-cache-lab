@@ -1,0 +1,75 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  54%|█████▍    | 182/338 [00:00<00:00, 1815.81it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2647.57it/s]
+USDT:2026-11-03 17:48:54 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:48:54 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=256 host baseline restore: {'cudaDeviceSynchronize': 1.2, 'cudaLaunchKernel': 56.0, 'cudaMemcpyAsync': 56.0, 'cudaStreamIsCapturing': 56.0, 'cudaStreamSynchronize': 56.0}
+USDT:2026-11-03 17:48:54 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:48:55 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=256 host baseline request: {'cuLaunchKernel': 196.0, 'cudaDeviceGetAttribute': 196.0, 'cudaDeviceSynchronize': 2.2, 'cudaFuncSetAttribute': 28.0, 'cudaLaunchKernel': 1212.0, 'cudaLaunchKernelExC': 84.0, 'cudaMemcpyAsync': 58.0, 'cudaMemsetAsync': 29.0, 'cudaStreamIsCapturing': 86.0, 'cudaStreamSynchronize': 58.0}
+USDT:2026-11-03 17:48:56 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:48:56 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=256 host batched restore: {'cudaDeviceSynchronize': 1.2, 'cudaLaunchKernel': 56.0, 'cudaMemcpyAsync': 2.0, 'cudaStreamIsCapturing': 1.0, 'cudaStreamSynchronize': 1.0}
+USDT:2026-11-03 17:48:56 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:48:56 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=256 host batched request: {'cuLaunchKernel': 196.0, 'cudaDeviceGetAttribute': 196.0, 'cudaDeviceSynchronize': 2.2, 'cudaFuncSetAttribute': 28.0, 'cudaLaunchKernel': 1212.0, 'cudaLaunchKernelExC': 84.0, 'cudaMemcpyAsync': 4.0, 'cudaMemsetAsync': 29.0, 'cudaStreamIsCapturing': 31.0, 'cudaStreamSynchronize': 3.0}
+USDT:2026-11-03 17:48:58 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:48:58 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=256 disk baseline restore: {'cudaDeviceSynchronize': 1.2, 'cudaLaunchKernel': 56.0, 'cudaMemcpyAsync': 56.0, 'cudaStreamIsCapturing': 56.0, 'cudaStreamSynchronize': 56.0}
+USDT:2026-11-03 17:48:58 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:48:58 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=256 disk baseline request: {'cuLaunchKernel': 196.0, 'cudaDeviceGetAttribute': 196.0, 'cudaDeviceSynchronize': 2.2, 'cudaFuncSetAttribute': 28.0, 'cudaLaunchKernel': 1212.0, 'cudaLaunchKernelExC': 84.0, 'cudaMemcpyAsync': 58.0, 'cudaMemsetAsync': 29.0, 'cudaStreamIsCapturing': 86.0, 'cudaStreamSynchronize': 58.0}
+USDT:2026-11-03 17:48:59 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:48:59 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=256 disk batched restore: {'cudaDeviceSynchronize': 1.2, 'cudaLaunchKernel': 56.0, 'cudaMemcpyAsync': 2.0, 'cudaStreamIsCapturing': 1.0, 'cudaStreamSynchronize': 1.0}
+USDT:2026-11-03 17:49:00 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:00 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=256 disk batched request: {'cuLaunchKernel': 196.0, 'cudaDeviceGetAttribute': 196.0, 'cudaDeviceSynchronize': 2.2, 'cudaFuncSetAttribute': 28.0, 'cudaLaunchKernel': 1212.0, 'cudaLaunchKernelExC': 84.0, 'cudaMemcpyAsync': 4.0, 'cudaMemsetAsync': 29.0, 'cudaStreamIsCapturing': 31.0, 'cudaStreamSynchronize': 3.0}
+USDT:2026-11-03 17:49:01 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:01 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=1536 host baseline restore: {'cudaDeviceSynchronize': 1.2, 'cudaLaunchKernel': 392.0, 'cudaMemcpyAsync': 336.0, 'cudaStreamIsCapturing': 336.0, 'cudaStreamSynchronize': 336.0}
+USDT:2026-11-03 17:49:02 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:02 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=1536 host baseline request: {'cudaDeviceSynchronize': 2.2, 'cudaFuncSetAttribute': 28.0, 'cudaLaunchKernel': 1744.0, 'cudaLaunchKernelExC': 84.0, 'cudaMemcpyAsync': 338.0, 'cudaMemsetAsync': 1.0, 'cudaOccupancyMaxActiveBlocksPerMultiprocessor': 168.0, 'cudaStreamIsCapturing': 366.0, 'cudaStreamSynchronize': 338.0}
+USDT:2026-11-03 17:49:05 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:05 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=1536 host batched restore: {'cudaDeviceSynchronize': 1.2, 'cudaLaunchKernel': 58.0, 'cudaMemcpyAsync': 6.0, 'cudaStreamIsCapturing': 6.0, 'cudaStreamSynchronize': 6.0}
+USDT:2026-11-03 17:49:05 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:05 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=1536 host batched request: {'cudaDeviceSynchronize': 2.2, 'cudaFuncSetAttribute': 28.0, 'cudaLaunchKernel': 1410.0, 'cudaLaunchKernelExC': 84.0, 'cudaMemcpyAsync': 8.0, 'cudaMemsetAsync': 1.0, 'cudaOccupancyMaxActiveBlocksPerMultiprocessor': 168.0, 'cudaStreamIsCapturing': 36.0, 'cudaStreamSynchronize': 8.0}
+USDT:2026-11-03 17:49:06 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:07 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=1536 disk baseline restore: {'cudaDeviceSynchronize': 1.2, 'cudaLaunchKernel': 392.0, 'cudaMemcpyAsync': 336.0, 'cudaStreamIsCapturing': 336.0, 'cudaStreamSynchronize': 336.0}
+USDT:2026-11-03 17:49:08 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:09 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=1536 disk baseline request: {'cudaDeviceSynchronize': 2.2, 'cudaFuncSetAttribute': 28.0, 'cudaLaunchKernel': 1744.0, 'cudaLaunchKernelExC': 84.0, 'cudaMemcpyAsync': 338.0, 'cudaMemsetAsync': 1.0, 'cudaOccupancyMaxActiveBlocksPerMultiprocessor': 168.0, 'cudaStreamIsCapturing': 366.0, 'cudaStreamSynchronize': 338.0}
+USDT:2026-11-03 17:49:11 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:11 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=1536 disk batched restore: {'cudaDeviceSynchronize': 1.2, 'cudaLaunchKernel': 58.0, 'cudaMemcpyAsync': 6.0, 'cudaStreamIsCapturing': 6.0, 'cudaStreamSynchronize': 6.0}
+USDT:2026-11-03 17:49:11 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:12 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=1536 disk batched request: {'cudaDeviceSynchronize': 2.2, 'cudaFuncSetAttribute': 28.0, 'cudaLaunchKernel': 1410.0, 'cudaLaunchKernelExC': 84.0, 'cudaMemcpyAsync': 8.0, 'cudaMemsetAsync': 1.0, 'cudaOccupancyMaxActiveBlocksPerMultiprocessor': 168.0, 'cudaStreamIsCapturing': 36.0, 'cudaStreamSynchronize': 8.0}
+USDT:2026-11-03 17:49:13 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:14 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=4096 host baseline restore: {'cudaDeviceSynchronize': 1.2, 'cudaLaunchKernel': 952.0, 'cudaMemcpyAsync': 896.0, 'cudaStreamIsCapturing': 896.0, 'cudaStreamSynchronize': 896.0}
+USDT:2026-11-03 17:49:17 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:18 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=4096 host baseline request: {'cuLaunchKernel': 112.0, 'cudaDeviceGetAttribute': 112.0, 'cudaDeviceSynchronize': 2.2, 'cudaFuncSetAttribute': 28.0, 'cudaLaunchKernel': 2192.0, 'cudaLaunchKernelExC': 84.0, 'cudaMemcpyAsync': 898.0, 'cudaMemsetAsync': 29.0, 'cudaOccupancyMaxActiveBlocksPerMultiprocessor': 84.0, 'cudaStreamIsCapturing': 926.0, 'cudaStreamSynchronize': 898.0}
+USDT:2026-11-03 17:49:22 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:22 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=4096 host batched restore: {'cudaDeviceSynchronize': 1.2, 'cudaLaunchKernel': 60.0, 'cudaMemcpyAsync': 16.0, 'cudaStreamIsCapturing': 16.0, 'cudaStreamSynchronize': 16.0}
+USDT:2026-11-03 17:49:22 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:22 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=4096 host batched request: {'cuLaunchKernel': 112.0, 'cudaDeviceGetAttribute': 112.0, 'cudaDeviceSynchronize': 2.2, 'cudaFuncSetAttribute': 28.0, 'cudaLaunchKernel': 1300.0, 'cudaLaunchKernelExC': 84.0, 'cudaMemcpyAsync': 18.0, 'cudaMemsetAsync': 29.0, 'cudaOccupancyMaxActiveBlocksPerMultiprocessor': 84.0, 'cudaStreamIsCapturing': 46.0, 'cudaStreamSynchronize': 18.0}
+USDT:2026-11-03 17:49:24 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:25 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=4096 disk baseline restore: {'cudaDeviceSynchronize': 1.2, 'cudaLaunchKernel': 952.0, 'cudaMemcpyAsync': 896.0, 'cudaStreamIsCapturing': 896.0, 'cudaStreamSynchronize': 896.0}
+USDT:2026-11-03 17:49:28 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:29 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=4096 disk baseline request: {'cuLaunchKernel': 112.0, 'cudaDeviceGetAttribute': 112.0, 'cudaDeviceSynchronize': 2.2, 'cudaFuncSetAttribute': 28.0, 'cudaLaunchKernel': 2192.0, 'cudaLaunchKernelExC': 84.0, 'cudaMemcpyAsync': 898.0, 'cudaMemsetAsync': 29.0, 'cudaOccupancyMaxActiveBlocksPerMultiprocessor': 84.0, 'cudaStreamIsCapturing': 926.0, 'cudaStreamSynchronize': 898.0}
+USDT:2026-11-03 17:49:34 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:34 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=4096 disk batched restore: {'cudaDeviceSynchronize': 1.2, 'cudaLaunchKernel': 60.0, 'cudaMemcpyAsync': 16.0, 'cudaStreamIsCapturing': 16.0, 'cudaStreamSynchronize': 16.0}
+USDT:2026-11-03 17:49:35 112530:112530 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 17:49:35 112530:112530 SyncActivityProfilerHandler.cpp:46] profiler_stop
+profile L=4096 disk batched request: {'cuLaunchKernel': 112.0, 'cudaDeviceGetAttribute': 112.0, 'cudaDeviceSynchronize': 2.2, 'cudaFuncSetAttribute': 28.0, 'cudaLaunchKernel': 1300.0, 'cudaLaunchKernelExC': 84.0, 'cudaMemcpyAsync': 18.0, 'cudaMemsetAsync': 29.0, 'cudaOccupancyMaxActiveBlocksPerMultiprocessor': 84.0, 'cudaStreamIsCapturing': 46.0, 'cudaStreamSynchronize': 18.0}
+{"n_samples": 0, "n_measured": 0, "n_excluded": 0, "elapsed_min": 0.7148787419001261, "correctness_all": true}
+failures []; wrote results/m3/eval_20261103T173632/session_prof.json

@@ -1,0 +1,4 @@
+# M3 evaluation sessions (docs/M3_PROTOCOL.md §4), sequential, one GPU process at a time
+for i in 1 2 3 4 5; do HF_HUB_OFFLINE=1 .venv/bin/python scripts/m3_measure.py --out-dir results/m3/eval_20261103T173632 --session s$i --cases 256:32,1024:1,1536:128,3072:256,4096:64 --blocks 2 --warmup 2 --reps 12 --seed 3100$i --staging-chunks 4; done
+# then the separate call-count run (§7)
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/m3_measure.py --out-dir results/m3/eval_20261103T173632 --session prof --profile --cases 256:32,1536:128,4096:64 --profile-reps 5 --seed 31099

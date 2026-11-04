@@ -1,0 +1,1 @@
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/m3_measure.py --out-dir results/m3/smoke_20261103T173459 --session smoke --cases 512:1,2048:64 --blocks 1 --warmup 1 --reps 3 --seed 1

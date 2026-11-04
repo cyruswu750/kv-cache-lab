@@ -1,0 +1,13 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  53%|█████▎    | 180/338 [00:00<00:00, 1794.65it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2589.14it/s]
+block 0 L=256 S=32 done (0.2 min)
+block 1 L=1536 S=128 done (0.5 min)
+block 2 L=4096 S=64 done (0.9 min)
+block 3 L=1024 S=1 done (1.0 min)
+block 4 L=3072 S=256 done (1.4 min)
+block 5 L=256 S=32 done (1.4 min)
+block 6 L=1536 S=128 done (1.6 min)
+block 7 L=4096 S=64 done (1.9 min)
+block 8 L=1024 S=1 done (2.0 min)
+block 9 L=3072 S=256 done (2.3 min)
+{"n_samples": 1296, "n_measured": 1080, "n_excluded": 0, "elapsed_min": 2.276738941669464, "correctness_all": true}
+failures []; wrote results/m3/eval_20261103T173632/session_s3.json

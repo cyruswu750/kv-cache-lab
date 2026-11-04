@@ -1,0 +1,1009 @@
+{
+ "meta": {
+  "session": "prof",
+  "args": {
+   "out_dir": "results/m3/eval_20261103T173632",
+   "session": "prof",
+   "cases": "256:32,1536:128,4096:64",
+   "blocks": 2,
+   "warmup": 2,
+   "reps": 12,
+   "seed": 31099,
+   "staging_chunks": 4,
+   "profile": true,
+   "profile_reps": 5
+  },
+  "seed": 31099,
+  "started_at": "2026-11-03T17:48:50-0800",
+  "started_unix": 1793756930.5183518,
+  "gpu_monitor_csv": "session_prof.gpu_monitor.csv",
+  "finished_at": "2026-11-03T17:49:37-0800",
+  "elapsed_min": 0.7148787419001261,
+  "n_samples": 0,
+  "n_measured": 0,
+  "n_excluded": 0,
+  "correctness_all": true
+ },
+ "source": {
+  "git_head": "362ee40aeaaae204b2b1dc88398b46bc5826f410",
+  "git_status_porcelain": [
+   " M docs/decisions.md",
+   " M docs/design.md",
+   " M kvlab/tiered_cache.py",
+   " M pyproject.toml",
+   " M scripts/m1_run.py",
+   " M tests/gpu/test_m1_tiered.py",
+   "?? docs/M3_DESIGN.md",
+   "?? docs/M3_PROTOCOL.md",
+   "?? docs/M3_WALKTHROUGH.md",
+   "?? kvlab/m3_bench.py",
+   "?? kvlab/m3_stats.py",
+   "?? results/m3/",
+   "?? scripts/m3_analyze.py",
+   "?? scripts/m3_measure.py",
+   "?? scripts/m3_mutation_check.py",
+   "?? tests/gpu/test_m3_restore.py",
+   "?? tests/test_m3_stats.py",
+   "?? tests/test_restore_backends_cpu.py"
+  ],
+  "git_diff_head_sha256": "2de194bf25e796e74a1a3e6faefb0dcea11d02d3872b3a7420350453fc8179f0",
+  "files_sha256": {
+   "kvlab/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "kvlab/always_restore.py": "a704b63bf6496c71fc5a6a7731463706ded366d45c96c17ddf73dc792aa1f7a3",
+   "kvlab/boundaries.py": "022a11e11ff03b9296391920dc58e715baab0560b77c164a5adda8e5df3e9e6d",
+   "kvlab/chunk_format.py": "55a9ab997cbe3190641a5ad332e007c974d0abe2433d52071e9f43b4c288b894",
+   "kvlab/diag_harness.py": "89c715b2dddb7d4f8f2cdf0311204ac1bb713516f312474843434fa0a729c88c",
+   "kvlab/disk_store.py": "f56a935c524613a54473430bf79b58822760a0d29b53d277b333bda9e7476736",
+   "kvlab/experiment.py": "546a8307ab76e6237ea432603aaa8c5be45d769781e9981d1a6c50fd5b354bf9",
+   "kvlab/fixtures.py": "5dd353014dbde98c18ab87a445ab02a39ae4d14d4392a4acc62e441c1b83a277",
+   "kvlab/host_store.py": "ceba0f739d9e661b02f13a1e3d0f24664acc1abde63ec4c4ca3738a5129aeb8b",
+   "kvlab/identity.py": "e016ad9fda3383cf1cd55e254be5913bfe0299a7737587ed8afbc1921cc20fd0",
+   "kvlab/kv_snapshot.py": "d97f2ea2624530f91c2d496c754377b97a5e99dc7414fe3e0fb7dcc6fb6e9b2f",
+   "kvlab/m3_bench.py": "025725da8c87333803e5f66694c2f8d18572b47427d5591c948c75b1ea32636f",
+   "kvlab/m3_stats.py": "a84562445effddf6f91eb757a014715ffe2920786dcf4ea9ecf22689f9eec5fe",
+   "kvlab/metrics.py": "1563d82427e3a440d8cf3c251d4f50dfc07bc997fcace0b3322fe423bcf5e556",
+   "kvlab/model.py": "821e0e5bbf0f1ec3eda1e62acb9542cc43c4c4383c5d37f23714d598de2bfb0a",
+   "kvlab/perf.py": "a263c948f19f20650a0e4b8ce0c998e6f21e9a9f3d1968eb61246f777e1b1f58",
+   "kvlab/perf_harness.py": "d2a76ff12d1acf02345d36fb19b676b649bac884a15ffdf5de2d74463c81ece8",
+   "kvlab/perf_stats.py": "8b3d8bd37f798ab85472b639167215d10875148afc27b4b88a186d5619e1e77d",
+   "kvlab/resident_reference.py": "b14da5c95ffad3af4d122b459d7bd2085e6485183a4f8fc9b3e367b5223546f0",
+   "kvlab/tiered_cache.py": "1cdbd53a38347210f0be4df3a5bcc85762d3078042a0a03e79d97f8f0e297df6",
+   "kvlab/tolerances.py": "35afa3f52b002b4a3af7be968639ee64e7c946cc73e9fd3174ee487db6add9ae",
+   "pyproject.toml": "172a23fd5a08a2bf6135bb0c355b171494f86da14f767f12336166da58cda60a",
+   "scripts/env_report.py": "e5ae16c90825709d26dbf471280ebd970085951095d0b77fc6499845dea5a883",
+   "scripts/m0_1_audit.py": "f2ad04412ee00355653a96e87c2c2b09b11c820d0337324470256d395b8e47f1",
+   "scripts/m0_calibrate.py": "129db017c0bcc4acaa1b972978200d5df7910449abf63727dd7cb37d98dfcc30",
+   "scripts/m0_diagnose_divergence.py": "af7d57e0898fcb7487cd97ce1fe2f38ad569e3a8801a168a6689fd2906f0e31a",
+   "scripts/m0_experiment.py": "5635e4e67f034c715ee2d0e4d250c5166c874f8e59d221364955d38533784033",
+   "scripts/m1_1_repro_review_issues.py": "ce6194c0b84a27418c11b99e97f8eb1cf0e50c5842b262077734ec51d8d94f23",
+   "scripts/m1_mutation_check.py": "8ae3499372a07ed3a2f3407dc1c181c07dc40eb11d2fd15e2ecef6aaab6c70c4",
+   "scripts/m1_run.py": "80016d9b97efadfac7096df07b83dd1049d57e0efb4ce524ee4dc5ca133daada",
+   "scripts/m2_1_analyze_diag.py": "891a6fb8d9bbb6ae67096333d9433a15ea9098f4c353617fa7f4934d6f77f76f",
+   "scripts/m2_1_diagnose.py": "a0bf0ecfe11f955c19ae1a9ac5b270dc0d30b0b61403fa231027e545a5562ce8",
+   "scripts/m2_1_reanalyze.py": "c7274246aa59d6eeb1b3b38081442aafeb9f84811ba76e8509211781d06cbb01",
+   "scripts/m2_1_regimes.py": "5a7f6ab02ae9ec8185916b7f9223261ef9f0943096087c81b8e1ca1c4953ca87",
+   "scripts/m2_fit_predict.py": "c363114161d613c979f704a7a3a4d477dc9c8792789a28491bef9484e19672e4",
+   "scripts/m2_measure.py": "2e07b48533987bf0b93fb8bd5438836841747782c1ec9cbc3ff0713ae9efff38",
+   "scripts/m2_score.py": "81ad78d30f236dfb5183e6e39aeac0e351f877a14fd98923d3ed4b5af8d45f2d",
+   "scripts/m2_spike_probe.py": "3967488edff29bfe0fa01383c6d23574da83063027306c78e8d34f7396343519",
+   "scripts/m3_analyze.py": "0ff942f230d92ecffe7c98610f5318c703bc3c2ab281a349b71e2cc799882950",
+   "scripts/m3_measure.py": "6d4c50467e21fc6dffdc8e2c98ffea1d9721b3053aa205ba489d3cd35f599550",
+   "scripts/m3_mutation_check.py": "03ac32c13841eeb02453d39def9d39aca4842f0ffa9d750c7e352101b39d001a",
+   "tests/gpu/test_gpu_roundtrip.py": "2768dd152fd046afe5227d6cd408e30ff49231fc96d5da728193e9a3e4e8647e",
+   "tests/gpu/test_m0_1_controls.py": "cb64b06e4eda911674a340dd9ef7b0fafc64811834c8d902fb37f6265ca869e1",
+   "tests/gpu/test_m1_tiered.py": "c866609eb632b02cd11efe856abac71a9ecd4da11744fcddbbaa22c1dc608d51",
+   "tests/gpu/test_m3_restore.py": "f0363d4a738ab970e62e159bc3a0183ea1bc7d7bfbe6c6ae198bd96f0035c35b",
+   "tests/m1_toy.py": "3189d88798771c5488936b98c5ddca60ac8c724d724bb5696bc073b880941db1",
+   "tests/test_boundaries.py": "c09d0e7805d5f1304cd4915b136cd039331da8277085bd10e5b2acf18be67960",
+   "tests/test_chunk_format.py": "51f331ca769d7099a44c98f625b44a92787400d806736e14ea8a04c9708ce356",
+   "tests/test_diag_bookkeeping.py": "1358fdbaccebf3aa4c5ac69c1ffcb4739f38650dad1824ab803cc801af9965b6",
+   "tests/test_disk_store.py": "918e3e031ef6f36d1988f135c07b03de461f82f37cc3d5fec2f44d60884ad095",
+   "tests/test_engine_cpu.py": "a5f0d2674f777f482c161536915c2eab0f737cd6acc894c7ea00ee45417bd594",
+   "tests/test_host_store.py": "cc78f8d7229eacecc623c951de4f52e25177f3c20ed0b05a518567b56297912a",
+   "tests/test_identity.py": "5905a3b7c36175a25d8eb22a2b16ff39c693637c9529dcaebe2e6d0f8c82d69c",
+   "tests/test_m1_run_validation.py": "3761fd928b890ba022f179cd2a74826a1c2a8949f5d439a14830ddc4d6b163ab",
+   "tests/test_m3_stats.py": "edb62333553257c027ecd6bbfccb0d6f4d462801c11a4da1cb158f51c31eee85",
+   "tests/test_perf.py": "7db1007d5bb44f2840da556c3ba262587f53afdc358e1d701f49142a6699f6c8",
+   "tests/test_perf_stats.py": "05a3a77d66eaf1a1226bac49907dd8eddaa3007179f93e030942c7ba6c524ace",
+   "tests/test_restore_backends_cpu.py": "c188e6403516a6cd3df471bf860df12b9ebe997566a4b61100e53d6de789ebed",
+   "tests/test_snapshot_cpu.py": "e1f6e32528d61bb7a9b0b2be8b618e56ce0c9958118e00e2c218aaa0a99642ee",
+   "tests/test_tiered_cpu.py": "9ee06a21397a3c707377052c854125ca9627c2929d39530cae709a1ce825966a"
+  }
+ },
+ "environment": {
+  "torch": "2.14.1+cu130",
+  "transformers": "5.22.1",
+  "cuda": "13.0",
+  "python": "3.14.4",
+  "gpu": "NVIDIA GeForce RTX 4080 Laptop GPU",
+  "gpu_static": "name, driver_version, power.limit [W], clocks.max.sm [MHz], clocks.max.memory [MHz], memory.total [MiB]\nNVIDIA GeForce RTX 4080 Laptop GPU, 596.49, [N/A], 3105 MHz, 9001 MHz, 12282 MiB",
+  "cpu": "AMD Ryzen 9 7945HX with Radeon Graphics",
+  "kernel": "6.18.54.1-microsoft-standard-WSL2",
+  "disk_root": "/home/cyrus/projects/kv-cache-lab/.kvcache/m3/eval_20261103T173632/prof",
+  "filesystem_df": [
+   "Filesystem     Type  1K-blocks     Used Available Use% Mounted on",
+   "/dev/sdd       ext4 1055762868 18913480 983145916   2% /"
+  ],
+  "root_mount": [
+   "/dev/sdd / ext4 rw,relatime,discard,errors=remount-ro,data=ordered 0 0"
+  ],
+  "page_size": 4096,
+  "source_manifest": {
+   "kvlab/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "kvlab/always_restore.py": "a704b63bf6496c71fc5a6a7731463706ded366d45c96c17ddf73dc792aa1f7a3",
+   "kvlab/boundaries.py": "022a11e11ff03b9296391920dc58e715baab0560b77c164a5adda8e5df3e9e6d",
+   "kvlab/chunk_format.py": "55a9ab997cbe3190641a5ad332e007c974d0abe2433d52071e9f43b4c288b894",
+   "kvlab/diag_harness.py": "89c715b2dddb7d4f8f2cdf0311204ac1bb713516f312474843434fa0a729c88c",
+   "kvlab/disk_store.py": "f56a935c524613a54473430bf79b58822760a0d29b53d277b333bda9e7476736",
+   "kvlab/experiment.py": "546a8307ab76e6237ea432603aaa8c5be45d769781e9981d1a6c50fd5b354bf9",
+   "kvlab/fixtures.py": "5dd353014dbde98c18ab87a445ab02a39ae4d14d4392a4acc62e441c1b83a277",
+   "kvlab/host_store.py": "ceba0f739d9e661b02f13a1e3d0f24664acc1abde63ec4c4ca3738a5129aeb8b",
+   "kvlab/identity.py": "e016ad9fda3383cf1cd55e254be5913bfe0299a7737587ed8afbc1921cc20fd0",
+   "kvlab/kv_snapshot.py": "d97f2ea2624530f91c2d496c754377b97a5e99dc7414fe3e0fb7dcc6fb6e9b2f",
+   "kvlab/m3_bench.py": "025725da8c87333803e5f66694c2f8d18572b47427d5591c948c75b1ea32636f",
+   "kvlab/m3_stats.py": "a84562445effddf6f91eb757a014715ffe2920786dcf4ea9ecf22689f9eec5fe",
+   "kvlab/metrics.py": "1563d82427e3a440d8cf3c251d4f50dfc07bc997fcace0b3322fe423bcf5e556",
+   "kvlab/model.py": "821e0e5bbf0f1ec3eda1e62acb9542cc43c4c4383c5d37f23714d598de2bfb0a",
+   "kvlab/perf.py": "a263c948f19f20650a0e4b8ce0c998e6f21e9a9f3d1968eb61246f777e1b1f58",
+   "kvlab/perf_harness.py": "d2a76ff12d1acf02345d36fb19b676b649bac884a15ffdf5de2d74463c81ece8",
+   "kvlab/perf_stats.py": "8b3d8bd37f798ab85472b639167215d10875148afc27b4b88a186d5619e1e77d",
+   "kvlab/resident_reference.py": "b14da5c95ffad3af4d122b459d7bd2085e6485183a4f8fc9b3e367b5223546f0",
+   "kvlab/tiered_cache.py": "1cdbd53a38347210f0be4df3a5bcc85762d3078042a0a03e79d97f8f0e297df6",
+   "kvlab/tolerances.py": "35afa3f52b002b4a3af7be968639ee64e7c946cc73e9fd3174ee487db6add9ae",
+   "scripts/m2_1_analyze_diag.py": "891a6fb8d9bbb6ae67096333d9433a15ea9098f4c353617fa7f4934d6f77f76f",
+   "scripts/m2_1_diagnose.py": "a0bf0ecfe11f955c19ae1a9ac5b270dc0d30b0b61403fa231027e545a5562ce8",
+   "scripts/m2_1_reanalyze.py": "c7274246aa59d6eeb1b3b38081442aafeb9f84811ba76e8509211781d06cbb01",
+   "scripts/m2_1_regimes.py": "5a7f6ab02ae9ec8185916b7f9223261ef9f0943096087c81b8e1ca1c4953ca87",
+   "scripts/m2_fit_predict.py": "c363114161d613c979f704a7a3a4d477dc9c8792789a28491bef9484e19672e4",
+   "scripts/m2_measure.py": "2e07b48533987bf0b93fb8bd5438836841747782c1ec9cbc3ff0713ae9efff38",
+   "scripts/m2_score.py": "81ad78d30f236dfb5183e6e39aeac0e351f877a14fd98923d3ed4b5af8d45f2d",
+   "scripts/m2_spike_probe.py": "3967488edff29bfe0fa01383c6d23574da83063027306c78e8d34f7396343519"
+  }
+ },
+ "packages": {
+  "huggingface_hub": "2.4.0",
+  "numpy": "2.5.4",
+  "nvidia-cublas": "13.1.1.3",
+  "nvidia-cuda-cupti": "13.0.85",
+  "nvidia-cuda-nvrtc": "13.0.88",
+  "nvidia-cuda-runtime": "13.0.96",
+  "nvidia-cudnn-cu13": "9.24.0.43",
+  "nvidia-cufft": "12.0.0.61",
+  "nvidia-cufile": "1.15.1.6",
+  "nvidia-curand": "10.4.0.35",
+  "nvidia-cusolver": "12.0.4.66",
+  "nvidia-cusparse": "12.6.3.3",
+  "nvidia-cusparselt-cu13": "0.8.1",
+  "nvidia-nccl-cu13": "2.30.7",
+  "nvidia-nvjitlink": "13.4.92",
+  "nvidia-nvshmem-cu13": "3.4.5",
+  "nvidia-nvtx": "13.0.85",
+  "safetensors": "0.8.0",
+  "tokenizers": "0.23.3",
+  "torch": "2.14.1+cu130",
+  "transformers": "5.22.1",
+  "triton": "3.8.0"
+ },
+ "weights": {
+  ".gitattributes": {
+   "blob": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+   "bytes": 1519
+  },
+  "LICENSE": {
+   "blob": "6634c8cc3133b3848ec74b9f275acaaa1ea618ab",
+   "bytes": 11343
+  },
+  "README.md": {
+   "blob": "b3327a17e2ffa52e0fd941a2810b18a9fd0e7d94",
+   "bytes": 4917
+  },
+  "config.json": {
+   "blob": "f81ead14ab072d65a07817f83a3ee0e5a1890d10",
+   "bytes": 660
+  },
+  "generation_config.json": {
+   "blob": "dfc11073787daf1b0f9c0f1499487ab5f4c93738",
+   "bytes": 242
+  },
+  "merges.txt": {
+   "blob": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0",
+   "bytes": 1671839
+  },
+  "model.safetensors": {
+   "blob": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+   "bytes": 3087467144
+  },
+  "tokenizer.json": {
+   "blob": "443909a61d429dff23010e5bddd28ff530edda00",
+   "bytes": 7031645
+  },
+  "tokenizer_config.json": {
+   "blob": "07bfe0640cb5a0037f9322287fbfc682806cf672",
+   "bytes": 7305
+  },
+  "vocab.json": {
+   "blob": "4783fe10ac3adce15ac8f358ef5462739852c569",
+   "bytes": 2776833
+  }
+ },
+ "process": {
+  "pid": 112530,
+  "nice": 0,
+  "affinity_n": 32,
+  "nproc": 32,
+  "torch_num_threads": 16,
+  "torch_num_interop_threads": 32,
+  "env": {
+   "OMP_NUM_THREADS": null,
+   "MKL_NUM_THREADS": null,
+   "CUDA_LAUNCH_BLOCKING": null,
+   "PYTORCH_CUDA_ALLOC_CONF": null,
+   "CUDA_MODULE_LOADING": null,
+   "HF_HUB_OFFLINE": "1"
+  },
+  "rlimit_memlock": [
+   67108864,
+   67108864
+  ],
+  "loadavg": "1.07 1.07 0.81 1/779 112631",
+  "meminfo_head": [
+   "MemTotal:        7720156 kB",
+   "MemFree:          414096 kB",
+   "MemAvailable:    5037264 kB",
+   "Buffers:           36212 kB",
+   "Cached:          4854324 kB",
+   "SwapCached:        44948 kB"
+  ],
+  "status_threads": "Threads:\t37",
+  "cpufreq_visible": false,
+  "sdpa_backends": {
+   "flash": true,
+   "mem_efficient": true,
+   "math": true,
+   "cudnn": true
+  },
+  "tf32_matmul": false,
+  "cudnn_benchmark": false
+ },
+ "model": {
+  "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+  "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "dtype": "torch.bfloat16",
+  "attn_implementation": "sdpa",
+  "num_hidden_layers": 28,
+  "num_key_value_heads": 2,
+  "head_dim": 128,
+  "layer_types": [
+   "full_attention"
+  ],
+  "rope_parameters": {
+   "rope_theta": 1000000.0,
+   "rope_type": "default"
+  },
+  "vocab_size": 151936
+ },
+ "restore_config": {
+  "restore_backend": "baseline",
+  "restore_staging_chunks": 4,
+  "chunk_bytes": 7340032,
+  "batched_max_scratch_bytes": 29360128,
+  "new_host_memory_bytes": 0
+ },
+ "gpu_state": [
+  {
+   "when": "start",
+   "time": "2026-11-03T17:48:54-0800",
+   "temperature.gpu": "69",
+   "power.draw": "69.86 W",
+   "clocks.sm": "2370 MHz",
+   "clocks.mem": "9001 MHz",
+   "clocks.max.sm": "3105 MHz",
+   "pstate": "P0",
+   "utilization.gpu": "2 %",
+   "memory.used": "3766 MiB"
+  },
+  {
+   "when": "end",
+   "time": "2026-11-03T17:49:37-0800",
+   "temperature.gpu": "63",
+   "power.draw": "34.41 W",
+   "clocks.sm": "2280 MHz",
+   "clocks.mem": "9001 MHz",
+   "clocks.max.sm": "3105 MHz",
+   "pstate": "P4",
+   "utilization.gpu": "0 %",
+   "memory.used": "3998 MiB"
+  }
+ ],
+ "samples": [],
+ "correctness": [],
+ "ab_checks": [],
+ "restore_memory": [],
+ "failures": [],
+ "blocks": [],
+ "profile": [
+  {
+   "L": 256,
+   "S": 32,
+   "n_chunks": 1,
+   "path": "host",
+   "backend": "baseline",
+   "unit": "restore",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 1.2,
+    "cudaLaunchKernel": 56.0,
+    "cudaMemcpyAsync": 56.0,
+    "cudaStreamIsCapturing": 56.0,
+    "cudaStreamSynchronize": 56.0
+   },
+   "device_ops_per_call": {
+    "kernel": 56.0,
+    "memcpy_HtoD": 56.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 256,
+   "S": 32,
+   "n_chunks": 1,
+   "path": "host",
+   "backend": "baseline",
+   "unit": "request",
+   "reps": 5,
+   "api_per_call": {
+    "cuLaunchKernel": 196.0,
+    "cudaDeviceGetAttribute": 196.0,
+    "cudaDeviceSynchronize": 2.2,
+    "cudaFuncSetAttribute": 28.0,
+    "cudaLaunchKernel": 1212.0,
+    "cudaLaunchKernelExC": 84.0,
+    "cudaMemcpyAsync": 58.0,
+    "cudaMemsetAsync": 29.0,
+    "cudaStreamIsCapturing": 86.0,
+    "cudaStreamSynchronize": 58.0
+   },
+   "device_ops_per_call": {
+    "kernel": 1492.0,
+    "memcpy_DtoH": 1.0,
+    "memcpy_HtoD": 57.0,
+    "memset": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 256,
+   "S": 32,
+   "n_chunks": 1,
+   "path": "host",
+   "backend": "batched",
+   "unit": "restore",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 1.2,
+    "cudaLaunchKernel": 56.0,
+    "cudaMemcpyAsync": 2.0,
+    "cudaStreamIsCapturing": 1.0,
+    "cudaStreamSynchronize": 1.0
+   },
+   "device_ops_per_call": {
+    "kernel": 56.0,
+    "memcpy_DtoD": 1.0,
+    "memcpy_HtoD": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 256,
+   "S": 32,
+   "n_chunks": 1,
+   "path": "host",
+   "backend": "batched",
+   "unit": "request",
+   "reps": 5,
+   "api_per_call": {
+    "cuLaunchKernel": 196.0,
+    "cudaDeviceGetAttribute": 196.0,
+    "cudaDeviceSynchronize": 2.2,
+    "cudaFuncSetAttribute": 28.0,
+    "cudaLaunchKernel": 1212.0,
+    "cudaLaunchKernelExC": 84.0,
+    "cudaMemcpyAsync": 4.0,
+    "cudaMemsetAsync": 29.0,
+    "cudaStreamIsCapturing": 31.0,
+    "cudaStreamSynchronize": 3.0
+   },
+   "device_ops_per_call": {
+    "kernel": 1492.0,
+    "memcpy_DtoD": 1.0,
+    "memcpy_DtoH": 1.0,
+    "memcpy_HtoD": 2.0,
+    "memset": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 256,
+   "S": 32,
+   "n_chunks": 1,
+   "path": "disk",
+   "backend": "baseline",
+   "unit": "restore",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 1.2,
+    "cudaLaunchKernel": 56.0,
+    "cudaMemcpyAsync": 56.0,
+    "cudaStreamIsCapturing": 56.0,
+    "cudaStreamSynchronize": 56.0
+   },
+   "device_ops_per_call": {
+    "kernel": 56.0,
+    "memcpy_HtoD": 56.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 256,
+   "S": 32,
+   "n_chunks": 1,
+   "path": "disk",
+   "backend": "baseline",
+   "unit": "request",
+   "reps": 5,
+   "api_per_call": {
+    "cuLaunchKernel": 196.0,
+    "cudaDeviceGetAttribute": 196.0,
+    "cudaDeviceSynchronize": 2.2,
+    "cudaFuncSetAttribute": 28.0,
+    "cudaLaunchKernel": 1212.0,
+    "cudaLaunchKernelExC": 84.0,
+    "cudaMemcpyAsync": 58.0,
+    "cudaMemsetAsync": 29.0,
+    "cudaStreamIsCapturing": 86.0,
+    "cudaStreamSynchronize": 58.0
+   },
+   "device_ops_per_call": {
+    "kernel": 1492.0,
+    "memcpy_DtoH": 1.0,
+    "memcpy_HtoD": 57.0,
+    "memset": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 256,
+   "S": 32,
+   "n_chunks": 1,
+   "path": "disk",
+   "backend": "batched",
+   "unit": "restore",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 1.2,
+    "cudaLaunchKernel": 56.0,
+    "cudaMemcpyAsync": 2.0,
+    "cudaStreamIsCapturing": 1.0,
+    "cudaStreamSynchronize": 1.0
+   },
+   "device_ops_per_call": {
+    "kernel": 56.0,
+    "memcpy_DtoD": 1.0,
+    "memcpy_HtoD": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 256,
+   "S": 32,
+   "n_chunks": 1,
+   "path": "disk",
+   "backend": "batched",
+   "unit": "request",
+   "reps": 5,
+   "api_per_call": {
+    "cuLaunchKernel": 196.0,
+    "cudaDeviceGetAttribute": 196.0,
+    "cudaDeviceSynchronize": 2.2,
+    "cudaFuncSetAttribute": 28.0,
+    "cudaLaunchKernel": 1212.0,
+    "cudaLaunchKernelExC": 84.0,
+    "cudaMemcpyAsync": 4.0,
+    "cudaMemsetAsync": 29.0,
+    "cudaStreamIsCapturing": 31.0,
+    "cudaStreamSynchronize": 3.0
+   },
+   "device_ops_per_call": {
+    "kernel": 1492.0,
+    "memcpy_DtoD": 1.0,
+    "memcpy_DtoH": 1.0,
+    "memcpy_HtoD": 2.0,
+    "memset": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 1536,
+   "S": 128,
+   "n_chunks": 6,
+   "path": "host",
+   "backend": "baseline",
+   "unit": "restore",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 1.2,
+    "cudaLaunchKernel": 392.0,
+    "cudaMemcpyAsync": 336.0,
+    "cudaStreamIsCapturing": 336.0,
+    "cudaStreamSynchronize": 336.0
+   },
+   "device_ops_per_call": {
+    "kernel": 392.0,
+    "memcpy_HtoD": 336.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 1536,
+   "S": 128,
+   "n_chunks": 6,
+   "path": "host",
+   "backend": "baseline",
+   "unit": "request",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 2.2,
+    "cudaFuncSetAttribute": 28.0,
+    "cudaLaunchKernel": 1744.0,
+    "cudaLaunchKernelExC": 84.0,
+    "cudaMemcpyAsync": 338.0,
+    "cudaMemsetAsync": 1.0,
+    "cudaOccupancyMaxActiveBlocksPerMultiprocessor": 168.0,
+    "cudaStreamIsCapturing": 366.0,
+    "cudaStreamSynchronize": 338.0
+   },
+   "device_ops_per_call": {
+    "kernel": 1828.0,
+    "memcpy_DtoH": 1.0,
+    "memcpy_HtoD": 337.0,
+    "memset": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 1536,
+   "S": 128,
+   "n_chunks": 6,
+   "path": "host",
+   "backend": "batched",
+   "unit": "restore",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 1.2,
+    "cudaLaunchKernel": 58.0,
+    "cudaMemcpyAsync": 6.0,
+    "cudaStreamIsCapturing": 6.0,
+    "cudaStreamSynchronize": 6.0
+   },
+   "device_ops_per_call": {
+    "kernel": 58.0,
+    "memcpy_HtoD": 6.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 1536,
+   "S": 128,
+   "n_chunks": 6,
+   "path": "host",
+   "backend": "batched",
+   "unit": "request",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 2.2,
+    "cudaFuncSetAttribute": 28.0,
+    "cudaLaunchKernel": 1410.0,
+    "cudaLaunchKernelExC": 84.0,
+    "cudaMemcpyAsync": 8.0,
+    "cudaMemsetAsync": 1.0,
+    "cudaOccupancyMaxActiveBlocksPerMultiprocessor": 168.0,
+    "cudaStreamIsCapturing": 36.0,
+    "cudaStreamSynchronize": 8.0
+   },
+   "device_ops_per_call": {
+    "kernel": 1494.0,
+    "memcpy_DtoH": 1.0,
+    "memcpy_HtoD": 7.0,
+    "memset": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 1536,
+   "S": 128,
+   "n_chunks": 6,
+   "path": "disk",
+   "backend": "baseline",
+   "unit": "restore",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 1.2,
+    "cudaLaunchKernel": 392.0,
+    "cudaMemcpyAsync": 336.0,
+    "cudaStreamIsCapturing": 336.0,
+    "cudaStreamSynchronize": 336.0
+   },
+   "device_ops_per_call": {
+    "kernel": 392.0,
+    "memcpy_HtoD": 336.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 1536,
+   "S": 128,
+   "n_chunks": 6,
+   "path": "disk",
+   "backend": "baseline",
+   "unit": "request",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 2.2,
+    "cudaFuncSetAttribute": 28.0,
+    "cudaLaunchKernel": 1744.0,
+    "cudaLaunchKernelExC": 84.0,
+    "cudaMemcpyAsync": 338.0,
+    "cudaMemsetAsync": 1.0,
+    "cudaOccupancyMaxActiveBlocksPerMultiprocessor": 168.0,
+    "cudaStreamIsCapturing": 366.0,
+    "cudaStreamSynchronize": 338.0
+   },
+   "device_ops_per_call": {
+    "kernel": 1828.0,
+    "memcpy_DtoH": 1.0,
+    "memcpy_HtoD": 337.0,
+    "memset": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 1536,
+   "S": 128,
+   "n_chunks": 6,
+   "path": "disk",
+   "backend": "batched",
+   "unit": "restore",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 1.2,
+    "cudaLaunchKernel": 58.0,
+    "cudaMemcpyAsync": 6.0,
+    "cudaStreamIsCapturing": 6.0,
+    "cudaStreamSynchronize": 6.0
+   },
+   "device_ops_per_call": {
+    "kernel": 58.0,
+    "memcpy_HtoD": 6.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 1536,
+   "S": 128,
+   "n_chunks": 6,
+   "path": "disk",
+   "backend": "batched",
+   "unit": "request",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 2.2,
+    "cudaFuncSetAttribute": 28.0,
+    "cudaLaunchKernel": 1410.0,
+    "cudaLaunchKernelExC": 84.0,
+    "cudaMemcpyAsync": 8.0,
+    "cudaMemsetAsync": 1.0,
+    "cudaOccupancyMaxActiveBlocksPerMultiprocessor": 168.0,
+    "cudaStreamIsCapturing": 36.0,
+    "cudaStreamSynchronize": 8.0
+   },
+   "device_ops_per_call": {
+    "kernel": 1494.0,
+    "memcpy_DtoH": 1.0,
+    "memcpy_HtoD": 7.0,
+    "memset": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 4096,
+   "S": 64,
+   "n_chunks": 16,
+   "path": "host",
+   "backend": "baseline",
+   "unit": "restore",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 1.2,
+    "cudaLaunchKernel": 952.0,
+    "cudaMemcpyAsync": 896.0,
+    "cudaStreamIsCapturing": 896.0,
+    "cudaStreamSynchronize": 896.0
+   },
+   "device_ops_per_call": {
+    "kernel": 952.0,
+    "memcpy_HtoD": 896.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 4096,
+   "S": 64,
+   "n_chunks": 16,
+   "path": "host",
+   "backend": "baseline",
+   "unit": "request",
+   "reps": 5,
+   "api_per_call": {
+    "cuLaunchKernel": 112.0,
+    "cudaDeviceGetAttribute": 112.0,
+    "cudaDeviceSynchronize": 2.2,
+    "cudaFuncSetAttribute": 28.0,
+    "cudaLaunchKernel": 2192.0,
+    "cudaLaunchKernelExC": 84.0,
+    "cudaMemcpyAsync": 898.0,
+    "cudaMemsetAsync": 29.0,
+    "cudaOccupancyMaxActiveBlocksPerMultiprocessor": 84.0,
+    "cudaStreamIsCapturing": 926.0,
+    "cudaStreamSynchronize": 898.0
+   },
+   "device_ops_per_call": {
+    "kernel": 2388.0,
+    "memcpy_DtoH": 1.0,
+    "memcpy_HtoD": 897.0,
+    "memset": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 4096,
+   "S": 64,
+   "n_chunks": 16,
+   "path": "host",
+   "backend": "batched",
+   "unit": "restore",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 1.2,
+    "cudaLaunchKernel": 60.0,
+    "cudaMemcpyAsync": 16.0,
+    "cudaStreamIsCapturing": 16.0,
+    "cudaStreamSynchronize": 16.0
+   },
+   "device_ops_per_call": {
+    "kernel": 60.0,
+    "memcpy_HtoD": 16.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 4096,
+   "S": 64,
+   "n_chunks": 16,
+   "path": "host",
+   "backend": "batched",
+   "unit": "request",
+   "reps": 5,
+   "api_per_call": {
+    "cuLaunchKernel": 112.0,
+    "cudaDeviceGetAttribute": 112.0,
+    "cudaDeviceSynchronize": 2.2,
+    "cudaFuncSetAttribute": 28.0,
+    "cudaLaunchKernel": 1300.0,
+    "cudaLaunchKernelExC": 84.0,
+    "cudaMemcpyAsync": 18.0,
+    "cudaMemsetAsync": 29.0,
+    "cudaOccupancyMaxActiveBlocksPerMultiprocessor": 84.0,
+    "cudaStreamIsCapturing": 46.0,
+    "cudaStreamSynchronize": 18.0
+   },
+   "device_ops_per_call": {
+    "kernel": 1496.0,
+    "memcpy_DtoH": 1.0,
+    "memcpy_HtoD": 17.0,
+    "memset": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 4096,
+   "S": 64,
+   "n_chunks": 16,
+   "path": "disk",
+   "backend": "baseline",
+   "unit": "restore",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 1.2,
+    "cudaLaunchKernel": 952.0,
+    "cudaMemcpyAsync": 896.0,
+    "cudaStreamIsCapturing": 896.0,
+    "cudaStreamSynchronize": 896.0
+   },
+   "device_ops_per_call": {
+    "kernel": 952.0,
+    "memcpy_HtoD": 896.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 4096,
+   "S": 64,
+   "n_chunks": 16,
+   "path": "disk",
+   "backend": "baseline",
+   "unit": "request",
+   "reps": 5,
+   "api_per_call": {
+    "cuLaunchKernel": 112.0,
+    "cudaDeviceGetAttribute": 112.0,
+    "cudaDeviceSynchronize": 2.2,
+    "cudaFuncSetAttribute": 28.0,
+    "cudaLaunchKernel": 2192.0,
+    "cudaLaunchKernelExC": 84.0,
+    "cudaMemcpyAsync": 898.0,
+    "cudaMemsetAsync": 29.0,
+    "cudaOccupancyMaxActiveBlocksPerMultiprocessor": 84.0,
+    "cudaStreamIsCapturing": 926.0,
+    "cudaStreamSynchronize": 898.0
+   },
+   "device_ops_per_call": {
+    "kernel": 2388.0,
+    "memcpy_DtoH": 1.0,
+    "memcpy_HtoD": 897.0,
+    "memset": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 4096,
+   "S": 64,
+   "n_chunks": 16,
+   "path": "disk",
+   "backend": "batched",
+   "unit": "restore",
+   "reps": 5,
+   "api_per_call": {
+    "cudaDeviceSynchronize": 1.2,
+    "cudaLaunchKernel": 60.0,
+    "cudaMemcpyAsync": 16.0,
+    "cudaStreamIsCapturing": 16.0,
+    "cudaStreamSynchronize": 16.0
+   },
+   "device_ops_per_call": {
+    "kernel": 60.0,
+    "memcpy_HtoD": 16.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  },
+  {
+   "L": 4096,
+   "S": 64,
+   "n_chunks": 16,
+   "path": "disk",
+   "backend": "batched",
+   "unit": "request",
+   "reps": 5,
+   "api_per_call": {
+    "cuLaunchKernel": 112.0,
+    "cudaDeviceGetAttribute": 112.0,
+    "cudaDeviceSynchronize": 2.2,
+    "cudaFuncSetAttribute": 28.0,
+    "cudaLaunchKernel": 1300.0,
+    "cudaLaunchKernelExC": 84.0,
+    "cudaMemcpyAsync": 18.0,
+    "cudaMemsetAsync": 29.0,
+    "cudaOccupancyMaxActiveBlocksPerMultiprocessor": 84.0,
+    "cudaStreamIsCapturing": 46.0,
+    "cudaStreamSynchronize": 18.0
+   },
+   "device_ops_per_call": {
+    "kernel": 1496.0,
+    "memcpy_DtoH": 1.0,
+    "memcpy_HtoD": 17.0,
+    "memset": 1.0
+   },
+   "note": "cudaDeviceSynchronize includes the profiler loop's own torch.cuda.synchronize() (1 per call); request units include Bench.measure's synchronize calls"
+  }
+ ],
+ "budgets": {
+  "store_A": {
+   "host": {
+    "budget_bytes": 132120576,
+    "slab_allocated_bytes": 132120576,
+    "cuda_host_registered_bytes": 132120576,
+    "staging_reserved_bytes": 7340032,
+    "resident_slots": 17,
+    "resident_logical_bytes": 117440512,
+    "resident_logical_peak_bytes": 117440512,
+    "entries": 16,
+    "max_entries": 17,
+    "evictions": 0,
+    "metadata_bytes_estimate": 18048,
+    "metadata_note": "estimate of raw identity field bytes; not measured Python heap usage",
+    "pinned": true
+   }
+  },
+  "store_B": {
+   "host": {
+    "budget_bytes": 14680064,
+    "slab_allocated_bytes": 14680064,
+    "cuda_host_registered_bytes": 14680064,
+    "staging_reserved_bytes": 7340032,
+    "resident_slots": 1,
+    "resident_logical_bytes": 0,
+    "resident_logical_peak_bytes": 0,
+    "entries": 0,
+    "max_entries": 1,
+    "evictions": 0,
+    "metadata_bytes_estimate": 0,
+    "metadata_note": "estimate of raw identity field bytes; not measured Python heap usage",
+    "pinned": true
+   },
+   "disk": {
+    "budget_bytes": 124816057,
+    "used_bytes": 117473936,
+    "peak_used_bytes": 117473936,
+    "committed_bytes": 117473936,
+    "tmp_bytes": 0,
+    "undeletable_bytes": 0,
+    "undeletable_files": [],
+    "unlink_failures": {},
+    "entries": 16,
+    "max_entries": 17,
+    "evictions": 0,
+    "dir_bytes_scanned": 117473936
+   }
+  },
+  "source_pageable_slab_bytes": 124780544
+ },
+ "process_end": {
+  "pid": 112530,
+  "nice": 0,
+  "affinity_n": 32,
+  "nproc": 32,
+  "torch_num_threads": 16,
+  "torch_num_interop_threads": 32,
+  "env": {
+   "OMP_NUM_THREADS": null,
+   "MKL_NUM_THREADS": null,
+   "CUDA_LAUNCH_BLOCKING": null,
+   "PYTORCH_CUDA_ALLOC_CONF": null,
+   "CUDA_MODULE_LOADING": null,
+   "HF_HUB_OFFLINE": "1"
+  },
+  "rlimit_memlock": [
+   67108864,
+   67108864
+  ],
+  "loadavg": "1.15 1.09 0.83 1/790 112791",
+  "meminfo_head": [
+   "MemTotal:        7720156 kB",
+   "MemFree:          102980 kB",
+   "MemAvailable:    2828924 kB",
+   "Buffers:           20980 kB",
+   "Cached:          2890112 kB",
+   "SwapCached:        41536 kB"
+  ],
+  "status_threads": "Threads:\t55",
+  "cpufreq_visible": false,
+  "sdpa_backends": {
+   "flash": true,
+   "mem_efficient": true,
+   "math": true,
+   "cudnn": true
+  },
+  "tf32_matmul": false,
+  "cudnn_benchmark": false
+ },
+ "excluded": []
+}

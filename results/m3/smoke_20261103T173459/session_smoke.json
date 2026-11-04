@@ -1,0 +1,7385 @@
+{
+ "meta": {
+  "session": "smoke",
+  "args": {
+   "out_dir": "results/m3/smoke_20261103T173459",
+   "session": "smoke",
+   "cases": "512:1,2048:64",
+   "blocks": 1,
+   "warmup": 1,
+   "reps": 3,
+   "seed": 1,
+   "staging_chunks": 4,
+   "profile": false,
+   "profile_reps": 5
+  },
+  "seed": 1,
+  "started_at": "2026-11-03T17:35:03-0800",
+  "started_unix": 1793756103.536713,
+  "gpu_monitor_csv": "session_smoke.gpu_monitor.csv",
+  "block_order": [
+   [
+    2048,
+    64
+   ],
+   [
+    512,
+    1
+   ]
+  ],
+  "finished_at": "2026-11-03T17:35:22-0800",
+  "elapsed_min": 0.19264366626739501,
+  "n_samples": 108,
+  "n_measured": 54,
+  "n_excluded": 0,
+  "correctness_all": true
+ },
+ "source": {
+  "git_head": "362ee40aeaaae204b2b1dc88398b46bc5826f410",
+  "git_status_porcelain": [
+   " M kvlab/tiered_cache.py",
+   " M pyproject.toml",
+   " M scripts/m1_run.py",
+   " M tests/gpu/test_m1_tiered.py",
+   "?? docs/M3_DESIGN.md",
+   "?? kvlab/m3_bench.py",
+   "?? results/m3/",
+   "?? scripts/m3_measure.py",
+   "?? scripts/m3_mutation_check.py",
+   "?? tests/gpu/test_m3_restore.py",
+   "?? tests/test_restore_backends_cpu.py"
+  ],
+  "git_diff_head_sha256": "8b98f3750e72c8df448f6b5484b0fd97c085ed8b421ea7b8dd516ef31b06a9cb",
+  "files_sha256": {
+   "kvlab/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "kvlab/always_restore.py": "a704b63bf6496c71fc5a6a7731463706ded366d45c96c17ddf73dc792aa1f7a3",
+   "kvlab/boundaries.py": "022a11e11ff03b9296391920dc58e715baab0560b77c164a5adda8e5df3e9e6d",
+   "kvlab/chunk_format.py": "55a9ab997cbe3190641a5ad332e007c974d0abe2433d52071e9f43b4c288b894",
+   "kvlab/diag_harness.py": "89c715b2dddb7d4f8f2cdf0311204ac1bb713516f312474843434fa0a729c88c",
+   "kvlab/disk_store.py": "f56a935c524613a54473430bf79b58822760a0d29b53d277b333bda9e7476736",
+   "kvlab/experiment.py": "546a8307ab76e6237ea432603aaa8c5be45d769781e9981d1a6c50fd5b354bf9",
+   "kvlab/fixtures.py": "5dd353014dbde98c18ab87a445ab02a39ae4d14d4392a4acc62e441c1b83a277",
+   "kvlab/host_store.py": "ceba0f739d9e661b02f13a1e3d0f24664acc1abde63ec4c4ca3738a5129aeb8b",
+   "kvlab/identity.py": "e016ad9fda3383cf1cd55e254be5913bfe0299a7737587ed8afbc1921cc20fd0",
+   "kvlab/kv_snapshot.py": "d97f2ea2624530f91c2d496c754377b97a5e99dc7414fe3e0fb7dcc6fb6e9b2f",
+   "kvlab/m3_bench.py": "025725da8c87333803e5f66694c2f8d18572b47427d5591c948c75b1ea32636f",
+   "kvlab/metrics.py": "1563d82427e3a440d8cf3c251d4f50dfc07bc997fcace0b3322fe423bcf5e556",
+   "kvlab/model.py": "821e0e5bbf0f1ec3eda1e62acb9542cc43c4c4383c5d37f23714d598de2bfb0a",
+   "kvlab/perf.py": "a263c948f19f20650a0e4b8ce0c998e6f21e9a9f3d1968eb61246f777e1b1f58",
+   "kvlab/perf_harness.py": "d2a76ff12d1acf02345d36fb19b676b649bac884a15ffdf5de2d74463c81ece8",
+   "kvlab/perf_stats.py": "8b3d8bd37f798ab85472b639167215d10875148afc27b4b88a186d5619e1e77d",
+   "kvlab/resident_reference.py": "b14da5c95ffad3af4d122b459d7bd2085e6485183a4f8fc9b3e367b5223546f0",
+   "kvlab/tiered_cache.py": "1cdbd53a38347210f0be4df3a5bcc85762d3078042a0a03e79d97f8f0e297df6",
+   "kvlab/tolerances.py": "35afa3f52b002b4a3af7be968639ee64e7c946cc73e9fd3174ee487db6add9ae",
+   "pyproject.toml": "172a23fd5a08a2bf6135bb0c355b171494f86da14f767f12336166da58cda60a",
+   "scripts/env_report.py": "e5ae16c90825709d26dbf471280ebd970085951095d0b77fc6499845dea5a883",
+   "scripts/m0_1_audit.py": "f2ad04412ee00355653a96e87c2c2b09b11c820d0337324470256d395b8e47f1",
+   "scripts/m0_calibrate.py": "129db017c0bcc4acaa1b972978200d5df7910449abf63727dd7cb37d98dfcc30",
+   "scripts/m0_diagnose_divergence.py": "af7d57e0898fcb7487cd97ce1fe2f38ad569e3a8801a168a6689fd2906f0e31a",
+   "scripts/m0_experiment.py": "5635e4e67f034c715ee2d0e4d250c5166c874f8e59d221364955d38533784033",
+   "scripts/m1_1_repro_review_issues.py": "ce6194c0b84a27418c11b99e97f8eb1cf0e50c5842b262077734ec51d8d94f23",
+   "scripts/m1_mutation_check.py": "8ae3499372a07ed3a2f3407dc1c181c07dc40eb11d2fd15e2ecef6aaab6c70c4",
+   "scripts/m1_run.py": "80016d9b97efadfac7096df07b83dd1049d57e0efb4ce524ee4dc5ca133daada",
+   "scripts/m2_1_analyze_diag.py": "891a6fb8d9bbb6ae67096333d9433a15ea9098f4c353617fa7f4934d6f77f76f",
+   "scripts/m2_1_diagnose.py": "a0bf0ecfe11f955c19ae1a9ac5b270dc0d30b0b61403fa231027e545a5562ce8",
+   "scripts/m2_1_reanalyze.py": "c7274246aa59d6eeb1b3b38081442aafeb9f84811ba76e8509211781d06cbb01",
+   "scripts/m2_1_regimes.py": "5a7f6ab02ae9ec8185916b7f9223261ef9f0943096087c81b8e1ca1c4953ca87",
+   "scripts/m2_fit_predict.py": "c363114161d613c979f704a7a3a4d477dc9c8792789a28491bef9484e19672e4",
+   "scripts/m2_measure.py": "2e07b48533987bf0b93fb8bd5438836841747782c1ec9cbc3ff0713ae9efff38",
+   "scripts/m2_score.py": "81ad78d30f236dfb5183e6e39aeac0e351f877a14fd98923d3ed4b5af8d45f2d",
+   "scripts/m2_spike_probe.py": "3967488edff29bfe0fa01383c6d23574da83063027306c78e8d34f7396343519",
+   "scripts/m3_measure.py": "6d4c50467e21fc6dffdc8e2c98ffea1d9721b3053aa205ba489d3cd35f599550",
+   "scripts/m3_mutation_check.py": "03ac32c13841eeb02453d39def9d39aca4842f0ffa9d750c7e352101b39d001a",
+   "tests/gpu/test_gpu_roundtrip.py": "2768dd152fd046afe5227d6cd408e30ff49231fc96d5da728193e9a3e4e8647e",
+   "tests/gpu/test_m0_1_controls.py": "cb64b06e4eda911674a340dd9ef7b0fafc64811834c8d902fb37f6265ca869e1",
+   "tests/gpu/test_m1_tiered.py": "c866609eb632b02cd11efe856abac71a9ecd4da11744fcddbbaa22c1dc608d51",
+   "tests/gpu/test_m3_restore.py": "f0363d4a738ab970e62e159bc3a0183ea1bc7d7bfbe6c6ae198bd96f0035c35b",
+   "tests/m1_toy.py": "3189d88798771c5488936b98c5ddca60ac8c724d724bb5696bc073b880941db1",
+   "tests/test_boundaries.py": "c09d0e7805d5f1304cd4915b136cd039331da8277085bd10e5b2acf18be67960",
+   "tests/test_chunk_format.py": "51f331ca769d7099a44c98f625b44a92787400d806736e14ea8a04c9708ce356",
+   "tests/test_diag_bookkeeping.py": "1358fdbaccebf3aa4c5ac69c1ffcb4739f38650dad1824ab803cc801af9965b6",
+   "tests/test_disk_store.py": "918e3e031ef6f36d1988f135c07b03de461f82f37cc3d5fec2f44d60884ad095",
+   "tests/test_engine_cpu.py": "a5f0d2674f777f482c161536915c2eab0f737cd6acc894c7ea00ee45417bd594",
+   "tests/test_host_store.py": "cc78f8d7229eacecc623c951de4f52e25177f3c20ed0b05a518567b56297912a",
+   "tests/test_identity.py": "5905a3b7c36175a25d8eb22a2b16ff39c693637c9529dcaebe2e6d0f8c82d69c",
+   "tests/test_m1_run_validation.py": "3761fd928b890ba022f179cd2a74826a1c2a8949f5d439a14830ddc4d6b163ab",
+   "tests/test_perf.py": "7db1007d5bb44f2840da556c3ba262587f53afdc358e1d701f49142a6699f6c8",
+   "tests/test_perf_stats.py": "05a3a77d66eaf1a1226bac49907dd8eddaa3007179f93e030942c7ba6c524ace",
+   "tests/test_restore_backends_cpu.py": "c188e6403516a6cd3df471bf860df12b9ebe997566a4b61100e53d6de789ebed",
+   "tests/test_snapshot_cpu.py": "e1f6e32528d61bb7a9b0b2be8b618e56ce0c9958118e00e2c218aaa0a99642ee",
+   "tests/test_tiered_cpu.py": "9ee06a21397a3c707377052c854125ca9627c2929d39530cae709a1ce825966a"
+  }
+ },
+ "environment": {
+  "torch": "2.14.1+cu130",
+  "transformers": "5.22.1",
+  "cuda": "13.0",
+  "python": "3.14.4",
+  "gpu": "NVIDIA GeForce RTX 4080 Laptop GPU",
+  "gpu_static": "name, driver_version, power.limit [W], clocks.max.sm [MHz], clocks.max.memory [MHz], memory.total [MiB]\nNVIDIA GeForce RTX 4080 Laptop GPU, 596.49, [N/A], 3105 MHz, 9001 MHz, 12282 MiB",
+  "cpu": "AMD Ryzen 9 7945HX with Radeon Graphics",
+  "kernel": "6.18.54.1-microsoft-standard-WSL2",
+  "disk_root": "/home/cyrus/projects/kv-cache-lab/.kvcache/m3/smoke_20261103T173459/smoke",
+  "filesystem_df": [
+   "Filesystem     Type  1K-blocks     Used Available Use% Mounted on",
+   "/dev/sdd       ext4 1055762868 18902628 983156768   2% /"
+  ],
+  "root_mount": [
+   "/dev/sdd / ext4 rw,relatime,discard,errors=remount-ro,data=ordered 0 0"
+  ],
+  "page_size": 4096,
+  "source_manifest": {
+   "kvlab/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+   "kvlab/always_restore.py": "a704b63bf6496c71fc5a6a7731463706ded366d45c96c17ddf73dc792aa1f7a3",
+   "kvlab/boundaries.py": "022a11e11ff03b9296391920dc58e715baab0560b77c164a5adda8e5df3e9e6d",
+   "kvlab/chunk_format.py": "55a9ab997cbe3190641a5ad332e007c974d0abe2433d52071e9f43b4c288b894",
+   "kvlab/diag_harness.py": "89c715b2dddb7d4f8f2cdf0311204ac1bb713516f312474843434fa0a729c88c",
+   "kvlab/disk_store.py": "f56a935c524613a54473430bf79b58822760a0d29b53d277b333bda9e7476736",
+   "kvlab/experiment.py": "546a8307ab76e6237ea432603aaa8c5be45d769781e9981d1a6c50fd5b354bf9",
+   "kvlab/fixtures.py": "5dd353014dbde98c18ab87a445ab02a39ae4d14d4392a4acc62e441c1b83a277",
+   "kvlab/host_store.py": "ceba0f739d9e661b02f13a1e3d0f24664acc1abde63ec4c4ca3738a5129aeb8b",
+   "kvlab/identity.py": "e016ad9fda3383cf1cd55e254be5913bfe0299a7737587ed8afbc1921cc20fd0",
+   "kvlab/kv_snapshot.py": "d97f2ea2624530f91c2d496c754377b97a5e99dc7414fe3e0fb7dcc6fb6e9b2f",
+   "kvlab/m3_bench.py": "025725da8c87333803e5f66694c2f8d18572b47427d5591c948c75b1ea32636f",
+   "kvlab/metrics.py": "1563d82427e3a440d8cf3c251d4f50dfc07bc997fcace0b3322fe423bcf5e556",
+   "kvlab/model.py": "821e0e5bbf0f1ec3eda1e62acb9542cc43c4c4383c5d37f23714d598de2bfb0a",
+   "kvlab/perf.py": "a263c948f19f20650a0e4b8ce0c998e6f21e9a9f3d1968eb61246f777e1b1f58",
+   "kvlab/perf_harness.py": "d2a76ff12d1acf02345d36fb19b676b649bac884a15ffdf5de2d74463c81ece8",
+   "kvlab/perf_stats.py": "8b3d8bd37f798ab85472b639167215d10875148afc27b4b88a186d5619e1e77d",
+   "kvlab/resident_reference.py": "b14da5c95ffad3af4d122b459d7bd2085e6485183a4f8fc9b3e367b5223546f0",
+   "kvlab/tiered_cache.py": "1cdbd53a38347210f0be4df3a5bcc85762d3078042a0a03e79d97f8f0e297df6",
+   "kvlab/tolerances.py": "35afa3f52b002b4a3af7be968639ee64e7c946cc73e9fd3174ee487db6add9ae",
+   "scripts/m2_1_analyze_diag.py": "891a6fb8d9bbb6ae67096333d9433a15ea9098f4c353617fa7f4934d6f77f76f",
+   "scripts/m2_1_diagnose.py": "a0bf0ecfe11f955c19ae1a9ac5b270dc0d30b0b61403fa231027e545a5562ce8",
+   "scripts/m2_1_reanalyze.py": "c7274246aa59d6eeb1b3b38081442aafeb9f84811ba76e8509211781d06cbb01",
+   "scripts/m2_1_regimes.py": "5a7f6ab02ae9ec8185916b7f9223261ef9f0943096087c81b8e1ca1c4953ca87",
+   "scripts/m2_fit_predict.py": "c363114161d613c979f704a7a3a4d477dc9c8792789a28491bef9484e19672e4",
+   "scripts/m2_measure.py": "2e07b48533987bf0b93fb8bd5438836841747782c1ec9cbc3ff0713ae9efff38",
+   "scripts/m2_score.py": "81ad78d30f236dfb5183e6e39aeac0e351f877a14fd98923d3ed4b5af8d45f2d",
+   "scripts/m2_spike_probe.py": "3967488edff29bfe0fa01383c6d23574da83063027306c78e8d34f7396343519"
+  }
+ },
+ "packages": {
+  "huggingface_hub": "2.4.0",
+  "numpy": "2.5.4",
+  "nvidia-cublas": "13.1.1.3",
+  "nvidia-cuda-cupti": "13.0.85",
+  "nvidia-cuda-nvrtc": "13.0.88",
+  "nvidia-cuda-runtime": "13.0.96",
+  "nvidia-cudnn-cu13": "9.24.0.43",
+  "nvidia-cufft": "12.0.0.61",
+  "nvidia-cufile": "1.15.1.6",
+  "nvidia-curand": "10.4.0.35",
+  "nvidia-cusolver": "12.0.4.66",
+  "nvidia-cusparse": "12.6.3.3",
+  "nvidia-cusparselt-cu13": "0.8.1",
+  "nvidia-nccl-cu13": "2.30.7",
+  "nvidia-nvjitlink": "13.4.92",
+  "nvidia-nvshmem-cu13": "3.4.5",
+  "nvidia-nvtx": "13.0.85",
+  "safetensors": "0.8.0",
+  "tokenizers": "0.23.3",
+  "torch": "2.14.1+cu130",
+  "transformers": "5.22.1",
+  "triton": "3.8.0"
+ },
+ "weights": {
+  ".gitattributes": {
+   "blob": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+   "bytes": 1519
+  },
+  "LICENSE": {
+   "blob": "6634c8cc3133b3848ec74b9f275acaaa1ea618ab",
+   "bytes": 11343
+  },
+  "README.md": {
+   "blob": "b3327a17e2ffa52e0fd941a2810b18a9fd0e7d94",
+   "bytes": 4917
+  },
+  "config.json": {
+   "blob": "f81ead14ab072d65a07817f83a3ee0e5a1890d10",
+   "bytes": 660
+  },
+  "generation_config.json": {
+   "blob": "dfc11073787daf1b0f9c0f1499487ab5f4c93738",
+   "bytes": 242
+  },
+  "merges.txt": {
+   "blob": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0",
+   "bytes": 1671839
+  },
+  "model.safetensors": {
+   "blob": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+   "bytes": 3087467144
+  },
+  "tokenizer.json": {
+   "blob": "443909a61d429dff23010e5bddd28ff530edda00",
+   "bytes": 7031645
+  },
+  "tokenizer_config.json": {
+   "blob": "07bfe0640cb5a0037f9322287fbfc682806cf672",
+   "bytes": 7305
+  },
+  "vocab.json": {
+   "blob": "4783fe10ac3adce15ac8f358ef5462739852c569",
+   "bytes": 2776833
+  }
+ },
+ "process": {
+  "pid": 108867,
+  "nice": 0,
+  "affinity_n": 32,
+  "nproc": 32,
+  "torch_num_threads": 16,
+  "torch_num_interop_threads": 32,
+  "env": {
+   "OMP_NUM_THREADS": null,
+   "MKL_NUM_THREADS": null,
+   "CUDA_LAUNCH_BLOCKING": null,
+   "PYTORCH_CUDA_ALLOC_CONF": null,
+   "CUDA_MODULE_LOADING": null,
+   "HF_HUB_OFFLINE": "1"
+  },
+  "rlimit_memlock": [
+   67108864,
+   67108864
+  ],
+  "loadavg": "0.36 0.46 0.33 1/787 108989",
+  "meminfo_head": [
+   "MemTotal:        7720156 kB",
+   "MemFree:          206464 kB",
+   "MemAvailable:    5011672 kB",
+   "Buffers:           30028 kB",
+   "Cached:          5092124 kB",
+   "SwapCached:        47472 kB"
+  ],
+  "status_threads": "Threads:\t37",
+  "cpufreq_visible": false,
+  "sdpa_backends": {
+   "flash": true,
+   "mem_efficient": true,
+   "math": true,
+   "cudnn": true
+  },
+  "tf32_matmul": false,
+  "cudnn_benchmark": false
+ },
+ "model": {
+  "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+  "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "dtype": "torch.bfloat16",
+  "attn_implementation": "sdpa",
+  "num_hidden_layers": 28,
+  "num_key_value_heads": 2,
+  "head_dim": 128,
+  "layer_types": [
+   "full_attention"
+  ],
+  "rope_parameters": {
+   "rope_theta": 1000000.0,
+   "rope_type": "default"
+  },
+  "vocab_size": 151936
+ },
+ "restore_config": {
+  "restore_backend": "baseline",
+  "restore_staging_chunks": 4,
+  "chunk_bytes": 7340032,
+  "batched_max_scratch_bytes": 29360128,
+  "new_host_memory_bytes": 0
+ },
+ "gpu_state": [
+  {
+   "when": "start",
+   "time": "2026-11-03T17:35:11-0800",
+   "temperature.gpu": "56",
+   "power.draw": "33.33 W",
+   "clocks.sm": "2280 MHz",
+   "clocks.mem": "9001 MHz",
+   "clocks.max.sm": "3105 MHz",
+   "pstate": "P0",
+   "utilization.gpu": "0 %",
+   "memory.used": "3598 MiB"
+  },
+  {
+   "when": "before block 0 L=2048 S=64",
+   "time": "2026-11-03T17:35:12-0800",
+   "temperature.gpu": "55",
+   "power.draw": "63.09 W",
+   "clocks.sm": "2385 MHz",
+   "clocks.mem": "9001 MHz",
+   "clocks.max.sm": "3105 MHz",
+   "pstate": "P0",
+   "utilization.gpu": "51 %",
+   "memory.used": "3820 MiB"
+  },
+  {
+   "when": "before block 1 L=512 S=1",
+   "time": "2026-11-03T17:35:17-0800",
+   "temperature.gpu": "62",
+   "power.draw": "92.46 W",
+   "clocks.sm": "2370 MHz",
+   "clocks.mem": "9001 MHz",
+   "clocks.max.sm": "3105 MHz",
+   "pstate": "P0",
+   "utilization.gpu": "50 %",
+   "memory.used": "3820 MiB"
+  },
+  {
+   "when": "end",
+   "time": "2026-11-03T17:35:22-0800",
+   "temperature.gpu": "55",
+   "power.draw": "64.55 W",
+   "clocks.sm": "2385 MHz",
+   "clocks.mem": "9001 MHz",
+   "clocks.max.sm": "3105 MHz",
+   "pstate": "P0",
+   "utilization.gpu": "52 %",
+   "memory.used": "3820 MiB"
+  }
+ ],
+ "samples": [
+  {
+   "path": "full",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 42243498,
+   "t_wall": 1793756111.067495,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "restore_not_attempted",
+   "first_token": 7354,
+   "backend": "none",
+   "mode": "plain",
+   "last_restore": null,
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3146771456,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02752700000000008,
+    "ru_stime": 0.014910000000000423,
+    "ru_nvcsw": 1,
+    "ru_nivcsw": 0,
+    "ru_minflt": 2741,
+    "ru_majflt": 1,
+    "sched_run_ns": 42436870,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "full",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 39379187,
+   "t_wall": 1793756111.1104507,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "restore_not_attempted",
+   "first_token": 7354,
+   "backend": "none",
+   "mode": "plain",
+   "last_restore": null,
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3146771456,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.028125999999999873,
+    "ru_stime": 0.011884000000000228,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 17,
+    "ru_majflt": 0,
+    "sched_run_ns": 40009718,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 92008370,
+   "t_wall": 1793756111.1504543,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.03644100000000039,
+    "ru_stime": 0.052659999999999485,
+    "ru_nvcsw": 3,
+    "ru_nivcsw": 0,
+    "ru_minflt": 18956,
+    "ru_majflt": 1,
+    "sched_run_ns": 89100826,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 3
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 24275890,
+   "t_wall": 1793756111.2431145,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02400000000000002,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 17,
+    "ru_majflt": 0,
+    "sched_run_ns": 24000107,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 18742400,
+   "t_wall": 1793756111.2679458,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.019999999999999574,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 13,
+    "ru_majflt": 0,
+    "sched_run_ns": 20000014,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 18605158,
+   "t_wall": 1793756111.287161,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.016339000000000325,
+    "ru_stime": 0.003670999999999758,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1,
+    "ru_majflt": 0,
+    "sched_run_ns": 20010192,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 40774542,
+   "t_wall": 1793756111.3068442,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.03215099999999982,
+    "ru_stime": 0.007838000000000456,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 62,
+    "ru_majflt": 0,
+    "sched_run_ns": 39989498,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 29717476,
+   "t_wall": 1793756111.3486927,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.019553000000000154,
+    "ru_stime": 0.011096000000000217,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 9,
+    "ru_majflt": 0,
+    "sched_run_ns": 30648955,
+    "sched_runqueue_wait_ns": 1350778,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 21639497,
+   "t_wall": 1793756111.3793545,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.01607499999999984,
+    "ru_stime": 0.003924999999999734,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 4,
+    "ru_majflt": 0,
+    "sched_run_ns": 20000034,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 22372328,
+   "t_wall": 1793756111.4020114,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.016061000000000103,
+    "ru_stime": 0.007939000000000362,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1,
+    "ru_majflt": 0,
+    "sched_run_ns": 19999593,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 23691881,
+   "t_wall": 1793756111.424905,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "phases_ns": {
+    "ingest": 134575,
+    "restore": 7609468,
+    "prefill": 15805929,
+    "store": 50556,
+    "select": 91353
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02400000000000002,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 6,
+    "ru_majflt": 0,
+    "sched_run_ns": 23999847,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 23758698,
+   "t_wall": 1793756111.4490585,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "phases_ns": {
+    "ingest": 121791,
+    "restore": 7720929,
+    "prefill": 15773087,
+    "store": 35427,
+    "select": 107464
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.020226000000000077,
+    "ru_stime": 0.0037679999999999936,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 2,
+    "ru_majflt": 0,
+    "sched_run_ns": 23993544,
+    "sched_runqueue_wait_ns": 6683,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 18213027,
+   "t_wall": 1793756111.473266,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "phases_ns": {
+    "ingest": 128935,
+    "restore": 2089013,
+    "prefill": 15863850,
+    "store": 35417,
+    "select": 95812
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.01607999999999965,
+    "ru_stime": 0.003937999999999775,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 4,
+    "ru_majflt": 0,
+    "sched_run_ns": 20018198,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 18250888,
+   "t_wall": 1793756111.4919343,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "phases_ns": {
+    "ingest": 129445,
+    "restore": 2093112,
+    "prefill": 15859541,
+    "store": 36238,
+    "select": 132552
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.012031000000000347,
+    "ru_stime": 0.007951000000000263,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 3,
+    "ru_majflt": 0,
+    "sched_run_ns": 19981159,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 30109247,
+   "t_wall": 1793756111.5111606,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 146128,
+    "restore": 12534932,
+    "prefill": 17260429,
+    "store": 40336,
+    "select": 127422
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.024115999999999804,
+    "ru_stime": 0.0038839999999993324,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 3,
+    "ru_majflt": 0,
+    "sched_run_ns": 28000099,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 28140623,
+   "t_wall": 1793756111.5423226,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 163881,
+    "restore": 11317604,
+    "prefill": 16527448,
+    "store": 37100,
+    "select": 94590
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.024135999999999935,
+    "ru_stime": 0.00386299999999995,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 3,
+    "ru_majflt": 0,
+    "sched_run_ns": 27999539,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 21654926,
+   "t_wall": 1793756111.571538,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 138643,
+    "restore": 5330864,
+    "prefill": 16044742,
+    "store": 41509,
+    "select": 99168
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.016072000000000308,
+    "ru_stime": 0.003928000000000154,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 2,
+    "ru_majflt": 0,
+    "sched_run_ns": 20000425,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 22184291,
+   "t_wall": 1793756111.5941503,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 144074,
+    "restore": 5430363,
+    "prefill": 16466623,
+    "store": 39374,
+    "select": 103857
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3529506816,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.016091999999999995,
+    "ru_stime": 0.003908000000000023,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 19999684,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "full",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 125257987,
+   "t_wall": 1793756111.7415733,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "restore_not_attempted",
+   "first_token": 1490,
+   "backend": "none",
+   "mode": "plain",
+   "last_restore": null,
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3529506816,
+    "peak_allocated": 3339924992,
+    "peak_reserved": 3649044480,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.1228469999999997,
+    "ru_stime": 0.000688000000000244,
+    "ru_nvcsw": 9,
+    "ru_nivcsw": 0,
+    "ru_minflt": 58,
+    "ru_majflt": 0,
+    "sched_run_ns": 123182047,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 9
+   },
+   "alloc_delta": {
+    "num_device_alloc": 3,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "full",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 124471995,
+   "t_wall": 1793756111.8675141,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "restore_not_attempted",
+   "first_token": 1490,
+   "backend": "none",
+   "mode": "plain",
+   "last_restore": null,
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3649044480,
+    "peak_allocated": 3339924992,
+    "peak_reserved": 3649044480,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.11654300000000006,
+    "ru_stime": 0.007456999999999603,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 123999686,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 141276537,
+   "t_wall": 1793756111.9925537,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3649044480,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3703570432,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.06561700000000004,
+    "ru_stime": 0.06607000000000074,
+    "ru_nvcsw": 85,
+    "ru_nivcsw": 0,
+    "ru_minflt": 20145,
+    "ru_majflt": 7,
+    "sched_run_ns": 131687694,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 85
+   },
+   "alloc_delta": {
+    "num_device_alloc": 26,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 49649302,
+   "t_wall": 1793756112.1344283,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3703570432,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3703570432,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.035585999999999895,
+    "ru_stime": 0.011087999999999987,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 17,
+    "ru_majflt": 0,
+    "sched_run_ns": 46674023,
+    "sched_runqueue_wait_ns": 1326121,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 38592532,
+   "t_wall": 1793756112.1846359,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3703570432,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02953399999999995,
+    "ru_stime": 0.00988299999999942,
+    "ru_nvcsw": 3,
+    "ru_nivcsw": 0,
+    "ru_minflt": 5,
+    "ru_majflt": 0,
+    "sched_run_ns": 39416702,
+    "sched_runqueue_wait_ns": 47580,
+    "sched_timeslices": 3
+   },
+   "alloc_delta": {
+    "num_device_alloc": 1,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 26673350,
+   "t_wall": 1793756112.223724,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.024107000000000323,
+    "ru_stime": 0.0038930000000005904,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 8,
+    "ru_majflt": 0,
+    "sched_run_ns": 27999661,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 66232034,
+   "t_wall": 1793756112.2525132,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.05623699999999987,
+    "ru_stime": 0.01176200000000005,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1,
+    "ru_majflt": 0,
+    "sched_run_ns": 67999847,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 69406777,
+   "t_wall": 1793756112.320954,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.06832199999999977,
+    "ru_stime": 0.003677999999999848,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 8,
+    "ru_majflt": 0,
+    "sched_run_ns": 71999890,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 39538888,
+   "t_wall": 1793756112.3925736,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.032128000000000156,
+    "ru_stime": 0.007873000000000019,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 3,
+    "ru_majflt": 0,
+    "sched_run_ns": 39999738,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 40015252,
+   "t_wall": 1793756112.434318,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.03614700000000015,
+    "ru_stime": 0.007856999999999559,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 44004459,
+    "sched_runqueue_wait_ns": 6252,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 52146279,
+   "t_wall": 1793756112.4748461,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "phases_ns": {
+    "ingest": 316230,
+    "restore": 30991010,
+    "prefill": 20689355,
+    "store": 36950,
+    "select": 112734
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.04821099999999978,
+    "ru_stime": 0.0037770000000003634,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 51988504,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 51722083,
+   "t_wall": 1793756112.527495,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "phases_ns": {
+    "ingest": 307994,
+    "restore": 29921080,
+    "prefill": 21331613,
+    "store": 38964,
+    "select": 122432
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.036113000000000284,
+    "ru_stime": 0.015887000000000207,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 2,
+    "ru_majflt": 0,
+    "sched_run_ns": 51999776,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 27041507,
+   "t_wall": 1793756112.5797708,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "phases_ns": {
+    "ingest": 306512,
+    "restore": 5993922,
+    "prefill": 20595757,
+    "store": 37732,
+    "select": 107584
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02799999999999958,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 28000060,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 31200087,
+   "t_wall": 1793756112.6073003,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "phases_ns": {
+    "ingest": 327842,
+    "restore": 6172552,
+    "prefill": 24545511,
+    "store": 38503,
+    "select": 115679
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02768000000000015,
+    "ru_stime": 0.0030189999999992168,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 1,
+    "ru_majflt": 0,
+    "sched_run_ns": 30698699,
+    "sched_runqueue_wait_ns": 1301313,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 68166514,
+   "t_wall": 1793756112.6406276,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 326109,
+    "restore": 46682141,
+    "prefill": 20990456,
+    "store": 49945,
+    "select": 117863
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.05621300000000051,
+    "ru_stime": 0.011786999999999992,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 2,
+    "ru_majflt": 0,
+    "sched_run_ns": 67999848,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 64166215,
+   "t_wall": 1793756112.710932,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 323654,
+    "restore": 42572084,
+    "prefill": 21081458,
+    "store": 42431,
+    "select": 146588
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.060241999999999685,
+    "ru_stime": 0.00775700000000068,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1,
+    "ru_majflt": 0,
+    "sched_run_ns": 67999737,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 40012117,
+   "t_wall": 1793756112.7772863,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 386594,
+    "restore": 18864803,
+    "prefill": 20606647,
+    "store": 38283,
+    "select": 115790
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.03990399999999994,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 1,
+    "ru_majflt": 0,
+    "sched_run_ns": 39903967,
+    "sched_runqueue_wait_ns": 96001,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 39952292,
+   "t_wall": 1793756112.819384,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 320057,
+    "restore": 18650025,
+    "prefill": 20591399,
+    "store": 45967,
+    "select": 344844
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.03639700000000001,
+    "ru_stime": 0.0036089999999999733,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 40005458,
+    "sched_runqueue_wait_ns": 27332,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "warmup": true,
+   "stage": "process_warmup",
+   "session": "smoke"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 28248894,
+   "t_wall": 1793756115.2692597,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "phases_ns": {
+    "ingest": 605188,
+    "restore": 6469875,
+    "prefill": 21009259,
+    "store": 37221,
+    "select": 127351
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.022222999999999438,
+    "ru_stime": 0.0063589999999997815,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 28581601,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 0,
+   "order_pos": 0,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 39842169,
+   "t_wall": 1793756115.2997394,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 340546,
+    "restore": 19006970,
+    "prefill": 20309201,
+    "store": 38794,
+    "select": 146658
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.03609300000000015,
+    "ru_stime": 0.003906999999999883,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 40000058,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 0,
+   "order_pos": 1,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 27119491,
+   "t_wall": 1793756115.34016,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02800000000000047,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 27999729,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 0,
+   "order_pos": 2,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 65255183,
+   "t_wall": 1793756115.369357,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 343131,
+    "restore": 43690942,
+    "prefill": 21075534,
+    "store": 39605,
+    "select": 105971
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.06023200000000006,
+    "ru_stime": 0.007768000000000441,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 67999977,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 0,
+   "order_pos": 3,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 50326330,
+   "t_wall": 1793756115.4351642,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "phases_ns": {
+    "ingest": 329916,
+    "restore": 29182666,
+    "prefill": 20628747,
+    "store": 38182,
+    "select": 146819
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.0360459999999998,
+    "ru_stime": 0.015944999999999432,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 51990979,
+    "sched_runqueue_wait_ns": 8747,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 0,
+   "order_pos": 4,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 64692505,
+   "t_wall": 1793756115.487742,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.0513779999999997,
+    "ru_stime": 0.011267000000000138,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 62644519,
+    "sched_runqueue_wait_ns": 1354895,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 0,
+   "order_pos": 5,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "full",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 123083165,
+   "t_wall": 1793756115.5529902,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "restore_not_attempted",
+   "first_token": 1490,
+   "backend": "none",
+   "mode": "plain",
+   "last_restore": null,
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3339924992,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.11226499999999984,
+    "ru_stime": 0.011716999999999977,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 2,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 123982803,
+    "sched_runqueue_wait_ns": 15490,
+    "sched_timeslices": 2
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 0,
+   "order_pos": 6,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 40049622,
+   "t_wall": 1793756115.6783445,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.03204900000000066,
+    "ru_stime": 0.011951999999999963,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 44001143,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 0,
+   "order_pos": 7,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 44640883,
+   "t_wall": 1793756115.7189493,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.03204899999999977,
+    "ru_stime": 0.011950999999999823,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 43999690,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 0,
+   "order_pos": 8,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 64560325,
+   "t_wall": 1793756115.89688,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 500690,
+    "restore": 43420087,
+    "prefill": 20477991,
+    "store": 37632,
+    "select": 123925
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.05646899999999988,
+    "ru_stime": 0.011530000000000484,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 67999226,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 1,
+   "order_pos": 0,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 49966517,
+   "t_wall": 1793756115.9620206,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "phases_ns": {
+    "ingest": 329114,
+    "restore": 28740416,
+    "prefill": 20730821,
+    "store": 37201,
+    "select": 128965
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.04410400000000081,
+    "ru_stime": 0.0038960000000001216,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 47999703,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 1,
+   "order_pos": 1,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 26424683,
+   "t_wall": 1793756116.0125263,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.024049999999999905,
+    "ru_stime": 0.003949999999999676,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 27999830,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 1,
+   "order_pos": 2,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 40720765,
+   "t_wall": 1793756116.0411026,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.04009199999999957,
+    "ru_stime": 0.003906999999999883,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 43999830,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 1,
+   "order_pos": 3,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 26713992,
+   "t_wall": 1793756116.0823593,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "phases_ns": {
+    "ingest": 311451,
+    "restore": 6050169,
+    "prefill": 20182781,
+    "store": 39605,
+    "select": 129986
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.020039999999999836,
+    "ru_stime": 0.003961000000000325,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 24000177,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 1,
+   "order_pos": 4,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "full",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 123189135,
+   "t_wall": 1793756116.109664,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "restore_not_attempted",
+   "first_token": 1490,
+   "backend": "none",
+   "mode": "plain",
+   "last_restore": null,
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3339924992,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.11629600000000018,
+    "ru_stime": 0.00370199999999965,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 119997720,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 1,
+   "order_pos": 5,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 40224314,
+   "t_wall": 1793756116.2352314,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 384860,
+    "restore": 19033972,
+    "prefill": 20666969,
+    "store": 38002,
+    "select": 100511
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.036087999999999454,
+    "ru_stime": 0.003911000000000442,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 39999467,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 1,
+   "order_pos": 6,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 47103184,
+   "t_wall": 1793756116.2759855,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.0320210000000003,
+    "ru_stime": 0.015963999999999423,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 2,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 47984774,
+    "sched_runqueue_wait_ns": 12073,
+    "sched_timeslices": 2
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 1,
+   "order_pos": 7,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 58047979,
+   "t_wall": 1793756116.3252442,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.05210500000000007,
+    "ru_stime": 0.00789400000000029,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 59999852,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 1,
+   "order_pos": 8,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 27955768,
+   "t_wall": 1793756116.5200553,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.016338999999999437,
+    "ru_stime": 0.011661000000000143,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 28000040,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 2,
+   "order_pos": 0,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 65149332,
+   "t_wall": 1793756116.5502453,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.06414400000000064,
+    "ru_stime": 0.0038559999999998595,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 67999336,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 2,
+   "order_pos": 1,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 27152764,
+   "t_wall": 1793756116.6159875,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "phases_ns": {
+    "ingest": 318995,
+    "restore": 6142804,
+    "prefill": 20532184,
+    "store": 36890,
+    "select": 121891
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.024045000000000094,
+    "ru_stime": 0.003954000000000235,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 27999900,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 2,
+   "order_pos": 2,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "full",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 123064399,
+   "t_wall": 1793756116.64364,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "restore_not_attempted",
+   "first_token": 1490,
+   "backend": "none",
+   "mode": "plain",
+   "last_restore": null,
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3339924992,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.12027499999999947,
+    "ru_stime": 0.0037240000000000606,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 123998133,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 2,
+   "order_pos": 3,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 41386199,
+   "t_wall": 1793756116.7690308,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 471134,
+    "restore": 19605766,
+    "prefill": 21163312,
+    "store": 40627,
+    "select": 105360
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.03203400000000034,
+    "ru_stime": 0.011959999999999305,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 43995071,
+    "sched_runqueue_wait_ns": 6232,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 2,
+   "order_pos": 4,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 51395508,
+   "t_wall": 1793756116.8109765,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.04005700000000001,
+    "ru_stime": 0.01194400000000062,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 51999826,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 2,
+   "order_pos": 5,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 50279380,
+   "t_wall": 1793756116.8629165,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "phases_ns": {
+    "ingest": 329264,
+    "restore": 28971606,
+    "prefill": 20806423,
+    "store": 36730,
+    "select": 135357
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.0479989999999999,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 47999884,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 2,
+   "order_pos": 6,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 40961423,
+   "t_wall": 1793756116.9153392,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.03619299999999992,
+    "ru_stime": 0.003807000000000116,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 39999187,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 2,
+   "order_pos": 7,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 66649339,
+   "t_wall": 1793756116.9585323,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 328133,
+    "restore": 45095466,
+    "prefill": 21046279,
+    "store": 39275,
+    "select": 140186
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.04720600000000008,
+    "ru_stime": 0.01933799999999941,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 66544120,
+    "sched_runqueue_wait_ns": 1455957,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 2,
+   "order_pos": 8,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 46320229,
+   "t_wall": 1793756117.155964,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.04438099999999956,
+    "ru_stime": 0.003618000000000343,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 47999753,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 3,
+   "order_pos": 0,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 27222747,
+   "t_wall": 1793756117.2028656,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "phases_ns": {
+    "ingest": 328503,
+    "restore": 6144587,
+    "prefill": 20603900,
+    "store": 37702,
+    "select": 108055
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.024043999999999954,
+    "ru_stime": 0.003961999999999577,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 28005180,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 3,
+   "order_pos": 1,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 26546764,
+   "t_wall": 1793756117.2306154,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.016007000000000104,
+    "ru_stime": 0.007986999999999966,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 23994626,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 3,
+   "order_pos": 2,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 64796834,
+   "t_wall": 1793756117.2593334,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.05208499999999905,
+    "ru_stime": 0.011914000000000868,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 63999213,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 3,
+   "order_pos": 3,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 63457742,
+   "t_wall": 1793756117.3263798,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 331428,
+    "restore": 42326252,
+    "prefill": 20629298,
+    "store": 39255,
+    "select": 131509
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.05206400000000144,
+    "ru_stime": 0.015936999999999202,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 67999697,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 3,
+   "order_pos": 4,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 40407761,
+   "t_wall": 1793756117.391996,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.036064999999998903,
+    "ru_stime": 0.003934000000000104,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 39999818,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 3,
+   "order_pos": 5,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 50035789,
+   "t_wall": 1793756117.4329762,
+   "restore_len": 2048,
+   "sources": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "phases_ns": {
+    "ingest": 321059,
+    "restore": 29081925,
+    "prefill": 20399703,
+    "store": 38142,
+    "select": 194960
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 448,
+    "h2d_bytes": 58720256,
+    "placement_ops": 0,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3214324224,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.03602799999999995,
+    "ru_stime": 0.01597200000000054,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 51999976,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 3,
+   "order_pos": 6,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 39808155,
+   "t_wall": 1793756117.4851756,
+   "restore_len": 2048,
+   "sources": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 1490,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 352880,
+    "restore": 18951224,
+    "prefill": 20358655,
+    "store": 38884,
+    "select": 106512
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 8,
+    "chunks_loaded": 8,
+    "h2d_copy_calls": 8,
+    "h2d_bytes": 58720256,
+    "placement_ops": 2,
+    "device_destination_bytes": 58720256,
+    "device_scratch_bytes": 29360128
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3243684352,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02400300000000044,
+    "ru_stime": 0.015996999999999595,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 39999928,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 3,
+   "order_pos": 7,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "full",
+   "L": 2048,
+   "S": 64,
+   "N": 2112,
+   "e2e_ns": 123420655,
+   "t_wall": 1793756117.5255477,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "restore_not_attempted",
+   "first_token": 1490,
+   "backend": "none",
+   "mode": "plain",
+   "last_restore": null,
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3339924992,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.11997400000000091,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 119974316,
+    "sched_runqueue_wait_ns": 23705,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 0,
+   "rep": 3,
+   "order_pos": 8,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 81613798,
+   "t_wall": 1793756120.3218982,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "phases_ns": {
+    "ingest": 498325,
+    "restore": 20778651,
+    "prefill": 60080706,
+    "store": 38593,
+    "select": 217523
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.06406199999999984,
+    "ru_stime": 0.01593800000000023,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 79999585,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 0,
+   "order_pos": 0,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 84115585,
+   "t_wall": 1793756120.4046166,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 227742,
+    "restore": 24050479,
+    "prefill": 59619160,
+    "store": 39615,
+    "select": 178589
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.06808499999999995,
+    "ru_stime": 0.01594400000000018,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 84028403,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 0,
+   "order_pos": 1,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 63164997,
+   "t_wall": 1793756120.489376,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.06007400000000018,
+    "ru_stime": 0.0039039999999994635,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 63977862,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 0,
+   "order_pos": 2,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 65373166,
+   "t_wall": 1793756120.5536199,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 185892,
+    "restore": 8342187,
+    "prefill": 56586897,
+    "store": 49283,
+    "select": 208907
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.048011999999999944,
+    "ru_stime": 0.01997300000000024,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 67985751,
+    "sched_runqueue_wait_ns": 6893,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 0,
+   "order_pos": 3,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 84773382,
+   "t_wall": 1793756120.6200576,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.06404799999999966,
+    "ru_stime": 0.01995199999999997,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 83999668,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 0,
+   "order_pos": 4,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 82241520,
+   "t_wall": 1793756120.7054837,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.06002500000000133,
+    "ru_stime": 0.02396699999999985,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 83993076,
+    "sched_runqueue_wait_ns": 6773,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 0,
+   "order_pos": 5,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 68974208,
+   "t_wall": 1793756120.7887452,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.06006299999999953,
+    "ru_stime": 0.011936999999999642,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 71999579,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 0,
+   "order_pos": 6,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "full",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 40723652,
+   "t_wall": 1793756120.8583467,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "restore_not_attempted",
+   "first_token": 7354,
+   "backend": "none",
+   "mode": "plain",
+   "last_restore": null,
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3146771456,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.028010999999999342,
+    "ru_stime": 0.011989000000000694,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 39999928,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 0,
+   "order_pos": 7,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 64192897,
+   "t_wall": 1793756120.8997905,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "phases_ns": {
+    "ingest": 188899,
+    "restore": 4309946,
+    "prefill": 59481730,
+    "store": 38152,
+    "select": 174170
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.044014000000000664,
+    "ru_stime": 0.019985999999999393,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 63999704,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 0,
+   "order_pos": 8,
+   "warmup": true,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 69067384,
+   "t_wall": 1793756121.0949104,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.04421499999999945,
+    "ru_stime": 0.023782999999999888,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 67999156,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 1,
+   "order_pos": 0,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 64585712,
+   "t_wall": 1793756121.1645956,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "phases_ns": {
+    "ingest": 190511,
+    "restore": 4587544,
+    "prefill": 59606225,
+    "store": 39255,
+    "select": 162177
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.05204800000000098,
+    "ru_stime": 0.011953000000000102,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 63999964,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 1,
+   "order_pos": 1,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "full",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 40098786,
+   "t_wall": 1793756121.2298338,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "restore_not_attempted",
+   "first_token": 7354,
+   "backend": "none",
+   "mode": "plain",
+   "last_restore": null,
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3146771456,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.03201900000000002,
+    "ru_stime": 0.007966000000000584,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 39984950,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 1,
+   "order_pos": 2,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 64382126,
+   "t_wall": 1793756121.2704525,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.05204800000000098,
+    "ru_stime": 0.011953000000000102,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1,
+    "ru_majflt": 0,
+    "sched_run_ns": 64000986,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 1,
+   "order_pos": 3,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 86373398,
+   "t_wall": 1793756121.3358774,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 189600,
+    "restore": 24227083,
+    "prefill": 61739704,
+    "store": 40797,
+    "select": 176214
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.08009999999999984,
+    "ru_stime": 0.00789799999999996,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 87998359,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 1,
+   "order_pos": 4,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 79737859,
+   "t_wall": 1793756121.4228265,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.05599899999999991,
+    "ru_stime": 0.02396899999999924,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 79968156,
+    "sched_runqueue_wait_ns": 31760,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 1,
+   "order_pos": 5,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 29315518,
+   "t_wall": 1793756121.5036943,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 205019,
+    "restore": 8444210,
+    "prefill": 20460098,
+    "store": 38894,
+    "select": 167297
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.024017999999999873,
+    "ru_stime": 0.003970000000000695,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 27988106,
+    "sched_runqueue_wait_ns": 8928,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 1,
+   "order_pos": 6,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 28695911,
+   "t_wall": 1793756121.5341113,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.016001000000001042,
+    "ru_stime": 0.012004999999999377,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 1,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 28004939,
+    "sched_runqueue_wait_ns": 8345,
+    "sched_timeslices": 1
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 1,
+   "order_pos": 7,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 24372670,
+   "t_wall": 1793756121.563397,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "phases_ns": {
+    "ingest": 138042,
+    "restore": 7981072,
+    "prefill": 16123349,
+    "store": 36470,
+    "select": 93737
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.023985999999998953,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 23986021,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 1,
+   "order_pos": 8,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 30652083,
+   "t_wall": 1793756121.7192051,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02827399999999969,
+    "ru_stime": 0.0037250000000002004,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31999862,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 2,
+   "order_pos": 0,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 18666023,
+   "t_wall": 1793756121.7504497,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "phases_ns": {
+    "ingest": 167598,
+    "restore": 2226043,
+    "prefill": 16106407,
+    "store": 35888,
+    "select": 130087
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.016000000000000014,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 16000171,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 2,
+   "order_pos": 1,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 21790170,
+   "t_wall": 1793756121.770069,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02000000000000135,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 19999704,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 2,
+   "order_pos": 2,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "full",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 46712674,
+   "t_wall": 1793756121.7923853,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "restore_not_attempted",
+   "first_token": 7354,
+   "backend": "none",
+   "mode": "plain",
+   "last_restore": null,
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3146771456,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.04009600000000013,
+    "ru_stime": 0.007902999999999771,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 47998511,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 2,
+   "order_pos": 3,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 18734303,
+   "t_wall": 1793756121.8396347,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.011995999999999896,
+    "ru_stime": 0.008005000000000706,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 20001176,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 2,
+   "order_pos": 4,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 24249246,
+   "t_wall": 1793756121.8589036,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "phases_ns": {
+    "ingest": 141038,
+    "restore": 7935224,
+    "prefill": 16046614,
+    "store": 35478,
+    "select": 90892
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.011986000000000274,
+    "ru_stime": 0.012013999999999747,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 23999866,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 2,
+   "order_pos": 5,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 29330316,
+   "t_wall": 1793756121.8840744,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 126810,
+    "restore": 12582111,
+    "prefill": 16473073,
+    "store": 38303,
+    "select": 110019
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.024012999999998286,
+    "ru_stime": 0.007986999999999966,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31999933,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 2,
+   "order_pos": 6,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 23569977,
+   "t_wall": 1793756121.914036,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.016002000000000294,
+    "ru_stime": 0.007997999999999728,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 23999766,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 2,
+   "order_pos": 7,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 22634772,
+   "t_wall": 1793756121.9385264,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 131098,
+    "restore": 5689875,
+    "prefill": 16667973,
+    "store": 37000,
+    "select": 108826
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.016013000000000943,
+    "ru_stime": 0.003987000000000407,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 19999994,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 2,
+   "order_pos": 8,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "full",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 39312474,
+   "t_wall": 1793756122.0899658,
+   "restore_len": 0,
+   "sources": [],
+   "stored_chunks": [],
+   "miss_reason": "restore_not_attempted",
+   "first_token": 7354,
+   "backend": "none",
+   "mode": "plain",
+   "last_restore": null,
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3146771456,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.032228999999999175,
+    "ru_stime": 0.003775000000000084,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 40010137,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 3,
+   "order_pos": 0,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 29772966,
+   "t_wall": 1793756122.1304786,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.024020999999999404,
+    "ru_stime": 0.003968999999999667,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 27990271,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 3,
+   "order_pos": 1,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 28902013,
+   "t_wall": 1793756122.161238,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 143252,
+    "restore": 11810377,
+    "prefill": 16811735,
+    "store": 38122,
+    "select": 98527
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02802900000000008,
+    "ru_stime": 0.003969999999999807,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 31999321,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 3,
+   "order_pos": 2,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 18632610,
+   "t_wall": 1793756122.1906774,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.012007000000000545,
+    "ru_stime": 0.003994000000000497,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 16000132,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 3,
+   "order_pos": 3,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 24286317,
+   "t_wall": 1793756122.2098622,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "backend": "baseline",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02399899999999988,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 2,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 23999225,
+    "sched_runqueue_wait_ns": 12634,
+    "sched_timeslices": 2
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 3,
+   "order_pos": 4,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 23435292,
+   "t_wall": 1793756122.234629,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "phases_ns": {
+    "ingest": 138583,
+    "restore": 7339695,
+    "prefill": 15836215,
+    "store": 36008,
+    "select": 84791
+   },
+   "backend": "baseline",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "baseline",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 112,
+    "h2d_bytes": 14680064,
+    "placement_ops": 0,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 0
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3126231552,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.020048000000000954,
+    "ru_stime": 0.003936999999999635,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1,
+    "ru_majflt": 0,
+    "sched_run_ns": 23984418,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 3,
+   "order_pos": 5,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 22553108,
+   "t_wall": 1793756122.2590396,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "backend": "batched",
+   "mode": "plain",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.020016999999999285,
+    "ru_stime": 0.003982000000000596,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 23999766,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 3,
+   "order_pos": 6,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "host",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 18349713,
+   "t_wall": 1793756122.2821424,
+   "restore_len": 512,
+   "sources": [
+    "host",
+    "host"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "phases_ns": {
+    "ingest": 150896,
+    "restore": 2165949,
+    "prefill": 15880810,
+    "store": 35738,
+    "select": 116320
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.016000999999999266,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 0,
+    "ru_majflt": 0,
+    "sched_run_ns": 16000111,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 3,
+   "order_pos": 7,
+   "warmup": false,
+   "stage": "m3"
+  },
+  {
+   "path": "disk",
+   "L": 512,
+   "S": 1,
+   "N": 513,
+   "e2e_ns": 22107321,
+   "t_wall": 1793756122.3014026,
+   "restore_len": 512,
+   "sources": [
+    "disk",
+    "disk"
+   ],
+   "stored_chunks": [],
+   "miss_reason": null,
+   "first_token": 7354,
+   "resident_fraction_before": 1.0,
+   "phases_ns": {
+    "ingest": 141057,
+    "restore": 5673865,
+    "prefill": 16157453,
+    "store": 37772,
+    "select": 97174
+   },
+   "backend": "batched",
+   "mode": "synced",
+   "last_restore": {
+    "backend": "batched",
+    "chunks_planned": 2,
+    "chunks_loaded": 2,
+    "h2d_copy_calls": 2,
+    "h2d_bytes": 14680064,
+    "placement_ops": 1,
+    "device_destination_bytes": 14680064,
+    "device_scratch_bytes": 14680064
+   },
+   "mem": {
+    "allocated_before": 3096866816,
+    "reserved_before": 3762290688,
+    "peak_allocated": 3140911616,
+    "peak_reserved": 3762290688,
+    "allocated_after": 3096866816
+   },
+   "rusage_delta": {
+    "ru_utime": 0.02400000000000091,
+    "ru_stime": 0.0,
+    "ru_nvcsw": 0,
+    "ru_nivcsw": 0,
+    "ru_minflt": 1,
+    "ru_majflt": 0,
+    "sched_run_ns": 23999987,
+    "sched_runqueue_wait_ns": 0,
+    "sched_timeslices": 0
+   },
+   "alloc_delta": {
+    "num_device_alloc": 0,
+    "num_device_free": 0,
+    "num_alloc_retries": 0
+   },
+   "session": "smoke",
+   "block": 1,
+   "rep": 3,
+   "order_pos": 8,
+   "warmup": false,
+   "stage": "m3"
+  }
+ ],
+ "correctness": [
+  {
+   "baseline": {
+    "L": 2048,
+    "S": 64,
+    "host_restore_len": 2048,
+    "host_sources": [
+     "host",
+     "host",
+     "host",
+     "host",
+     "host",
+     "host",
+     "host",
+     "host"
+    ],
+    "disk_restore_len": 2048,
+    "disk_sources": [
+     "disk",
+     "disk",
+     "disk",
+     "disk",
+     "disk",
+     "disk",
+     "disk",
+     "disk"
+    ],
+    "full_restore_len": 0,
+    "full_sources": [],
+    "restored_kv_bytes_equal": {
+     "host": true,
+     "disk": true
+    },
+    "strict_host_eq_disk_bitwise": true,
+    "strict_host_eq_resident_bitwise": true,
+    "strict_pass": true,
+    "report_only_full_vs_restored": {
+     "first_token_equal": true,
+     "max_abs_logit_diff": 0.28125
+    }
+   },
+   "batched": {
+    "L": 2048,
+    "S": 64,
+    "host_restore_len": 2048,
+    "host_sources": [
+     "host",
+     "host",
+     "host",
+     "host",
+     "host",
+     "host",
+     "host",
+     "host"
+    ],
+    "disk_restore_len": 2048,
+    "disk_sources": [
+     "disk",
+     "disk",
+     "disk",
+     "disk",
+     "disk",
+     "disk",
+     "disk",
+     "disk"
+    ],
+    "full_restore_len": 0,
+    "full_sources": [],
+    "restored_kv_bytes_equal": {
+     "host": true,
+     "disk": true
+    },
+    "strict_host_eq_disk_bitwise": true,
+    "strict_host_eq_resident_bitwise": true,
+    "strict_pass": true,
+    "report_only_full_vs_restored": {
+     "first_token_equal": true,
+     "max_abs_logit_diff": 0.28125
+    }
+   },
+   "strict_pass_all": true
+  },
+  {
+   "baseline": {
+    "L": 512,
+    "S": 1,
+    "host_restore_len": 512,
+    "host_sources": [
+     "host",
+     "host"
+    ],
+    "disk_restore_len": 512,
+    "disk_sources": [
+     "disk",
+     "disk"
+    ],
+    "full_restore_len": 0,
+    "full_sources": [],
+    "restored_kv_bytes_equal": {
+     "host": true,
+     "disk": true
+    },
+    "strict_host_eq_disk_bitwise": true,
+    "strict_host_eq_resident_bitwise": true,
+    "strict_pass": true,
+    "report_only_full_vs_restored": {
+     "first_token_equal": true,
+     "max_abs_logit_diff": 0.1875
+    }
+   },
+   "batched": {
+    "L": 512,
+    "S": 1,
+    "host_restore_len": 512,
+    "host_sources": [
+     "host",
+     "host"
+    ],
+    "disk_restore_len": 512,
+    "disk_sources": [
+     "disk",
+     "disk"
+    ],
+    "full_restore_len": 0,
+    "full_sources": [],
+    "restored_kv_bytes_equal": {
+     "host": true,
+     "disk": true
+    },
+    "strict_host_eq_disk_bitwise": true,
+    "strict_host_eq_resident_bitwise": true,
+    "strict_pass": true,
+    "report_only_full_vs_restored": {
+     "first_token_equal": true,
+     "max_abs_logit_diff": 0.1875
+    }
+   },
+   "strict_pass_all": true
+  }
+ ],
+ "ab_checks": [
+  {
+   "L": 2048,
+   "S": 64,
+   "host": {
+    "restore_len_sources_admission_equal": true,
+    "kv_bytes_equal_after_prefill": true,
+    "first_logits_bitwise_equal": true,
+    "greedy_tokens_equal": true,
+    "step_logits_bitwise_equal": true,
+    "restore_len": 2048,
+    "sources": [
+     "host",
+     "host",
+     "host",
+     "host",
+     "host",
+     "host",
+     "host",
+     "host"
+    ]
+   },
+   "disk": {
+    "restore_len_sources_admission_equal": true,
+    "kv_bytes_equal_after_prefill": true,
+    "first_logits_bitwise_equal": true,
+    "greedy_tokens_equal": true,
+    "step_logits_bitwise_equal": true,
+    "restore_len": 2048,
+    "sources": [
+     "disk",
+     "disk",
+     "disk",
+     "disk",
+     "disk",
+     "disk",
+     "disk",
+     "disk"
+    ]
+   },
+   "pass": true
+  },
+  {
+   "L": 512,
+   "S": 1,
+   "host": {
+    "restore_len_sources_admission_equal": true,
+    "kv_bytes_equal_after_prefill": true,
+    "first_logits_bitwise_equal": true,
+    "greedy_tokens_equal": true,
+    "step_logits_bitwise_equal": true,
+    "restore_len": 512,
+    "sources": [
+     "host",
+     "host"
+    ]
+   },
+   "disk": {
+    "restore_len_sources_admission_equal": true,
+    "kv_bytes_equal_after_prefill": true,
+    "first_logits_bitwise_equal": true,
+    "greedy_tokens_equal": true,
+    "step_logits_bitwise_equal": true,
+    "restore_len": 512,
+    "sources": [
+     "disk",
+     "disk"
+    ]
+   },
+   "pass": true
+  }
+ ],
+ "restore_memory": [
+  {
+   "L": 2048,
+   "S": 64,
+   "host_baseline": {
+    "L": 2048,
+    "sources_ok": true,
+    "peak_above_start": 117440512,
+    "kept_after_return": 58720256,
+    "last_restore": {
+     "backend": "baseline",
+     "chunks_planned": 8,
+     "chunks_loaded": 8,
+     "h2d_copy_calls": 448,
+     "h2d_bytes": 58720256,
+     "placement_ops": 0,
+     "device_destination_bytes": 58720256,
+     "device_scratch_bytes": 0
+    },
+    "reserved_after": 3762290688
+   },
+   "host_batched": {
+    "L": 2048,
+    "sources_ok": true,
+    "peak_above_start": 146800640,
+    "kept_after_return": 58720256,
+    "last_restore": {
+     "backend": "batched",
+     "chunks_planned": 8,
+     "chunks_loaded": 8,
+     "h2d_copy_calls": 8,
+     "h2d_bytes": 58720256,
+     "placement_ops": 2,
+     "device_destination_bytes": 58720256,
+     "device_scratch_bytes": 29360128
+    },
+    "reserved_after": 3762290688
+   },
+   "disk_baseline": {
+    "L": 2048,
+    "sources_ok": true,
+    "peak_above_start": 117440512,
+    "kept_after_return": 58720256,
+    "last_restore": {
+     "backend": "baseline",
+     "chunks_planned": 8,
+     "chunks_loaded": 8,
+     "h2d_copy_calls": 448,
+     "h2d_bytes": 58720256,
+     "placement_ops": 0,
+     "device_destination_bytes": 58720256,
+     "device_scratch_bytes": 0
+    },
+    "reserved_after": 3762290688
+   },
+   "disk_batched": {
+    "L": 2048,
+    "sources_ok": true,
+    "peak_above_start": 146800640,
+    "kept_after_return": 58720256,
+    "last_restore": {
+     "backend": "batched",
+     "chunks_planned": 8,
+     "chunks_loaded": 8,
+     "h2d_copy_calls": 8,
+     "h2d_bytes": 58720256,
+     "placement_ops": 2,
+     "device_destination_bytes": 58720256,
+     "device_scratch_bytes": 29360128
+    },
+    "reserved_after": 3762290688
+   }
+  },
+  {
+   "L": 512,
+   "S": 1,
+   "host_baseline": {
+    "L": 512,
+    "sources_ok": true,
+    "peak_above_start": 29360128,
+    "kept_after_return": 14680064,
+    "last_restore": {
+     "backend": "baseline",
+     "chunks_planned": 2,
+     "chunks_loaded": 2,
+     "h2d_copy_calls": 112,
+     "h2d_bytes": 14680064,
+     "placement_ops": 0,
+     "device_destination_bytes": 14680064,
+     "device_scratch_bytes": 0
+    },
+    "reserved_after": 3762290688
+   },
+   "host_batched": {
+    "L": 512,
+    "sources_ok": true,
+    "peak_above_start": 44040192,
+    "kept_after_return": 14680064,
+    "last_restore": {
+     "backend": "batched",
+     "chunks_planned": 2,
+     "chunks_loaded": 2,
+     "h2d_copy_calls": 2,
+     "h2d_bytes": 14680064,
+     "placement_ops": 1,
+     "device_destination_bytes": 14680064,
+     "device_scratch_bytes": 14680064
+    },
+    "reserved_after": 3762290688
+   },
+   "disk_baseline": {
+    "L": 512,
+    "sources_ok": true,
+    "peak_above_start": 29360128,
+    "kept_after_return": 14680064,
+    "last_restore": {
+     "backend": "baseline",
+     "chunks_planned": 2,
+     "chunks_loaded": 2,
+     "h2d_copy_calls": 112,
+     "h2d_bytes": 14680064,
+     "placement_ops": 0,
+     "device_destination_bytes": 14680064,
+     "device_scratch_bytes": 0
+    },
+    "reserved_after": 3762290688
+   },
+   "disk_batched": {
+    "L": 512,
+    "sources_ok": true,
+    "peak_above_start": 44040192,
+    "kept_after_return": 14680064,
+    "last_restore": {
+     "backend": "batched",
+     "chunks_planned": 2,
+     "chunks_loaded": 2,
+     "h2d_copy_calls": 2,
+     "h2d_bytes": 14680064,
+     "placement_ops": 1,
+     "device_destination_bytes": 14680064,
+     "device_scratch_bytes": 14680064
+    },
+    "reserved_after": 3762290688
+   }
+  }
+ ],
+ "failures": [],
+ "blocks": [
+  {
+   "block": 0,
+   "L": 2048,
+   "S": 64,
+   "t_start": 1793756115.143569,
+   "t_end": 1793756117.6494477
+  },
+  {
+   "block": 1,
+   "L": 512,
+   "S": 1,
+   "t_start": 1793756120.2005353,
+   "t_end": 1793756122.3238387
+  }
+ ],
+ "budgets": {
+  "store_A": {
+   "host": {
+    "budget_bytes": 73400320,
+    "slab_allocated_bytes": 73400320,
+    "cuda_host_registered_bytes": 73400320,
+    "staging_reserved_bytes": 7340032,
+    "resident_slots": 9,
+    "resident_logical_bytes": 14680064,
+    "resident_logical_peak_bytes": 58720256,
+    "entries": 2,
+    "max_entries": 9,
+    "evictions": 0,
+    "metadata_bytes_estimate": 2256,
+    "metadata_note": "estimate of raw identity field bytes; not measured Python heap usage",
+    "pinned": true
+   }
+  },
+  "store_B": {
+   "host": {
+    "budget_bytes": 14680064,
+    "slab_allocated_bytes": 14680064,
+    "cuda_host_registered_bytes": 14680064,
+    "staging_reserved_bytes": 7340032,
+    "resident_slots": 1,
+    "resident_logical_bytes": 0,
+    "resident_logical_peak_bytes": 0,
+    "entries": 0,
+    "max_entries": 1,
+    "evictions": 0,
+    "metadata_bytes_estimate": 0,
+    "metadata_note": "estimate of raw identity field bytes; not measured Python heap usage",
+    "pinned": true
+   },
+   "disk": {
+    "budget_bytes": 66079089,
+    "used_bytes": 14684242,
+    "peak_used_bytes": 58736968,
+    "committed_bytes": 14684242,
+    "tmp_bytes": 0,
+    "undeletable_bytes": 0,
+    "undeletable_files": [],
+    "unlink_failures": {},
+    "entries": 2,
+    "max_entries": 9,
+    "evictions": 0,
+    "dir_bytes_scanned": 14684242
+   }
+  },
+  "source_pageable_slab_bytes": 66060288
+ },
+ "process_end": {
+  "pid": 108867,
+  "nice": 0,
+  "affinity_n": 32,
+  "nproc": 32,
+  "torch_num_threads": 16,
+  "torch_num_interop_threads": 32,
+  "env": {
+   "OMP_NUM_THREADS": null,
+   "MKL_NUM_THREADS": null,
+   "CUDA_LAUNCH_BLOCKING": null,
+   "PYTORCH_CUDA_ALLOC_CONF": null,
+   "CUDA_MODULE_LOADING": null,
+   "HF_HUB_OFFLINE": "1"
+  },
+  "rlimit_memlock": [
+   67108864,
+   67108864
+  ],
+  "loadavg": "0.46 0.48 0.34 1/799 109042",
+  "meminfo_head": [
+   "MemTotal:        7720156 kB",
+   "MemFree:          103668 kB",
+   "MemAvailable:    4897220 kB",
+   "Buffers:           30140 kB",
+   "Cached:          5030704 kB",
+   "SwapCached:        46896 kB"
+  ],
+  "status_threads": "Threads:\t52",
+  "cpufreq_visible": false,
+  "sdpa_backends": {
+   "flash": true,
+   "mem_efficient": true,
+   "math": true,
+   "cudnn": true
+  },
+  "tf32_matmul": false,
+  "cudnn_benchmark": false
+ },
+ "excluded": []
+}

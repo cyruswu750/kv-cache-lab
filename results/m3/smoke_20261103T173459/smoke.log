@@ -1,0 +1,4 @@
+block 0 L=2048 S=64 done (0.1 min)
+block 1 L=512 S=1 done (0.2 min)
+{"n_samples": 108, "n_measured": 54, "n_excluded": 0, "elapsed_min": 0.19264366626739501, "correctness_all": true}
+failures []; wrote results/m3/smoke_20261103T173459/session_smoke.json
