@@ -1,0 +1,6 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   5%|▍         | 16/338 [00:00<00:02, 156.23it/s]Loading weights:  11%|█         | 36/338 [00:00<00:01, 173.46it/s]Loading weights:  65%|██████▌   | 221/338 [00:00<00:00, 913.13it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 1065.33it/s]
+L=1024: done (0.4 min)
+L=256: done (0.7 min)
+{"n_samples": 189, "n_valid": 140, "n_excluded": 0, "elapsed_min": 0.7411965092023214, "correctness_strict_all": true}
+failures [] not_run []
+wrote results/m2/smoke_20261103T125910/smoke_samples.json

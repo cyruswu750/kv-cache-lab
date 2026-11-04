@@ -1,0 +1,20 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   7%|▋         | 24/338 [00:00<00:01, 235.05it/s]Loading weights:  14%|█▍        | 48/338 [00:00<00:01, 174.31it/s]Loading weights:  20%|█▉        | 67/338 [00:00<00:01, 175.03it/s]Loading weights:  25%|██▌       | 86/338 [00:00<00:01, 172.07it/s]Loading weights:  31%|███▏      | 106/338 [00:00<00:01, 177.48it/s]Loading weights:  37%|███▋      | 124/338 [00:00<00:01, 161.99it/s]Loading weights:  43%|████▎     | 144/338 [00:00<00:01, 165.52it/s]Loading weights:  49%|████▊     | 164/338 [00:00<00:01, 171.14it/s]Loading weights:  56%|█████▌    | 189/338 [00:01<00:00, 193.34it/s]Loading weights:  62%|██████▏   | 209/338 [00:01<00:00, 179.47it/s]Loading weights:  67%|██████▋   | 228/338 [00:01<00:00, 159.61it/s]Loading weights:  72%|███████▏  | 245/338 [00:01<00:00, 156.50it/s]Loading weights: 100%|██████████| 338/338 [00:01<00:00, 232.96it/s]
+Traceback (most recent call last):
+  File "/home/cyrus/projects/kv-cache-lab/scripts/m2_measure.py", line 129, in <module>
+    main()
+    ~~~~^^
+  File "/home/cyrus/projects/kv-cache-lab/scripts/m2_measure.py", line 92, in main
+    report["correctness"].append(bench.correctness(S))
+                                 ~~~~~~~~~~~~~~~~~^^^
+  File "/home/cyrus/projects/kv-cache-lab/kvlab/perf_harness.py", line 264, in correctness
+    p = self.engine[eng_key].prefill_request(prompt, allow_restore=allow,
+                                             on_restored=checker(tag) if allow else None)
+  File "/home/cyrus/projects/kv-cache-lab/kvlab/always_restore.py", line 71, in prefill_request
+    on_restored(cache, L)
+    ~~~~~~~~~~~^^^^^^^^^^
+  File "/home/cyrus/projects/kv-cache-lab/kvlab/perf_harness.py", line 257, in on_restored
+    ok &= bytes_equal(layer.keys[:, :, i * C:(i + 1) * C, :], src[li, 0])
+          ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/cyrus/projects/kv-cache-lab/kvlab/kv_snapshot.py", line 63, in bytes_equal
+    raise ValueError(f"compare on one device, got {a.device} and {b.device}")
+ValueError: compare on one device, got cuda:0 and cpu
