@@ -1,0 +1,11 @@
+{
+ "requests": 19,
+ "strict_records": 19,
+ "strict_pass_all": true,
+ "expected_requests": 19,
+ "acceptance": true,
+ "problems": [],
+ "restored_requests": 7,
+ "report_only_full_recompute_greedy_identical": 3,
+ "elapsed_s": null
+}

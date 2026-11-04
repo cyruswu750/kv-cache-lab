@@ -1,0 +1,11 @@
+KILLED    every group placed at offset 0                                     1 failed, 1 passed in 1.90s
+KILLED    chunk order reversed within a placed group                         1 failed, 2 passed in 1.93s
+KILLED    last partial group never placed                                    1 failed, 2 passed in 1.92s
+KILLED    cache built from the whole planned destination                     1 failed, 9 passed in 1.93s
+KILLED    scratch not bounded by the prefix length                           1 failed, 5 passed in 1.91s
+KILLED    placement waits for the end (unbounded group)                      1 failed, 1 passed in 1.93s
+KILLED    batched backend ignored (always baseline)                          1 failed in 1.90s
+KILLED    hit counted before the copy                                        1 failed, 20 passed in 1.99s
+KILLED    chunk H2D made non_blocking (no sync before lease/staging release) 1 failed in 6.72s
+KILLED    chunk order reversed within a placed group (GPU)                   1 failed, 1 passed in 7.55s
+10/10 KILLED

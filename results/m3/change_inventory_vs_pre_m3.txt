@@ -1,0 +1,94 @@
+Change inventory: working tree vs the pre-M3 snapshot backups/pre-m3-20261103T171930.tar.gz
+(baseline manifest results/m3/pre_m3_manifest_20261103T171930.sha256; baseline git HEAD 362ee40aeaaae204b2b1dc88398b46bc5826f410)
+Excluded from both sides: .git, .venv, .hf_cache, .kvcache, backups/, __pycache__, .pytest_cache, *:Zone.Identifier,
+and this inventory, post_m3_manifest.sha256, review_archive_m3.sha256 / .filelist.txt (written after it).
+
+files before: 271; files now: 337; modified: 10; added: 66; deleted: 0
+
+historical evidence (results/ files present before M3): 197; changed: 0 []
+kvlab modules byte-identical to pre-M3: __init__.py, always_restore.py, boundaries.py, chunk_format.py, diag_harness.py, disk_store.py, experiment.py, fixtures.py, host_store.py, identity.py, kv_snapshot.py, metrics.py, model.py, perf.py, perf_harness.py, perf_stats.py, resident_reference.py, tolerances.py
+
+MODIFIED (sha256 before -> after):
+  ./README.md  4c232c3a03c43625 -> 9ab50882903b96bc
+  ./docs/M2_1_REVIEW.md  ba35ae2240f16d41 -> 80a0657ba9be3430
+  ./docs/M2_REVIEW.md  c4c481baceac60ab -> 2e8bae2b5cfd7a93
+  ./docs/correctness-matrix.md  2a9abc141e23ea0d -> 2985265be8b4efbc
+  ./docs/decisions.md  689c2ccab1191104 -> 464a9af30e3a2435
+  ./docs/design.md  8365b20f804a2c78 -> b6f0f1ba7c8de9f0
+  ./kvlab/tiered_cache.py  840fd65f292198a0 -> 1cdbd53a38347210
+  ./pyproject.toml  4aec03a2fb844a60 -> 172a23fd5a08a2bf
+  ./scripts/m1_run.py  e478806ec4844fc7 -> 80016d9b97efadfa
+  ./tests/gpu/test_m1_tiered.py  f8e7e6cd0690d45c -> c866609eb632b02c
+
+ADDED, outside results/m3/:
+  ./docs/M3_DESIGN.md
+  ./docs/M3_PROTOCOL.md
+  ./docs/M3_REVIEW.md
+  ./docs/M3_WALKTHROUGH.md
+  ./kvlab/m3_bench.py
+  ./kvlab/m3_stats.py
+  ./scripts/m3_analyze.py
+  ./scripts/m3_measure.py
+  ./scripts/m3_mutation_check.py
+  ./tests/gpu/test_m3_restore.py
+  ./tests/test_m3_stats.py
+  ./tests/test_restore_backends_cpu.py
+
+ADDED under results/m3/:
+  ./results/m3/design_probe/probe_allocator_rounding.py
+  ./results/m3/design_probe/probe_allocator_rounding_20261103T175140.json
+  ./results/m3/design_probe/probe_copy_calls.py
+  ./results/m3/design_probe/probe_copy_calls_20261103T172020.json
+  ./results/m3/design_probe/probe_copy_calls_20261103T172020.stderr.log
+  ./results/m3/eval_20261103T173632/logs/analyze.log
+  ./results/m3/eval_20261103T173632/logs/commands.txt
+  ./results/m3/eval_20261103T173632/logs/exit_codes.txt
+  ./results/m3/eval_20261103T173632/logs/session_prof.log
+  ./results/m3/eval_20261103T173632/logs/session_s1.log
+  ./results/m3/eval_20261103T173632/logs/session_s2.log
+  ./results/m3/eval_20261103T173632/logs/session_s3.log
+  ./results/m3/eval_20261103T173632/logs/session_s4.log
+  ./results/m3/eval_20261103T173632/logs/session_s5.log
+  ./results/m3/eval_20261103T173632/m3_analysis.json
+  ./results/m3/eval_20261103T173632/m3_analysis.md
+  ./results/m3/eval_20261103T173632/samples_chronological.csv
+  ./results/m3/eval_20261103T173632/session_prof.gpu_monitor.csv
+  ./results/m3/eval_20261103T173632/session_prof.json
+  ./results/m3/eval_20261103T173632/session_s1.gpu_monitor.csv
+  ./results/m3/eval_20261103T173632/session_s1.json
+  ./results/m3/eval_20261103T173632/session_s2.gpu_monitor.csv
+  ./results/m3/eval_20261103T173632/session_s2.json
+  ./results/m3/eval_20261103T173632/session_s3.gpu_monitor.csv
+  ./results/m3/eval_20261103T173632/session_s3.json
+  ./results/m3/eval_20261103T173632/session_s4.gpu_monitor.csv
+  ./results/m3/eval_20261103T173632/session_s4.json
+  ./results/m3/eval_20261103T173632/session_s5.gpu_monitor.csv
+  ./results/m3/eval_20261103T173632/session_s5.json
+  ./results/m3/logs/m1_run_backend_comparison_20261103T175241.txt
+  ./results/m3/logs/m1_run_baseline_20261103T175241.log
+  ./results/m3/logs/m1_run_baseline_validate_20261103T175241.log
+  ./results/m3/logs/m1_run_batched_20261103T175241.log
+  ./results/m3/logs/m1_run_batched_validate_20261103T175241.log
+  ./results/m3/logs/pytest_cpu_20261103T175215.log
+  ./results/m3/logs/pytest_gpu_m0_1_20261103T175241.log
+  ./results/m3/logs/pytest_gpu_m0_strict_20261103T175241.log
+  ./results/m3/logs/pytest_gpu_m1_20261103T175241.log
+  ./results/m3/logs/pytest_gpu_m3_20261103T175241.log
+  ./results/m3/logs/pytest_gpu_m3_dev_20261103T172629.log
+  ./results/m3/logs/pytest_gpu_m3_dev_20261103T172757.log
+  ./results/m3/logs/pytest_gpu_m3_dev_20261103T172902.log
+  ./results/m3/m1_run_baseline_20261103T175241.json
+  ./results/m3/m1_run_batched_20261103T175241.json
+  ./results/m3/mutation_check_20261103T173035.txt
+  ./results/m3/mutation_check_20261103T173143.txt
+  ./results/m3/pre_m3_git_state_20261103T171930.txt
+  ./results/m3/pre_m3_manifest_20261103T171930.sha256
+  ./results/m3/pre_m3_snapshot_20261103T171930.sha256
+  ./results/m3/protocol_freeze_20261103T173632.sha256
+  ./results/m3/smoke_20261103T173459/commands.txt
+  ./results/m3/smoke_20261103T173459/session_smoke.gpu_monitor.csv
+  ./results/m3/smoke_20261103T173459/session_smoke.json
+  ./results/m3/smoke_20261103T173459/smoke.log
+
+DELETED:
+  (none)

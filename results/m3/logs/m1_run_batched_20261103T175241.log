@@ -1,0 +1,29 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  57%|█████▋    | 192/338 [00:00<00:00, 1918.59it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2880.47it/s]
+== sequence (host 2 slots + 1 staging, disk 2 files)
+  X                      N= 622 L=   0/ 512 src=-               miss=absent stored=[0, 1] fwd=8/8 STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'host']
+  Y                      N= 642 L= 512/ 512 src=host,host       miss=None stored=[] fwd=8/8 STRICT=PASS | vs full: max_abs=0.312 greedy=8/8 | tiers=['host', 'host']
+  W                      N= 600 L=   0/ 512 src=-               miss=absent stored=[0, 1] fwd=8/8 STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'host']
+  Z                      N= 366 L= 256/ 256 src=disk            miss=None stored=[] fwd=8/8 STRICT=PASS | vs full: max_abs=0.312 greedy=8/8 | tiers=['disk']
+  X                      N= 622 L= 512/ 512 src=disk,disk       miss=None stored=[] fwd=8/8 STRICT=PASS | vs full: max_abs=0.281 greedy=4/8 (div step 4 margin 0.000) | tiers=['disk', 'disk']
+  L3                     N= 779 L= 512/ 768 src=disk,disk       miss=absent stored=[2] fwd=8/8 STRICT=PASS | vs full: max_abs=0.281 greedy=4/8 (div step 4 margin 0.125) | tiers=[None, 'disk', 'host']
+  Y                      N= 642 L=   0/ 512 src=-               miss=absent stored=[0, 1] fwd=8/8 STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'host']
+  W                      N= 600 L=   0/ 512 src=-               miss=absent stored=[0, 1] fwd=8/8 STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'host']
+  X                      N= 622 L= 512/ 512 src=disk,disk       miss=None stored=[] fwd=8/8 STRICT=PASS | vs full: max_abs=0.281 greedy=4/8 (div step 4 margin 0.000) | tiers=['disk', 'disk']
+== fault: corrupt middle chunk (one payload bit)
+  L3 cold                N= 779 L=   0/ 768 src=-               miss=absent stored=[0, 1, 2] fwd=8/8 STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['disk', 'disk', 'host']
+  L3 chunk1 corrupt      N= 779 L= 256/ 768 src=disk            miss=disk_payload_crc stored=[1] fwd=8/8 STRICT=PASS | vs full: max_abs=0.266 greedy=8/8 | tiers=['disk', 'host', 'disk']
+  L3 again               N= 779 L= 768/ 768 src=disk,host,disk  miss=None stored=[] fwd=8/8 STRICT=PASS | vs full: max_abs=0.375 greedy=4/8 (div step 4 margin 0.125) | tiers=['disk', 'host', 'disk']
+== fault: missing file
+  X cold                 N= 622 L=   0/ 512 src=-               miss=absent stored=[0, 1] fwd=8/8 STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['disk', 'host']
+  Y chunk0 file deleted  N= 642 L=   0/ 512 src=-               miss=disk_file_missing stored=[0] fwd=8/8 STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'disk']
+== fault: incompatible namespace
+  X cold                 N= 622 L=   0/ 512 src=-               miss=absent stored=[0, 1] fwd=8/8 STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['disk', 'host']
+  Y namespace incompatible N= 642 L=   0/ 512 src=-               miss=disk_namespace_mismatch:attn_implementation stored=[0] fwd=8/8 STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'disk']
+== fault: incompatible layout
+  X cold                 N= 622 L=   0/ 512 src=-               miss=absent stored=[0, 1] fwd=8/8 STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['disk', 'host']
+  Y layout incompatible  N= 642 L=   0/ 512 src=-               miss=disk_layout_mismatch:num_layers stored=[0] fwd=8/8 STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=['host', 'disk']
+== fault: ENOSPC on every disk write (spill)
+  L3 ENOSPC on spill     N= 779 L=   0/ 768 src=-               miss=absent stored=[0, 1, 2] fwd=8/8 STRICT=PASS | vs full: max_abs=0.000 greedy=8/8 | tiers=[None, None, 'host']
+  ENOSPC injections 2; spill_failures {'write_oserror:ENOSPC': 2}; dir after [0, []]
+{"requests": 19, "strict_records": 19, "strict_pass_all": true, "expected_requests": 19, "acceptance": true, "problems": [], "restored_requests": 7, "report_only_full_recompute_greedy_identical": 3, "elapsed_s": 18.6}
+wrote results/m3/m1_run_batched_20261103T175241.json

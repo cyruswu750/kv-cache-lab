@@ -1,0 +1,33 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.2.0, pluggy-1.7.0 -- /home/cyrus/projects/kv-cache-lab/.venv/bin/python
+rootdir: /home/cyrus/projects/kv-cache-lab
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.16.0
+collecting ... collected 465 items / 442 deselected / 23 selected
+
+tests/gpu/test_m1_tiered.py::test_namespace_reflects_loaded_model PASSED [  4%]
+tests/gpu/test_m1_tiered.py::test_host_hit_restoration[baseline] PASSED  [  8%]
+tests/gpu/test_m1_tiered.py::test_host_hit_restoration[batched] PASSED   [ 13%]
+tests/gpu/test_m1_tiered.py::test_forced_host_eviction_then_disk_hit[baseline] PASSED [ 17%]
+tests/gpu/test_m1_tiered.py::test_forced_host_eviction_then_disk_hit[batched] PASSED [ 21%]
+tests/gpu/test_m1_tiered.py::test_partial_prefix_and_chunk_boundaries[baseline] PASSED [ 26%]
+tests/gpu/test_m1_tiered.py::test_partial_prefix_and_chunk_boundaries[batched] PASSED [ 30%]
+tests/gpu/test_m1_tiered.py::test_corrupt_middle_chunk_falls_back_to_verified_prefix[baseline] PASSED [ 34%]
+tests/gpu/test_m1_tiered.py::test_corrupt_middle_chunk_falls_back_to_verified_prefix[batched] PASSED [ 39%]
+tests/gpu/test_m1_tiered.py::test_missing_file_falls_back_to_full_recompute[baseline] PASSED [ 43%]
+tests/gpu/test_m1_tiered.py::test_missing_file_falls_back_to_full_recompute[batched] PASSED [ 47%]
+tests/gpu/test_m1_tiered.py::test_incompatible_entry_is_a_miss[baseline-namespace] PASSED [ 52%]
+tests/gpu/test_m1_tiered.py::test_incompatible_entry_is_a_miss[baseline-layout] PASSED [ 56%]
+tests/gpu/test_m1_tiered.py::test_incompatible_entry_is_a_miss[batched-namespace] PASSED [ 60%]
+tests/gpu/test_m1_tiered.py::test_incompatible_entry_is_a_miss[batched-layout] PASSED [ 65%]
+tests/gpu/test_m1_tiered.py::test_multi_request_sequence_with_shared_prefixes_and_eviction[baseline] PASSED [ 69%]
+tests/gpu/test_m1_tiered.py::test_multi_request_sequence_with_shared_prefixes_and_eviction[batched] PASSED [ 73%]
+tests/gpu/test_m1_tiered.py::test_write_failure_does_not_repeat_inference[baseline] PASSED [ 78%]
+tests/gpu/test_m1_tiered.py::test_write_failure_does_not_repeat_inference[batched] PASSED [ 82%]
+tests/gpu/test_m1_tiered.py::test_disk_cleanup_failure_neither_aborts_nor_repeats_inference[baseline-evict_unlink] PASSED [ 86%]
+tests/gpu/test_m1_tiered.py::test_disk_cleanup_failure_neither_aborts_nor_repeats_inference[baseline-invalid_cleanup] PASSED [ 91%]
+tests/gpu/test_m1_tiered.py::test_disk_cleanup_failure_neither_aborts_nor_repeats_inference[batched-evict_unlink] PASSED [ 95%]
+tests/gpu/test_m1_tiered.py::test_disk_cleanup_failure_neither_aborts_nor_repeats_inference[batched-invalid_cleanup] PASSED [100%]
+
+===================== 23 passed, 442 deselected in 43.22s ======================

@@ -1,0 +1,5 @@
+M1 evidence runner, baseline vs batched restore backend (results/m3/m1_run_{baseline,batched}_20261103T175241.json)
+compared per record: label, N, L, eligible_L, sources, miss_reason, stored_chunks, tiers_after, forward_calls, strict_pass, strict_restored_kv_bytes, strict_tokens_equal_resident, strict_all_step_logits_bitwise_equal_resident, report_only_vs_full_recompute, disk_used_bytes, host_resident_logical_bytes
+records: 19 19 identical: True
+scenario counters identical: True
+acceptance: True True
