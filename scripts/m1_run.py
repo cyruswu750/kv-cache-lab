@@ -1,7 +1,9 @@
 """M1 evidence run: synchronous always-restore over a tiered (pinned host + disk) store.
 
-Usage: .venv/bin/python scripts/m1_run.py --out results/m1_1/m1_run_<ts>.json
+Usage: .venv/bin/python scripts/m1_run.py --out results/m1_1/m1_run_<ts>.json [--restore-backend batched]
        .venv/bin/python scripts/m1_run.py --validate <report.json>   (re-check a saved report; no model)
+--restore-backend (M3) selects the TieredKVCache restore backend for every scenario; the default
+"baseline" is the M1 behavior. The chosen backend is recorded in the report.
 
 Scenarios (fresh store each, tiny budgets so eviction happens):
   sequence   9 requests with shared prefixes; host 2 slots, disk 2 files
@@ -46,6 +48,7 @@ from kvlab.tolerances import ATOL, RTOL  # noqa: E402
 
 C, STEPS = 256, 8
 DISK_ROOT = km.PROJECT_ROOT / ".kvcache" / "m1_run"
+RESTORE_BACKEND = "baseline"  # set from --restore-backend in main()
 
 
 # ---- strict per-request checks and report validation (acceptance) ---------------------------
@@ -159,7 +162,7 @@ class Run:
         cb = cf.payload_len(self.ns)
         self.host = HostStore((host_chunks + 1) * cb, cb, max_entries=64, pin=True)
         self.disk = DiskStore(DISK_ROOT / name, disk_files * cf.file_size(self.ns), 64, write_fn=write_fn)
-        self.tiered = TieredKVCache(self.ns, self.host, self.disk)
+        self.tiered = TieredKVCache(self.ns, self.host, self.disk, restore_backend=RESTORE_BACKEND)
         self.engine = AlwaysRestoreEngine(model, self.tiered)
         self.ref = ResidentReference(model, self.ns.digest(), C)
         self.records = []
@@ -239,7 +242,10 @@ def main():
     mode = ap.add_mutually_exclusive_group(required=True)
     mode.add_argument("--out", help="run the GPU evidence scenarios and write a new report")
     mode.add_argument("--validate", help="re-validate a saved report (ignores its stored summary); no model")
+    ap.add_argument("--restore-backend", choices=("baseline", "batched"), default="baseline")
     args = ap.parse_args()
+    global RESTORE_BACKEND
+    RESTORE_BACKEND = args.restore_backend
     if args.validate:
         summary = summarize(json.loads(Path(args.validate).read_text()))
         print(json.dumps(summary, indent=1))
@@ -254,7 +260,7 @@ def main():
     report = {"versions": {"torch": torch.__version__, "transformers": transformers.__version__},
               "gpu": torch.cuda.get_device_name(0), "model": km.model_info(model), "chunk_size": C,
               "steps": STEPS, "namespace": namespace_for(model, km.MODEL_ID, km.MODEL_REVISION, C).fields(),
-              "scenarios": {}}
+              "restore_backend": RESTORE_BACKEND, "scenarios": {}}
 
     print("== sequence (host 2 slots + 1 staging, disk 2 files)")
     run = Run(model, "sequence", host_chunks=2, disk_files=2)
