@@ -1,0 +1,4 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  59%|█████▊    | 198/338 [00:00<00:00, 1978.31it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2852.60it/s]
+block 0 L=512 S=1 done (0.1 min)
+{"n_samples": 100, "n_measured": 48, "n_excluded": 0, "elapsed_min": 0.07991419633229574, "correctness_all": true, "spike_probe_audit_pass": true}
+failures []; wrote results/m2_1/smoke_probes_20261103T151500/session_smoke.json

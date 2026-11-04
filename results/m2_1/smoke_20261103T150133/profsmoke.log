@@ -1,0 +1,5 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  59%|█████▉    | 200/338 [00:00<00:00, 1998.42it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2796.06it/s]
+USDT:2026-11-03 15:02:35 65257:65257 SyncActivityProfilerHandler.cpp:39] profiler_start
+USDT:2026-11-03 15:02:36 65257:65257 SyncActivityProfilerHandler.cpp:46] profiler_stop
+{"n_samples": 12, "n_measured": 12, "n_excluded": 0, "elapsed_min": 0.0703234314918518, "correctness_all": true, "spike_probe_audit_pass": null}
+failures []; wrote results/m2_1/smoke_20261103T150133/session_profsmoke.json
