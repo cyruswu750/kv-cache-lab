@@ -1,6 +1,6 @@
 # kv-cache-lab — Cost-Aware Tiered KV Cache for LLM Inference
 
-**Status: M0, M0.1, M1, M1.1, M1.2 (runner validation fix), M2 (performance calibration + offline cost model), M2.1 (measurement audit + slow-mode diagnosis) and M3 (batched KV restoration, opt-in; analysis validation fix VAL-006) done.**
+**Status: M0, M0.1, M1, M1.1, M1.2 (runner validation fix), M2 (performance calibration + offline cost model), M2.1 (measurement audit + slow-mode diagnosis) and M3 (batched KV restoration, opt-in; analysis validation fix VAL-006) done. M3_CONFIRM_V1 (preregistered confirmation of the batched backend) measured: confirmed; the default backend stays `baseline`.**
 
 | Milestone | What it covers | Status |
 |---|---|---|
@@ -12,8 +12,7 @@
 | M2 | Synchronous first-token latency for full / host / disk paths; cost model fitted on calibration, scored on held-out cases | done (no break-even established; model describes the baseline backend; claims qualified by M2.1) |
 | M2.1 | Audit of M2 timing/scoring; dependence-aware reanalysis (BUGLOG VAL-005); interleaved diagnosis of the restore slow mode | done (slow mode associated with higher host-side CUDA-call cost; root cause open) |
 | M3 | Opt-in `batched` restore backend: one contiguous H2D per chunk into bounded chunk-major device staging, one placement per group; strict A/B against the baseline; interleaved 5-session comparison | done (restore calls 896 → 16 memcpy at 16 chunks; median e2e 1.07–2.29× faster in this sample). `supports_adoption` is **false**: under the frozen rule, (1024, 1) is inconclusive (R3, measured stretch too short), so the default stays `baseline`. The analysis now validates evidence against the frozen spec first (BUGLOG VAL-006); the reanalysis reproduced every number and the verdict |
-
-| M3_CONFIRM_V1 | Preregistered confirmation of (1024, 1) and the fresh (1280, 96): own validator spec, premeasurement freeze manifest, budgeted batch wrapper | **prepared, not measured** (protocol is a draft pending review and freeze: `docs/M3_CONFIRM_PROTOCOL.md`; D31) |
+| M3_CONFIRM_V1 | Preregistered confirmation of (1024, 1) and the fresh (1280, 96): own validator spec, premeasurement freeze manifest, budgeted batch wrapper | done: one batch, 8,640 measured samples, valid; all 8 primary verdicts batched faster (median paired d −14.0 to −16.8 ms), so `m3_confirm_v1_confirmed` is true. Restoration microbenchmark only; not pooled with M3, whose `supports_adoption` stays **false**; the default stays `baseline` (`docs/results.md`; D31) |
 
 Not implemented yet: a runtime cost-aware policy (M2's model is offline only),
 async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `docs/design.md` §1).
@@ -27,7 +26,7 @@ async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `
 - M2 performance protocol: `docs/M2_PROTOCOL.md`
 - M2.1 diagnostic plan: `docs/M2_1_DIAGNOSTIC_PLAN.md`
 - M3 design note: `docs/M3_DESIGN.md`; frozen comparison protocol: `docs/M3_PROTOCOL.md`
-- M3_CONFIRM_V1 confirmation protocol (draft, not measured): `docs/M3_CONFIRM_PROTOCOL.md`
+- M3_CONFIRM_V1 confirmation protocol (frozen before measurement): `docs/M3_CONFIRM_PROTOCOL.md`; dated clarifications: `docs/M3_CONFIRM_CLARIFICATIONS.md`
 
 Reference harness: Hugging Face Transformers + PyTorch (decisions D1).
 Model: `Qwen/Qwen2.5-1.5B-Instruct@989aa7980e4cf806f80c7fef2b1adb7bc71aa306`, **bf16**, **SDPA**, chunk = 256 tokens.
@@ -58,9 +57,9 @@ kvlab/m3_bench.py          M3: baseline vs batched benchmark harness on the unch
 kvlab/m3_stats.py          M3: stratified block bootstrap, R1-R3 verdicts, regime durations (CPU)
 kvlab/m3_validate.py       M3 / VAL-006: fail-closed evidence validation against explicit specs, incl. warmups (CPU)
 kvlab/m3_confirm.py        M3_CONFIRM_V1: premeasurement freeze manifest, budgeted batch wrapper, their checks (CPU, no torch)
-scripts/                   m0_*, m0_1_audit, m1_run, m1_mutation_check, m2_measure, m2_fit_predict, m2_score, m2_spike_probe, m2_1_reanalyze, m2_1_diagnose, m2_1_analyze_diag, m2_1_regimes, m3_measure, m3_analyze, m3_mutation_check, m3_confirm, env_report
+scripts/                   m0_*, m0_1_audit, m1_run, m1_mutation_check, m2_measure, m2_fit_predict, m2_score, m2_spike_probe, m2_1_reanalyze, m2_1_diagnose, m2_1_analyze_diag, m2_1_regimes, m3_measure, m3_analyze, m3_mutation_check, m3_confirm, m3_confirm_reconstruct, env_report
 tests/                     CPU tests; tests/gpu/ GPU tests (markers: gpu + m0_strict | m0_1 | m1 | m3)
-results/m0/ (read-only), results/m0_1/, results/m1/, results/m1_1/, results/m1_2/, results/m2/, results/m2_1/, results/m3/   machine-readable evidence and logs
+results/m0/ (read-only), results/m0_1/, results/m1/, results/m1_1/, results/m1_2/, results/m2/, results/m2_1/, results/m3/, results/m3_confirm/   machine-readable evidence and logs
 ```
 
 ## Setup (no sudo; nothing outside the project is modified)
@@ -139,4 +138,9 @@ HF_HUB_OFFLINE=1 .venv/bin/python scripts/m2_1_diagnose.py --out-dir results/m2_
 HF_HUB_OFFLINE=1 .venv/bin/python scripts/m3_measure.py --out-dir results/m3/eval_<ts> --session s1 --cases 256:32,1024:1,1536:128,3072:256,4096:64 --blocks 2 --warmup 2 --reps 12 --seed 31001
 HF_HUB_OFFLINE=1 .venv/bin/python scripts/m3_measure.py --out-dir results/m3/eval_<ts> --session prof --profile --cases 256:32,1536:128,4096:64
 .venv/bin/python scripts/m3_analyze.py --run-dir results/m3/eval_<ts> [--out-dir <new dir>]   # validates first: 0 valid, 3 invalid evidence, 4 failed correctness check
+
+# M3_CONFIRM_V1 frozen analysis (CPU). Current tree, valid while the analysis files keep their frozen bytes:
+.venv/bin/python scripts/m3_analyze.py --spec M3_CONFIRM_V1 --run-dir results/m3_confirm/M3_CONFIRM_V1_run --out-dir <new dir> --expect-freeze-sha256 dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216
+# After later changes: reconstruct the frozen tree (verified against the manifest), then run its own analyzer (docs/results.md)
+.venv/bin/python scripts/m3_confirm_reconstruct.py --out <new dir> --tree-rev 13afde2 --expect-freeze-sha256 dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216
 ```

@@ -391,7 +391,7 @@ chunked prefill (which has no CPU round trip).
     reanalysis reproduces every number. `supports_adoption` remains false for the same
     (1024, 1) reason, and the default stays `baseline`. See BUGLOG VAL-006.
 
-## D31. (M3_CONFIRM_V1, prepared; DRAFT, not measured) A separate, preregistered confirmation, bound to a premeasurement freeze
+## D31. (M3_CONFIRM_V1; frozen and measured 2026-11-04) A separate, preregistered confirmation, bound to a premeasurement freeze
 - **Problem:** the M3 adoption rule failed only on (1024, 1), under R3. Its measured span was
   too short relative to the slow regimes. Re-analysing the M3 data, or extending it, would
   make the rule depend on the outcome.
@@ -444,3 +444,14 @@ chunked prefill (which has no CPU round trip).
   - pooling with M3, or adding sessions to M3: outcome-dependent;
   - a generic orchestration framework: not needed for five sequential commands;
   - writing samples incrementally: it would change the runner and the timed loop.
+- **Outcome (2026-11-04):**
+  - **Freeze:** frozen before any measurement, manifest SHA-256
+    `dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216`.
+  - **Batch:** exactly one, 798 s of the 1,800 s budget; all sessions exited 0.
+  - **Analysis:** exit 0, valid evidence; all 8 primary verdicts are "batched faster", so
+    `m3_confirm_v1_confirmed = true` (`docs/results.md`, M3_CONFIRM_V1).
+  - **R3:** the effective-sample-size condition is applied to the sum over strata, as frozen;
+    the dated clarification C1 (`docs/M3_CONFIRM_CLARIFICATIONS.md`) records this without
+    changing the protocol.
+  - **Unchanged:** M3's `supports_adoption = false`; the default backend stays `baseline`.
+    No default change has been decided.
