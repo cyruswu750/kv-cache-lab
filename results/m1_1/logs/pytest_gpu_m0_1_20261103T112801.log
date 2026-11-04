@@ -1,0 +1,16 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.2.0, pluggy-1.7.0 -- /home/cyrus/projects/kv-cache-lab/.venv/bin/python
+rootdir: /home/cyrus/projects/kv-cache-lab
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.16.0
+collecting ... collected 335 items / 329 deselected / 6 selected
+
+tests/gpu/test_m0_1_controls.py::test_restored_split_bitwise_equals_resident_split[nat_long-256-256] PASSED [ 16%]
+tests/gpu/test_m0_1_controls.py::test_restored_split_bitwise_equals_resident_split[boundary_513-256-512] PASSED [ 33%]
+tests/gpu/test_m0_1_controls.py::test_restored_split_bitwise_equals_resident_split[boundary_513-512-512] PASSED [ 50%]
+tests/gpu/test_m0_1_controls.py::test_corrupted_snapshot_fails_byte_check PASSED [ 66%]
+tests/gpu/test_m0_1_controls.py::test_wrong_prefix_detected_by_byte_check PASSED [ 83%]
+tests/gpu/test_m0_1_controls.py::test_position_guard_rejects_offset PASSED [100%]
+
+====================== 6 passed, 329 deselected in 11.91s ======================

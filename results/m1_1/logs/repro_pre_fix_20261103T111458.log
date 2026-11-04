@@ -1,0 +1,5 @@
+put a: (True, 'written') committed 8
+put b raised: PermissionError [Errno 13] Permission denied: '/tmp/tmpsp_w2xht/c/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.kvc'
+after: committed_bytes 0 used 0 file a exists True size 8
+marker symlink: constructed OK
+external now: 'kvlab disk cache v1; files here are owne' stale cache file exists: False

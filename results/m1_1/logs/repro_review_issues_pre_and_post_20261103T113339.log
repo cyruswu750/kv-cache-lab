@@ -1,0 +1,18 @@
+== pre-fix tree (backups/pre-m1_1-20261103T111458.tar.gz)
+issue 1: eviction unlink failure (8-byte budget)
+  put a: (True, 'written') committed_bytes 8
+  put b raised: PermissionError [Errno 13] Permission denied: '<tmp>/c/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.kvc'
+  after: committed_bytes 0 used_bytes 0 | file a exists True size 8
+issue 2: marker is a symlink to an external file
+  constructed without error
+  external file now: 'kvlab disk cache v1; files here are owne' | existing cache file still present: False
+exit 0
+== current tree (M1.1)
+issue 1: eviction unlink failure (8-byte budget)
+  put a: (True, 'written') committed_bytes 8
+  put b: (False, 'evict_oserror:EACCES')
+  after: committed_bytes 0 used_bytes 8 | file a exists True size 8
+issue 2: marker is a symlink to an external file
+  construction raised: ValueError <tmp>/cache/.kvlab-disk-cache-v1 is not a regular file; refusing to use <tmp>/cache
+  external file now: 'KEEP' | existing cache file still present: True
+exit 0

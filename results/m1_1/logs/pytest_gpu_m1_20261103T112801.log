@@ -1,0 +1,22 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.2.0, pluggy-1.7.0 -- /home/cyrus/projects/kv-cache-lab/.venv/bin/python
+rootdir: /home/cyrus/projects/kv-cache-lab
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.16.0
+collecting ... collected 335 items / 323 deselected / 12 selected
+
+tests/gpu/test_m1_tiered.py::test_namespace_reflects_loaded_model PASSED [  8%]
+tests/gpu/test_m1_tiered.py::test_host_hit_restoration PASSED            [ 16%]
+tests/gpu/test_m1_tiered.py::test_forced_host_eviction_then_disk_hit PASSED [ 25%]
+tests/gpu/test_m1_tiered.py::test_partial_prefix_and_chunk_boundaries PASSED [ 33%]
+tests/gpu/test_m1_tiered.py::test_corrupt_middle_chunk_falls_back_to_verified_prefix PASSED [ 41%]
+tests/gpu/test_m1_tiered.py::test_missing_file_falls_back_to_full_recompute PASSED [ 50%]
+tests/gpu/test_m1_tiered.py::test_incompatible_entry_is_a_miss[namespace] PASSED [ 58%]
+tests/gpu/test_m1_tiered.py::test_incompatible_entry_is_a_miss[layout] PASSED [ 66%]
+tests/gpu/test_m1_tiered.py::test_multi_request_sequence_with_shared_prefixes_and_eviction PASSED [ 75%]
+tests/gpu/test_m1_tiered.py::test_write_failure_does_not_repeat_inference PASSED [ 83%]
+tests/gpu/test_m1_tiered.py::test_disk_cleanup_failure_neither_aborts_nor_repeats_inference[evict_unlink] PASSED [ 91%]
+tests/gpu/test_m1_tiered.py::test_disk_cleanup_failure_neither_aborts_nor_repeats_inference[invalid_cleanup] PASSED [100%]
+
+===================== 12 passed, 323 deselected in 30.76s ======================
