@@ -1,0 +1,9 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  51%|█████     | 172/338 [00:00<00:00, 1716.39it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2263.16it/s]
+block 0 L=4096 S=64 done (0.8 min)
+block 1 L=1024 S=64 done (1.1 min)
+block 2 L=512 S=1 done (1.2 min)
+block 3 L=4096 S=64 done (1.9 min)
+block 4 L=1024 S=64 done (2.1 min)
+block 5 L=512 S=1 done (2.2 min)
+{"n_samples": 1128, "n_measured": 864, "n_excluded": 0, "elapsed_min": 2.222060414155324, "correctness_all": true, "spike_probe_audit_pass": true}
+failures []; wrote results/m2_1/diag_20261103T150340/session_s3.json

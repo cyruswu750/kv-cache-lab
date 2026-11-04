@@ -1,0 +1,2 @@
+# baseline sessions (M2 configuration, monitor on), run sequentially, one GPU process at a time
+for i in 1 2 3 4; do HF_HUB_OFFLINE=1 .venv/bin/python scripts/m2_1_diagnose.py --out-dir results/m2_1/diag_20261103T150340 --session s$i --config baseline --seed 2110$i; done
