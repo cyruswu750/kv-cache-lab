@@ -1,0 +1,13 @@
+git status --short at 20261103T145039:
+?? .gitignore
+?? CLAUDE.md
+?? README.md
+?? docs/
+?? kv-cache-plan.md
+?? kvlab/
+?? pyproject.toml
+?? requirements.txt
+?? results/
+?? scripts/
+?? tests/
+HEAD: none (branch main has no commits); index entries: 0
