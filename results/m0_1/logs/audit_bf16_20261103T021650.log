@@ -1,0 +1,33 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  61%|██████    | 207/338 [00:00<00:00, 2066.98it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2812.07it/s]
+== paths (torch.bfloat16)
+  nat_long L=256 P=256 B_rep=True C_rep=True bytes=True B==C(all steps,3x)=True Bf==Cf=True default_pos=True A-B max_abs=0.3125 A-B greedy=6/8 forced argmax eq=7/8
+  DIVERGENCE nat_long L=256 step=6 {"A_full": {"cand": {"312": 23.75, "7481": 23.75}, "bits": {"312": "0x41be", "7481": "0x41be"}, "fp32dot": {"312": 23.76917266845703, "7481": 23.79568099975586}}, "B_resident_split": {"cand": {"312": 23.75, "7481": 23.875}, "bits": {"312": "0x41be", "7481": "0x41bf"}, "fp32dot": {"312": 23.76195526123047, "7481": 23.814420700073242}}, "C_restored_split": {"cand": {"312": 23.75, "7481": 23.875}, "bits": {"312": "0x41be", "7481": "0x41bf"}, "fp32dot": {"312": 23.76195526123047, "7481": 23.814420700073242}}}
+  boundary_257 L=256 P=256 B_rep=True C_rep=True bytes=True B==C(all steps,3x)=True Bf==Cf=True default_pos=True A-B max_abs=0.1875 A-B greedy=8/8 forced argmax eq=8/8
+  boundary_511 L=256 P=256 B_rep=True C_rep=True bytes=True B==C(all steps,3x)=True Bf==Cf=True default_pos=True A-B max_abs=0.5625 A-B greedy=8/8 forced argmax eq=8/8
+  boundary_513 L=256 P=256 B_rep=True C_rep=True bytes=True B==C(all steps,3x)=True Bf==Cf=True default_pos=None A-B max_abs=0.2656 A-B greedy=8/8 forced argmax eq=8/8
+  boundary_513 L=256 P=512 B_rep=True C_rep=True bytes=True B==C(all steps,3x)=True Bf==Cf=True default_pos=None A-B max_abs=0.2188 A-B greedy=8/8 forced argmax eq=8/8
+  boundary_513 L=512 P=512 B_rep=True C_rep=True bytes=True B==C(all steps,3x)=True Bf==Cf=True default_pos=True A-B max_abs=0.2500 A-B greedy=8/8 forced argmax eq=8/8
+  nat_xlong L=256 P=256 B_rep=True C_rep=True bytes=True B==C(all steps,3x)=True Bf==Cf=True default_pos=None A-B max_abs=0.2969 A-B greedy=8/8 forced argmax eq=8/8
+  nat_xlong L=256 P=512 B_rep=True C_rep=True bytes=True B==C(all steps,3x)=True Bf==Cf=True default_pos=None A-B max_abs=0.2969 A-B greedy=8/8 forced argmax eq=8/8
+  nat_xlong L=512 P=512 B_rep=True C_rep=True bytes=True B==C(all steps,3x)=True Bf==Cf=True default_pos=True A-B max_abs=0.3047 A-B greedy=8/8 forced argmax eq=8/8
+== controls
+  nat_long L=256 valid_restore                    bytes_ok=True  mism=  0 ==B(all steps)=True  A-C max_abs=0.3125 allclose(atol)=True  greedy vs A 6/8 vs B 8/8
+  nat_long L=256 bitflip_lsb_one_element          bytes_ok=False mism=  1 ==B(all steps)=False A-C max_abs=0.2500 allclose(atol)=True  greedy vs A 6/8 vs B 8/8
+  nat_long L=256 one_element_set_to_1e3           bytes_ok=False mism=  1 ==B(all steps)=False A-C max_abs=3.0469 allclose(atol)=False greedy vs A 1/8 vs B 1/8
+  nat_long L=256 wrong_prefix_other_text          bytes_ok=False mism= 56 ==B(all steps)=False A-C max_abs=11.8438 allclose(atol)=False greedy vs A 1/8 vs B 1/8
+  nat_long L=256 wrong_prefix_one_token_changed   bytes_ok=False mism= 56 ==B(all steps)=False A-C max_abs=0.9375 allclose(atol)=True  greedy vs A 1/8 vs B 1/8
+  nat_long L=256 layers_0_1_swapped               bytes_ok=False mism=  4 ==B(all steps)=False A-C max_abs=3.9609 allclose(atol)=False greedy vs A 1/8 vs B 1/8
+  nat_long L=256 k_v_swapped_layer_5              bytes_ok=False mism=  2 ==B(all steps)=False A-C max_abs=5.7188 allclose(atol)=False greedy vs A 1/8 vs B 1/8
+  nat_long L=256 zeroed                           bytes_ok=False mism= 56 ==B(all steps)=False A-C max_abs=16.2812 allclose(atol)=False greedy vs A 1/8 vs B 1/8
+  nat_long L=256 suffix_positions_shifted_by_+1        ==B=False A-C max_abs=0.3281 allclose(atol)=True argmax_eq=True guard=ValueError: cache length 256 != start_pos 257
+  boundary_513 L=512 valid_restore                    bytes_ok=True  mism=  0 ==B(all steps)=True  A-C max_abs=0.2500 allclose(atol)=True  greedy vs A 8/8 vs B 8/8
+  boundary_513 L=512 bitflip_lsb_one_element          bytes_ok=False mism=  1 ==B(all steps)=True  A-C max_abs=0.2500 allclose(atol)=True  greedy vs A 8/8 vs B 8/8
+  boundary_513 L=512 one_element_set_to_1e3           bytes_ok=False mism=  1 ==B(all steps)=False A-C max_abs=2.1406 allclose(atol)=False greedy vs A 8/8 vs B 8/8
+  boundary_513 L=512 wrong_prefix_other_text          bytes_ok=False mism=112 ==B(all steps)=False A-C max_abs=13.6562 allclose(atol)=False greedy vs A 0/8 vs B 0/8
+  boundary_513 L=512 wrong_prefix_one_token_changed   bytes_ok=False mism= 56 ==B(all steps)=False A-C max_abs=3.7500 allclose(atol)=False greedy vs A 8/8 vs B 8/8
+  boundary_513 L=512 layers_0_1_swapped               bytes_ok=False mism=  8 ==B(all steps)=False A-C max_abs=18.4688 allclose(atol)=False greedy vs A 0/8 vs B 0/8
+  boundary_513 L=512 k_v_swapped_layer_5              bytes_ok=False mism=  4 ==B(all steps)=False A-C max_abs=6.8438 allclose(atol)=False greedy vs A 8/8 vs B 8/8
+  boundary_513 L=512 zeroed                           bytes_ok=False mism=112 ==B(all steps)=False A-C max_abs=23.0938 allclose(atol)=False greedy vs A 0/8 vs B 0/8
+  boundary_513 L=512 chunks_0_1_swapped               bytes_ok=False mism=112 ==B(all steps)=False A-C max_abs=0.2500 allclose(atol)=True  greedy vs A 8/8 vs B 8/8
+  boundary_513 L=512 suffix_positions_shifted_by_+1        ==B=False A-C max_abs=0.9922 allclose(atol)=True argmax_eq=True guard=ValueError: cache length 512 != start_pos 513
+wrote results/m0_1/audit_bf16_20261103T021650.json in 42.7 s

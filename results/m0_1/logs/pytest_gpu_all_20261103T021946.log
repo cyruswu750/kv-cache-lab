@@ -1,0 +1,66 @@
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.2.0, pluggy-1.7.0 -- /home/cyrus/projects/kv-cache-lab/.venv/bin/python
+rootdir: /home/cyrus/projects/kv-cache-lab
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.16.0
+collecting ... collected 210 items / 193 deselected / 17 selected
+
+tests/gpu/test_gpu_roundtrip.py::test_boundary_case[255-expected_bounds0] PASSED [  5%]
+tests/gpu/test_gpu_roundtrip.py::test_boundary_case[256-expected_bounds1] PASSED [ 11%]
+tests/gpu/test_gpu_roundtrip.py::test_boundary_case[257-expected_bounds2] PASSED [ 17%]
+tests/gpu/test_gpu_roundtrip.py::test_boundary_case[511-expected_bounds3] PASSED [ 23%]
+tests/gpu/test_gpu_roundtrip.py::test_boundary_case[512-expected_bounds4] PASSED [ 29%]
+tests/gpu/test_gpu_roundtrip.py::test_boundary_case[513-expected_bounds5] PASSED [ 35%]
+tests/gpu/test_gpu_roundtrip.py::test_natural_prompt[nat_long] FAILED    [ 41%]
+tests/gpu/test_gpu_roundtrip.py::test_natural_prompt[nat_medium] PASSED  [ 47%]
+tests/gpu/test_gpu_roundtrip.py::test_natural_prompt[nat_short] PASSED   [ 52%]
+tests/gpu/test_gpu_roundtrip.py::test_natural_prompt[nat_xlong] PASSED   [ 58%]
+tests/gpu/test_gpu_roundtrip.py::test_restore_is_used PASSED             [ 64%]
+tests/gpu/test_m0_1_controls.py::test_restored_split_bitwise_equals_resident_split[nat_long-256-256] PASSED [ 70%]
+tests/gpu/test_m0_1_controls.py::test_restored_split_bitwise_equals_resident_split[boundary_513-256-512] PASSED [ 76%]
+tests/gpu/test_m0_1_controls.py::test_restored_split_bitwise_equals_resident_split[boundary_513-512-512] PASSED [ 82%]
+tests/gpu/test_m0_1_controls.py::test_corrupted_snapshot_fails_byte_check PASSED [ 88%]
+tests/gpu/test_m0_1_controls.py::test_wrong_prefix_detected_by_byte_check PASSED [ 94%]
+tests/gpu/test_m0_1_controls.py::test_position_guard_rejects_offset PASSED [100%]
+
+=================================== FAILURES ===================================
+________________________ test_natural_prompt[nat_long] _________________________
+
+model_tok = (Qwen2ForCausalLM(
+  (model): Qwen2Model(
+    (embed_tokens): Embedding(151936, 1536)
+    (layers): ModuleList(
+      ...151664: AddedToken("<|file_sep|>", rstrip=False, lstrip=False, single_word=False, normalized=False, special=False),
+}))
+name = 'nat_long'
+
+    @pytest.mark.parametrize("name", sorted(NATURAL_PROMPTS))
+    def test_natural_prompt(model_tok, name):
+        model, tok = model_tok
+        rec = run_case(model, name, chat_ids(tok, NATURAL_PROMPTS[name]), C, ATOL, RTOL)
+>       _check(rec)
+
+tests/gpu/test_gpu_roundtrip.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+rec = {'name': 'nat_long', 'prompt_len': 426, 'chunk_size': 256, 'eligible_restore_lens': [256], ...}
+
+    def _check(rec):
+        assert rec["full"]["first_logits_finite"] and rec["full"]["all_step_logits_finite"]
+        for r in rec["restores"]:
+            assert rec["export_check"]["all_bytes_equal"], rec["export_check"]["mismatches"][:5]
+            assert r["restore_check"]["all_bytes_equal"], r["restore_check"]["mismatches"][:5]
+            assert r["suffix_len"] == rec["prompt_len"] - r["restore_len"] >= 1
+            fl = r["first_logits"]
+            assert fl["ref_finite"] and fl["test_finite"] and r["all_step_logits_finite"]
+            assert fl["allclose"], fl
+            assert fl["argmax_equal"], fl
+>           assert r["greedy"]["identical"], (r["greedy"], rec["full"]["greedy_tokens"], r["greedy_tokens"])
+E           AssertionError: ({'steps': 8, 'matching_positions': 6, 'identical': False, 'first_divergence': 6}, [785, 3078, 460, 46719, 9471, 1849, ...], [785, 3078, 460, 46719, 9471, 1849, ...])
+E           assert False
+
+tests/gpu/test_gpu_roundtrip.py:39: AssertionError
+=========================== short test summary info ============================
+FAILED tests/gpu/test_gpu_roundtrip.py::test_natural_prompt[nat_long] - Asser...
+================ 1 failed, 16 passed, 193 deselected in 22.78s =================
