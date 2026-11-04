@@ -1,4 +1,4 @@
-# Design (M1 scope, with M1.1 fixes; M2 measurement additions in §10)
+# Design (M1 scope, with M1.1 fixes; M2 measurement additions in §10; M3 restore backends in §11)
 
 This is the authoritative design for what is implemented. `kv-cache-plan.md`
 describes later weeks; anything not in this file is not implemented.
@@ -178,7 +178,8 @@ cache directory is trusted as project-owned local storage.
 | Directory not owned or not valid (unknown entries, non-regular or symlinked marker, cache-named non-file); stale file not deletable at startup | refuse at construction (`ValueError` / `OSError`), before any request |
 | Host identity mismatch, wrong tensor shape/dtype from the model cache, invariant violations, non-`OSError` exceptions, CUDA errors | **raise** |
 
-Restore state: GPU destination tensors are filled chunk by chunk. The
+Restore state: GPU destination tensors are filled chunk by chunk (with the M3
+`batched` backend: chunk-major staging, placed group by group, §11). The
 `DynamicCache` is built only from the verified prefix `[0, L)`, so no
 partially invalid state is reachable. Leases are released on success and on
 failure.
@@ -246,3 +247,32 @@ current/peak host and disk bytes.
   `Bench.measure()` with no behavior change.
 - **Unchanged:** the engine, tiers, runtime policy and the M2 cost model.
 - **Reference:** see `docs/M2_1_REVIEW.md` and decisions D27–D29.
+
+## 11. M3: restore backends (restoration mechanics only; default unchanged)
+- `TieredKVCache(..., restore_backend="baseline" | "batched", restore_staging_chunks=4)`.
+  The default is `baseline` (the M1 copies). `restore_backend` may be switched between
+  requests on the same store; it is validated on every restore.
+- **Shared by both backends, unchanged:** lookup (longest contiguous present prefix), leases
+  and LRU touches, staging-slot disk reads with full validation, stop at the first invalid
+  chunk, sources, counters (hits counted only after a completed copy), miss reasons, budgets,
+  no promotion, and the D4 public-constructor cache build from `[0, L)`.
+- **batched:**
+  - per chunk, one blocking contiguous H2D of the whole 7,340,032 B slot into a chunk-major
+    device staging tensor `X` of min(n, G) chunks;
+  - per group of ≤ G chunks, one `copy_` of `X` permuted `[g, layer, K/V, 1, head, t, d] →
+    [layer, K/V, 1, head, g, t, d]` into one layer-major destination `Y` (n chunks);
+  - the last, possibly partial, group is placed before the cache is built.
+- **Synchronization:** no copy is `non_blocking`. A blocking H2D returns after the transfer
+  completed, so a lease or the staging slot is released only after its transfer finished. All
+  device work is on the current stream: `X` is rewritten only by memcpys ordered after the
+  placement that reads it, and `X`/`Y` are freed at return under the caching allocator's
+  same-stream ordering.
+- **Memory:** no new host memory. Transient device memory per restore of n chunks:
+  - baseline: n·CB destination plus per-copy 128 KiB temporaries;
+  - batched: n·CB destination plus min(n, G)·CB scratch;
+  - both: plus the k·CB cache, which owns exactly its L tokens.
+
+  `TieredKVCache.last_restore` reports the copy calls, placement ops, H2D bytes and the
+  destination/scratch sizes of the latest restore (diagnostic, not a counter).
+- Details and the options considered: `docs/M3_DESIGN.md`; decision D30; review
+  `docs/M3_REVIEW.md`.

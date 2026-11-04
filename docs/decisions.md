@@ -352,3 +352,41 @@ chunked prefill (which has no CPU round trip).
   the number of CUDA calls they remove, as well as by bytes. They should be
   measured with the M2.1 protocol (interleaved, block-bootstrap, mean and
   median).
+
+## D30. (M3) Batched restore backend: chunk-major device staging, one H2D per chunk, one placement per group; opt-in
+- **Problem:** the M1 restore issues 56 blocking H2D copies per chunk (28 layers × K/V). For
+  n > 1 chunks, PyTorch adds a device temporary and a copy kernel to each copy, because the
+  per-layer destination slice is strided. A 16-chunk restore makes about 900 synchronizing
+  copies and 950 kernel launches. M2.1 associated the restore slow mode with a higher
+  host-side cost per CUDA call (D29), so the call count is the target.
+- **Choice** (docs/M3_DESIGN.md §3, option b):
+  - one blocking contiguous H2D of the whole 7 MB slot per chunk, into a chunk-major device
+    staging tensor of min(n, G) chunks (G = 4);
+  - one permuted `copy_` per group into a single layer-major destination;
+  - the unchanged D4 constructor, which copies exactly [0, L) into fresh tensors.
+- **Rejected or deferred:**
+  - one strided `copy_` per chunk (option a): same transfers, n placement kernels, and an
+    implicit temporary;
+  - `cudaMemcpy2D` through ctypes (option c): not a standard PyTorch operation;
+  - `non_blocking` copies with leases held to a group sync (option d): PyTorch records events
+    only for its own pinned allocator, not for our registered slab, and the staging slot
+    would still need a sync per disk chunk;
+  - skipping the constructor copy (option e): would need private `DynamicLayer` field writes
+    (conflicts with D4). It remains a measured cost.
+- **Kept identical:** chunk format, identity, tiers, longest-valid-prefix, stop at the first
+  invalid chunk, sources, counters, miss reasons, budgets, admission and LRU. The default
+  backend stays `baseline` until the batched backend is reviewed. Switching is one
+  constructor argument or attribute.
+- **Cost:** transient device memory of min(n, G) × 7,340,032 B (≤ 28 MiB) per restore. No new
+  host memory.
+- **Evidence (M3_REVIEW §4–§8):**
+  - All strict, A/B and M1 checks pass for both backends, and the mutation check kills 10/10.
+  - Measured per 16-chunk restore: 896 → 16 memcpy, 896 → 16 syncs, 952 → 60 launches.
+  - Median e2e falls 1.07× (1 chunk) to 2.29× (16 chunks, host).
+  - The pre-registered adoption rule is not fully met. (1024, 1) is inconclusive under the
+    duration rule R3, although every block length and session agrees on the direction.
+    Hence the default stays `baseline`, pending review.
+  - *Correction note (VAL-006, added after M3):* the M3 analysis script failed to validate
+    missing or incomplete evidence. It now validates against the frozen spec first, and the
+    reanalysis reproduces every number. `supports_adoption` remains false for the same
+    (1024, 1) reason, and the default stays `baseline`. See BUGLOG VAL-006.
