@@ -1,6 +1,6 @@
 """Restore-boundary selection (pure Python, CPU-testable).
 
-Rule (kv-cache-plan.md, "首token规则"): at least the last prompt token is
+Rule (first-token rule, docs/design.md §2): at least the last prompt token is
 always recomputed, and only complete chunks are restored. For prompt length N
 and chunk size C, a restore length L is eligible iff
 
