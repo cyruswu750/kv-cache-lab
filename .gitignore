@@ -26,3 +26,13 @@ backups/
 
 # Project-owned disk KV cache payloads (never committed)
 .kvcache/
+
+# Local-only working documents (kept on disk, not published): agent instructions,
+# the original working plan, milestone reviews/handoffs and walkthroughs.
+/CLAUDE.md
+/kv-cache-plan.md
+/docs/*_REVIEW.md
+/docs/*_WALKTHROUGH.md
+/docs/*_HANDOFF.md
+# Local notes, backups and handoff material
+/local/
