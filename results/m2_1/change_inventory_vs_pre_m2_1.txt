@@ -1,0 +1,109 @@
+Change inventory vs backups/pre-m2_1-20261103T145039.tar.gz (manifest results/m2_1/pre_m2_1_manifest_20261103T145039.sha256)
+Computed last, after all edits; excludes .git .venv .hf_cache .kvcache backups bytecode .pytest_cache *:Zone.Identifier.
+Written after this file: results/m2_1/post_m2_1_manifest.sha256 and results/m2_1/review_archive_m2_1.sha256.
+
+MODIFIED (7):
+  ./README.md
+  ./docs/BUGLOG.md
+  ./docs/M2_REVIEW.md
+  ./docs/correctness-matrix.md
+  ./docs/decisions.md
+  ./docs/design.md
+  ./kvlab/perf_harness.py
+
+ADDED outside results/ (11):
+  ./docs/M2_1_DIAGNOSTIC_PLAN.md
+  ./docs/M2_1_REVIEW.md
+  ./docs/M2_1_WALKTHROUGH.md
+  ./kvlab/diag_harness.py
+  ./kvlab/perf_stats.py
+  ./scripts/m2_1_analyze_diag.py
+  ./scripts/m2_1_diagnose.py
+  ./scripts/m2_1_reanalyze.py
+  ./scripts/m2_1_regimes.py
+  ./tests/test_diag_bookkeeping.py
+  ./tests/test_perf_stats.py
+
+ADDED under results/m2_1/ (77):
+  ./results/m2_1/diag_20261103T150340/diag_analysis.json
+  ./results/m2_1/diag_20261103T150340/diag_analysis.md
+  ./results/m2_1/diag_20261103T150340/logs/analyze.log
+  ./results/m2_1/diag_20261103T150340/logs/commands.txt
+  ./results/m2_1/diag_20261103T150340/logs/exit_codes.txt
+  ./results/m2_1/diag_20261103T150340/logs/regime_durations.txt
+  ./results/m2_1/diag_20261103T150340/logs/session_s1.log
+  ./results/m2_1/diag_20261103T150340/logs/session_s2.log
+  ./results/m2_1/diag_20261103T150340/logs/session_s3.log
+  ./results/m2_1/diag_20261103T150340/logs/session_s4.log
+  ./results/m2_1/diag_20261103T150340/session_s1.gpu_monitor.csv
+  ./results/m2_1/diag_20261103T150340/session_s1.json
+  ./results/m2_1/diag_20261103T150340/session_s2.gpu_monitor.csv
+  ./results/m2_1/diag_20261103T150340/session_s2.json
+  ./results/m2_1/diag_20261103T150340/session_s3.gpu_monitor.csv
+  ./results/m2_1/diag_20261103T150340/session_s3.json
+  ./results/m2_1/diag_20261103T150340/session_s4.gpu_monitor.csv
+  ./results/m2_1/diag_20261103T150340/session_s4.json
+  ./results/m2_1/diag_nomonitor_20261103T151540/diag_analysis.json
+  ./results/m2_1/diag_nomonitor_20261103T151540/diag_analysis.md
+  ./results/m2_1/diag_nomonitor_20261103T151540/logs/analyze.log
+  ./results/m2_1/diag_nomonitor_20261103T151540/logs/commands.txt
+  ./results/m2_1/diag_nomonitor_20261103T151540/logs/exit_codes.txt
+  ./results/m2_1/diag_nomonitor_20261103T151540/logs/session_f1.log
+  ./results/m2_1/diag_nomonitor_20261103T151540/session_f1.json
+  ./results/m2_1/diag_probes_20261103T151540/diag_analysis.json
+  ./results/m2_1/diag_probes_20261103T151540/diag_analysis.md
+  ./results/m2_1/diag_probes_20261103T151540/logs/analyze.log
+  ./results/m2_1/diag_probes_20261103T151540/logs/commands.txt
+  ./results/m2_1/diag_probes_20261103T151540/logs/exit_codes.txt
+  ./results/m2_1/diag_probes_20261103T151540/logs/session_p1.log
+  ./results/m2_1/diag_probes_20261103T151540/logs/session_p2.log
+  ./results/m2_1/diag_probes_20261103T151540/session_p1.gpu_monitor.csv
+  ./results/m2_1/diag_probes_20261103T151540/session_p1.json
+  ./results/m2_1/diag_probes_20261103T151540/session_p2.gpu_monitor.csv
+  ./results/m2_1/diag_probes_20261103T151540/session_p2.json
+  ./results/m2_1/diag_profiler_20261103T151540/diag_analysis.json
+  ./results/m2_1/diag_profiler_20261103T151540/diag_analysis.md
+  ./results/m2_1/diag_profiler_20261103T151540/logs/analyze.log
+  ./results/m2_1/diag_profiler_20261103T151540/logs/commands.txt
+  ./results/m2_1/diag_profiler_20261103T151540/logs/exit_codes.txt
+  ./results/m2_1/diag_profiler_20261103T151540/logs/session_prof.log
+  ./results/m2_1/diag_profiler_20261103T151540/session_prof.gpu_monitor.csv
+  ./results/m2_1/diag_profiler_20261103T151540/session_prof.json
+  ./results/m2_1/diag_syscall_20261103T152505/diag_analysis.json
+  ./results/m2_1/diag_syscall_20261103T152505/diag_analysis.md
+  ./results/m2_1/diag_syscall_20261103T152505/logs/analyze.log
+  ./results/m2_1/diag_syscall_20261103T152505/logs/commands.txt
+  ./results/m2_1/diag_syscall_20261103T152505/logs/exit_codes.txt
+  ./results/m2_1/diag_syscall_20261103T152505/logs/session_q1.log
+  ./results/m2_1/diag_syscall_20261103T152505/session_q1.gpu_monitor.csv
+  ./results/m2_1/diag_syscall_20261103T152505/session_q1.json
+  ./results/m2_1/m2_smoke_after_refactor_20261103T152815/measure.log
+  ./results/m2_1/m2_smoke_after_refactor_20261103T152815/smoke_gpu_monitor.csv
+  ./results/m2_1/m2_smoke_after_refactor_20261103T152815/smoke_samples.json
+  ./results/m2_1/pre_m2_1_git_state_20261103T145039.txt
+  ./results/m2_1/pre_m2_1_manifest_20261103T145039.sha256
+  ./results/m2_1/pre_m2_1_snapshot_20261103T145039.sha256
+  ./results/m2_1/pytest_focused_20261103T153248.log
+  ./results/m2_1/reanalysis/reanalysis.json
+  ./results/m2_1/reanalysis/reanalysis.md
+  ./results/m2_1/reanalysis/reanalyze.log
+  ./results/m2_1/smoke_20261103T150133/analyze.log
+  ./results/m2_1/smoke_20261103T150133/diag_analysis.json
+  ./results/m2_1/smoke_20261103T150133/diag_analysis.md
+  ./results/m2_1/smoke_20261103T150133/profsmoke.log
+  ./results/m2_1/smoke_20261103T150133/session_profsmoke.gpu_monitor.csv
+  ./results/m2_1/smoke_20261103T150133/session_profsmoke.json
+  ./results/m2_1/smoke_20261103T150133/session_smoke.gpu_monitor.csv
+  ./results/m2_1/smoke_20261103T150133/session_smoke.json
+  ./results/m2_1/smoke_20261103T150133/smoke.log
+  ./results/m2_1/smoke_probes_20261103T151500/analyze.log
+  ./results/m2_1/smoke_probes_20261103T151500/diag_analysis.json
+  ./results/m2_1/smoke_probes_20261103T151500/diag_analysis.md
+  ./results/m2_1/smoke_probes_20261103T151500/session_smoke.gpu_monitor.csv
+  ./results/m2_1/smoke_probes_20261103T151500/session_smoke.json
+  ./results/m2_1/smoke_probes_20261103T151500/smoke.log
+
+DELETED (0):
+
+Historical evidence files unchanged: 117 of 117 (results/m0*, m1*, m2/)
+kvlab/perf.py unchanged: True

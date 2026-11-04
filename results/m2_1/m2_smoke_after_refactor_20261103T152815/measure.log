@@ -1,0 +1,6 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  55%|█████▌    | 187/338 [00:00<00:00, 1862.72it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2658.75it/s]
+L=1024: done (0.2 min)
+L=256: done (0.3 min)
+{"n_samples": 189, "n_valid": 140, "n_excluded": 0, "elapsed_min": 0.2871908227602641, "correctness_strict_all": true}
+failures [] not_run []
+wrote results/m2_1/m2_smoke_after_refactor_20261103T152815/smoke_samples.json
