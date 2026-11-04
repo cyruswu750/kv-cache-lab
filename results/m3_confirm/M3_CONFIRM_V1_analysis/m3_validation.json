@@ -1,0 +1,131 @@
+{
+ "spec": "M3_CONFIRM_V1",
+ "spec_source": "docs/M3_CONFIRM_PROTOCOL.md + the freeze manifest results/m3_confirm/M3_CONFIRM_V1.freeze.json",
+ "run_dir": "results/m3_confirm/M3_CONFIRM_V1_run",
+ "status": "valid",
+ "problems": [],
+ "correctness_failures": [],
+ "sessions_expected": [
+  "c1",
+  "c2",
+  "c3",
+  "c4",
+  "c5"
+ ],
+ "session_files_found": [
+  "c1",
+  "c2",
+  "c3",
+  "c4",
+  "c5"
+ ],
+ "profile_session_present": false,
+ "per_session": {
+  "c1": {
+   "problems": 0,
+   "correctness_and_ab_pass_recomputed": true
+  },
+  "c2": {
+   "problems": 0,
+   "correctness_and_ab_pass_recomputed": true
+  },
+  "c3": {
+   "problems": 0,
+   "correctness_and_ab_pass_recomputed": true
+  },
+  "c4": {
+   "problems": 0,
+   "correctness_and_ab_pass_recomputed": true
+  },
+  "c5": {
+   "problems": 0,
+   "correctness_and_ab_pass_recomputed": true
+  }
+ },
+ "counts": {
+  "measured_samples": {
+   "expected": 8640,
+   "present": 8640,
+   "passed": 8640
+  },
+  "block_warmup_samples": {
+   "expected": 720,
+   "present": 720,
+   "passed": 720
+  },
+  "process_warmup_samples": {
+   "expected": 180,
+   "present": 180,
+   "passed": 180
+  },
+  "correctness_checks": {
+   "expected": 20,
+   "present": 20,
+   "passed": 20
+  },
+  "ab_checks": {
+   "expected": 20,
+   "present": 20,
+   "passed": 20
+  },
+  "restore_memory_records": {
+   "expected": 10,
+   "present": 10,
+   "passed": 10
+  }
+ },
+ "correctness_and_ab_acceptance_recomputed": true,
+ "provenance": {
+  "freeze_manifest": "/home/cyrus/projects/kv-cache-lab/results/m3_confirm/M3_CONFIRM_V1.freeze.json",
+  "freeze_manifest_sha256": "dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216",
+  "batch_record_sha256": "e66144a666908613c215ac91c5df928cd2e778807cbfefb1f956501a96412b1e",
+  "execution": {
+   "execution_status": "succeeded",
+   "stop": null,
+   "not_launched": [],
+   "returncodes": {
+    "c1": 0,
+    "c2": 0,
+    "c3": 0,
+    "c4": 0,
+    "c5": 0
+   }
+  }
+ },
+ "correctness_failures_observed": false,
+ "decision": {
+  "experiment": "M3_CONFIRM_V1",
+  "evidence_status": "valid",
+  "spec": "M3_CONFIRM_V1",
+  "all_correctness_and_ab_checks_pass": true,
+  "primary_verdicts": {
+   "1024:1 host median_d": "batched_faster",
+   "1024:1 host mean_d": "batched_faster",
+   "1024:1 disk median_d": "batched_faster",
+   "1024:1 disk mean_d": "batched_faster",
+   "1280:96 host median_d": "batched_faster",
+   "1280:96 host mean_d": "batched_faster",
+   "1280:96 disk median_d": "batched_faster",
+   "1280:96 disk mean_d": "batched_faster"
+  },
+  "primary_not_established": [],
+  "established_regressions": [],
+  "m3_confirm_v1_confirmed": true,
+  "scope": "M3_CONFIRM_V1 only: this sample, machine and stack; not pooled with the M3 evaluation, whose supports_adoption=false is unchanged",
+  "default_backend": "baseline",
+  "authorizes_default_change": false,
+  "observed_correctness_failures": [],
+  "execution": {
+   "execution_status": "succeeded",
+   "stop": null,
+   "not_launched": [],
+   "returncodes": {
+    "c1": 0,
+    "c2": 0,
+    "c3": 0,
+    "c4": 0,
+    "c5": 0
+   }
+  }
+ }
+}

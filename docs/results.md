@@ -35,6 +35,14 @@ are not established.**
   **`baseline`**. Under the frozen adoption rule, `supports_adoption` is **false**: the
   (1024, 1) case is inconclusive under the duration rule R3. Its speedups hold for the tested
   hardware, model, workloads and warm-disk condition only.
+- **M3_CONFIRM_V1** is a separate, preregistered confirmation, frozen before measurement:
+  - **Result:** all 8 primary verdicts are "batched faster", and
+    `m3_confirm_v1_confirmed = true`.
+  - **Scope:** two restoration microbenchmark cases, (1024, 1) and (1280, 96), on host and
+    warm-disk tiers, on this machine and stack.
+  - **What it does not change:** it is not pooled with M3, and M3's `supports_adoption`
+    stays **false**. The default backend remains **`baseline`**: the confirmation does not
+    authorize a default change.
 
 ## Test status (only runs that actually occurred)
 | Run | Result | Log |
@@ -299,6 +307,187 @@ be established faster in median and mean on both tiers.
 - **Reanalysis of the preserved run** (`results/m3/reanalysis_val006_*`): it is valid, all 5,938
   historical values are reproduced exactly, and the verdict is unchanged (`supports_adoption`
   false).
+
+## M3_CONFIRM_V1: preregistered confirmation of the batched backend (restoration microbenchmark)
+Protocol: `docs/M3_CONFIRM_PROTOCOL.md`, frozen 2026-11-04T01:22-08:00 before any
+measurement; decision D31. Post-measurement clarification: `docs/M3_CONFIRM_CLARIFICATIONS.md`.
+Evidence: `results/m3_confirm/`.
+
+**Design:**
+- A new experiment with its own validator spec (`M3_CONFIRM_V1`), analysed on its own and
+  never pooled with the M3 samples.
+- The runner, timed region, statistics and rules R1–R3 are M3's, unchanged.
+- **Freeze:** `results/m3_confirm/M3_CONFIRM_V1.freeze.json` binds:
+  - the base HEAD and the diff;
+  - every executable and analysis file;
+  - the protocol documents, the commands and the stack.
+
+  Its SHA-256, `dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216`, was also
+  recorded outside the repository before measurement.
+
+**Cases:**
+- (1024, 1), 4 chunks: the M3 case that was inconclusive under R3. This is a targeted
+  confirmation, not a random draw.
+- (1280, 96), 5 chunks: a fresh case from the same range.
+- Tiers: host, and disk with a **warm** page cache.
+
+**Sampling:**
+- 5 fresh-process sessions (seeds 32001–32005);
+- per case and session, 4 blocks of 2 warmup + 24 measured repetitions, in interleaved random
+  order;
+- exactly one batch, which ran 798 s of its 1,800 s budget. All 5 sessions exited 0.
+
+**Evidence and correctness:** the analysis exited 0, and the evidence is valid with 0 problems
+and 0 exclusions. The validator recomputed every count from the detailed records:
+
+| Item | Present / expected |
+|---|---|
+| Measured samples | 8,640 / 8,640 |
+| Block-warmup records | 720 / 720 |
+| Process-warmup records | 180 / 180 |
+| Strict correctness checks (passed) | 20 / 20 |
+| Baseline-vs-batched A/B checks (passed) | 20 / 20 |
+| Restore-memory records | 10 / 10 |
+
+**Primary verdicts** (plain end-to-end first-token latency):
+- d = batched − baseline, in ms, paired by repetition;
+- 480 pairs per row, in 20 strata (session × block);
+- stratified block-bootstrap 95% intervals at b = 4.
+
+| Case | Tier | Median d [95% CI] | Mean d [95% CI] | Median verdict | Mean verdict |
+|---|---|---|---|---|---|
+| (1024, 1) | host | −13.99 [−14.49, −13.61] | −21.54 [−23.44, −19.63] | batched faster | batched faster |
+| (1024, 1) | disk (warm) | −14.27 [−15.14, −13.88] | −22.24 [−24.04, −20.51] | batched faster | batched faster |
+| (1280, 96) | host | −16.42 [−16.66, −16.12] | −23.35 [−25.37, −21.38] | batched faster | batched faster |
+| (1280, 96) | disk (warm) | −16.84 [−17.18, −16.54] | −24.52 [−26.51, −22.56] | batched faster | batched faster |
+
+No primary verdict is inconclusive, and there is no established regression.
+
+Marginal latency, baseline → batched (ms):
+
+| Case | Tier | Median | Mean |
+|---|---|---|---|
+| (1024, 1) | host | 36.0 → 22.5 | 63.5 → 42.0 |
+| (1024, 1) | disk (warm) | 44.1 → 30.3 | 71.4 → 49.2 |
+| (1280, 96) | host | 42.1 → 25.9 | 65.1 → 41.8 |
+| (1280, 96) | disk (warm) | 52.1 → 35.5 | 76.1 → 51.5 |
+
+The means lie far above the medians because of the slow mode (below).
+
+**Rules:**
+- **R1:** for b ∈ {1, 2, 4, 8}, every interval excludes 0 in the batched-faster direction, in
+  all 8 rows.
+- **R2:** all 5 per-session point estimates are negative, in all 8 rows.
+- **R3, span:**
+  - (1024, 1): the summed span is 319.0 s ≥ 10 × 11.76 s (its longest slow regime);
+  - (1280, 96): it is 333.4 s ≥ 10 × 8.46 s.
+
+  In M3, (1024, 1) failed this condition with 73 s < 10 × 8.2 s.
+- **R3, effective sample size:** the AR(1) effective sample size is computed within each
+  stratum and summed, and the rule compares the sum with 10. The sums are:
+  - 352.2 / 367.8 for (1024, 1), host / disk;
+  - 368.7 / 360.5 for (1280, 96).
+
+  Six individual strata are below 10. The frozen rule has no per-stratum minimum: see
+  clarification C1 in `docs/M3_CONFIRM_CLARIFICATIONS.md`, which cites the premeasurement
+  sources and does not change the rule.
+
+**Paired differences and speedups are different quantities.** The verdicts above use the paired
+difference d in milliseconds. The speedups below are reported only as descriptions. Each one is
+a ratio of baseline to batched under a different definition, with b = 4 intervals. They must
+not be mixed with each other or with d.
+
+| Case | Tier | Ratio of medians | Ratio of means | Median of paired ratios |
+|---|---|---|---|---|
+| (1024, 1) | host | 1.600 [1.577, 1.620] | 1.513 [1.470, 1.558] | 1.543 [1.533, 1.554] |
+| (1024, 1) | disk (warm) | 1.458 [1.445, 1.471] | 1.452 [1.421, 1.484] | 1.439 [1.431, 1.444] |
+| (1280, 96) | host | 1.627 [1.613, 1.635] | 1.559 [1.514, 1.604] | 1.588 [1.580, 1.599] |
+| (1280, 96) | disk (warm) | 1.469 [1.459, 1.481] | 1.476 [1.441, 1.510] | 1.468 [1.462, 1.474] |
+
+**Outcome:**
+- **The confirmation flag:** `m3_confirm_v1_confirmed = true`. All three conditions of the
+  protocol's §7 hold: valid evidence, all checks passing, and all 8 primary verdicts
+  "batched faster".
+- **M3 is unchanged:** this flag is separate from M3's adoption rule. M3's own result is
+  unchanged: (1024, 1) is inconclusive there, and `supports_adoption = false`.
+- **The default backend remains `baseline`.** The analysis records
+  `authorizes_default_change: false`. Switching would need a separate, reviewed decision in
+  `docs/decisions.md`.
+
+**Qualifications:**
+- **Scope:**
+  - one machine: RTX 4080 Laptop GPU, WSL2, driver 596.49;
+  - one stack and model: Qwen2.5-1.5B bf16 SDPA, C = 256, G = 4;
+  - two cases, and a warm page cache only.
+
+  No cold-NVMe, p99 or tail-latency claim follows.
+- **Not a workload result.** These are batch-1, sequential, synchronous first-token
+  restoration microbenchmarks (D22). They do not establish request-level throughput, serving
+  latency or TTFT, or any production benefit.
+- **The slow mode persists** for both backends: slow-sample shares are 31–42% per row. Its root
+  cause is open (D29).
+- **Unaffected by the batched backend:** the suffix forward, admission's D2H copies, the D4
+  constructor copy and the validated disk read.
+- **Comparison with full recompute (`full`)** is context only (D10) and conditional on this
+  sample (VAL-005). With the baseline backend at (1024, 1), disk, the paired mean of
+  restore − full is +3.69 [0.10, 7.23] ms: baseline restore was slower than recompute in the
+  mean. This is not a policy result.
+- **The M2 cost model** still describes the baseline backend only, and was not refitted.
+- **GPU exclusivity is not proven:**
+  - before launch, no competing GPU process or GPU memory use was observable;
+  - after the batch, no measurement process remained;
+  - however, `nvidia-smi` under WSL2 does not list Windows host processes, so host-side GPU
+    use cannot be excluded.
+- **Self-attested freeze:** the freeze lives inside the repository, and the out-of-band digest
+  record narrows that.
+- **Unchanged items:** D4, D10, the M0 `nat_long` strict FAIL, and the VAL-005 and VAL-006
+  qualifications above all still apply.
+
+**Re-analysis (CPU only).** Two different checks recompute every number above from the
+preserved raw evidence. Neither relaxes a frozen check.
+
+1. **Current-tree check.** The frozen analysis runs in the current tree only while its 7
+   analysis files and 4 protocol documents keep their frozen bytes:
+
+   ```bash
+   .venv/bin/python scripts/m3_analyze.py --spec M3_CONFIRM_V1 \
+     --run-dir results/m3_confirm/M3_CONFIRM_V1_run --out-dir <new dir> \
+     --expect-freeze-sha256 dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216
+   ```
+
+   - Once any of those files changes, it refuses the evidence (exit 3). That is intended.
+   - `scripts/m3_confirm.py verify` is a pre-launch check of the whole frozen tree, including
+     HEAD and the full diff. It fails after any later commit, and it is not a post-measurement
+     check.
+2. **Historical reconstruction**, for use after development has changed any of those files.
+   `scripts/m3_confirm_reconstruct.py`:
+   - rebuilds the frozen source tree in a new directory, from either:
+     - base commit `858f952` + the committed diff sidecar + the four files that were
+       untracked at freeze time, taken from commit `13afde2` (`--untracked-rev`); or
+     - the tree of commit `13afde2` (`--tree-rev`), which equals the frozen tree;
+   - checks every hash in the manifest: 65 source files with no extras, 4 untracked files and
+     4 documents;
+   - copies in the manifest, the sidecar and the run directory, compared byte for byte;
+   - exits 3 on any mismatch.
+
+   The reconstructed tree's own analyzer then runs from inside it:
+
+   ```bash
+   .venv/bin/python scripts/m3_confirm_reconstruct.py --out <new dir> --tree-rev 13afde2 \
+     --expect-freeze-sha256 dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216
+   cd <new dir> && <repo>/.venv/bin/python scripts/m3_analyze.py --spec M3_CONFIRM_V1 \
+     --run-dir results/m3_confirm/M3_CONFIRM_V1_run --out-dir <another new dir> \
+     --expect-freeze-sha256 dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216
+   ```
+
+   - **Executed once on 2026-11-04,** from a reconstruction built from the freeze-time
+     snapshot: exit 0, valid, confirmed.
+     - `samples_chronological.csv` is byte-identical.
+     - The validation JSON, the analysis Markdown and the analysis JSON differ only in the
+       absolute path of the freeze manifest, which names the tree the analysis ran in, and in
+       `out_dir`.
+   - **Requirement:** the Python environment must still hold the frozen package versions
+     (`requirements.txt`, recorded in the manifest).
 
 ## Reproducing
 Commands are in the README. Each evidence directory keeps its raw session JSON, logs and

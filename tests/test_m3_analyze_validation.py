@@ -229,6 +229,24 @@ def test_missing_duplicate_or_unpaired_samples_are_invalid(tmp_path, texts, edit
     assert_rejected(code, val, tmp_path / "run", expect=[expect])
 
 
+@pytest.mark.parametrize("where, value, expect", [
+    ("measured", 10 ** 400, "s2: sample (3, 5, 'host', 'batched', 'plain') fails the validity rules, so its pair is incomplete: ['t_wall']"),
+    ("first", 10 ** 400, "s2: sample 0: malformed process-warmup record: ['t_wall']"),
+    ("first", True, "s2: sample 0: malformed process-warmup record: ['t_wall']"),
+], ids=["huge_integer_measured", "huge_integer_warmup", "boolean_warmup"])
+def test_t_wall_must_convert_to_a_finite_float(tmp_path, texts, where, value, expect):
+    """The shared sample-field check (M3_CONFIRM_V1 review 2, P2): a JSON integer beyond the
+    float range crashed the analysis (OverflowError, exit 1, no report), and JSON true was
+    accepted as a time. Both are now malformed evidence. Recorded wall times are floats
+    (time.time()), so the historical analysis is unchanged
+    (test_complete_valid_report_reproduces_the_historical_analysis)."""
+    def edit(rep):
+        i = sample_index(rep, 3, 5, HOST_BATCHED_PLAIN) if where == "measured" else 0
+        rep["samples"][i]["t_wall"] = value
+    code, val = cli(make_run(tmp_path, texts, edits={"session_s2.json": edit}))
+    assert_rejected(code, val, tmp_path / "run", expect=[expect])
+
+
 CASE = (1024, 1)
 CHECK_EDITS = {
     # missing records or fields, while every stored summary flag still says pass

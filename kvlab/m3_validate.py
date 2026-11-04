@@ -25,16 +25,31 @@ specification (`SPECS`) before any statistic is computed, and returns one of thr
 Acceptance is recomputed from the detailed checks against counts that come from the spec, so an
 empty or partial set of checks can never pass. Stored summary flags are compared, never trusted.
 
+Specs:
+- `FROZEN_M3_EVAL`: the M3 evaluation, unchanged. Its provenance is the Git HEAD in the spec.
+- `M3_CONFIRM_V1` (docs/M3_CONFIRM_PROTOCOL.md): the preregistered confirmation. It also
+  requires:
+  - the exact sample sequence the runner draws from each seed;
+  - a match with the independently frozen manifest: base HEAD, diff, file bytes, commands and
+    stack (kvlab/m3_confirm.py);
+  - a finalized batch record whose session-file hashes match: every planned session launched,
+    none killed, none launched after a nonzero exit, all ended before the deadline, and no stop
+    other than a nonzero exit. A nonzero exit itself is not an evidence problem: the reports
+    are judged on their contents;
+  - a closed file listing of the run directory, which also rejects any profiler evidence;
+  - the analysis files still having their frozen bytes.
+
 No model weights and no CUDA are needed. Only the per-sample M2/M3 rules
 (`kvlab.m3_bench.sample_problems`) are imported, lazily; that imports torch but does not
 initialise CUDA or load the model.
 """
 
 import json
-import math
+import random
 from collections import Counter
 from pathlib import Path
 
+from kvlab import m3_confirm as mc
 from kvlab import perf
 
 C = perf.C
@@ -74,8 +89,63 @@ FROZEN_M3_EVAL = {
     "profile_session": {"id": "prof", "cases": ((256, 32), (1536, 128), (4096, 64)),
                         "units": ("restore", "request")},
 }
-SPECS = {FROZEN_M3_EVAL["name"]: FROZEN_M3_EVAL}
+# M3_CONFIRM_V1 (docs/M3_CONFIRM_PROTOCOL.md): the preregistered confirmation of (1024, 1) plus one
+# fresh 5-chunk case. The runner and its ordering semantics are the M3 ones, unchanged. Unlike the
+# frozen M3 spec, the provenance (base HEAD, diff, file bytes, stack, commands) is not written here:
+# it comes from the independently frozen manifest (kvlab/m3_confirm.py), which every session file
+# and the batch record must match. Keys absent from FROZEN_M3_EVAL switch on the stricter checks
+# below; FROZEN_M3_EVAL is unchanged. The one shared change: a sample's t_wall must convert to a
+# finite float (mc.finite), so JSON true and an out-of-range integer are malformed (decisions D31).
+M3_CONFIRM_V1 = {
+    "name": "M3_CONFIRM_V1",
+    "source": "docs/M3_CONFIRM_PROTOCOL.md + the freeze manifest results/m3_confirm/M3_CONFIRM_V1.freeze.json",
+    "git_head": None,  # from the freeze manifest
+    "provenance": "freeze_manifest",
+    "freeze_manifest": "results/m3_confirm/M3_CONFIRM_V1.freeze.json",
+    "run_dir": "results/m3_confirm/M3_CONFIRM_V1_run",
+    "python": ".venv/bin/python",
+    "session_env": {"HF_HUB_OFFLINE": "1"},
+    # the process environment every M3 evaluation session recorded (diag_harness.process_record)
+    "required_process_env": {"OMP_NUM_THREADS": None, "MKL_NUM_THREADS": None, "CUDA_LAUNCH_BLOCKING": None,
+                             "PYTORCH_CUDA_ALLOC_CONF": None, "CUDA_MODULE_LOADING": None, "HF_HUB_OFFLINE": "1"},
+    "budget_s": 1800,  # whole batch, monotonic, from launching the first session process
+    "sessions": {"c1": 32001, "c2": 32002, "c3": 32003, "c4": 32004, "c5": 32005},
+    "cases": ((1024, 1), (1280, 96)),
+    "blocks": 4,
+    "warmup": 2,
+    # the runner's process warmup, sorted({min(cases), max(cases)}): with two cases, both of them
+    "process_warmup": {"cases": ((1024, 1), (1280, 96)), "repeats": 2},
+    "reps": 24,
+    "staging_chunks": 4,
+    "num_layers": 28,
+    "tiers": FROZEN_M3_EVAL["tiers"],
+    "backends": FROZEN_M3_EVAL["backends"],
+    "combos": FROZEN_M3_EVAL["combos"],
+    "executed_sources": FROZEN_M3_EVAL["executed_sources"],
+    "profile_session": None,      # no profiler run: any profiler evidence is rejected
+    "exact_sequence": True,       # every sample identity, in file order, replayed from the seed
+    "count_restore_memory": True,
+    "decision_rule": "confirm_all_primary",
+    "primary_statistics": ("median_d", "mean_d"),
+    "required_model": {"model_id": "Qwen/Qwen2.5-1.5B-Instruct", "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+                       "dtype": "torch.bfloat16", "attn_implementation": "sdpa", "num_hidden_layers": 28},
+    # the stack recorded by every M3 evaluation session (results/m3/eval_20261103T173632)
+    "required_stack": {"python": "3.14.4", "torch": "2.14.1+cu130", "transformers": "5.22.1", "cuda": "13.0",
+                       "gpu_name": "NVIDIA GeForce RTX 4080 Laptop GPU", "driver_version": "596.49",
+                       "weights_blob": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+                       "weights_bytes": 3087467144},
+    "required_packages": {
+        "huggingface_hub": "2.4.0", "numpy": "2.5.4", "nvidia-cublas": "13.1.1.3", "nvidia-cuda-cupti": "13.0.85",
+        "nvidia-cuda-nvrtc": "13.0.88", "nvidia-cuda-runtime": "13.0.96", "nvidia-cudnn-cu13": "9.24.0.43",
+        "nvidia-cufft": "12.0.0.61", "nvidia-cufile": "1.15.1.6", "nvidia-curand": "10.4.0.35",
+        "nvidia-cusolver": "12.0.4.66", "nvidia-cusparse": "12.6.3.3", "nvidia-cusparselt-cu13": "0.8.1",
+        "nvidia-nccl-cu13": "2.30.7", "nvidia-nvjitlink": "13.4.92", "nvidia-nvshmem-cu13": "3.4.5",
+        "nvidia-nvtx": "13.0.85", "safetensors": "0.8.0", "tokenizers": "0.23.3", "torch": "2.14.1+cu130",
+        "transformers": "5.22.1", "triton": "3.8.0"},
+}
+SPECS = {FROZEN_M3_EVAL["name"]: FROZEN_M3_EVAL, M3_CONFIRM_V1["name"]: M3_CONFIRM_V1}
 DEFAULT_SPEC = FROZEN_M3_EVAL["name"]
+ROOT = Path(__file__).resolve().parent.parent
 
 SESSION_SECTIONS = ("meta", "source", "restore_config", "samples", "correctness", "ab_checks",
                     "restore_memory", "failures", "blocks", "excluded")
@@ -86,6 +156,8 @@ CORRECTNESS_FIELDS = ("L", "S", "host_restore_len", "host_sources", "disk_restor
 # M3Bench.ab_check (kvlab/m3_bench.py) boolean fields per tier
 AB_FIELDS = ("restore_len_sources_admission_equal", "kv_bytes_equal_after_prefill",
              "first_logits_bitwise_equal", "greedy_tokens_equal", "step_logits_bitwise_equal")
+# extra sections a session must have when its provenance is checked against a freeze manifest
+PROVENANCE_SECTIONS = ("environment", "packages", "weights", "model", "process")
 MAX_LISTED = 5  # sample-level problems listed individually per session; the rest are counted
 
 
@@ -98,7 +170,7 @@ def _warmup_field_problems(s: dict) -> list[str]:
     """Fields a kept warmup record must have; the analysis lists every warmup in
     samples_chronological.csv but never uses its timing."""
     ph = s.get("phases_ns")
-    checks = (("t_wall", isinstance(s.get("t_wall"), (int, float)) and math.isfinite(s["t_wall"])),
+    checks = (("t_wall", mc.finite(s.get("t_wall"))),
               ("e2e_ns", isinstance(s.get("e2e_ns"), int) and s["e2e_ns"] > 0),
               ("restore_len", isinstance(s.get("restore_len"), int)),
               ("sources", isinstance(s.get("sources"), list)),
@@ -136,13 +208,16 @@ def _new_counts(spec):
            "process_warmup_samples": n_s * len(pw["cases"]) * len(spec["combos"]) * pw["repeats"],
            "correctness_checks": n_s * n_c * len(spec["backends"]),
            "ab_checks": n_s * n_c * len(spec["tiers"])}
+    if spec.get("count_restore_memory"):  # one record per session x case, every tier x backend
+        exp["restore_memory_records"] = n_s * n_c
     return {k: {"expected": v, "present": 0, "passed": 0} for k, v in exp.items()}
 
 
-def _check_session(sid, rep, spec, P, fail, counts):
+def _check_session(sid, rep, spec, P, fail, counts, prov=None):
     """Append problems (P) and failed checks (fail) for one evaluation session. Returns the
-    recomputed per-session acceptance of its correctness and A/B checks."""
-    missing = [k for k in SESSION_SECTIONS if k not in rep]
+    recomputed per-session acceptance of its correctness and A/B checks. `prov` (specs with a
+    freeze manifest) holds the manifest the session must match."""
+    missing = [k for k in SESSION_SECTIONS + (PROVENANCE_SECTIONS if prov else ()) if k not in rep]
     if missing:
         P(f"missing sections {missing}")
         return False
@@ -166,8 +241,13 @@ def _check_session(sid, rep, spec, P, fail, counts):
     if meta.get("session") != sid or meta.get("seed") != seed:
         P(f"meta session/seed {meta.get('session')!r}/{meta.get('seed')!r}, spec {sid!r}/{seed}")
     head = rep["source"].get("git_head") if isinstance(rep["source"], dict) else None
-    if head != spec["git_head"]:
-        P(f"git_head {head!r}, spec {spec['git_head']}")
+    want_head = prov["manifest"].get("base_git_head") if prov else spec["git_head"]
+    if head != want_head:
+        P(f"git_head {head!r}, {'frozen base' if prov else 'spec'} {want_head}")
+    if prov:
+        _check_provenance(sid, rep, spec, prov, P)
+    if spec["profile_session"] is None and ("profile" in rep or args.get("profile") is not False):
+        P("unexpected profiler evidence (this experiment plans no profiler run)")
     if not isinstance(rep["restore_config"], dict) or \
             rep["restore_config"].get("restore_staging_chunks") != spec["staging_chunks"]:
         P(f"restore_config {rep['restore_config']!r}, spec staging_chunks {spec['staging_chunks']}")
@@ -182,6 +262,8 @@ def _check_session(sid, rep, spec, P, fail, counts):
     blocks = [(b.get("block"), b.get("L"), b.get("S")) if isinstance(b, dict) else None for b in rep["blocks"]]
     if blocks != [(i, *order[i]) for i in range(n_blocks)]:
         P(f"block records {blocks} do not match the block order")
+    if spec.get("exact_sequence"):
+        _check_sequence(rep, spec, sid, order, P)
 
     # ---- sample identities: (block, rep, path, backend, mode), exactly once each, for measured
     # and block-warmup repetitions alike; process warmups by (case, combination) multiplicity.
@@ -270,7 +352,7 @@ def _check_session(sid, rep, spec, P, fail, counts):
     for key, s in measured.items():
         rule = _sample_problems(s, spec["num_layers"])
         mem = s.get("mem") if isinstance(s.get("mem"), dict) else {}
-        field = [f for f, ok in (("t_wall", isinstance(s.get("t_wall"), (int, float)) and math.isfinite(s["t_wall"])),
+        field = [f for f, ok in (("t_wall", mc.finite(s.get("t_wall"))),
                                  *((f"mem.{k}", isinstance(mem.get(k), int))
                                    for k in ("allocated_before", "peak_allocated", "peak_reserved"))) if not ok]
         n_rule += bool(rule)
@@ -295,13 +377,114 @@ def _check_session(sid, rep, spec, P, fail, counts):
     ab_ok = _check_records(rep["ab_checks"], cases, "A/B", P, lambda a: _case(a.get("L"), a.get("S")),
                            lambda a, case: _check_ab(a, case, spec, P, fail, sid, counts["ab_checks"]))
     # ---- restore-only memory: one record per spec case, every tier x backend a full restore
+    mem_count = counts.get("restore_memory_records")
+
+    def mem_check(m, case):
+        ok = _check_restore_memory(m, case, spec, P)
+        if mem_count is not None:
+            mem_count["present"] += 1
+            mem_count["passed"] += ok
+        return ok
     _check_records(rep["restore_memory"], cases, "restore_memory", P, lambda m: _case(m.get("L"), m.get("S")),
-                   lambda m, case: _check_restore_memory(m, case, spec, P))
+                   mem_check)
     session_ok = corr_ok and ab_ok
     if meta.get("correctness_all") is not session_ok:
         P(f"stored correctness_all={meta.get('correctness_all')!r}, but the detailed correctness and A/B "
           f"records give {session_ok}")
     return session_ok
+
+
+def expected_sequence(spec, sid):
+    """The runner's sample order (scripts/m3_measure.py), replayed from the session seed:
+    (block order, [(stage, L, S, block, rep, order_pos, (path, backend, mode))] in file order).
+    The runner draws, from one random.Random(seed): one shuffle of the cases (repeated `blocks`
+    times), then one shuffle of the combinations per repetition. The process warmup runs every
+    combination twice, in COMBOS order, at sorted({min(cases), max(cases)}), before block 0."""
+    rng = random.Random(spec["sessions"][sid])
+    cases = [tuple(c) for c in spec["cases"]]  # the --cases order of the frozen command
+    combos = [tuple(c) for c in spec["combos"]]
+    order = cases[:]
+    rng.shuffle(order)
+    block_cases = [c for _ in range(spec["blocks"]) for c in order]
+    seq = [("process_warmup", L, S, None, None, None, combo)
+           for L, S in sorted({min(cases), max(cases)}) for combo in combos for _ in range(2)]
+    for bi, (L, S) in enumerate(block_cases):
+        for r in range(spec["warmup"] + spec["reps"]):
+            cs = list(combos)
+            rng.shuffle(cs)
+            seq += [("m3", L, S, bi, r, pos, combo) for pos, combo in enumerate(cs)]
+    return block_cases, seq
+
+
+def _check_sequence(rep, spec, sid, order, P):
+    """Exact identities and order: every sample, in file order, is the one the runner draws at
+    that position for this seed; recorded wall times never go backwards; the per-case checks
+    follow the first pass of the block order."""
+    block_cases, seq = expected_sequence(spec, sid)
+    if order != block_cases:
+        P(f"block_order {order} is not the runner's order for seed {spec['sessions'][sid]}: {block_cases}")
+    got = [(s.get("stage"), s.get("L"), s.get("S"), s.get("block"), s.get("rep"), s.get("order_pos"),
+            (s.get("path"), s.get("backend"), s.get("mode"))) if isinstance(s, dict) else None for s in rep["samples"]]
+    if got != seq:
+        i = next((i for i, (a, b) in enumerate(zip(got, seq)) if a != b), min(len(got), len(seq)))
+        P(f"sample sequence differs from the runner's order for seed {spec['sessions'][sid]} at sample {i} "
+          f"(found {got[i] if i < len(got) else 'end'}, expected {seq[i] if i < len(seq) else 'end'}; "
+          f"{len(got)} samples, {len(seq)} planned)")
+    tw = [s.get("t_wall") if isinstance(s, dict) else None for s in rep["samples"]]
+    if not all(isinstance(x, (int, float)) for x in tw) or any(b < a for a, b in zip(tw, tw[1:])):
+        P("sample wall times are missing or not in file order")
+    first = block_cases[:len(spec["cases"])]
+
+    def corr_case(c):
+        e = c.get(spec["backends"][0])
+        return _case(e.get("L"), e.get("S")) if isinstance(e, dict) else None
+    for what, recs, case_of in (("correctness", rep["correctness"], corr_case),
+                                ("A/B", rep["ab_checks"], lambda a: _case(a.get("L"), a.get("S"))),
+                                ("restore_memory", rep["restore_memory"], lambda m: _case(m.get("L"), m.get("S")))):
+        got_cases = [case_of(x) if isinstance(x, dict) else None for x in recs] if isinstance(recs, list) else None
+        if got_cases != first:
+            P(f"{what} records are for cases {got_cases}, not the first pass of the block order {first}")
+
+
+def _check_provenance(sid, rep, spec, prov, P):
+    """The session ran the frozen command, from the frozen tree, on the required stack."""
+    m = prov["manifest"]
+    src = rep["source"] if isinstance(rep["source"], dict) else {}
+    if src.get("git_diff_head_sha256") != m.get("git_diff_head_sha256"):
+        P("git diff HEAD differs from the frozen diff")
+    files, frozen = src.get("files_sha256"), m.get("files_sha256")
+    if files != frozen:
+        files, frozen = files if isinstance(files, dict) else {}, frozen if isinstance(frozen, dict) else {}
+        P(f"source files differ from the freeze: {sorted(f for f in set(files) | set(frozen) if files.get(f) != frozen.get(f))}")
+    args = rep["meta"].get("args")
+    if args != mc.expected_args(spec, sid):
+        P(f"recorded arguments {args!r} differ from the frozen command {mc.expected_args(spec, sid)!r}")
+    env = rep["environment"] if isinstance(rep["environment"], dict) else {}
+    req, stack = spec["required_stack"], m.get("stack") or {}
+    for k in ("torch", "transformers", "cuda", "python"):
+        if env.get(k) != req[k]:
+            P(f"environment {k} {env.get(k)!r}, required {req[k]!r}")
+    gs = mc.parse_gpu_static(env.get("gpu_static"))
+    if env.get("gpu") != req["gpu_name"] or gs != {k: stack.get(k) for k in ("gpu_name", "driver_version")}:
+        P(f"GPU {env.get('gpu')!r} / {gs}, frozen {stack.get('gpu_name')!r} driver {stack.get('driver_version')!r}")
+    for k in ("kernel", "cpu"):
+        if env.get(k) != stack.get(k):
+            P(f"environment {k} {env.get(k)!r}, frozen {stack.get(k)!r}")
+    if rep["packages"] != stack.get("packages") or rep["packages"] != spec["required_packages"]:
+        P("package versions differ from the frozen and required stack")
+    if rep["weights"] != stack.get("weights"):
+        P("model weight files differ from the freeze")
+    model = rep["model"] if isinstance(rep["model"], dict) else {}
+    if {k: model.get(k) for k in spec["required_model"]} != spec["required_model"]:
+        P(f"model {({k: model.get(k) for k in spec['required_model']})}, required {spec['required_model']}")
+    penv = (rep["process"] or {}).get("env") if isinstance(rep["process"], dict) else None
+    if penv != spec["required_process_env"]:
+        P(f"process environment {penv!r}, required {spec['required_process_env']}")
+    started = rep["meta"].get("started_unix")
+    launched = (prov.get("batch") or {}).get("launched_unix") if isinstance(prov.get("batch"), dict) else None
+    fr = m.get("frozen_unix")
+    if not mc.finite(started) or not mc.finite(fr) or started < fr or not mc.finite(launched) or started < launched:
+        P(f"session started at {started!r}, not after the freeze ({fr!r}) and the batch launch ({launched!r})")
 
 
 def _check_records(records, cases, what, P, case_of, check) -> bool:
@@ -389,7 +572,7 @@ def _check_ab(a, case, spec, P, fail, sid, count) -> bool:
 
 
 def _check_restore_memory(m, case, spec, P) -> bool:
-    n = case[0] // C
+    n, ok = case[0] // C, True
     for tier in spec["tiers"]:
         for b in spec["backends"]:
             r = m.get(f"{tier}_{b}")
@@ -398,7 +581,8 @@ def _check_restore_memory(m, case, spec, P) -> bool:
                     not isinstance(r.get("peak_above_start"), int) or not isinstance(r.get("kept_after_return"), int) or \
                     lr.get("backend") != b or lr.get("chunks_loaded") != n:
                 P(f"restore_memory {case} {tier}_{b}: missing, incomplete or not a full {b} restore from {tier}")
-    return True
+                ok = False
+    return ok
 
 
 def _check_profile(rep, spec, P):
@@ -421,21 +605,101 @@ def _check_profile(rep, spec, P):
         P(f"profile rows {sorted(keys)} differ from the planned {len(want)} (case, tier, backend, unit) rows")
 
 
-def load_and_validate(run_dir, spec=FROZEN_M3_EVAL):
+def _load_provenance(rd, spec, freeze, root, expect_sha, problems):
+    """Freeze manifest + batch record + closed file listing of the run directory."""
+    path = Path(root) / spec["freeze_manifest"] if freeze is None else Path(freeze)
+    info = {"freeze_manifest": str(path), "freeze_manifest_sha256": None, "batch_record_sha256": None}
+    try:
+        data = path.read_bytes()
+        manifest = mc.load_json_finite(data)  # NaN/Infinity would defeat every time comparison
+        info["freeze_manifest_sha256"] = mc.sha256_bytes(data)
+    except (OSError, ValueError) as e:
+        problems.append(f"freeze manifest {path} missing or unreadable: {e}")
+        return None, info
+    if expect_sha is not None and info["freeze_manifest_sha256"] != expect_sha:
+        problems.append(f"freeze manifest sha256 {info['freeze_manifest_sha256']} != the expected {expect_sha}")
+    try:
+        problems += mc.manifest_problems(manifest, spec, root)
+    except (AttributeError, KeyError, TypeError, ValueError) as e:  # malformed field: fail closed
+        problems.append(f"malformed freeze manifest: {e!r}")
+    try:
+        data = (rd / mc.BATCH_RECORD).read_bytes()
+        batch = mc.load_json_finite(data)
+        info["batch_record_sha256"] = mc.sha256_bytes(data)
+    except (OSError, ValueError) as e:
+        problems.append(f"batch record {mc.BATCH_RECORD} missing or unreadable: {e}")
+        batch = None
+    if batch is not None:
+        try:
+            problems += mc.batch_problems(batch, manifest if isinstance(manifest, dict) else {},
+                                          info["freeze_manifest_sha256"], rd, spec)
+        except (AttributeError, KeyError, TypeError, ValueError) as e:
+            problems.append(f"malformed batch record: {e!r}")
+        if isinstance(batch, dict):  # execution, reported as recorded; the evidence is judged separately
+            info["execution"] = {
+                "execution_status": batch.get("execution_status"), "stop": batch.get("stop"),
+                "not_launched": batch.get("not_launched"),
+                "returncodes": {e.get("session"): e.get("returncode") for e in batch.get("sessions") or []
+                                if isinstance(e, dict)}}
+    present = {p.relative_to(rd).as_posix() for p in rd.rglob("*") if not p.is_dir()}
+    want = mc.run_dir_files(spec)
+    for f in sorted(present - want):
+        problems.append(f"unexpected file in the run directory: {f}")
+    for f in sorted(want - present - {f"session_{s}.json" for s in spec["sessions"]} - {mc.BATCH_RECORD}):
+        problems.append(f"missing file in the run directory: {f}")
+    return {"manifest": manifest if isinstance(manifest, dict) else {}, "batch": batch}, info
+
+
+def _check_batch_sessions(sessions, prov, spec, problems):
+    """Sequential fresh processes; each exit code is the runner's own verdict on its record."""
+    entries = {e.get("session"): e for e in (prov["batch"] or {}).get("sessions") or [] if isinstance(e, dict)}
+    prev, pids = None, set()
+    for sid in spec["sessions"]:
+        rep = sessions.get(sid)
+        if not isinstance(rep, dict) or not isinstance(rep.get("meta"), dict):
+            prev = None
+            continue
+        m = rep["meta"]
+        pid = (rep.get("process") or {}).get("pid") if isinstance(rep.get("process"), dict) else None
+        if pid in pids or pid is None:
+            problems.append(f"{sid}: process id {pid!r} is missing or repeats an earlier session")
+        elif pid != (entries.get(sid) or {}).get("pid"):
+            problems.append(f"{sid}: process id {pid} is not the process the batch launched "
+                            f"({(entries.get(sid) or {}).get('pid')!r})")
+        pids.add(pid)
+        times = [s.get("t_wall") for s in rep.get("samples") or [] if isinstance(s, dict)]
+        if prev is not None and (not mc.finite(m.get("started_unix")) or m["started_unix"] <= prev):
+            problems.append(f"{sid}: started at {m.get('started_unix')!r}, before the previous session's last sample {prev}")
+        prev = max((x for x in times if mc.finite(x)), default=None)
+        ok_run = m.get("correctness_all") is True and rep.get("failures") == [] and m.get("n_excluded") == 0
+        rc = (entries.get(sid) or {}).get("returncode")
+        if rc != (0 if ok_run else 1):
+            problems.append(f"{sid}: exit code {rc!r} disagrees with the session record (runner success {ok_run})")
+
+
+def load_and_validate(run_dir, spec=FROZEN_M3_EVAL, *, freeze=None, root=ROOT, expect_freeze_sha256=None):
     """Validate a run directory against `spec`. Returns (report, sessions, profile):
     report["status"] is "valid", "invalid" or "correctness_failed" (see the module docstring);
     sessions maps each loaded evaluation session id (spec order) to its parsed JSON; profile is
-    the parsed profile session or None."""
+    the parsed profile session or None. For a spec with a freeze manifest, `freeze` overrides
+    the manifest path (default: the spec's, under `root`), and `expect_freeze_sha256`, if
+    given, must be the manifest's SHA-256 as recorded out of band at freeze time."""
     rd = Path(run_dir)
     problems, fail, counts = [], [], _new_counts(spec)
     sessions, prof, per_session = {}, None, {}
+    prov, prov_info = None, None
+    if spec.get("provenance") == "freeze_manifest":
+        prov, prov_info = _load_provenance(rd, spec, freeze, root, expect_freeze_sha256, problems)
+        if prov is None:
+            prov = {"manifest": {}, "batch": None}
     found = {p.stem.removeprefix("session_"): p for p in sorted(rd.glob("session_*.json"))}
-    prof_id = spec["profile_session"]["id"]
+    prof_id = spec["profile_session"]["id"] if spec["profile_session"] else None
     for sid in spec["sessions"]:
         if sid not in found:
             problems.append(f"missing session file session_{sid}.json (spec {spec['name']}: {list(spec['sessions'])})")
     for sid in sorted(set(found) - set(spec["sessions"]) - {prof_id}):
-        problems.append(f"unexpected session file {found[sid].name} (not in spec {spec['name']})")
+        problems.append(f"unexpected session file {found[sid].name} (not in spec {spec['name']}"
+                        f"{'; this experiment plans no profiler session' if prof_id is None else ''})")
     for sid in (s for s in spec["sessions"] if s in found):
         try:
             rep = json.loads(found[sid].read_text())
@@ -448,12 +712,17 @@ def load_and_validate(run_dir, spec=FROZEN_M3_EVAL):
         sessions[sid] = rep
         n0 = len(problems)
         try:
-            ok = _check_session(sid, rep, spec, lambda m, sid=sid: problems.append(f"{sid}: {m}"), fail, counts)
+            ok = _check_session(sid, rep, spec, lambda m, sid=sid: problems.append(f"{sid}: {m}"), fail, counts, prov)
         except (AttributeError, KeyError, TypeError, ValueError) as e:  # malformed nested record: fail closed
             problems.append(f"{sid}: malformed session record: {e!r}")
             ok = False
         per_session[sid] = {"problems": len(problems) - n0, "correctness_and_ab_pass_recomputed": ok}
-    if prof_id in found:
+    if prov is not None:
+        try:
+            _check_batch_sessions(sessions, prov, spec, problems)
+        except (AttributeError, KeyError, TypeError, ValueError) as e:
+            problems.append(f"malformed session or batch record: {e!r}")
+    if prof_id is not None and prof_id in found:
         try:
             prof = json.loads(found[prof_id].read_text())
             _check_profile(prof, spec, lambda m: problems.append(f"{prof_id}: {m}"))
@@ -476,6 +745,9 @@ def load_and_validate(run_dir, spec=FROZEN_M3_EVAL):
         problems.append("a session lacks source.files_sha256")
 
     complete = all(c["present"] == c["passed"] == c["expected"] for c in counts.values())
+    # Status precedence: invalid (exit 3) > correctness_failed (exit 4) > valid. Detailed
+    # correctness/A-B failures found in any parseable session are listed in
+    # `correctness_failures` whatever the status, so an invalid or incomplete batch never hides them.
     status = "invalid" if problems or (not fail and not complete) else "correctness_failed" if fail else "valid"
     acceptance = status == "valid" and complete
     report = {"spec": spec["name"], "spec_source": spec["source"], "run_dir": str(rd), "status": status,
@@ -483,4 +755,7 @@ def load_and_validate(run_dir, spec=FROZEN_M3_EVAL):
               "sessions_expected": list(spec["sessions"]), "session_files_found": sorted(found),
               "profile_session_present": prof is not None, "per_session": per_session, "counts": counts,
               "correctness_and_ab_acceptance_recomputed": acceptance}
+    if prov_info is not None:
+        report["provenance"] = prov_info
+        report["correctness_failures_observed"] = bool(fail)
     return report, sessions, prof

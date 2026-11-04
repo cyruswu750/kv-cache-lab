@@ -1,0 +1,918 @@
+diff --git a/README.md b/README.md
+index 6195a96..05ff584 100644
+--- a/README.md
++++ b/README.md
+@@ -13,6 +13,8 @@
+ | M2.1 | Audit of M2 timing/scoring; dependence-aware reanalysis (BUGLOG VAL-005); interleaved diagnosis of the restore slow mode | done (slow mode associated with higher host-side CUDA-call cost; root cause open) |
+ | M3 | Opt-in `batched` restore backend: one contiguous H2D per chunk into bounded chunk-major device staging, one placement per group; strict A/B against the baseline; interleaved 5-session comparison | done (restore calls 896 → 16 memcpy at 16 chunks; median e2e 1.07–2.29× faster in this sample). `supports_adoption` is **false**: under the frozen rule, (1024, 1) is inconclusive (R3, measured stretch too short), so the default stays `baseline`. The analysis now validates evidence against the frozen spec first (BUGLOG VAL-006); the reanalysis reproduced every number and the verdict |
+ 
++| M3_CONFIRM_V1 | Preregistered confirmation of (1024, 1) and the fresh (1280, 96): own validator spec, premeasurement freeze manifest, budgeted batch wrapper | **prepared, not measured** (protocol is a draft pending review and freeze: `docs/M3_CONFIRM_PROTOCOL.md`; D31) |
++
+ Not implemented yet: a runtime cost-aware policy (M2's model is offline only),
+ async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `docs/design.md` §1).
+ 
+@@ -25,6 +27,7 @@ async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `
+ - M2 performance protocol: `docs/M2_PROTOCOL.md`
+ - M2.1 diagnostic plan: `docs/M2_1_DIAGNOSTIC_PLAN.md`
+ - M3 design note: `docs/M3_DESIGN.md`; frozen comparison protocol: `docs/M3_PROTOCOL.md`
++- M3_CONFIRM_V1 confirmation protocol (draft, not measured): `docs/M3_CONFIRM_PROTOCOL.md`
+ 
+ Reference harness: Hugging Face Transformers + PyTorch (decisions D1).
+ Model: `Qwen/Qwen2.5-1.5B-Instruct@989aa7980e4cf806f80c7fef2b1adb7bc71aa306`, **bf16**, **SDPA**, chunk = 256 tokens.
+@@ -53,8 +56,9 @@ kvlab/perf_stats.py        M2.1: block bootstrap, inconclusive classification, p
+ kvlab/diag_harness.py      M2.1: diagnostic paths/modes (full_nocache, CUDA-event marks, probes); diagnostic only
+ kvlab/m3_bench.py          M3: baseline vs batched benchmark harness on the unchanged M2 timed region
+ kvlab/m3_stats.py          M3: stratified block bootstrap, R1-R3 verdicts, regime durations (CPU)
+-kvlab/m3_validate.py       M3 / VAL-006: fail-closed evidence validation against the frozen spec, incl. warmups (CPU)
+-scripts/                   m0_*, m0_1_audit, m1_run, m1_mutation_check, m2_measure, m2_fit_predict, m2_score, m2_spike_probe, m2_1_reanalyze, m2_1_diagnose, m2_1_analyze_diag, m2_1_regimes, m3_measure, m3_analyze, m3_mutation_check, env_report
++kvlab/m3_validate.py       M3 / VAL-006: fail-closed evidence validation against explicit specs, incl. warmups (CPU)
++kvlab/m3_confirm.py        M3_CONFIRM_V1: premeasurement freeze manifest, budgeted batch wrapper, their checks (CPU, no torch)
++scripts/                   m0_*, m0_1_audit, m1_run, m1_mutation_check, m2_measure, m2_fit_predict, m2_score, m2_spike_probe, m2_1_reanalyze, m2_1_diagnose, m2_1_analyze_diag, m2_1_regimes, m3_measure, m3_analyze, m3_mutation_check, m3_confirm, env_report
+ tests/                     CPU tests; tests/gpu/ GPU tests (markers: gpu + m0_strict | m0_1 | m1 | m3)
+ results/m0/ (read-only), results/m0_1/, results/m1/, results/m1_1/, results/m1_2/, results/m2/, results/m2_1/, results/m3/   machine-readable evidence and logs
+ ```
+diff --git a/docs/correctness-matrix.md b/docs/correctness-matrix.md
+index f507929..2b2d043 100644
+--- a/docs/correctness-matrix.md
++++ b/docs/correctness-matrix.md
+@@ -222,7 +222,7 @@ tiers, host LRU order, pins, staging state and budgets between the backends.
+ | Regime durations | exact | PASS |
+ | Well-formed samples of all 9 path × backend × mode combinations valid; wrong backend, wrong copy count, wrong chunk count, missing record, restore on `full`, bad phases, wrong tier excluded | as stated | PASS (9 + 1) |
+ 
+-## M3 analysis evidence validation (CPU; BUGLOG VAL-006, `tests/test_m3_analyze_validation.py`, 42 tests)
++## M3 analysis evidence validation (CPU; BUGLOG VAL-006, `tests/test_m3_analyze_validation.py`, 45 tests)
+ Added after M3. These run the production validator (`kvlab/m3_validate.py`) and the real `scripts/m3_analyze.py` CLI on scratch copies of `results/m3/eval_20261103T173632/`. That directory is only read.
+ 
+ | Scenario | Expected | Actual | Test |
+@@ -233,9 +233,40 @@ Added after M3. These run the production validator (`kvlab/m3_validate.py`) and
+ | Decision on the historical cases with (1024, 1) removed, and on no cases | adoption false; the rule can still pass on valid all-faster input | PASS | `test_decision_is_driven_by_the_spec_case_list…` |
+ | Missing / unexpected / unreadable session file | `invalid` | PASS (3) | `test_missing_unexpected_or_unreadable_session_is_invalid` |
+ | Measured samples: missing, duplicate, warmup flag either way, rep outside the plan, pair partner failing the rules, missing `t_wall` | `invalid` | PASS (7) | `test_missing_duplicate_or_unpaired_samples_are_invalid` |
++| Sample wall time `t_wall` (shared check; M3_CONFIRM_V1 preparation review 2, decisions D31): a JSON integer beyond the float range on a measured or a process-warmup sample; JSON `true` on a process-warmup sample | `invalid`, exit 3, no analysis. Before the fix: the integer crashed the analysis (`OverflowError`, exit 1, no report) and `true` was accepted (exit 0) | PASS (3) | `test_t_wall_must_convert_to_a_finite_float` |
+ | Correctness / A/B / restore-memory records or fields missing or failed while stored summaries still pass; A/B of two misses; summary contradicting passing details | `invalid` (failed details also listed) | PASS (11) | `test_missing_or_failed_detailed_checks_with_stale_passing_summaries…` |
+ | Correctness failure recorded consistently | `correctness_failed`, exit 4 | PASS | `test_consistently_recorded_correctness_failure…` |
+ | Warmups (follow-up): all removed with `n_samples` adjusted; one block / one process warmup missing; same-count substitutions; relabelled measured row; flag or stage errors; out-of-order process warmup; malformed warmup | `invalid`, exit 3 | PASS (12 + 1 subprocess) | `test_missing_substituted_or_misflagged_warmup_evidence_is_invalid`, `test_all_warmups_removed_is_rejected_by_the_real_cli_subprocess` |
+ | Warmup timings inflated 100× | valid; every case statistic and the decision unchanged | PASS | `test_warmup_timings_never_enter_the_statistics` |
+ | Complete original evidence | `valid`, exit 0: 5,400 samples, 900 block and 180 process warmups, 50 strict and 50 A/B checks; all historical values equal; adoption false | PASS | `test_complete_valid_report_reproduces_the_historical_analysis` |
+ | Existing output, or a missing run directory | refused; nothing written | PASS | `test_refuses_to_overwrite_and_writes_nothing` |
++
++## M3_CONFIRM_V1 preparation (CPU; `tests/test_m3_confirm.py`, 127 tests; no measurement)
++Synthetic evidence from a generator that mirrors the `scripts/m3_measure.py` loop, bound to a real freeze manifest of the working tree (synthetic stack equal to the required one). The wrapper tests use dummy child processes only; no test starts a GPU process.
++
++| Scenario | Expected | Actual | Test |
++|---|---|---|---|
++| Spec counts (8,640 / 720 / 180 / 20 / 20 / 10), commands, runner semantics; draft protocol; old spec untouched | as stated | PASS | `test_spec_counts_commands_and_runner_semantics` |
++| Required stack equals the recorded M3 stack; model constants pinned | as stated | PASS | `test_required_stack_is_the_recorded_m3_stack` |
++| Torch-free identity records equal the runner's (`source_identity`, packages, weights); the validator imports no torch | equal | PASS | `test_torch_free_identity_mirrors_the_runner` |
++| Seed replay reproduces all 6,480 recorded M3 sample identities in order | equal | PASS | `test_sequence_replay_reproduces_the_recorded_m3_order` |
++| Complete valid evidence | `valid`, exit 0, all counts complete, 480 pairs in 20 strata per case × tier × mode, confirmed; no `supports_adoption` key; default stays `baseline` | PASS | `test_complete_valid_evidence_confirms` |
++| Warmup timings inflated 100× | statistics and decision unchanged | PASS | `test_warmup_timings_never_enter_the_statistics` |
++| No effect on (1280, 96) | `valid`, exit 0, not confirmed (final outcome) | PASS | `test_complete_but_not_confirmed_is_a_valid_final_outcome` |
++| Missing case; duplicate, substituted or reordered rows; missing, substituted or misflagged block and process warmups; block order not from the seed; missing correctness or memory records; profile section | `invalid`, exit 3, no analysis | PASS (14) | `test_invalid_evidence_is_rejected` |
++| Missing session; profiler session, trace file, extra session or stale output in the run directory | `invalid` | PASS (1 + 4) | `test_missing_session_is_invalid`, `test_unexpected_files_and_profiler_evidence_are_rejected` |
++| Provenance or batch mismatch: source bytes, new file, HEAD, diff, packages, driver, weights, arguments, process environment (offline flag, allocator config), start before freeze, session or manifest edited after the batch, analysis or protocol bytes changed, commands, stack, a stop by deadline or signal, an unfinalized record, over-budget elapsed time or a session ending at the deadline, killed session, launch after a nonzero exit, status disagreeing with the exits, exit code or PID mismatch, missing or malformed records, overlapping sessions | `invalid` | PASS (33) | `test_provenance_or_batch_mismatch_is_invalid` |
++| Contradictory execution records (hand-written fields over complete evidence): a `nonzero_exit` stop while all five exits are 0, with status `failed` or `succeeded` (the re-review P1); the inverse, an actual nonzero exit with no stop (either status); a stop naming another session or exit code; a boolean exit code; a `nonzero_exit` stop for a killed session; `failed` with no stop; no stop but a session never launched; exit 0 without a report but no stop; `elapsed_s` not the last end; overlapping session times; a recorded session-file state differing from the actual file (presence, size, or parseability of the c5 report in otherwise complete A/B-failure evidence); NaN or Infinity in a session end, the elapsed time, the launch time, the freeze time or a session start | `invalid`, exit 3, no performance output, not confirmed. Before the fixes: the P1 records, the boolean exit code, the two timing contradictions, the absent-file state and the NaN end were accepted (exit 0), and the unparseable c5 state gave exit 4 | PASS (21) | `test_contradictory_execution_record_is_rejected_before_analysis` |
++| Complete, consistent c5 A/B failure (positive control for the file-state check); NaN times passed directly to the checks (no JSON parsing) | exit 4; rejected | PASS (2) | `test_ab_failure_in_the_last_session_exits_4`, `test_non_finite_times_are_rejected_by_the_checks_themselves` |
++| Times as numbers (preparation review 2): a JSON integer beyond the float range as a session end (the review's trigger), a session start (negative), the elapsed time, the launch time, the freeze time, a session start time or a sample wall time; JSON `true` as a sample wall time or a session end; the largest integer that converts to a float, as a session end; the literal `1e400` (parses to infinity); an integer beyond Python's 4,300-digit parse limit | `invalid`, exit 3, report written, no performance output, not confirmed. Before the fix: the seven out-of-range integers crashed the analyzer (`OverflowError`, exit 1, no report), and `true` as a sample wall time was accepted (exit 0, confirmed); the other four were already rejected | PASS (12) | `test_out_of_range_or_boolean_times_are_invalid_evidence_not_a_crash` |
++| The review's trigger through the real CLI process; `finite()` boundaries (it accepts exactly the non-boolean numbers that convert to a finite float) and a direct check with an out-of-range integer; integral JSON times (positive control) | exit 3 with only `m3_validation.json` and no traceback; as stated; `valid`, exit 0, confirmed | PASS (3) | `test_huge_integer_end_through_the_real_cli_subprocess`, `test_finite_accepts_exactly_the_numbers_that_convert_to_finite_floats`, `test_ordinary_integer_times_remain_valid` |
++| Records written by the real wrapper (dummy children): succeeded, nonzero exit with sessions left, deadline; the same records forged into the P1 contradiction and its inverse | real records pass the consistency rules (a deadline is rejected as a stop, not as a contradiction); forged ones fail | PASS | `test_wrapper_records_satisfy_the_consistency_rules_and_tampering_fails` |
++| Out-of-band manifest SHA-256 wrong / right; manifest missing | invalid / valid; invalid | PASS (2) | `test_manifest_must_match_the_out_of_band_sha256`, `test_missing_manifest_is_invalid` |
++| Correctness failure recorded consistently in c5 (exit 1, the batch stopped with nothing left to launch); the same in c2 (c3–c5 never launched); OOM-like report in c5; five processes exiting 0 with one empty report | exit 4 (failure listed); exit 3 with the c2 failure still listed explicitly; exit 3; exit 3 | PASS (4) | `test_correctness_failure_in_the_last_session_exits_4`, `…_before_the_last_session_is_invalid_but_reported`, `test_oom_report_in_the_last_session_is_invalid`, `test_all_processes_ran_but_a_report_is_empty` |
++| CLI: confirm spec without a separate out-dir; old spec with `--freeze` | usage error, exit 2 | PASS | `test_cli_usage_guards` |
++| Freeze: draft protocol, different stack; records actual bytes incl. untracked files, never itself; writes once; launch check detects tree, stack and environment drift | refused / as stated | PASS (3) | `test_freeze_refuses_…`, `test_manifest_records_the_tree_…`, `test_freeze_writes_once_and_verify_detects_drift` |
++| `run` without a matching manifest | refused; nothing launched | PASS | `test_run_refuses_without_a_matching_manifest` |
++| Wrapper: every session exits 0; any nonzero exit (exit 1 with an OOM-like or empty report, a crash), including the last session's, stops it with nothing further launched and wrapper exit 3; exit 0 without a report stops it; the signal mask is restored | as stated | PASS (6) | `test_batch_runs_every_session_in_order`, `test_any_nonzero_exit_stops_the_batch`, `test_nonzero_exit_of_the_last_session_…`, `test_exit_0_without_a_report_…` |
++| Wrapper deadline: still running at the deadline (only the session group is killed, helper included, bystander untouched, only its scratch removed); an exit first observed after the deadline (deterministic, child-driven clock); the deadline rechecked before the next launch | execution failed, never success | PASS (3) | `test_deadline_while_running_…`, `test_exit_observed_after_the_deadline_is_not_success`, `test_deadline_is_rechecked_before_the_next_launch` |
++| Wrapper signals and cleanup: SIGTERM, SIGINT or SIGHUP right after launch (from the launch-log callback); a signal between sessions; a wrapper error after launch; a session ignoring SIGTERM while signalling the wrapper (SIGKILL escalation, cleanup not aborted); a signal while waiting; wrapper SIGKILLed (parent-death signal only) | the session group terminated and reaped, nothing further launched, record finalized (except after SIGKILL) | PASS (8) | `test_signal_right_after_launch_…`, `test_signal_between_sessions_…`, `test_wrapper_error_after_launch_…`, `test_cleanup_escalates_…`, `test_operator_signal_while_waiting`, `test_killed_wrapper_…` |
++| Documented §11 Bash procedure, run on the real CLIs with no manifest (both refuse) | `pipefail` and `${PIPESTATUS[0]}` report exit 1 for the wrapper and the analysis; the old `cmd \| tee` form reports 0 | PASS | `test_documented_procedure_preserves_the_failing_wrapper_status` |
+diff --git a/docs/decisions.md b/docs/decisions.md
+index 37ad920..bf1145b 100644
+--- a/docs/decisions.md
++++ b/docs/decisions.md
+@@ -390,3 +390,57 @@ chunked prefill (which has no CPU round trip).
+     missing or incomplete evidence, measured samples and retained warmups alike. It now validates against the frozen spec first, and the
+     reanalysis reproduces every number. `supports_adoption` remains false for the same
+     (1024, 1) reason, and the default stays `baseline`. See BUGLOG VAL-006.
++
++## D31. (M3_CONFIRM_V1, prepared; DRAFT, not measured) A separate, preregistered confirmation, bound to a premeasurement freeze
++- **Problem:** the M3 adoption rule failed only on (1024, 1), under R3. Its measured span was
++  too short relative to the slow regimes. Re-analysing the M3 data, or extending it, would
++  make the rule depend on the outcome.
++- **Choice** (`docs/M3_CONFIRM_PROTOCOL.md`):
++  - a new experiment with its own validator spec, `M3_CONFIRM_V1`, analysed on its own and
++    never pooled with M3. Cases: (1024, 1) and the fresh (1280, 96). Five fresh-process
++    sessions, seeds 32001–32005; 4 blocks × (2 warmup + 24 measured) repetitions per case;
++  - the unchanged runner, statistics and R1–R3;
++  - confirmed only if every check passes and all 8 primary verdicts (case × tier × mean and
++    median of the plain e2e difference) are "batched faster";
++  - the flag is `m3_confirm_v1_confirmed`. It does not change the M3 result and does not by
++    itself authorize a default change.
++- **Freeze:** after review and before measurement, `scripts/m3_confirm.py freeze` writes a
++  manifest without a commit. It records the base HEAD, the diff, the actual bytes of every
++  executable file (untracked included), the documents, the commands and the stack, which must
++  equal the M3 stack. The launch, every session record, the batch record and the analysis are
++  checked against that manifest, not against each other. While an analysis file differs from
++  its frozen bytes, the analysis rejects the evidence under this spec. Restoring the frozen
++  bytes reproduces the frozen analysis of the preserved raw measurements, which a later
++  source edit does not invalidate. Adopting a revised analysis needs a new spec.
++- **Execution:** one 1,800 s monotonic deadline for the whole batch, rechecked before every
++  launch and before accepting a session's exit. No early stopping, retries, replacements or
++  extensions.
++  - **Stopping:** any nonzero session exit stops the batch: nothing further is launched,
++    whatever the session file says. The project owner chose this over a correctness-only
++    exception after the preparation review (2026-11-03).
++  - **Execution status:** it is recorded separately from evidence completeness. The wrapper
++    returns nonzero for every execution failure. The analysis judges the actual evidence:
++    exit 3 for missing, inconsistent, timed-out, OOM-affected or excluded-sample evidence;
++    exit 4 for complete, consistent evidence with a failed check, which the stopping rule
++    allows only in the last session.
++  - **Visibility of failures:** recorded correctness failures are listed in every case.
++  - **Process groups:** each session runs in its own process group. Stop signals are received
++    synchronously, so cleanup always terminates and reaps that group and signals nothing else.
++    SIGKILL of the wrapper is covered only by the parent-death signal.
++- **Exact identities:** the runner draws all randomness from the session seed, so the
++  validator replays the whole sample sequence, not only counts. The replay reproduces all
++  6,480 M3 sample identities.
++- **Times as numbers** (preparation review 2, 2026-11-04): every compared time must be a JSON
++  number, not a boolean, that converts to a finite float (`kvlab/m3_confirm.py` `finite()`).
++  - **Problem:** a JSON integer beyond the float range made the check itself raise
++    `OverflowError`, so the analysis crashed (exit 1, no report) instead of rejecting the
++    evidence. Accepting every integer would only move the crash into the analysis, which
++    subtracts and formats sample wall times as floats.
++  - **Shared with the frozen M3 spec:** the sample wall-time check (`t_wall`) now uses the same
++    helper. For `FROZEN_M3_EVAL` this changes only malformed input: JSON `true` was accepted as
++    a time and an out-of-range integer crashed the check; both are now invalid evidence
++    (exit 3). The spec itself and its decision on the preserved M3 evaluation are unchanged.
++- **Rejected:**
++  - pooling with M3, or adding sessions to M3: outcome-dependent;
++  - a generic orchestration framework: not needed for five sequential commands;
++  - writing samples incrementally: it would change the runner and the timed loop.
+diff --git a/kvlab/m3_validate.py b/kvlab/m3_validate.py
+index b466d94..26c62c2 100644
+--- a/kvlab/m3_validate.py
++++ b/kvlab/m3_validate.py
+@@ -25,16 +25,31 @@ specification (`SPECS`) before any statistic is computed, and returns one of thr
+ Acceptance is recomputed from the detailed checks against counts that come from the spec, so an
+ empty or partial set of checks can never pass. Stored summary flags are compared, never trusted.
+ 
++Specs:
++- `FROZEN_M3_EVAL`: the M3 evaluation, unchanged. Its provenance is the Git HEAD in the spec.
++- `M3_CONFIRM_V1` (docs/M3_CONFIRM_PROTOCOL.md): the preregistered confirmation. It also
++  requires:
++  - the exact sample sequence the runner draws from each seed;
++  - a match with the independently frozen manifest: base HEAD, diff, file bytes, commands and
++    stack (kvlab/m3_confirm.py);
++  - a finalized batch record whose session-file hashes match: every planned session launched,
++    none killed, none launched after a nonzero exit, all ended before the deadline, and no stop
++    other than a nonzero exit. A nonzero exit itself is not an evidence problem: the reports
++    are judged on their contents;
++  - a closed file listing of the run directory, which also rejects any profiler evidence;
++  - the analysis files still having their frozen bytes.
++
+ No model weights and no CUDA are needed. Only the per-sample M2/M3 rules
+ (`kvlab.m3_bench.sample_problems`) are imported, lazily; that imports torch but does not
+ initialise CUDA or load the model.
+ """
+ 
+ import json
+-import math
++import random
+ from collections import Counter
+ from pathlib import Path
+ 
++from kvlab import m3_confirm as mc
+ from kvlab import perf
+ 
+ C = perf.C
+@@ -74,8 +89,63 @@ FROZEN_M3_EVAL = {
+     "profile_session": {"id": "prof", "cases": ((256, 32), (1536, 128), (4096, 64)),
+                         "units": ("restore", "request")},
+ }
+-SPECS = {FROZEN_M3_EVAL["name"]: FROZEN_M3_EVAL}
++# M3_CONFIRM_V1 (docs/M3_CONFIRM_PROTOCOL.md): the preregistered confirmation of (1024, 1) plus one
++# fresh 5-chunk case. The runner and its ordering semantics are the M3 ones, unchanged. Unlike the
++# frozen M3 spec, the provenance (base HEAD, diff, file bytes, stack, commands) is not written here:
++# it comes from the independently frozen manifest (kvlab/m3_confirm.py), which every session file
++# and the batch record must match. Keys absent from FROZEN_M3_EVAL switch on the stricter checks
++# below; FROZEN_M3_EVAL is unchanged. The one shared change: a sample's t_wall must convert to a
++# finite float (mc.finite), so JSON true and an out-of-range integer are malformed (decisions D31).
++M3_CONFIRM_V1 = {
++    "name": "M3_CONFIRM_V1",
++    "source": "docs/M3_CONFIRM_PROTOCOL.md + the freeze manifest results/m3_confirm/M3_CONFIRM_V1.freeze.json",
++    "git_head": None,  # from the freeze manifest
++    "provenance": "freeze_manifest",
++    "freeze_manifest": "results/m3_confirm/M3_CONFIRM_V1.freeze.json",
++    "run_dir": "results/m3_confirm/M3_CONFIRM_V1_run",
++    "python": ".venv/bin/python",
++    "session_env": {"HF_HUB_OFFLINE": "1"},
++    # the process environment every M3 evaluation session recorded (diag_harness.process_record)
++    "required_process_env": {"OMP_NUM_THREADS": None, "MKL_NUM_THREADS": None, "CUDA_LAUNCH_BLOCKING": None,
++                             "PYTORCH_CUDA_ALLOC_CONF": None, "CUDA_MODULE_LOADING": None, "HF_HUB_OFFLINE": "1"},
++    "budget_s": 1800,  # whole batch, monotonic, from launching the first session process
++    "sessions": {"c1": 32001, "c2": 32002, "c3": 32003, "c4": 32004, "c5": 32005},
++    "cases": ((1024, 1), (1280, 96)),
++    "blocks": 4,
++    "warmup": 2,
++    # the runner's process warmup, sorted({min(cases), max(cases)}): with two cases, both of them
++    "process_warmup": {"cases": ((1024, 1), (1280, 96)), "repeats": 2},
++    "reps": 24,
++    "staging_chunks": 4,
++    "num_layers": 28,
++    "tiers": FROZEN_M3_EVAL["tiers"],
++    "backends": FROZEN_M3_EVAL["backends"],
++    "combos": FROZEN_M3_EVAL["combos"],
++    "executed_sources": FROZEN_M3_EVAL["executed_sources"],
++    "profile_session": None,      # no profiler run: any profiler evidence is rejected
++    "exact_sequence": True,       # every sample identity, in file order, replayed from the seed
++    "count_restore_memory": True,
++    "decision_rule": "confirm_all_primary",
++    "primary_statistics": ("median_d", "mean_d"),
++    "required_model": {"model_id": "Qwen/Qwen2.5-1.5B-Instruct", "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
++                       "dtype": "torch.bfloat16", "attn_implementation": "sdpa", "num_hidden_layers": 28},
++    # the stack recorded by every M3 evaluation session (results/m3/eval_20261103T173632)
++    "required_stack": {"python": "3.14.4", "torch": "2.14.1+cu130", "transformers": "5.22.1", "cuda": "13.0",
++                       "gpu_name": "NVIDIA GeForce RTX 4080 Laptop GPU", "driver_version": "596.49",
++                       "weights_blob": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
++                       "weights_bytes": 3087467144},
++    "required_packages": {
++        "huggingface_hub": "2.4.0", "numpy": "2.5.4", "nvidia-cublas": "13.1.1.3", "nvidia-cuda-cupti": "13.0.85",
++        "nvidia-cuda-nvrtc": "13.0.88", "nvidia-cuda-runtime": "13.0.96", "nvidia-cudnn-cu13": "9.24.0.43",
++        "nvidia-cufft": "12.0.0.61", "nvidia-cufile": "1.15.1.6", "nvidia-curand": "10.4.0.35",
++        "nvidia-cusolver": "12.0.4.66", "nvidia-cusparse": "12.6.3.3", "nvidia-cusparselt-cu13": "0.8.1",
++        "nvidia-nccl-cu13": "2.30.7", "nvidia-nvjitlink": "13.4.92", "nvidia-nvshmem-cu13": "3.4.5",
++        "nvidia-nvtx": "13.0.85", "safetensors": "0.8.0", "tokenizers": "0.23.3", "torch": "2.14.1+cu130",
++        "transformers": "5.22.1", "triton": "3.8.0"},
++}
++SPECS = {FROZEN_M3_EVAL["name"]: FROZEN_M3_EVAL, M3_CONFIRM_V1["name"]: M3_CONFIRM_V1}
+ DEFAULT_SPEC = FROZEN_M3_EVAL["name"]
++ROOT = Path(__file__).resolve().parent.parent
+ 
+ SESSION_SECTIONS = ("meta", "source", "restore_config", "samples", "correctness", "ab_checks",
+                     "restore_memory", "failures", "blocks", "excluded")
+@@ -86,6 +156,8 @@ CORRECTNESS_FIELDS = ("L", "S", "host_restore_len", "host_sources", "disk_restor
+ # M3Bench.ab_check (kvlab/m3_bench.py) boolean fields per tier
+ AB_FIELDS = ("restore_len_sources_admission_equal", "kv_bytes_equal_after_prefill",
+              "first_logits_bitwise_equal", "greedy_tokens_equal", "step_logits_bitwise_equal")
++# extra sections a session must have when its provenance is checked against a freeze manifest
++PROVENANCE_SECTIONS = ("environment", "packages", "weights", "model", "process")
+ MAX_LISTED = 5  # sample-level problems listed individually per session; the rest are counted
+ 
+ 
+@@ -98,7 +170,7 @@ def _warmup_field_problems(s: dict) -> list[str]:
+     """Fields a kept warmup record must have; the analysis lists every warmup in
+     samples_chronological.csv but never uses its timing."""
+     ph = s.get("phases_ns")
+-    checks = (("t_wall", isinstance(s.get("t_wall"), (int, float)) and math.isfinite(s["t_wall"])),
++    checks = (("t_wall", mc.finite(s.get("t_wall"))),
+               ("e2e_ns", isinstance(s.get("e2e_ns"), int) and s["e2e_ns"] > 0),
+               ("restore_len", isinstance(s.get("restore_len"), int)),
+               ("sources", isinstance(s.get("sources"), list)),
+@@ -136,13 +208,16 @@ def _new_counts(spec):
+            "process_warmup_samples": n_s * len(pw["cases"]) * len(spec["combos"]) * pw["repeats"],
+            "correctness_checks": n_s * n_c * len(spec["backends"]),
+            "ab_checks": n_s * n_c * len(spec["tiers"])}
++    if spec.get("count_restore_memory"):  # one record per session x case, every tier x backend
++        exp["restore_memory_records"] = n_s * n_c
+     return {k: {"expected": v, "present": 0, "passed": 0} for k, v in exp.items()}
+ 
+ 
+-def _check_session(sid, rep, spec, P, fail, counts):
++def _check_session(sid, rep, spec, P, fail, counts, prov=None):
+     """Append problems (P) and failed checks (fail) for one evaluation session. Returns the
+-    recomputed per-session acceptance of its correctness and A/B checks."""
+-    missing = [k for k in SESSION_SECTIONS if k not in rep]
++    recomputed per-session acceptance of its correctness and A/B checks. `prov` (specs with a
++    freeze manifest) holds the manifest the session must match."""
++    missing = [k for k in SESSION_SECTIONS + (PROVENANCE_SECTIONS if prov else ()) if k not in rep]
+     if missing:
+         P(f"missing sections {missing}")
+         return False
+@@ -166,8 +241,13 @@ def _check_session(sid, rep, spec, P, fail, counts):
+     if meta.get("session") != sid or meta.get("seed") != seed:
+         P(f"meta session/seed {meta.get('session')!r}/{meta.get('seed')!r}, spec {sid!r}/{seed}")
+     head = rep["source"].get("git_head") if isinstance(rep["source"], dict) else None
+-    if head != spec["git_head"]:
+-        P(f"git_head {head!r}, spec {spec['git_head']}")
++    want_head = prov["manifest"].get("base_git_head") if prov else spec["git_head"]
++    if head != want_head:
++        P(f"git_head {head!r}, {'frozen base' if prov else 'spec'} {want_head}")
++    if prov:
++        _check_provenance(sid, rep, spec, prov, P)
++    if spec["profile_session"] is None and ("profile" in rep or args.get("profile") is not False):
++        P("unexpected profiler evidence (this experiment plans no profiler run)")
+     if not isinstance(rep["restore_config"], dict) or \
+             rep["restore_config"].get("restore_staging_chunks") != spec["staging_chunks"]:
+         P(f"restore_config {rep['restore_config']!r}, spec staging_chunks {spec['staging_chunks']}")
+@@ -182,6 +262,8 @@ def _check_session(sid, rep, spec, P, fail, counts):
+     blocks = [(b.get("block"), b.get("L"), b.get("S")) if isinstance(b, dict) else None for b in rep["blocks"]]
+     if blocks != [(i, *order[i]) for i in range(n_blocks)]:
+         P(f"block records {blocks} do not match the block order")
++    if spec.get("exact_sequence"):
++        _check_sequence(rep, spec, sid, order, P)
+ 
+     # ---- sample identities: (block, rep, path, backend, mode), exactly once each, for measured
+     # and block-warmup repetitions alike; process warmups by (case, combination) multiplicity.
+@@ -270,7 +352,7 @@ def _check_session(sid, rep, spec, P, fail, counts):
+     for key, s in measured.items():
+         rule = _sample_problems(s, spec["num_layers"])
+         mem = s.get("mem") if isinstance(s.get("mem"), dict) else {}
+-        field = [f for f, ok in (("t_wall", isinstance(s.get("t_wall"), (int, float)) and math.isfinite(s["t_wall"])),
++        field = [f for f, ok in (("t_wall", mc.finite(s.get("t_wall"))),
+                                  *((f"mem.{k}", isinstance(mem.get(k), int))
+                                    for k in ("allocated_before", "peak_allocated", "peak_reserved"))) if not ok]
+         n_rule += bool(rule)
+@@ -295,8 +377,16 @@ def _check_session(sid, rep, spec, P, fail, counts):
+     ab_ok = _check_records(rep["ab_checks"], cases, "A/B", P, lambda a: _case(a.get("L"), a.get("S")),
+                            lambda a, case: _check_ab(a, case, spec, P, fail, sid, counts["ab_checks"]))
+     # ---- restore-only memory: one record per spec case, every tier x backend a full restore
++    mem_count = counts.get("restore_memory_records")
++
++    def mem_check(m, case):
++        ok = _check_restore_memory(m, case, spec, P)
++        if mem_count is not None:
++            mem_count["present"] += 1
++            mem_count["passed"] += ok
++        return ok
+     _check_records(rep["restore_memory"], cases, "restore_memory", P, lambda m: _case(m.get("L"), m.get("S")),
+-                   lambda m, case: _check_restore_memory(m, case, spec, P))
++                   mem_check)
+     session_ok = corr_ok and ab_ok
+     if meta.get("correctness_all") is not session_ok:
+         P(f"stored correctness_all={meta.get('correctness_all')!r}, but the detailed correctness and A/B "
+@@ -304,6 +394,99 @@ def _check_session(sid, rep, spec, P, fail, counts):
+     return session_ok
+ 
+ 
++def expected_sequence(spec, sid):
++    """The runner's sample order (scripts/m3_measure.py), replayed from the session seed:
++    (block order, [(stage, L, S, block, rep, order_pos, (path, backend, mode))] in file order).
++    The runner draws, from one random.Random(seed): one shuffle of the cases (repeated `blocks`
++    times), then one shuffle of the combinations per repetition. The process warmup runs every
++    combination twice, in COMBOS order, at sorted({min(cases), max(cases)}), before block 0."""
++    rng = random.Random(spec["sessions"][sid])
++    cases = [tuple(c) for c in spec["cases"]]  # the --cases order of the frozen command
++    combos = [tuple(c) for c in spec["combos"]]
++    order = cases[:]
++    rng.shuffle(order)
++    block_cases = [c for _ in range(spec["blocks"]) for c in order]
++    seq = [("process_warmup", L, S, None, None, None, combo)
++           for L, S in sorted({min(cases), max(cases)}) for combo in combos for _ in range(2)]
++    for bi, (L, S) in enumerate(block_cases):
++        for r in range(spec["warmup"] + spec["reps"]):
++            cs = list(combos)
++            rng.shuffle(cs)
++            seq += [("m3", L, S, bi, r, pos, combo) for pos, combo in enumerate(cs)]
++    return block_cases, seq
++
++
++def _check_sequence(rep, spec, sid, order, P):
++    """Exact identities and order: every sample, in file order, is the one the runner draws at
++    that position for this seed; recorded wall times never go backwards; the per-case checks
++    follow the first pass of the block order."""
++    block_cases, seq = expected_sequence(spec, sid)
++    if order != block_cases:
++        P(f"block_order {order} is not the runner's order for seed {spec['sessions'][sid]}: {block_cases}")
++    got = [(s.get("stage"), s.get("L"), s.get("S"), s.get("block"), s.get("rep"), s.get("order_pos"),
++            (s.get("path"), s.get("backend"), s.get("mode"))) if isinstance(s, dict) else None for s in rep["samples"]]
++    if got != seq:
++        i = next((i for i, (a, b) in enumerate(zip(got, seq)) if a != b), min(len(got), len(seq)))
++        P(f"sample sequence differs from the runner's order for seed {spec['sessions'][sid]} at sample {i} "
++          f"(found {got[i] if i < len(got) else 'end'}, expected {seq[i] if i < len(seq) else 'end'}; "
++          f"{len(got)} samples, {len(seq)} planned)")
++    tw = [s.get("t_wall") if isinstance(s, dict) else None for s in rep["samples"]]
++    if not all(isinstance(x, (int, float)) for x in tw) or any(b < a for a, b in zip(tw, tw[1:])):
++        P("sample wall times are missing or not in file order")
++    first = block_cases[:len(spec["cases"])]
++
++    def corr_case(c):
++        e = c.get(spec["backends"][0])
++        return _case(e.get("L"), e.get("S")) if isinstance(e, dict) else None
++    for what, recs, case_of in (("correctness", rep["correctness"], corr_case),
++                                ("A/B", rep["ab_checks"], lambda a: _case(a.get("L"), a.get("S"))),
++                                ("restore_memory", rep["restore_memory"], lambda m: _case(m.get("L"), m.get("S")))):
++        got_cases = [case_of(x) if isinstance(x, dict) else None for x in recs] if isinstance(recs, list) else None
++        if got_cases != first:
++            P(f"{what} records are for cases {got_cases}, not the first pass of the block order {first}")
++
++
++def _check_provenance(sid, rep, spec, prov, P):
++    """The session ran the frozen command, from the frozen tree, on the required stack."""
++    m = prov["manifest"]
++    src = rep["source"] if isinstance(rep["source"], dict) else {}
++    if src.get("git_diff_head_sha256") != m.get("git_diff_head_sha256"):
++        P("git diff HEAD differs from the frozen diff")
++    files, frozen = src.get("files_sha256"), m.get("files_sha256")
++    if files != frozen:
++        files, frozen = files if isinstance(files, dict) else {}, frozen if isinstance(frozen, dict) else {}
++        P(f"source files differ from the freeze: {sorted(f for f in set(files) | set(frozen) if files.get(f) != frozen.get(f))}")
++    args = rep["meta"].get("args")
++    if args != mc.expected_args(spec, sid):
++        P(f"recorded arguments {args!r} differ from the frozen command {mc.expected_args(spec, sid)!r}")
++    env = rep["environment"] if isinstance(rep["environment"], dict) else {}
++    req, stack = spec["required_stack"], m.get("stack") or {}
++    for k in ("torch", "transformers", "cuda", "python"):
++        if env.get(k) != req[k]:
++            P(f"environment {k} {env.get(k)!r}, required {req[k]!r}")
++    gs = mc.parse_gpu_static(env.get("gpu_static"))
++    if env.get("gpu") != req["gpu_name"] or gs != {k: stack.get(k) for k in ("gpu_name", "driver_version")}:
++        P(f"GPU {env.get('gpu')!r} / {gs}, frozen {stack.get('gpu_name')!r} driver {stack.get('driver_version')!r}")
++    for k in ("kernel", "cpu"):
++        if env.get(k) != stack.get(k):
++            P(f"environment {k} {env.get(k)!r}, frozen {stack.get(k)!r}")
++    if rep["packages"] != stack.get("packages") or rep["packages"] != spec["required_packages"]:
++        P("package versions differ from the frozen and required stack")
++    if rep["weights"] != stack.get("weights"):
++        P("model weight files differ from the freeze")
++    model = rep["model"] if isinstance(rep["model"], dict) else {}
++    if {k: model.get(k) for k in spec["required_model"]} != spec["required_model"]:
++        P(f"model {({k: model.get(k) for k in spec['required_model']})}, required {spec['required_model']}")
++    penv = (rep["process"] or {}).get("env") if isinstance(rep["process"], dict) else None
++    if penv != spec["required_process_env"]:
++        P(f"process environment {penv!r}, required {spec['required_process_env']}")
++    started = rep["meta"].get("started_unix")
++    launched = (prov.get("batch") or {}).get("launched_unix") if isinstance(prov.get("batch"), dict) else None
++    fr = m.get("frozen_unix")
++    if not mc.finite(started) or not mc.finite(fr) or started < fr or not mc.finite(launched) or started < launched:
++        P(f"session started at {started!r}, not after the freeze ({fr!r}) and the batch launch ({launched!r})")
++
++
+ def _check_records(records, cases, what, P, case_of, check) -> bool:
+     """Exactly one record per spec case; `check(record, case)` -> passed. True only if every
+     spec case has exactly one record and every one passed."""
+@@ -389,7 +572,7 @@ def _check_ab(a, case, spec, P, fail, sid, count) -> bool:
+ 
+ 
+ def _check_restore_memory(m, case, spec, P) -> bool:
+-    n = case[0] // C
++    n, ok = case[0] // C, True
+     for tier in spec["tiers"]:
+         for b in spec["backends"]:
+             r = m.get(f"{tier}_{b}")
+@@ -398,7 +581,8 @@ def _check_restore_memory(m, case, spec, P) -> bool:
+                     not isinstance(r.get("peak_above_start"), int) or not isinstance(r.get("kept_after_return"), int) or \
+                     lr.get("backend") != b or lr.get("chunks_loaded") != n:
+                 P(f"restore_memory {case} {tier}_{b}: missing, incomplete or not a full {b} restore from {tier}")
+-    return True
++                ok = False
++    return ok
+ 
+ 
+ def _check_profile(rep, spec, P):
+@@ -421,21 +605,101 @@ def _check_profile(rep, spec, P):
+         P(f"profile rows {sorted(keys)} differ from the planned {len(want)} (case, tier, backend, unit) rows")
+ 
+ 
+-def load_and_validate(run_dir, spec=FROZEN_M3_EVAL):
++def _load_provenance(rd, spec, freeze, root, expect_sha, problems):
++    """Freeze manifest + batch record + closed file listing of the run directory."""
++    path = Path(root) / spec["freeze_manifest"] if freeze is None else Path(freeze)
++    info = {"freeze_manifest": str(path), "freeze_manifest_sha256": None, "batch_record_sha256": None}
++    try:
++        data = path.read_bytes()
++        manifest = mc.load_json_finite(data)  # NaN/Infinity would defeat every time comparison
++        info["freeze_manifest_sha256"] = mc.sha256_bytes(data)
++    except (OSError, ValueError) as e:
++        problems.append(f"freeze manifest {path} missing or unreadable: {e}")
++        return None, info
++    if expect_sha is not None and info["freeze_manifest_sha256"] != expect_sha:
++        problems.append(f"freeze manifest sha256 {info['freeze_manifest_sha256']} != the expected {expect_sha}")
++    try:
++        problems += mc.manifest_problems(manifest, spec, root)
++    except (AttributeError, KeyError, TypeError, ValueError) as e:  # malformed field: fail closed
++        problems.append(f"malformed freeze manifest: {e!r}")
++    try:
++        data = (rd / mc.BATCH_RECORD).read_bytes()
++        batch = mc.load_json_finite(data)
++        info["batch_record_sha256"] = mc.sha256_bytes(data)
++    except (OSError, ValueError) as e:
++        problems.append(f"batch record {mc.BATCH_RECORD} missing or unreadable: {e}")
++        batch = None
++    if batch is not None:
++        try:
++            problems += mc.batch_problems(batch, manifest if isinstance(manifest, dict) else {},
++                                          info["freeze_manifest_sha256"], rd, spec)
++        except (AttributeError, KeyError, TypeError, ValueError) as e:
++            problems.append(f"malformed batch record: {e!r}")
++        if isinstance(batch, dict):  # execution, reported as recorded; the evidence is judged separately
++            info["execution"] = {
++                "execution_status": batch.get("execution_status"), "stop": batch.get("stop"),
++                "not_launched": batch.get("not_launched"),
++                "returncodes": {e.get("session"): e.get("returncode") for e in batch.get("sessions") or []
++                                if isinstance(e, dict)}}
++    present = {p.relative_to(rd).as_posix() for p in rd.rglob("*") if not p.is_dir()}
++    want = mc.run_dir_files(spec)
++    for f in sorted(present - want):
++        problems.append(f"unexpected file in the run directory: {f}")
++    for f in sorted(want - present - {f"session_{s}.json" for s in spec["sessions"]} - {mc.BATCH_RECORD}):
++        problems.append(f"missing file in the run directory: {f}")
++    return {"manifest": manifest if isinstance(manifest, dict) else {}, "batch": batch}, info
++
++
++def _check_batch_sessions(sessions, prov, spec, problems):
++    """Sequential fresh processes; each exit code is the runner's own verdict on its record."""
++    entries = {e.get("session"): e for e in (prov["batch"] or {}).get("sessions") or [] if isinstance(e, dict)}
++    prev, pids = None, set()
++    for sid in spec["sessions"]:
++        rep = sessions.get(sid)
++        if not isinstance(rep, dict) or not isinstance(rep.get("meta"), dict):
++            prev = None
++            continue
++        m = rep["meta"]
++        pid = (rep.get("process") or {}).get("pid") if isinstance(rep.get("process"), dict) else None
++        if pid in pids or pid is None:
++            problems.append(f"{sid}: process id {pid!r} is missing or repeats an earlier session")
++        elif pid != (entries.get(sid) or {}).get("pid"):
++            problems.append(f"{sid}: process id {pid} is not the process the batch launched "
++                            f"({(entries.get(sid) or {}).get('pid')!r})")
++        pids.add(pid)
++        times = [s.get("t_wall") for s in rep.get("samples") or [] if isinstance(s, dict)]
++        if prev is not None and (not mc.finite(m.get("started_unix")) or m["started_unix"] <= prev):
++            problems.append(f"{sid}: started at {m.get('started_unix')!r}, before the previous session's last sample {prev}")
++        prev = max((x for x in times if mc.finite(x)), default=None)
++        ok_run = m.get("correctness_all") is True and rep.get("failures") == [] and m.get("n_excluded") == 0
++        rc = (entries.get(sid) or {}).get("returncode")
++        if rc != (0 if ok_run else 1):
++            problems.append(f"{sid}: exit code {rc!r} disagrees with the session record (runner success {ok_run})")
++
++
++def load_and_validate(run_dir, spec=FROZEN_M3_EVAL, *, freeze=None, root=ROOT, expect_freeze_sha256=None):
+     """Validate a run directory against `spec`. Returns (report, sessions, profile):
+     report["status"] is "valid", "invalid" or "correctness_failed" (see the module docstring);
+     sessions maps each loaded evaluation session id (spec order) to its parsed JSON; profile is
+-    the parsed profile session or None."""
++    the parsed profile session or None. For a spec with a freeze manifest, `freeze` overrides
++    the manifest path (default: the spec's, under `root`), and `expect_freeze_sha256`, if
++    given, must be the manifest's SHA-256 as recorded out of band at freeze time."""
+     rd = Path(run_dir)
+     problems, fail, counts = [], [], _new_counts(spec)
+     sessions, prof, per_session = {}, None, {}
++    prov, prov_info = None, None
++    if spec.get("provenance") == "freeze_manifest":
++        prov, prov_info = _load_provenance(rd, spec, freeze, root, expect_freeze_sha256, problems)
++        if prov is None:
++            prov = {"manifest": {}, "batch": None}
+     found = {p.stem.removeprefix("session_"): p for p in sorted(rd.glob("session_*.json"))}
+-    prof_id = spec["profile_session"]["id"]
++    prof_id = spec["profile_session"]["id"] if spec["profile_session"] else None
+     for sid in spec["sessions"]:
+         if sid not in found:
+             problems.append(f"missing session file session_{sid}.json (spec {spec['name']}: {list(spec['sessions'])})")
+     for sid in sorted(set(found) - set(spec["sessions"]) - {prof_id}):
+-        problems.append(f"unexpected session file {found[sid].name} (not in spec {spec['name']})")
++        problems.append(f"unexpected session file {found[sid].name} (not in spec {spec['name']}"
++                        f"{'; this experiment plans no profiler session' if prof_id is None else ''})")
+     for sid in (s for s in spec["sessions"] if s in found):
+         try:
+             rep = json.loads(found[sid].read_text())
+@@ -448,12 +712,17 @@ def load_and_validate(run_dir, spec=FROZEN_M3_EVAL):
+         sessions[sid] = rep
+         n0 = len(problems)
+         try:
+-            ok = _check_session(sid, rep, spec, lambda m, sid=sid: problems.append(f"{sid}: {m}"), fail, counts)
++            ok = _check_session(sid, rep, spec, lambda m, sid=sid: problems.append(f"{sid}: {m}"), fail, counts, prov)
+         except (AttributeError, KeyError, TypeError, ValueError) as e:  # malformed nested record: fail closed
+             problems.append(f"{sid}: malformed session record: {e!r}")
+             ok = False
+         per_session[sid] = {"problems": len(problems) - n0, "correctness_and_ab_pass_recomputed": ok}
+-    if prof_id in found:
++    if prov is not None:
++        try:
++            _check_batch_sessions(sessions, prov, spec, problems)
++        except (AttributeError, KeyError, TypeError, ValueError) as e:
++            problems.append(f"malformed session or batch record: {e!r}")
++    if prof_id is not None and prof_id in found:
+         try:
+             prof = json.loads(found[prof_id].read_text())
+             _check_profile(prof, spec, lambda m: problems.append(f"{prof_id}: {m}"))
+@@ -476,6 +745,9 @@ def load_and_validate(run_dir, spec=FROZEN_M3_EVAL):
+         problems.append("a session lacks source.files_sha256")
+ 
+     complete = all(c["present"] == c["passed"] == c["expected"] for c in counts.values())
++    # Status precedence: invalid (exit 3) > correctness_failed (exit 4) > valid. Detailed
++    # correctness/A-B failures found in any parseable session are listed in
++    # `correctness_failures` whatever the status, so an invalid or incomplete batch never hides them.
+     status = "invalid" if problems or (not fail and not complete) else "correctness_failed" if fail else "valid"
+     acceptance = status == "valid" and complete
+     report = {"spec": spec["name"], "spec_source": spec["source"], "run_dir": str(rd), "status": status,
+@@ -483,4 +755,7 @@ def load_and_validate(run_dir, spec=FROZEN_M3_EVAL):
+               "sessions_expected": list(spec["sessions"]), "session_files_found": sorted(found),
+               "profile_session_present": prof is not None, "per_session": per_session, "counts": counts,
+               "correctness_and_ab_acceptance_recomputed": acceptance}
++    if prov_info is not None:
++        report["provenance"] = prov_info
++        report["correctness_failures_observed"] = bool(fail)
+     return report, sessions, prof
+diff --git a/scripts/m3_analyze.py b/scripts/m3_analyze.py
+index 1de455a..1676c3f 100644
+--- a/scripts/m3_analyze.py
++++ b/scripts/m3_analyze.py
+@@ -2,7 +2,10 @@
+ 
+ Usage: .venv/bin/python scripts/m3_analyze.py --run-dir results/m3/<eval run> [--out-dir <new dir>]
+            [--spec m3_eval_20261103T173632]
+-Reads session_*.json without modifying them.
++       .venv/bin/python scripts/m3_analyze.py --spec M3_CONFIRM_V1 --run-dir results/m3_confirm/M3_CONFIRM_V1_run
++           --out-dir <new dir outside the run dir> [--freeze <manifest>] [--expect-freeze-sha256 <hex>]
++Reads session_*.json without modifying them. The spec is selected explicitly; the default is the
++frozen M3 evaluation, whose behavior is unchanged.
+ 
+ - **Validation first** (kvlab/m3_validate.py, BUGLOG VAL-006). The run is checked against an
+   explicit experiment specification: planned sessions, cases, blocks, repetitions, every
+@@ -10,17 +13,23 @@ Reads session_*.json without modifying them.
+   acceptance is recomputed from the detailed checks. m3_validation.json is always written.
+ - **Analysis.** Only if the evidence is valid, the analysis writes m3_analysis.json,
+   m3_analysis.md and samples_chronological.csv.
+-- **Output.** Everything goes to --out-dir (default: the run directory). The script refuses to
+-  overwrite.
++- **Output.** Everything goes to --out-dir (default: the run directory; M3_CONFIRM_V1 requires a
++  separate directory, because its run directory has a closed file listing). The script refuses
++  to overwrite.
++- **M3_CONFIRM_V1.** The evidence must also match the freeze manifest and a complete batch
++  record (kvlab/m3_validate.py). The decision is the confirmation rule of
++  docs/M3_CONFIRM_PROTOCOL.md: it is scoped to that experiment, never pooled with M3, and it
++  does not change the default backend.
+ 
+ Exit codes:
+-- 0: valid evidence, analysis written. supports_adoption may still be false, for example
+-  when a required case is inconclusive.
++- 0: valid evidence, analysis written. supports_adoption (M3) or m3_confirm_v1_confirmed may
++  still be false, for example when a required case is inconclusive.
+ - 1: refused (an output exists, or the run directory is missing).
+ - 2: usage error.
+-- 3: invalid or incomplete evidence. No analysis is written, and supports_adoption is false.
++- 3: invalid or incomplete evidence (including an incomplete or interrupted batch). No analysis
++  is written, and the decision flag is false.
+ - 4: complete evidence, but a required correctness or A/B check failed. No analysis is
+-  written, and supports_adoption is false.
++  written, and the decision flag is false.
+ """
+ 
+ import argparse
+@@ -88,25 +97,73 @@ def decide(cases_out: dict, spec: dict, validation: dict) -> dict:
+             "evidence_status": validation.get("status"), "spec": spec["name"], "missing_from_analysis": missing}
+ 
+ 
++def decide_confirm(cases_out: dict, spec: dict, validation: dict) -> dict:
++    """docs/M3_CONFIRM_PROTOCOL.md §7: confirmed only if the evidence is valid, every correctness
++    and A/B check passes, and every primary verdict (case x tier x statistic, plain e2e) is
++    batched_faster. Driven by the spec's lists; a missing verdict is a failure. Scoped to this
++    experiment: it does not replace the M3 result and does not change the default backend."""
++    gates = validation.get("status") == "valid" and validation.get("correctness_and_ab_acceptance_recomputed") is True
++    verdicts = {}
++    for L, S in spec["cases"]:
++        for tier in spec["tiers"]:
++            for st in spec["primary_statistics"]:
++                try:
++                    verdicts[f"{L}:{S} {tier} {st}"] = cases_out[f"{L}:{S}"]["tiers"][tier]["e2e"][st]["verdict"]
++                except (KeyError, TypeError):
++                    verdicts[f"{L}:{S} {tier} {st}"] = "missing"
++    need = [f"{k}: {v}" for k, v in verdicts.items() if v != "batched_faster"]
++    return {"experiment": spec["name"], "evidence_status": validation.get("status"), "spec": spec["name"],
++            "all_correctness_and_ab_checks_pass": gates, "primary_verdicts": verdicts,
++            "primary_not_established": need,
++            "established_regressions": [k for k, v in verdicts.items() if v == "batched_slower"],
++            "m3_confirm_v1_confirmed": gates and not need and len(verdicts) == len(spec["cases"]) * len(spec["tiers"]) *
++                                       len(spec["primary_statistics"]),
++            "scope": f"{spec['name']} only: this sample, machine and stack; not pooled with the M3 evaluation, "
++                     "whose supports_adoption=false is unchanged",
++            "default_backend": "baseline", "authorizes_default_change": False,
++            # reported whatever the evidence status: an invalid batch never hides a recorded failure
++            "observed_correctness_failures": list(validation.get("correctness_failures") or []),
++            "execution": (validation.get("provenance") or {}).get("execution")}
++
++
++DECIDE = {"m3_adoption": decide, "confirm_all_primary": decide_confirm}
++FLAG = {"m3_adoption": "supports_adoption", "confirm_all_primary": "m3_confirm_v1_confirmed"}
++
++
++def rule(spec) -> str:
++    return spec.get("decision_rule", "m3_adoption")
++
++
+ def main(argv=None) -> int:
+     ap = argparse.ArgumentParser()
+     ap.add_argument("--run-dir", required=True)
+     ap.add_argument("--out-dir", default=None, help="where to write the outputs (default: the run directory)")
+     ap.add_argument("--spec", default=mv.DEFAULT_SPEC, choices=sorted(mv.SPECS))
++    ap.add_argument("--freeze", default=None, help="freeze manifest (specs with one; default: the spec's path)")
++    ap.add_argument("--expect-freeze-sha256", default=None, help="the manifest SHA-256 recorded at freeze time")
+     args = ap.parse_args(argv)
++    spec = mv.SPECS[args.spec]
+     rd = Path(args.run_dir)
+     od = Path(args.out_dir) if args.out_dir else rd
++    frozen = spec.get("provenance") == "freeze_manifest"
++    if not frozen and (args.freeze or args.expect_freeze_sha256):
++        ap.error(f"--freeze / --expect-freeze-sha256 apply only to specs with a freeze manifest, not {spec['name']}")
++    if frozen and (args.out_dir is None or od.resolve() == rd.resolve() or rd.resolve() in od.resolve().parents):
++        ap.error(f"{spec['name']} needs --out-dir outside the run directory")
+     if not rd.is_dir():
+         sys.exit(f"run directory {rd} does not exist")
+     outs = [od / "m3_validation.json", od / "m3_analysis.json", od / "m3_analysis.md", od / "samples_chronological.csv"]
+     for o in outs:
+         if o.exists():
+             sys.exit(f"refusing to overwrite {o}")
+-    spec = mv.SPECS[args.spec]
+-    validation, sessions, prof = mv.load_and_validate(rd, spec)
++    if frozen:
++        validation, sessions, prof = mv.load_and_validate(rd, spec, freeze=args.freeze,
++                                                          expect_freeze_sha256=args.expect_freeze_sha256)
++    else:
++        validation, sessions, prof = mv.load_and_validate(rd, spec)
+     od.mkdir(parents=True, exist_ok=True)
+     if validation["status"] != "valid":
+-        validation["decision"] = decide({}, spec, validation)
++        validation["decision"] = DECIDE[rule(spec)]({}, spec, validation)
+         (od / "m3_validation.json").write_text(json.dumps(validation, indent=1))
+         print(render_rejected(validation))
+         return EXIT[validation["status"]]
+@@ -248,7 +305,7 @@ def main(argv=None) -> int:
+         out["cases"][f"{L}:{S}"] = crec
+ 
+     # ---- decision rule (protocol §8): spec-driven, gate (1) recomputed by the validation
+-    out["decision"] = decide(out["cases"], spec, validation)
++    out["decision"] = DECIDE[rule(spec)](out["cases"], spec, validation)
+     out["validation"] = {k: v for k, v in validation.items() if k != "per_session"}
+     (od / "m3_validation.json").write_text(json.dumps({**validation, "decision": out["decision"]}, indent=1))
+     if prof:
+@@ -269,8 +326,8 @@ def main(argv=None) -> int:
+                         f"{s['phases_ns']['restore'] / 1e6:.4f}" if s["mode"] == "synced" else "",
+                         s.get("slow", ""), s["restore_len"],
+                         "|".join(s["sources"]), "|".join(map(str, s["stored_chunks"]))])
+-    (od / "m3_analysis.md").write_text(render(out))
+-    print(render(out))
++    (od / "m3_analysis.md").write_text(render(out, spec))
++    print(render(out, spec))
+     return EXIT["valid"]
+ 
+ 
+@@ -278,17 +335,39 @@ def fmt_ci(r, scale=1.0, nd=2):
+     return f"{r['estimate'] * scale:.{nd}f} [{r['ci'][0] * scale:.{nd}f}, {r['ci'][1] * scale:.{nd}f}]"
+ 
+ 
+-def render(out) -> str:
+-    L = ["# M3 analysis (generated by scripts/m3_analyze.py)", "",
++HEADINGS = {
++    "m3_adoption": {
++        "title": "# M3 analysis (generated by scripts/m3_analyze.py)",
++        "rules_doc": "docs/M3_PROTOCOL.md §6 (R1–R3)",
++        "e2e": "## End-to-end first-token latency (plain, ms)",
++        "phase": "## Restore phase (synced diagnostic samples, ms)",
++        "speed": "## Speedups (plain e2e; b = 4; three different definitions)",
++        "rules": "## Rules R1–R3 and block-length sensitivity (plain e2e)",
++        "ctx": "## Context: restore path − full (prepared-state recompute), plain e2e, b = 4 (report only)"},
++    "confirm_all_primary": {
++        "title": "# M3_CONFIRM_V1 analysis (generated by scripts/m3_analyze.py; this experiment only, not pooled with M3)",
++        "rules_doc": "docs/M3_CONFIRM_PROTOCOL.md §6 (the M3 rules R1–R3, unchanged)",
++        "e2e": "## Primary: end-to-end first-token latency (plain, ms)",
++        "phase": "## Secondary: restore phase (synced diagnostic samples, ms; reported, not part of the confirmation rule)",
++        "speed": "## Descriptive: speedups (plain e2e; b = 4; three different definitions)",
++        "rules": "## Primary: rules R1–R3 and block-length sensitivity (plain e2e)",
++        "ctx": "## Context: restore path − full (prepared-state recompute), plain e2e, b = 4 (report only)"},
++}
++
++
++def render(out, spec=None) -> str:
++    kind = rule(spec) if spec else "m3_adoption"
++    H = HEADINGS[kind]
++    L = [H["title"], "",
+          "d = batched − baseline (ms), paired within a repetition. Intervals: stratified circular block "
+-         "bootstrap within contiguous blocks, 95% percentile. Verdicts follow docs/M3_PROTOCOL.md §6 (R1–R3).", ""]
++         f"bootstrap within contiguous blocks, 95% percentile. Verdicts follow {H['rules_doc']}.", ""]
+     L += ["## Sessions", "", "| session | seed | elapsed min | measured | excluded | correctness + A/B | SM clock median MHz | tiered_cache sha256 |",
+           "|---|---|---|---|---|---|---|---|"]
+     for sid, s in out["sessions"].items():
+         clk = s["sm_clock_mhz"]["median"] if s["sm_clock_mhz"] else "n/a"
+         L.append(f"| {sid} | {s['seed']} | {s['elapsed_min']:.1f} | {s['n_measured']} | {s['n_excluded_recomputed']} | "
+                  f"{s['correctness_all_recomputed']} | {clk} | `{(s['tiered_cache_sha256'] or '')[:12]}` |")
+-    L += ["", "## End-to-end first-token latency (plain, ms)", "",
++    L += ["", H["e2e"], "",
+           "| case | tier | baseline median / mean | batched median / mean | median d, b=4 [CI] | mean d, b=4 [CI] | median verdict | mean verdict | slow share base / batched |",
+           "|---|---|---|---|---|---|---|---|---|"]
+     for key, c in out["cases"].items():
+@@ -298,7 +377,7 @@ def render(out) -> str:
+                      f"{e['batched']['median']:.1f} / {e['batched']['mean']:.1f} | {fmt_ci(e['median_d']['by_block_len']['4'])} | "
+                      f"{fmt_ci(e['mean_d']['by_block_len']['4'])} | {e['median_d']['verdict']} | {e['mean_d']['verdict']} | "
+                      f"{e['slow_share']['baseline']:.0%} / {e['slow_share']['batched']:.0%} |")
+-    L += ["", "## Restore phase (synced diagnostic samples, ms)", "",
++    L += ["", H["phase"], "",
+           "| case | tier | baseline median / mean | batched median / mean | median d, b=4 [CI] | mean d, b=4 [CI] | median verdict | mean verdict |",
+           "|---|---|---|---|---|---|---|---|"]
+     for key, c in out["cases"].items():
+@@ -307,14 +386,14 @@ def render(out) -> str:
+             L.append(f"| {key} | {tier} | {e['baseline']['median']:.2f} / {e['baseline']['mean']:.2f} | "
+                      f"{e['batched']['median']:.2f} / {e['batched']['mean']:.2f} | {fmt_ci(e['median_d']['by_block_len']['4'])} | "
+                      f"{fmt_ci(e['mean_d']['by_block_len']['4'])} | {e['median_d']['verdict']} | {e['mean_d']['verdict']} |")
+-    L += ["", "## Speedups (plain e2e; b = 4; three different definitions)", "",
++    L += ["", H["speed"], "",
+           "| case | tier | marginal median ratio | marginal mean ratio | median of paired ratios |", "|---|---|---|---|---|"]
+     for key, c in out["cases"].items():
+         for tier in TIERS:
+             sp = c["tiers"][tier]["e2e"]["speedups"]
+             L.append(f"| {key} | {tier} | {fmt_ci(sp['marginal_median_ratio']['4'], nd=3)} | "
+                      f"{fmt_ci(sp['marginal_mean_ratio']['4'], nd=3)} | {fmt_ci(sp['median_paired_ratio']['4'], nd=3)} |")
+-    L += ["", "## Rules R1–R3 and block-length sensitivity (plain e2e)", "",
++    L += ["", H["rules"], "",
+           "| case | tier | stat | CI b=1 | CI b=2 | CI b=4 | CI b=8 | per-session range | R1 | R2 | span s / longest regime s | n_eff | verdict |",
+           "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+     for key, c in out["cases"].items():
+@@ -325,7 +404,7 @@ def render(out) -> str:
+                 L.append(f"| {key} | {tier} | {st} | {cis} | [{r['per_session_range'][0]:.2f}, {r['per_session_range'][1]:.2f}] | "
+                          f"{r['R1_all_block_lengths_agree']} | {r['R2_all_sessions_agree']} | "
+                          f"{r['R3']['span_s']:.0f} / {r['R3']['longest_slow_regime_s']:.1f} | {r['R3']['ar1_effective_n']:.1f} | {r['verdict']} |")
+-    L += ["", "## Context: restore path − full (prepared-state recompute), plain e2e, b = 4 (report only)", "",
++    L += ["", H["ctx"], "",
+           "| case | full median / mean | tier | baseline: median d / mean d | batched: median d / mean d |", "|---|---|---|---|---|"]
+     for key, c in out["cases"].items():
+         for tier in TIERS:
+@@ -364,6 +443,8 @@ def render(out) -> str:
+                 L.append(f"| {key} | {tier} | {st} | " + " | ".join(f"{ps.get(s, float('nan')):.2f}" for s in out["sessions"]) + " |")
+     d, v = out["decision"], out["validation"]
+     c = v["counts"]
++    if kind == "confirm_all_primary":
++        return "\n".join(L + render_confirm_decision(d, v))
+     L += ["", "## Decision rule (protocol §8)", "",
+           f"- evidence validation against spec `{v['spec']}`: **{v['status']}** "
+           f"({len(v['sessions_expected'])} planned sessions; measured samples "
+@@ -381,19 +462,52 @@ def render(out) -> str:
+     return "\n".join(L)
+ 
+ 
++def render_confirm_decision(d, v) -> list[str]:
++    c, pv = v["counts"], v.get("provenance") or {}
++    return ["", "## Confirmation rule (docs/M3_CONFIRM_PROTOCOL.md §7)", "",
++            f"- evidence validation against spec `{v['spec']}`: **{v['status']}** "
++            f"({len(v['sessions_expected'])} planned sessions; " +
++            "; ".join(f"{k} {x['passed']}/{x['expected']}" for k, x in c.items()) +
++            "; warmup records kept as evidence, never used in statistics; recomputed from the detailed records)",
++            f"- freeze manifest `{pv.get('freeze_manifest')}` sha256 `{pv.get('freeze_manifest_sha256')}`; "
++            f"batch record sha256 `{pv.get('batch_record_sha256')}`",
++            f"- all correctness and A/B checks pass: {d['all_correctness_and_ab_checks_pass']}",
++            *(f"- primary verdict {k}: {x}" for k, x in d["primary_verdicts"].items()),
++            f"- established regressions: {d['established_regressions'] or 'none'}",
++            f"- **M3_CONFIRM_V1 confirmed: {d['m3_confirm_v1_confirmed']}** ({d['scope']})",
++            f"- default backend: `{d['default_backend']}`; this result does not by itself authorize a default change", ""]
++
++
+ def render_rejected(v) -> str:
+     c = v["counts"]
++    ex = (v.get("provenance") or {}).get("execution")
++    extra = []
++    if ex is not None:
++        extra = [f"- batch execution (as recorded; not evidence completeness): status {ex.get('execution_status')!r}, "
++                 f"stop {ex.get('stop')!r}, exit codes {ex.get('returncodes')}, not launched {ex.get('not_launched')}"]
++    if v.get("provenance") is not None and v["correctness_failures"] and v["status"] == "invalid":
++        extra.append(f"- **observed correctness / A/B failures: {len(v['correctness_failures'])}** (listed below; "
++                     f"reported although the invalid evidence takes precedence, exit 3)")
+     L = [f"# M3 analysis NOT run: evidence status `{v['status']}` (spec `{v['spec']}`, run dir {v['run_dir']})", "",
++         *extra,
+          f"- session files found: {v['session_files_found'] or 'none'}; planned: {v['sessions_expected']}",
+          *(f"- {k}: {x['passed']} passed / {x['present']} present / {x['expected']} expected" for k, x in c.items()),
+          f"- problems ({len(v['problems'])}):", *(f"  - {p}" for p in v["problems"][:40]),
+          *([f"  - ... {len(v['problems']) - 40} more in m3_validation.json"] if len(v["problems"]) > 40 else []),
+          f"- failed correctness / A/B checks ({len(v['correctness_failures'])}):",
+          *(f"  - {p}" for p in v["correctness_failures"][:40]),
+-         "", f"**supports adoption: {v['decision']['supports_adoption']}** (no performance result is drawn from "
++         "", f"**{_flag_label(v['decision'])}: {v['decision'][_flag_key(v['decision'])]}** (no performance result is drawn from "
+              f"{'invalid or incomplete evidence' if v['status'] == 'invalid' else 'a run with a failed correctness check'})"]
+     return "\n".join(L)
+ 
+ 
++def _flag_key(decision) -> str:
++    return FLAG["confirm_all_primary"] if "m3_confirm_v1_confirmed" in decision else FLAG["m3_adoption"]
++
++
++def _flag_label(decision) -> str:
++    return "M3_CONFIRM_V1 confirmed" if "m3_confirm_v1_confirmed" in decision else "supports adoption"
++
++
+ if __name__ == "__main__":
+     sys.exit(main())
+diff --git a/tests/test_m3_analyze_validation.py b/tests/test_m3_analyze_validation.py
+index 42bc022..5a0307c 100644
+--- a/tests/test_m3_analyze_validation.py
++++ b/tests/test_m3_analyze_validation.py
+@@ -229,6 +229,24 @@ def test_missing_duplicate_or_unpaired_samples_are_invalid(tmp_path, texts, edit
+     assert_rejected(code, val, tmp_path / "run", expect=[expect])
+ 
+ 
++@pytest.mark.parametrize("where, value, expect", [
++    ("measured", 10 ** 400, "s2: sample (3, 5, 'host', 'batched', 'plain') fails the validity rules, so its pair is incomplete: ['t_wall']"),
++    ("first", 10 ** 400, "s2: sample 0: malformed process-warmup record: ['t_wall']"),
++    ("first", True, "s2: sample 0: malformed process-warmup record: ['t_wall']"),
++], ids=["huge_integer_measured", "huge_integer_warmup", "boolean_warmup"])
++def test_t_wall_must_convert_to_a_finite_float(tmp_path, texts, where, value, expect):
++    """The shared sample-field check (M3_CONFIRM_V1 review 2, P2): a JSON integer beyond the
++    float range crashed the analysis (OverflowError, exit 1, no report), and JSON true was
++    accepted as a time. Both are now malformed evidence. Recorded wall times are floats
++    (time.time()), so the historical analysis is unchanged
++    (test_complete_valid_report_reproduces_the_historical_analysis)."""
++    def edit(rep):
++        i = sample_index(rep, 3, 5, HOST_BATCHED_PLAIN) if where == "measured" else 0
++        rep["samples"][i]["t_wall"] = value
++    code, val = cli(make_run(tmp_path, texts, edits={"session_s2.json": edit}))
++    assert_rejected(code, val, tmp_path / "run", expect=[expect])
++
++
+ CASE = (1024, 1)
+ CHECK_EDITS = {
+     # missing records or fields, while every stored summary flag still says pass
