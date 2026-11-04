@@ -1,0 +1,6 @@
+# Exact versions used for M0 (see results/m0/pip_freeze.txt for the full set).
+# Install torch from the official PyTorch CUDA 13.0 index:
+#   .venv/bin/python -m pip install --index-url https://download.pytorch.org/whl/cu130 torch==2.14.1+cu130
+torch==2.14.1+cu130
+transformers==5.22.1
+pytest==9.2.0

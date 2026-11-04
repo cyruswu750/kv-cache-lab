@@ -1,0 +1,16 @@
+[project]
+name = "kvlab"
+version = "0.0.0"
+description = "Cost-Aware Tiered KV Cache for LLM Inference (M0 reference harness)"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+markers = [
+    "gpu: needs a CUDA GPU and the pinned model weights (run with -m gpu)",
+    "m0_strict: original M0 acceptance suite, criteria unchanged (known FAIL: nat_long greedy tie)",
+    "m0_1: M0.1 audit regressions (resident vs restored, negative controls)",
+    "m1: M1 tiered-cache GPU integration suite",
+]
+addopts = "-m 'not gpu'"

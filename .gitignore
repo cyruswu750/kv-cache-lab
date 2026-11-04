@@ -1,0 +1,28 @@
+# Environments
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Model weights / HF cache (project-local, never committed)
+.hf_cache/
+*.safetensors
+*.bin
+*.pt
+
+# Large generated tensors
+results/**/*.pt
+results/**/*.npy
+
+# Secrets / machine-specific
+.env
+*.token
+
+# Windows download metadata
+*:Zone.Identifier
+
+# Local pre-edit snapshots (not for git)
+backups/
+
+# Project-owned disk KV cache payloads (never committed)
+.kvcache/
