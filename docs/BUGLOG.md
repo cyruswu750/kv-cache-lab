@@ -328,3 +328,202 @@ Status values: FIXED (fix + regression tests passing), OPEN.
     `scripts/m2_1_reanalyze.py`. The script first reproduces every original
     M2 interval exactly (`all_original_cis_reproduced: true`).
   - Summary: `docs/M2_1_REVIEW.md` §3.
+
+---
+
+## VAL-006: M3 analysis inferred the experiment from the files present, so missing evidence could report supports_adoption=true
+- **Type:** validation/reporting defect in the M3 analysis script. It is not
+  evidence of an incorrect cache restore. No measured sample, restore,
+  cache, model or tolerance code is involved, and the preserved M3 evidence
+  is complete (validated below), so the M3 verdict is unchanged.
+- **Status:** FIXED (2026-11-03), as an analysis-only follow-up to M3. Found
+  by external review. Both reproductions were confirmed locally with the
+  pre-fix script.
+  - **Follow-up, same day: warmup evidence.** The first fix still did not
+    validate retained warmup records. This is part of the same defect, so it
+    gets no new entry. It is now fixed; see the "Warmup evidence" bullets
+    below.
+- **Component:** `scripts/m3_analyze.py` (loading and decision rule); new
+  `kvlab/m3_validate.py`.
+- **Trigger:** a run directory that lacks a planned session, case, block,
+  repetition or sample, or whose correctness/A-B records are missing or
+  inconsistent with their summary flags.
+- **Root cause:**
+  - The experiment's contents were inferred from the data that happened to
+    load: the sessions were whatever `session_s*.json` existed, and the cases
+    were the (L, S) values of the loaded samples.
+  - The decision rule iterated over those cases only. A missing required case
+    could neither fail clause (3) nor be reported.
+  - Gate (1) was `all(correctness_all and not failures and 0 exclusions)` over
+    the loaded sessions, using the stored flags. `all([])` is true for no
+    sessions, and the flags were never recomputed from the detailed checks.
+  - Pairs were formed only where both halves existed. Incomplete pairs were
+    dropped silently.
+- **Impact:**
+  - An empty directory exited 0 with `supports_adoption: true`.
+  - Removing every (1024, 1) sample from copies of the five sessions turned
+    `supports_adoption` from false to true. The only unmet required case
+    simply disappeared from the decision.
+  - **The historical M3 result is unaffected.** The preserved evidence passes
+    the new validation. Its reanalysis reproduces all 5,938 historical values
+    exactly, and the verdict stays false. `results/m3/eval_20261103T173632/`
+    is byte-identical.
+  - **Warmup evidence (follow-up).** The first fix checked measured
+    identities only:
+    - process-warmup records were checked only for their warmup flag;
+    - block-warmup records were checked for flag and range, but never for
+      completeness or duplicates.
+
+    Reproduced from copies of the five sessions:
+    - **All 1,080 warmup rows removed**, with only `meta.n_samples` updated:
+      `status: valid`, no problems, acceptance true, and the analyzer exited 0.
+    - **One block warmup, or one process warmup, replaced by a copy of another**
+      (row count unchanged): also `valid`, exit 0.
+
+    `supports_adoption` stayed false in all three only because (1024, 1) is
+    inconclusive.
+- **Fix:**
+  - **Explicit spec.** `kvlab/m3_validate.py` holds the spec
+    `m3_eval_20261103T173632`, taken from the frozen `docs/M3_PROTOCOL.md`
+    and the recorded commands. It fixes:
+    - 5 sessions and their seeds, and 5 cases;
+    - 2 blocks per case, each 2 warmup + 12 measured repetitions;
+    - the 9 path/backend/mode samples per repetition, and G = 4;
+    - the git HEAD, and the files that executed the measurement;
+    - the optional profile session's planned rows.
+  - **Checks before any statistic:**
+    - session files: none missing, unexpected or unreadable;
+    - the recorded arguments and block plan match the spec;
+    - each (block, rep, path, backend, mode) identity occurs exactly once;
+      warmup flags and order positions are consistent; every measured sample
+      passes the M2/M3 validity rules and has the fields the analysis reads;
+    - exactly one strict-correctness, A/B and restore-memory record per case,
+      with every detailed field present;
+    - stored counters and flags match the recomputed values;
+    - the source hashes agree across sessions.
+  - **Acceptance is recomputed from the detailed fields,** against counts
+    taken from the spec: 5,400 measured samples, 50 strict checks
+    (session × case × backend) and 50 A/B checks (session × case × tier).
+    Stored summary flags are compared, never trusted. An A/B record also has
+    to show that both requests restored the whole prefix from the tier.
+  - **Three statuses, each with its own exit code:**
+    - `valid` → 0, analysis written. The verdict may still be inconclusive.
+    - `invalid` → 3: no analysis is written; `m3_validation.json` lists the
+      problems and has `supports_adoption: false`.
+    - `correctness_failed` → 4: complete, consistent evidence with a failed
+      check. As for `invalid`, no analysis is written and adoption is false.
+    - Refusal stays exit 1 and usage errors exit 2.
+  - **`decide()` iterates over the spec's case list.** A spec case absent from
+    the analysis blocks adoption. The analysis also checks that every case has
+    10 strata and 120 pairs per tier and mode.
+  - **`--out-dir`** writes a reanalysis to a new location.
+  - **Warmup evidence (follow-up).** The protocol keeps warmups (§4: "kept,
+    flagged, never used"). Leaving them out of the statistics does not leave
+    them out of the completeness check:
+    - **Block warmups:** each (block, rep < 2, path, backend, mode) identity
+      must occur exactly once, with consistent order positions. That is
+      900 = 5 sessions × 10 blocks × 2 reps × 9 combinations, counted
+      separately from the measured samples.
+    - **Process warmups:** these follow the spec's plan, which matches the
+      frozen runner (`sorted({min(cases), max(cases)})`, every combination
+      twice). That gives 36 records per session: (256, 32) and (4096, 64)
+      × 9 combinations × 2.
+      - The historical records have no repetition ID, so they are matched by
+        multiplicity per (case, combination) on the recorded fields. Nothing
+        is invented or rewritten.
+      - They must be flagged `warmup: true`, carry no block/rep/order_pos, and
+        come before the first block sample.
+    - **Rejected:** missing, duplicate, surplus, substituted or unexpected
+      warmup records, wrong warmup or stage flags, and records lacking the
+      fields that `samples_chronological.csv` lists. The result is
+      `invalid`, exit 3, no adoption.
+    - **Statistics unaffected:** warmup timings are still excluded from every
+      estimate, interval and decision.
+  - **Unchanged:** R1–R3, the bootstrap, its seeds and all numerical code.
+    `kvlab/m3_stats.py`, `kvlab/m3_bench.py`, `kvlab/tiered_cache.py`,
+    `scripts/m3_measure.py` and the protocol are byte-identical.
+  - **Hardware:** validation needs neither CUDA nor model weights. It imports
+    torch only for the per-sample rules.
+- **Regression tests** (`tests/test_m3_analyze_validation.py`, 42 cases, CPU;
+  28 from the first fix, 14 from the follow-up).
+  They use the production validation and the real CLI, in-process and as a
+  subprocess with CUDA hidden, on scratch copies of the preserved run:
+  - `test_empty_directory_is_invalid_via_the_real_cli` (subprocess; exit 3)
+  - `test_missing_required_case_1024_1_is_invalid_via_the_real_cli`: the
+    exact reproduction (subprocess; exit 3)
+  - `test_decision_is_driven_by_the_spec_case_list_not_by_the_loaded_cases`:
+    on the historical analysis with (1024, 1) removed, the pre-fix rule gave
+    true; `decide()` gives false.
+  - `test_missing_unexpected_or_unreadable_session_is_invalid[3]`
+  - `test_missing_duplicate_or_unpaired_samples_are_invalid[7]`: missing,
+    duplicate, warmup flags both ways, repetition outside the plan, a pair
+    partner failing the validity rules, a missing `t_wall`.
+  - `test_missing_or_failed_detailed_checks_with_stale_passing_summaries_are_invalid[11]`:
+    - missing correctness, A/B or restore-memory records, including empty
+      lists;
+    - missing detailed fields;
+    - failed detailed fields under passing `strict_pass` / `strict_pass_all` /
+      `pass` / `correctness_all`;
+    - an A/B record of two cache misses;
+    - a stored flag contradicting passing details.
+  - `test_consistently_recorded_correctness_failure_is_reported_as_such`
+    (exit 4)
+  - `test_complete_valid_report_reproduces_the_historical_analysis`: exit 0;
+    every historical value equal; the CSV byte-identical; one added md line.
+  - `test_refuses_to_overwrite_and_writes_nothing`
+  - `test_spec_is_the_frozen_protocol_and_the_recorded_commands` (also checks
+    the process-warmup plan against the runner and the protocol)
+  - Follow-up, `test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[12]`:
+    - all warmups removed with `n_samples` adjusted;
+    - one block warmup missing, and one process warmup missing;
+    - block- and process-warmup substitutions with an unchanged row count;
+    - a process warmup replaced by a relabelled measured row;
+    - a process warmup flagged as measured;
+    - a process warmup given the block stage, and a block warmup given the
+      process stage;
+    - an unknown stage;
+    - a process warmup after the block samples;
+    - a malformed block warmup.
+  - Follow-up, `test_all_warmups_removed_is_rejected_by_the_real_cli_subprocess`
+    (exit 3; all 5,400 measured samples valid, which is not enough).
+  - Follow-up, `test_warmup_timings_never_enter_the_statistics`: with
+    warmup timings inflated 100×, the evidence is still valid, and every case
+    statistic and the decision equal the historical analysis.
+- **Evidence** (`results/m3/reanalysis_val006_20261103T200427/`):
+  - `logs/repro_before_prefix_analyzer.log`: with the pre-fix script (sha256
+    `0ff942f2…`, as recorded by sessions s2–s5), both the empty directory and
+    the no-(1024, 1) copies exit 0 with `supports_adoption: true`. A complete
+    control copy reproduces the historical outputs.
+  - `logs/repro_after_fixed_analyzer.log`: the same inputs exit 3 with
+    `supports_adoption: false`, and the control exits 0 with the historical
+    verdict.
+  - `analysis/` (`m3_validation.json`, `m3_analysis.{json,md}`,
+    `samples_chronological.csv`): the reanalysis of the preserved run, which
+    is valid: 5,400/5,400 samples, 50/50 strict checks, 50/50 A/B checks.
+    `logs/compare_with_historical.log` shows 0 differences in 5,938 values,
+    the CSV byte-identical, and the same 4 unmet (1024, 1) requirements.
+  - `logs/pytest_m3_validation_*.log`: 42 passed. `logs/pytest_cpu_*.log`:
+    436 passed, 57 deselected.
+  - `logs/preservation_check.log`: every pre-existing file under `results/`
+    is byte-identical to `pre_fix_results_manifest.sha256`.
+  - Summary: the correction note in `docs/M3_REVIEW.md`.
+- **Evidence, warmup follow-up** (`results/m3/reanalysis_val006_warmups_20261103T202825/`):
+  - `logs/repro_before.log`: with the first-fix validator (`97f4a282…`), the
+    three warmup variants from `make_warmup_variants.py` were `valid`, exit 0.
+  - `logs/repro_after.log`: the same inputs are `invalid`, exit 3,
+    `supports_adoption: false`, and no analysis is written.
+  - `analysis/`: the preserved run is valid, with 900/900 block warmups and
+    180/180 process warmups. `logs/compare_with_historical.log` shows 0
+    differences in 5,938 historical values, the CSV byte-identical, the
+    verdict false from the same 4 (1024, 1) entries, and everything equal to
+    the first reanalysis except the validation block.
+  - Focused tests:
+    - `logs/pytest_m3_analyze_validation_20261103T203038.log`: 41 passed, 1
+      failed. An existing test expected the old wording "duplicate sample
+      identity", now "duplicate measured sample identity"; the expected text
+      was updated.
+    - `logs/pytest_m3_analyze_validation_20261103T203111.log`: 56 passed (42
+      validation + 14 statistics).
+    - The full suite was not rerun for the follow-up.
+  - `logs/preservation_check.log`: every pre-existing file under `results/`
+    is byte-identical.
