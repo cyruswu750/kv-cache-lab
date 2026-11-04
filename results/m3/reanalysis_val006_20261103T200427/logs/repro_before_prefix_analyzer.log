@@ -1,0 +1,20 @@
+# VAL-006 reproductions BEFORE the fix: unmodified scripts/m3_analyze.py (sha256 0ff942f2..., the script recorded by sessions s2-s5)
+# scratch inputs built by make_variants.py from copies of results/m3/eval_20261103T173632/session_*.json (originals untouched)
+2026-11-03T20:04:48-08:00
+== empty: exit 0 (.129164693 s)
+   sessions analysed: [] | cases analysed: []
+   decision: {"all_correctness_and_ab_checks_pass": true, "established_regressions": [], "required_but_not_established": [], "supports_adoption": true, "default_backend_after_m3": "baseline"}
+== no1024: exit 0 (7.160029017 s)
+   sessions analysed: ['s1', 's2', 's3', 's4', 's5'] | cases analysed: ['256:32', '1536:128', '3072:256', '4096:64']
+   decision: {"all_correctness_and_ab_checks_pass": true, "established_regressions": [], "required_but_not_established": [], "supports_adoption": true, "default_backend_after_m3": "baseline"}
+== control: exit 0 (8.892234255 s)
+   sessions analysed: ['s1', 's2', 's3', 's4', 's5'] | cases analysed: ['256:32', '1024:1', '1536:128', '3072:256', '4096:64']
+   decision: {"all_correctness_and_ab_checks_pass": true, "established_regressions": [], "required_but_not_established": ["1024:1 host median_d: inconclusive", "1024:1 host mean_d: inconclusive", "1024:1 disk median_d: inconclusive", "1024:1 disk mean_d: inconclusive"], "supports_adoption": false, "default_backend_after_m3": "baseline"}
+== control (pre-fix analyzer) vs historical outputs
+m3_analysis.md: DIFFERS
+samples_chronological.csv: byte-identical
+m3_analysis.json: run_dir results/m3/eval_20261103T173632 -> /tmp/claude-1000/-home-cyrus-projects-kv-cache-lab/5613b909-ff7a-470d-9dd7-7e83ab215616/scratchpad/repro_before/control | everything else equal: False
+   Explanation: the control directory held only session_*.json, not the session_*.gpu_monitor.csv files, so the
+   diagnostic SM-clock summary is None / "n/a". Every other field of m3_analysis.json (all statistics, verdicts,
+   decision) and samples_chronological.csv are identical to the historical outputs: the pre-fix analysis is
+   deterministic on this evidence.

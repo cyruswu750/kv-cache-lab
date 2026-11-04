@@ -1,0 +1,51 @@
+# VAL-006 preservation check 2026-11-03T20:17:16-08:00
+== every file under results/ that existed before the fix (pre_fix_results_manifest.sha256):
+   255/255 OK (byte-identical)
+== results/ files listed in results/m3/post_m3_manifest.sha256 (written at the end of M3):
+   252/252 OK
+== results/ files added by this fix (all under results/m3/reanalysis_val006_20261103T200427):
+   17 files, none outside
+== measurement-path code, statistics and frozen protocol vs pre-fix hashes:
+   kvlab/m3_bench.py: OK
+   kvlab/m3_stats.py: OK
+   kvlab/tiered_cache.py: OK
+   scripts/m3_measure.py: OK
+   kvlab/perf.py: OK
+   kvlab/perf_stats.py: OK
+   kvlab/perf_harness.py: OK
+   docs/M3_PROTOCOL.md: OK
+   tests/test_m3_stats.py: OK
+== files changed by this fix (expected to differ from pre-fix hashes):
+   scripts/m3_analyze.py: FAILED
+   docs/BUGLOG.md: FAILED
+   docs/M3_REVIEW.md: FAILED
+== backup archives (unchanged since M3):
+   8239b5e6be6050c4316a3df6e2bf0ff922d2cf3f82285b8edeb8f577271fd785  backups/kvlab-review-m3.tar.gz
+   5c46ad464a2176a193d814c532e892ef50bab4c9ef88e6b11edb1a63d68fb78e  backups/pre-m3-20261103T171930.tar.gz
+== git: HEAD 362ee40aeaaae204b2b1dc88398b46bc5826f410; staged files: 0
+    M README.md
+    M docs/BUGLOG.md
+    M docs/M2_1_REVIEW.md
+    M docs/M2_REVIEW.md
+    M docs/correctness-matrix.md
+    M docs/decisions.md
+    M docs/design.md
+    M kvlab/tiered_cache.py
+    M pyproject.toml
+    M scripts/m1_run.py
+    M tests/gpu/test_m1_tiered.py
+   ?? docs/M3_DESIGN.md
+   ?? docs/M3_PROTOCOL.md
+   ?? docs/M3_REVIEW.md
+   ?? docs/M3_WALKTHROUGH.md
+   ?? kvlab/m3_bench.py
+   ?? kvlab/m3_stats.py
+   ?? kvlab/m3_validate.py
+   ?? results/m3/
+   ?? scripts/m3_analyze.py
+   ?? scripts/m3_measure.py
+   ?? scripts/m3_mutation_check.py
+   ?? tests/gpu/test_m3_restore.py
+   ?? tests/test_m3_analyze_validation.py
+   ?? tests/test_m3_stats.py
+   ?? tests/test_restore_backends_cpu.py

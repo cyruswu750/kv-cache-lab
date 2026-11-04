@@ -1,0 +1,13 @@
+# .venv/bin/python -m pytest -q -p no:cacheprovider tests/test_m3_analyze_validation.py tests/test_m3_stats.py -v   (20261103T201405)
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.2.0, pluggy-1.7.0
+rootdir: /home/cyrus/projects/kv-cache-lab
+configfile: pyproject.toml
+plugins: anyio-4.16.0
+collected 42 items
+
+tests/test_m3_analyze_validation.py ............................         [ 66%]
+tests/test_m3_stats.py ..............                                    [100%]
+
+============================= 42 passed in 13.39s ==============================
+exit 0

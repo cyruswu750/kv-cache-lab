@@ -1,0 +1,8 @@
+m3_analysis.json: 5938 historical leaf values compared exactly; differences: 0
+  added keys (10): ['decision/evidence_status', 'decision/missing_from_analysis', 'decision/spec', 'out_dir', 'sessions/*/correctness_all_recomputed', 'validation']
+  decision historical: supports_adoption=False, required_but_not_established=['1024:1 host median_d: inconclusive', '1024:1 host mean_d: inconclusive', '1024:1 disk median_d: inconclusive', '1024:1 disk mean_d: inconclusive']
+  decision new       : supports_adoption=False, evidence_status=valid, missing_from_analysis=[]
+samples_chronological.csv byte-identical: True
+m3_analysis.md: 184 historical lines, 185 new; historical lines all kept unchanged: True
+  INSERT +- evidence validation against spec `m3_eval_20261103T173632`: **valid** (5 planned sessions; measured samples 5400/5400; strict correctness checks (session × case × backend) 50/50; A/B checks (session × case × tier) 50/50; recomputed from the detailed records)
+RESULT: PASS (numerical results and verdict unchanged)

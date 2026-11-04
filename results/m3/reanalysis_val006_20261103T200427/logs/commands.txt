@@ -1,0 +1,3 @@
+# VAL-006 reanalysis of the preserved M3 evidence with the fixed analyzer (CPU only, CUDA hidden); input dir is only read
+CUDA_VISIBLE_DEVICES= HF_HUB_OFFLINE=1 .venv/bin/python scripts/m3_analyze.py --run-dir results/m3/eval_20261103T173632 --out-dir results/m3/reanalysis_val006_20261103T200427/analysis
+.venv/bin/python results/m3/reanalysis_val006_20261103T200427/compare_with_historical.py results/m3/eval_20261103T173632 results/m3/reanalysis_val006_20261103T200427/analysis

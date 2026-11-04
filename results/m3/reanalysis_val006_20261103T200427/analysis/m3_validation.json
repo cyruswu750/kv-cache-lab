@@ -1,0 +1,79 @@
+{
+ "spec": "m3_eval_20261103T173632",
+ "spec_source": "docs/M3_PROTOCOL.md (frozen 2026-11-03) + results/m3/eval_20261103T173632/logs/commands.txt",
+ "run_dir": "results/m3/eval_20261103T173632",
+ "status": "valid",
+ "problems": [],
+ "correctness_failures": [],
+ "sessions_expected": [
+  "s1",
+  "s2",
+  "s3",
+  "s4",
+  "s5"
+ ],
+ "session_files_found": [
+  "prof",
+  "s1",
+  "s2",
+  "s3",
+  "s4",
+  "s5"
+ ],
+ "profile_session_present": true,
+ "per_session": {
+  "s1": {
+   "problems": 0,
+   "correctness_and_ab_pass_recomputed": true
+  },
+  "s2": {
+   "problems": 0,
+   "correctness_and_ab_pass_recomputed": true
+  },
+  "s3": {
+   "problems": 0,
+   "correctness_and_ab_pass_recomputed": true
+  },
+  "s4": {
+   "problems": 0,
+   "correctness_and_ab_pass_recomputed": true
+  },
+  "s5": {
+   "problems": 0,
+   "correctness_and_ab_pass_recomputed": true
+  }
+ },
+ "counts": {
+  "measured_samples": {
+   "expected": 5400,
+   "present": 5400,
+   "passed": 5400
+  },
+  "correctness_checks": {
+   "expected": 50,
+   "present": 50,
+   "passed": 50
+  },
+  "ab_checks": {
+   "expected": 50,
+   "present": 50,
+   "passed": 50
+  }
+ },
+ "correctness_and_ab_acceptance_recomputed": true,
+ "decision": {
+  "all_correctness_and_ab_checks_pass": true,
+  "established_regressions": [],
+  "required_but_not_established": [
+   "1024:1 host median_d: inconclusive",
+   "1024:1 host mean_d: inconclusive",
+   "1024:1 disk median_d: inconclusive",
+   "1024:1 disk mean_d: inconclusive"
+  ],
+  "supports_adoption": false,
+  "default_backend_after_m3": "baseline",
+  "evidence_status": "valid",
+  "spec": "m3_eval_20261103T173632",
+  "missing_from_analysis": []
+ }
+}
