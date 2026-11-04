@@ -1,7 +1,7 @@
 # Design (M1 scope, with M1.1 fixes; M2 measurement additions in §10; M3 restore backends in §11)
 
-This is the authoritative design for what is implemented. `kv-cache-plan.md`
-describes later weeks; anything not in this file is not implemented.
+This is the authoritative design for what is implemented. Anything not described here is
+not implemented; planned but unimplemented work is listed under **Excluded** in §1.
 Decisions and trade-offs are recorded in `docs/decisions.md` (D11+ for M1).
 
 ## 1. Scope
@@ -205,7 +205,7 @@ current/peak host and disk bytes.
   against what was written, and bitwise equality of all step logits against
   a resident-GPU reference that replays the same request sequence and splits
   (`kvlab/resident_reference.py`). The M0 tolerance (atol 1.45) is never used
-  as evidence that storage is correct (see M0_1_REVIEW: it misses one-token
+  as evidence that storage is correct (`docs/results.md`, M0.1: it misses one-token
   prefix errors and position shifts).
 - **Full recomputation** is compared separately and reported (D7 metrics). The
   known full-vs-split bf16 limitation (M0.1: exact ties can flip greedy
@@ -246,7 +246,7 @@ current/peak host and disk bytes.
 - **Harness refactor:** `Bench.page_cache_before()` was extracted from
   `Bench.measure()` with no behavior change.
 - **Unchanged:** the engine, tiers, runtime policy and the M2 cost model.
-- **Reference:** see `docs/M2_1_REVIEW.md` and decisions D27–D29.
+- **Reference:** `docs/results.md` (M2.1) and decisions D27–D29.
 
 ## 11. M3: restore backends (restoration mechanics only; default unchanged)
 - `TieredKVCache(..., restore_backend="baseline" | "batched", restore_staging_chunks=4)`.
@@ -274,5 +274,5 @@ current/peak host and disk bytes.
 
   `TieredKVCache.last_restore` reports the copy calls, placement ops, H2D bytes and the
   destination/scratch sizes of the latest restore (diagnostic, not a counter).
-- Details and the options considered: `docs/M3_DESIGN.md`; decision D30; review
-  `docs/M3_REVIEW.md`.
+- Details and the options considered: `docs/M3_DESIGN.md`; decision D30; results
+  `docs/results.md` (M3).

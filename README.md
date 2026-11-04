@@ -9,21 +9,22 @@
 | M1 | Cache identity, validated chunk files, bounded pinned-host and disk tiers, synchronous always-restore | done; all M1 tests pass |
 | M1.1 | Fixes from external review: disk deletion accounting, marker symlink, host accounting terms; D10 recorded | done; all tests pass except the known M0 strict case |
 | M1.2 | Evidence-runner validation fix (BUGLOG VAL-004): strict ENOSPC record, forward-call acceptance, derived counts | done; corrected run `results/m1_2/m1_run_20261103T121800.json` |
-| M2 | Synchronous first-token latency for full / host / disk paths; cost model fitted on calibration, scored on held-out cases | done; `docs/M2_REVIEW.md` (no break-even established; claims qualified by M2.1) |
-| M2.1 | Audit of M2 timing/scoring; dependence-aware reanalysis (BUGLOG VAL-005); interleaved diagnosis of the restore slow mode | done; `docs/M2_1_REVIEW.md` (slow mode narrowed to CPU-side CUDA call cost; root cause open) |
-| M3 | Opt-in `batched` restore backend: one contiguous H2D per chunk into bounded chunk-major device staging, one placement per group; strict A/B against the baseline; interleaved 5-session comparison | done; `docs/M3_REVIEW.md` (restore calls 896 → 16 memcpy at 16 chunks; median e2e 1.07–2.29× faster in this sample). `supports_adoption` is **false**: under the frozen rule, (1024, 1) is inconclusive (R3, measured stretch too short), so the default stays `baseline`. The analysis now validates evidence against the frozen spec first (BUGLOG VAL-006); the reanalysis reproduced every number and the verdict |
+| M2 | Synchronous first-token latency for full / host / disk paths; cost model fitted on calibration, scored on held-out cases | done (no break-even established; model describes the baseline backend; claims qualified by M2.1) |
+| M2.1 | Audit of M2 timing/scoring; dependence-aware reanalysis (BUGLOG VAL-005); interleaved diagnosis of the restore slow mode | done (slow mode associated with higher host-side CUDA-call cost; root cause open) |
+| M3 | Opt-in `batched` restore backend: one contiguous H2D per chunk into bounded chunk-major device staging, one placement per group; strict A/B against the baseline; interleaved 5-session comparison | done (restore calls 896 → 16 memcpy at 16 chunks; median e2e 1.07–2.29× faster in this sample). `supports_adoption` is **false**: under the frozen rule, (1024, 1) is inconclusive (R3, measured stretch too short), so the default stays `baseline`. The analysis now validates evidence against the frozen spec first (BUGLOG VAL-006); the reanalysis reproduced every number and the verdict |
 
 Not implemented yet: a runtime cost-aware policy (M2's model is offline only),
-async pipelines, concurrency, service-level TTFT, and vLLM integration (see `kv-cache-plan.md`).
+async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `docs/design.md` §1).
 
+- Results, scope and limitations per milestone: `docs/results.md`
 - Design: `docs/design.md`
 - Trade-offs: `docs/decisions.md`
 - Bugs found and fixed: `docs/BUGLOG.md`
-- Results and limitations: `docs/M0_REVIEW.md`, `docs/M0_1_REVIEW.md`, `docs/M1_REVIEW.md`, `docs/M1_1_REVIEW.md`, `docs/M2_REVIEW.md`, `docs/M2_1_REVIEW.md`, `docs/M3_REVIEW.md`
-- M2 performance protocol: `docs/M2_PROTOCOL.md`; Chinese walkthrough: `docs/M2_WALKTHROUGH.md`
-- M2.1 diagnostic plan: `docs/M2_1_DIAGNOSTIC_PLAN.md`; Chinese explanation: `docs/M2_1_WALKTHROUGH.md`
-- M3 design note: `docs/M3_DESIGN.md`; protocol: `docs/M3_PROTOCOL.md`; Chinese walkthrough: `docs/M3_WALKTHROUGH.md`
 - Test-by-scenario table: `docs/correctness-matrix.md`
+- Environment and observed cache API: `docs/environment.md`
+- M2 performance protocol: `docs/M2_PROTOCOL.md`
+- M2.1 diagnostic plan: `docs/M2_1_DIAGNOSTIC_PLAN.md`
+- M3 design note: `docs/M3_DESIGN.md`; frozen comparison protocol: `docs/M3_PROTOCOL.md`
 
 Reference harness: Hugging Face Transformers + PyTorch (decisions D1).
 Model: `Qwen/Qwen2.5-1.5B-Instruct@989aa7980e4cf806f80c7fef2b1adb7bc71aa306`, **bf16**, **SDPA**, chunk = 256 tokens.
@@ -102,7 +103,7 @@ What the GPU acceptance checks mean (design §9):
 - Every request makes exactly one prefill plus `steps − 1` decode forward
   calls. Cache failures never repeat or abort inference.
 - Comparison with full recomputation is report-only. In bf16, exact ties can
-  flip greedy tokens; see M0_1_REVIEW and M1_REVIEW §7.
+  flip greedy tokens; see `docs/results.md` (M0.1 and M1).
 - Decision D10 (2026-11-03):
   - standard argmax; no tie rule, rounding, tolerance inflation or xfail;
   - the original M0 strict FAIL is kept as recorded.
@@ -110,8 +111,8 @@ What the GPU acceptance checks mean (design §9):
   Restored output is **not** claimed to equal full-prefill output.
 - Performance numbers exist only for M2 and M3. They are synchronous, single-request,
   tokenized-input first-token latencies on one WSL2 laptop GPU, with platform
-  drift documented in `docs/M2_REVIEW.md` §6. They are not service TTFT and
-  not cold-NVMe figures. M2.1 qualifies the M2 decision claims (block-bootstrap
+  drift documented in `docs/results.md` (M2). They are not service TTFT and
+  not cold-NVMe or p99 figures. M2.1 qualifies the M2 decision claims (block-bootstrap
   intervals; mean-based penalties) and shows that restore-path latency on this
   platform switches between regimes of different CPU-side CUDA call cost.
 - M3 compares the baseline and batched restore backends within the same

@@ -11,8 +11,17 @@ Not recorded here:
 - Failures of the original M0 strict suite on `nat_long`. That is a bf16
   numerical limitation, kept as recorded under decisions D10, not a defect.
 
-Earlier findings are recorded in `docs/M0_1_REVIEW.md`: three M0 hardening
-gaps in `kv_snapshot.py`, and one audit-script indexing bug.
+Earlier findings, from the M0.1 audit (fixed before M1, with regression tests):
+- three hardening gaps in `kvlab/kv_snapshot.py`:
+  - restore silently cast V to the first chunk's K dtype (now a per-chunk
+    dtype/shape check);
+  - `copy_` could silently broadcast a `[1, 1, C, D]` chunk into `[1, 2, C, D]`;
+  - `compare_snapshot_to_cache` did not check the layer count;
+- one audit-script indexing bug. In audit run 1, the fp32 dot products for path
+  B were read from the wrong `lm_head` call. This was fixed in run 2, and the
+  run-1 files are kept.
+
+None of them affected an M0 result (`docs/results.md`, M0.1).
 
 Status values: FIXED (fix + regression tests passing), OPEN.
 
@@ -85,7 +94,6 @@ Status values: FIXED (fix + regression tests passing), OPEN.
     tests failing on the pre-fix source.
   - `results/m1_1/logs/pytest_cpu_final_20261103T113545.log`: 306 passed.
   - `results/m1_1/logs/pytest_gpu_m1_20261103T112801.log`: 12 passed.
-  - Details: `docs/M1_1_REVIEW.md` §2.
 
 ## BUG-002: A symlinked marker let the disk store overwrite a file outside its directory
 - **Status:** FIXED in M1.1 (2026-11-03). Found by external review of M1 and
@@ -134,8 +142,7 @@ Status values: FIXED (fix + regression tests passing), OPEN.
   - `test_symlinked_chunk_file_is_not_followed_on_read`\*
   - Unchanged and still passing: `test_refuses_foreign_directories_and_deletes_nothing`,
     `test_stale_cleanup_only_touches_own_files_and_never_follows_symlinks`.
-- **Evidence:** the same repro, pre-fix and final-run logs as BUG-001;
-  `docs/M1_1_REVIEW.md` §3.
+- **Evidence:** the same repro, pre-fix and final-run logs as BUG-001.
 
 ## RPT-003: Host memory figures mixed logical occupancy with allocated memory
 - **Type:** reporting definition. There was no functional defect: the
@@ -143,7 +150,7 @@ Status values: FIXED (fix + regression tests passing), OPEN.
 - **Status:** FIXED in M1.1 (2026-11-03). Raised by external review of M1.
 - **Component:** `kvlab/host_store.py` (`used_bytes`, `peak_bytes`),
   `kvlab/tiered_cache.py` (`budgets()`), `scripts/m1_run.py`
-  (`host_used_bytes`), and the M1_REVIEW §6 wording.
+  (`host_used_bytes`), and the wording of the M1 review report (§6).
 - **Trigger:** any report of host usage.
 - **Root cause:**
   - The whole slab is allocated, and registered with `cudaHostRegister`, at
@@ -154,7 +161,7 @@ Status values: FIXED (fix + regression tests passing), OPEN.
   - The metadata figure was not clearly labeled as an estimate.
 - **Impact:**
   - Misleading evidence, no wrong behavior.
-  - M1_REVIEW §6 presented host "observed peak 22,020,096". That is the slab
+  - The M1 review report (§6) presented host "observed peak 22,020,096". That is the slab
     size with both slots occupied, not a measurement.
   - Before the slots fill, `used_bytes` understated the memory actually held.
 - **Fix:** see decisions D21.
@@ -174,8 +181,7 @@ Status values: FIXED (fix + regression tests passing), OPEN.
 - **Evidence:**
   - `results/m1/m1_run_20261103T023956.json` (old keys);
   - `results/m1_1/m1_run_20261103T112930.json` (new keys; sequence: slab
-    22,020,096, staging 7,340,032, resident 14,680,064);
-  - `docs/M1_1_REVIEW.md` §4.
+    22,020,096, staging 7,340,032, resident 14,680,064).
 
 ## VAL-004: Evidence runner reported 19 strict requests but validated only 18
 - **Type:** validation/reporting defect in the evidence script. It is not
@@ -206,7 +212,7 @@ Status values: FIXED (fix + regression tests passing), OPEN.
     - `results/m1/m1_run_20261103T023850.json`
     - `results/m1/m1_run_20261103T023956.json`
     - `results/m1_1/m1_run_20261103T112930.json`
-    - `results/m1/manual_rerun_20261103_111038.json` (your rerun, from the same pre-fix runner)
+    - `results/m1/manual_rerun_20261103_111038.json` (a manual rerun with the same pre-fix runner)
 
     Their 18 strict records are still valid evidence for those requests.
 - **Fix:**
@@ -262,7 +268,7 @@ Status values: FIXED (fix + regression tests passing), OPEN.
   - `results/m1_2/mutation_check_20261103T121449.txt`: the `zip()` mutant SURVIVED.
   - `results/m1_2/mutation_check_20261103T121623.txt`: 21/21 KILLED.
   - `results/m1_2/logs/pytest_cpu_20261103T121734.log`: 325 passed.
-  - Summary: `docs/M1_1_REVIEW.md` §13.
+  - Summary: `docs/results.md` (M1–M1.2).
 
 ---
 
@@ -286,8 +292,8 @@ Status values: FIXED (fix + regression tests passing), OPEN.
     The reported "0 ms penalty" therefore excluded every decision whose
     interval contained 0, including some whose point estimates favored
     recompute.
-- **Impact on historical claims** (`docs/M2_REVIEW.md`, qualified in its
-  M2.1 note):
+- **Impact on historical claims** (the M2 results, qualified in
+  `docs/results.md`, M2):
   - **Overconfident restore wins.** "11 of 11 scorable held-out decisions
     correct" rests on i.i.d. intervals. Two of the 11 (host and disk at
     L=1024, S=64) are inconclusive with block length 8. Their i.i.d. median
@@ -327,7 +333,7 @@ Status values: FIXED (fix + regression tests passing), OPEN.
   - `results/m2_1/reanalysis/reanalysis.json` and `.md`, written by
     `scripts/m2_1_reanalyze.py`. The script first reproduces every original
     M2 interval exactly (`all_original_cis_reproduced: true`).
-  - Summary: `docs/M2_1_REVIEW.md` §3.
+  - Summary: `docs/results.md` (M2).
 
 ---
 
@@ -506,7 +512,7 @@ Status values: FIXED (fix + regression tests passing), OPEN.
     436 passed, 57 deselected.
   - `logs/preservation_check.log`: every pre-existing file under `results/`
     is byte-identical to `pre_fix_results_manifest.sha256`.
-  - Summary: the correction note in `docs/M3_REVIEW.md`.
+  - Summary: `docs/results.md` (M3 analysis validation).
 - **Evidence, warmup follow-up** (`results/m3/reanalysis_val006_warmups_20261103T202825/`):
   - `logs/repro_before.log`: with the first-fix validator (`97f4a282…`), the
     three warmup variants from `make_warmup_variants.py` were `valid`, exit 0.

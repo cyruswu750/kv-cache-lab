@@ -116,7 +116,7 @@ Every row below is also checked strictly against a resident-GPU replay: all
 In `m1_run`, 7 requests were restored. Greedy matched full recomputation on 3
 of them. The other 4 come from 2 distinct prompts, and all diverge at greedy
 step 4. At that step the full path's top-2 margin is 0.000 (exact tie) or
-0.125 (1 bf16 ulp). The mechanism is the one documented in M0_1_REVIEW.
+0.125 (1 bf16 ulp). The mechanism is the one documented for M0.1 in `docs/results.md`.
 M1.1 rerun (`results/m1_1/m1_run_20261103T112930.json`): identical records and
 counters, and the same 4/7 divergences.
 

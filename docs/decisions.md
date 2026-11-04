@@ -1,6 +1,7 @@
 # Decisions
 
-Each entry: decision, reason, and whether it deviates from `kv-cache-plan.md`.
+Each entry: decision, reason, and whether it deviates from the original project plan (a
+working document, not published; the deviations are stated here).
 `docs/design.md` (created in M1) is the authoritative design; this file records why.
 Defects and their evidence are in `docs/BUGLOG.md`; entries here link to them
 instead of repeating them.
@@ -8,13 +9,13 @@ instead of repeating them.
 ## D1. HF Transformers + PyTorch as the M0 correctness reference harness
 - **Decision:** M0 uses `transformers` `DynamicCache` with plain PyTorch
   forward calls. vLLM was not installed or evaluated.
-- **Reason:** Your M0 instruction. HF lets us read and write per-layer K/V
+- **Reason:** chosen for M0 by the project owner. HF lets us read and write per-layer K/V
   tensors directly and control positions and masks explicitly. That makes it a
   transparent reference for byte-exact and numerical checks.
 - **Not decided:** the production integration. The plan's vLLM KV-connector
   option (time-boxed to 6–8 h) is still open for later.
-- **Plan deviation:** the plan lists vLLM as the first choice for Week 1. You
-  overrode that for M0.
+- **Plan deviation:** the plan listed vLLM as the first choice for Week 1; M0 used HF
+  instead.
 
 ## D2. dtype = bfloat16 (plan says fp16)
 - **Decision:** load the model with an explicit `dtype=torch.bfloat16`.
@@ -23,9 +24,8 @@ instead of repeating them.
   bf16 avoids fp16 overflow risk on a bf16-trained model. KV size per token
   is the same (2 bytes/element, 28 KiB/token), so the plan's memory figures
   still hold.
-- **Plan deviation:** yes (fp16 → bf16). You can change it back with one
-  constant (`kvlab/model.py: DTYPE`). If you change it, the tolerances must be
-  recalibrated.
+- **Plan deviation:** yes (fp16 → bf16). It is one constant (`kvlab/model.py: DTYPE`);
+  changing it requires recalibrating the tolerances.
 
 ## D3. Attention backend = SDPA (pinned explicitly)
 - `attn_implementation="sdpa"` is passed explicitly and checked after load.
@@ -99,8 +99,8 @@ chunked prefill (which has no CPU round trip).
   was added for run2. Tolerances and PASS criteria were **not** changed.
   Run1's raw output is kept in `results/m0/run1/`.
 
-## D10. DECIDED (2026-11-03, your decision, recorded in M1.1): no tie rule; standard argmax; separate contracts
-**Decision (your words, recorded as given):**
+## D10. DECIDED (2026-11-03, project owner's decision, recorded in M1.1): no tie rule; standard argmax; separate contracts
+**Decision (recorded as stated by the project owner):**
 - Preserve standard argmax and the original M0 strict test and its result.
 - No approximate-tie rule, no rounding, no tolerance inflation, no hidden xfail.
 - Storage correctness is established by byte identity and by strict
@@ -136,11 +136,11 @@ chunked prefill (which has no CPU round trip).
   before M1 acceptance runs.
 
 ## D11. M0.1 gate passed; D10 left open (decided later, see D10); M0 strict suite kept as-is
-- The M0.1 audit (docs/M0_1_REVIEW.md) isolated the nat_long mismatch to a bf16
+- The M0.1 audit (`docs/results.md`, M0.1) isolated the nat_long mismatch to a bf16
   rounding tie caused by execution shape. Restored and resident splits are
   bitwise equal.
 - The M0 strict suite is unchanged and still FAILs. No tie rule was adopted,
-  because D10 is still your decision.
+  because D10 was still an open decision for the project owner.
 - New suites get their own markers (`m0_1`, `m1`); `-m gpu` still runs all of them.
 
 ## D12. Storage correctness is proven strictly, not with atol
@@ -336,7 +336,7 @@ chunked prefill (which has no CPU round trip).
 - `full_nocache` is never mixed into the historical scores.
 
 ## D29. (M2.1) The restore slow mode is reported as a narrowed, unresolved platform effect; no model or policy change
-- **Evidence** (`docs/M2_1_REVIEW.md` §4): in time-clustered regimes, the
+- **Evidence** (`docs/results.md`, M2.1): in time-clustered regimes, the
   host-side CPU cost per CUDA launch or synchronous copy rises 2–5×. GPU
   kernel time, pure-CPU work, guest system calls and the SM clock are
   unchanged, and the thread stays on-CPU. Every path is affected; recompute
@@ -379,14 +379,14 @@ chunked prefill (which has no CPU round trip).
   constructor argument or attribute.
 - **Cost:** transient device memory of min(n, G) × 7,340,032 B (≤ 28 MiB) per restore. No new
   host memory.
-- **Evidence (M3_REVIEW §4–§8):**
+- **Evidence (`docs/results.md`, M3):**
   - All strict, A/B and M1 checks pass for both backends, and the mutation check kills 10/10.
   - Measured per 16-chunk restore: 896 → 16 memcpy, 896 → 16 syncs, 952 → 60 launches.
   - Median e2e falls 1.07× (1 chunk) to 2.29× (16 chunks, host).
   - The pre-registered adoption rule is not fully met. (1024, 1) is inconclusive under the
     duration rule R3, although every block length and session agrees on the direction.
-    Hence the default stays `baseline`, pending review.
+    Hence the default stays `baseline`.
   - *Correction note (VAL-006, added after M3):* the M3 analysis script failed to validate
-    missing or incomplete evidence. It now validates against the frozen spec first, and the
+    missing or incomplete evidence, measured samples and retained warmups alike. It now validates against the frozen spec first, and the
     reanalysis reproduces every number. `supports_adoption` remains false for the same
     (1024, 1) reason, and the default stays `baseline`. See BUGLOG VAL-006.
