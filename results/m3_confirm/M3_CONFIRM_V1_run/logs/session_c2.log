@@ -1,0 +1,11 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   5%|▌         | 18/338 [00:00<00:01, 162.56it/s]Loading weights:  10%|█         | 35/338 [00:00<00:01, 162.03it/s]Loading weights:  15%|█▌        | 52/338 [00:00<00:01, 164.65it/s]Loading weights:  21%|██        | 70/338 [00:00<00:01, 168.78it/s]Loading weights:  26%|██▌       | 87/338 [00:00<00:01, 166.39it/s]Loading weights:  32%|███▏      | 107/338 [00:00<00:01, 176.95it/s]Loading weights:  37%|███▋      | 125/338 [00:00<00:01, 156.57it/s]Loading weights:  42%|████▏     | 142/338 [00:00<00:01, 149.25it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 345.43it/s]
+block 0 L=1280 S=96 done (0.3 min)
+block 1 L=1024 S=1 done (0.7 min)
+block 2 L=1280 S=96 done (1.0 min)
+block 3 L=1024 S=1 done (1.2 min)
+block 4 L=1280 S=96 done (1.5 min)
+block 5 L=1024 S=1 done (1.7 min)
+block 6 L=1280 S=96 done (2.0 min)
+block 7 L=1024 S=1 done (2.3 min)
+{"n_samples": 1908, "n_measured": 1728, "n_excluded": 0, "elapsed_min": 2.3432414015134175, "correctness_all": true}
+failures []; wrote results/m3_confirm/M3_CONFIRM_V1_run/session_c2.json

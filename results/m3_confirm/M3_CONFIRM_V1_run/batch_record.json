@@ -1,0 +1,264 @@
+{
+ "record_version": 2,
+ "experiment": "M3_CONFIRM_V1",
+ "freeze_manifest_sha256": "dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216",
+ "pre_launch_verification": {
+  "problems": [],
+  "checked_at": "2026-11-04T01:23:16-0800",
+  "manifest": "/home/cyrus/projects/kv-cache-lab/results/m3_confirm/M3_CONFIRM_V1.freeze.json"
+ },
+ "budget_s": 1800,
+ "clock": "time.monotonic; deadline = first launch + budget_s",
+ "wrapper_pid": 221071,
+ "execution_status": "succeeded",
+ "stop": null,
+ "launched_at": "2026-11-04T01:23:16-0800",
+ "launched_unix": 1793784196.214781,
+ "sessions": [
+  {
+   "session": "c1",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m3_measure.py",
+    "--out-dir",
+    "results/m3_confirm/M3_CONFIRM_V1_run",
+    "--session",
+    "c1",
+    "--cases",
+    "1024:1,1280:96",
+    "--blocks",
+    "4",
+    "--warmup",
+    "2",
+    "--reps",
+    "24",
+    "--seed",
+    "32001",
+    "--staging-chunks",
+    "4"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_c1.log",
+   "pid": 221109,
+   "started_s": 0.0028525390007416718,
+   "ended_s": 176.11298055000225,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "1e92cd530698309390e4ac5fef3974ebaf0b2d12c13310d418345401ca1ad247",
+    "bytes": 2527635
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": true,
+    "n_block_failures": 0,
+    "n_excluded": 0,
+    "n_measured": 1728,
+    "n_samples": 1908
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "c2",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m3_measure.py",
+    "--out-dir",
+    "results/m3_confirm/M3_CONFIRM_V1_run",
+    "--session",
+    "c2",
+    "--cases",
+    "1024:1,1280:96",
+    "--blocks",
+    "4",
+    "--warmup",
+    "2",
+    "--reps",
+    "24",
+    "--seed",
+    "32002",
+    "--staging-chunks",
+    "4"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_c2.log",
+   "pid": 221860,
+   "started_s": 176.1561917459985,
+   "ended_s": 328.04260218700074,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "296bae20ca4b1764f07ae18c53913bbaee943694f42da56c00759b658d2d0dc5",
+    "bytes": 2530607
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": true,
+    "n_block_failures": 0,
+    "n_excluded": 0,
+    "n_measured": 1728,
+    "n_samples": 1908
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "c3",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m3_measure.py",
+    "--out-dir",
+    "results/m3_confirm/M3_CONFIRM_V1_run",
+    "--session",
+    "c3",
+    "--cases",
+    "1024:1,1280:96",
+    "--blocks",
+    "4",
+    "--warmup",
+    "2",
+    "--reps",
+    "24",
+    "--seed",
+    "32003",
+    "--staging-chunks",
+    "4"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_c3.log",
+   "pid": 222477,
+   "started_s": 328.075473859004,
+   "ended_s": 476.05547010600276,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "b91f153e83f6adc68d05455da2f18ef0f7fdf02de3114909c9a679d1d0862fbb",
+    "bytes": 2526932
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": true,
+    "n_block_failures": 0,
+    "n_excluded": 0,
+    "n_measured": 1728,
+    "n_samples": 1908
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "c4",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m3_measure.py",
+    "--out-dir",
+    "results/m3_confirm/M3_CONFIRM_V1_run",
+    "--session",
+    "c4",
+    "--cases",
+    "1024:1,1280:96",
+    "--blocks",
+    "4",
+    "--warmup",
+    "2",
+    "--reps",
+    "24",
+    "--seed",
+    "32004",
+    "--staging-chunks",
+    "4"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_c4.log",
+   "pid": 223305,
+   "started_s": 476.08933313400485,
+   "ended_s": 634.2004191730011,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "8e9b5c68628836963df9195241cc49fc5273fb5056c55baa310993238cc1013b",
+    "bytes": 2527669
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": true,
+    "n_block_failures": 0,
+    "n_excluded": 0,
+    "n_measured": 1728,
+    "n_samples": 1908
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "c5",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m3_measure.py",
+    "--out-dir",
+    "results/m3_confirm/M3_CONFIRM_V1_run",
+    "--session",
+    "c5",
+    "--cases",
+    "1024:1,1280:96",
+    "--blocks",
+    "4",
+    "--warmup",
+    "2",
+    "--reps",
+    "24",
+    "--seed",
+    "32005",
+    "--staging-chunks",
+    "4"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_c5.log",
+   "pid": 223938,
+   "started_s": 634.2360608989984,
+   "ended_s": 798.4283121510016,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "a794b6b6de40734721bbe2135dd3605d2f55e93ac4676711362ca036240d05ef",
+    "bytes": 2527886
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": true,
+    "n_block_failures": 0,
+    "n_excluded": 0,
+    "n_measured": 1728,
+    "n_samples": 1908
+   },
+   "scratch_removed": null
+  }
+ ],
+ "not_launched": [],
+ "elapsed_s": 798.4283121510016,
+ "finalized_s": 798.4580430269998,
+ "signals_received": [],
+ "finished_at": "2026-11-04T01:36:34-0800"
+}
