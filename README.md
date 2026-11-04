@@ -13,6 +13,8 @@
 | M2.1 | Audit of M2 timing/scoring; dependence-aware reanalysis (BUGLOG VAL-005); interleaved diagnosis of the restore slow mode | done (slow mode associated with higher host-side CUDA-call cost; root cause open) |
 | M3 | Opt-in `batched` restore backend: one contiguous H2D per chunk into bounded chunk-major device staging, one placement per group; strict A/B against the baseline; interleaved 5-session comparison | done (restore calls 896 → 16 memcpy at 16 chunks; median e2e 1.07–2.29× faster in this sample). `supports_adoption` is **false**: under the frozen rule, (1024, 1) is inconclusive (R3, measured stretch too short), so the default stays `baseline`. The analysis now validates evidence against the frozen spec first (BUGLOG VAL-006); the reanalysis reproduced every number and the verdict |
 
+| M3_CONFIRM_V1 | Preregistered confirmation of (1024, 1) and the fresh (1280, 96): own validator spec, premeasurement freeze manifest, budgeted batch wrapper | **prepared, not measured** (protocol is a draft pending review and freeze: `docs/M3_CONFIRM_PROTOCOL.md`; D31) |
+
 Not implemented yet: a runtime cost-aware policy (M2's model is offline only),
 async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `docs/design.md` §1).
 
@@ -25,6 +27,7 @@ async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `
 - M2 performance protocol: `docs/M2_PROTOCOL.md`
 - M2.1 diagnostic plan: `docs/M2_1_DIAGNOSTIC_PLAN.md`
 - M3 design note: `docs/M3_DESIGN.md`; frozen comparison protocol: `docs/M3_PROTOCOL.md`
+- M3_CONFIRM_V1 confirmation protocol (draft, not measured): `docs/M3_CONFIRM_PROTOCOL.md`
 
 Reference harness: Hugging Face Transformers + PyTorch (decisions D1).
 Model: `Qwen/Qwen2.5-1.5B-Instruct@989aa7980e4cf806f80c7fef2b1adb7bc71aa306`, **bf16**, **SDPA**, chunk = 256 tokens.
@@ -53,8 +56,9 @@ kvlab/perf_stats.py        M2.1: block bootstrap, inconclusive classification, p
 kvlab/diag_harness.py      M2.1: diagnostic paths/modes (full_nocache, CUDA-event marks, probes); diagnostic only
 kvlab/m3_bench.py          M3: baseline vs batched benchmark harness on the unchanged M2 timed region
 kvlab/m3_stats.py          M3: stratified block bootstrap, R1-R3 verdicts, regime durations (CPU)
-kvlab/m3_validate.py       M3 / VAL-006: fail-closed evidence validation against the frozen spec, incl. warmups (CPU)
-scripts/                   m0_*, m0_1_audit, m1_run, m1_mutation_check, m2_measure, m2_fit_predict, m2_score, m2_spike_probe, m2_1_reanalyze, m2_1_diagnose, m2_1_analyze_diag, m2_1_regimes, m3_measure, m3_analyze, m3_mutation_check, env_report
+kvlab/m3_validate.py       M3 / VAL-006: fail-closed evidence validation against explicit specs, incl. warmups (CPU)
+kvlab/m3_confirm.py        M3_CONFIRM_V1: premeasurement freeze manifest, budgeted batch wrapper, their checks (CPU, no torch)
+scripts/                   m0_*, m0_1_audit, m1_run, m1_mutation_check, m2_measure, m2_fit_predict, m2_score, m2_spike_probe, m2_1_reanalyze, m2_1_diagnose, m2_1_analyze_diag, m2_1_regimes, m3_measure, m3_analyze, m3_mutation_check, m3_confirm, env_report
 tests/                     CPU tests; tests/gpu/ GPU tests (markers: gpu + m0_strict | m0_1 | m1 | m3)
 results/m0/ (read-only), results/m0_1/, results/m1/, results/m1_1/, results/m1_2/, results/m2/, results/m2_1/, results/m3/   machine-readable evidence and logs
 ```

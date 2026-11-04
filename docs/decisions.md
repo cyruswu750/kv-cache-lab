@@ -390,3 +390,57 @@ chunked prefill (which has no CPU round trip).
     missing or incomplete evidence, measured samples and retained warmups alike. It now validates against the frozen spec first, and the
     reanalysis reproduces every number. `supports_adoption` remains false for the same
     (1024, 1) reason, and the default stays `baseline`. See BUGLOG VAL-006.
+
+## D31. (M3_CONFIRM_V1, prepared; DRAFT, not measured) A separate, preregistered confirmation, bound to a premeasurement freeze
+- **Problem:** the M3 adoption rule failed only on (1024, 1), under R3. Its measured span was
+  too short relative to the slow regimes. Re-analysing the M3 data, or extending it, would
+  make the rule depend on the outcome.
+- **Choice** (`docs/M3_CONFIRM_PROTOCOL.md`):
+  - a new experiment with its own validator spec, `M3_CONFIRM_V1`, analysed on its own and
+    never pooled with M3. Cases: (1024, 1) and the fresh (1280, 96). Five fresh-process
+    sessions, seeds 32001–32005; 4 blocks × (2 warmup + 24 measured) repetitions per case;
+  - the unchanged runner, statistics and R1–R3;
+  - confirmed only if every check passes and all 8 primary verdicts (case × tier × mean and
+    median of the plain e2e difference) are "batched faster";
+  - the flag is `m3_confirm_v1_confirmed`. It does not change the M3 result and does not by
+    itself authorize a default change.
+- **Freeze:** after review and before measurement, `scripts/m3_confirm.py freeze` writes a
+  manifest without a commit. It records the base HEAD, the diff, the actual bytes of every
+  executable file (untracked included), the documents, the commands and the stack, which must
+  equal the M3 stack. The launch, every session record, the batch record and the analysis are
+  checked against that manifest, not against each other. While an analysis file differs from
+  its frozen bytes, the analysis rejects the evidence under this spec. Restoring the frozen
+  bytes reproduces the frozen analysis of the preserved raw measurements, which a later
+  source edit does not invalidate. Adopting a revised analysis needs a new spec.
+- **Execution:** one 1,800 s monotonic deadline for the whole batch, rechecked before every
+  launch and before accepting a session's exit. No early stopping, retries, replacements or
+  extensions.
+  - **Stopping:** any nonzero session exit stops the batch: nothing further is launched,
+    whatever the session file says. The project owner chose this over a correctness-only
+    exception after the preparation review (2026-11-03).
+  - **Execution status:** it is recorded separately from evidence completeness. The wrapper
+    returns nonzero for every execution failure. The analysis judges the actual evidence:
+    exit 3 for missing, inconsistent, timed-out, OOM-affected or excluded-sample evidence;
+    exit 4 for complete, consistent evidence with a failed check, which the stopping rule
+    allows only in the last session.
+  - **Visibility of failures:** recorded correctness failures are listed in every case.
+  - **Process groups:** each session runs in its own process group. Stop signals are received
+    synchronously, so cleanup always terminates and reaps that group and signals nothing else.
+    SIGKILL of the wrapper is covered only by the parent-death signal.
+- **Exact identities:** the runner draws all randomness from the session seed, so the
+  validator replays the whole sample sequence, not only counts. The replay reproduces all
+  6,480 M3 sample identities.
+- **Times as numbers** (preparation review 2, 2026-11-04): every compared time must be a JSON
+  number, not a boolean, that converts to a finite float (`kvlab/m3_confirm.py` `finite()`).
+  - **Problem:** a JSON integer beyond the float range made the check itself raise
+    `OverflowError`, so the analysis crashed (exit 1, no report) instead of rejecting the
+    evidence. Accepting every integer would only move the crash into the analysis, which
+    subtracts and formats sample wall times as floats.
+  - **Shared with the frozen M3 spec:** the sample wall-time check (`t_wall`) now uses the same
+    helper. For `FROZEN_M3_EVAL` this changes only malformed input: JSON `true` was accepted as
+    a time and an out-of-range integer crashed the check; both are now invalid evidence
+    (exit 3). The spec itself and its decision on the preserved M3 evaluation are unchanged.
+- **Rejected:**
+  - pooling with M3, or adding sessions to M3: outcome-dependent;
+  - a generic orchestration framework: not needed for five sequential commands;
+  - writing samples incrementally: it would change the runner and the timed loop.

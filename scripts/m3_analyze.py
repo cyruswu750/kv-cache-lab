@@ -2,7 +2,10 @@
 
 Usage: .venv/bin/python scripts/m3_analyze.py --run-dir results/m3/<eval run> [--out-dir <new dir>]
            [--spec m3_eval_20261103T173632]
-Reads session_*.json without modifying them.
+       .venv/bin/python scripts/m3_analyze.py --spec M3_CONFIRM_V1 --run-dir results/m3_confirm/M3_CONFIRM_V1_run
+           --out-dir <new dir outside the run dir> [--freeze <manifest>] [--expect-freeze-sha256 <hex>]
+Reads session_*.json without modifying them. The spec is selected explicitly; the default is the
+frozen M3 evaluation, whose behavior is unchanged.
 
 - **Validation first** (kvlab/m3_validate.py, BUGLOG VAL-006). The run is checked against an
   explicit experiment specification: planned sessions, cases, blocks, repetitions, every
@@ -10,17 +13,23 @@ Reads session_*.json without modifying them.
   acceptance is recomputed from the detailed checks. m3_validation.json is always written.
 - **Analysis.** Only if the evidence is valid, the analysis writes m3_analysis.json,
   m3_analysis.md and samples_chronological.csv.
-- **Output.** Everything goes to --out-dir (default: the run directory). The script refuses to
-  overwrite.
+- **Output.** Everything goes to --out-dir (default: the run directory; M3_CONFIRM_V1 requires a
+  separate directory, because its run directory has a closed file listing). The script refuses
+  to overwrite.
+- **M3_CONFIRM_V1.** The evidence must also match the freeze manifest and a complete batch
+  record (kvlab/m3_validate.py). The decision is the confirmation rule of
+  docs/M3_CONFIRM_PROTOCOL.md: it is scoped to that experiment, never pooled with M3, and it
+  does not change the default backend.
 
 Exit codes:
-- 0: valid evidence, analysis written. supports_adoption may still be false, for example
-  when a required case is inconclusive.
+- 0: valid evidence, analysis written. supports_adoption (M3) or m3_confirm_v1_confirmed may
+  still be false, for example when a required case is inconclusive.
 - 1: refused (an output exists, or the run directory is missing).
 - 2: usage error.
-- 3: invalid or incomplete evidence. No analysis is written, and supports_adoption is false.
+- 3: invalid or incomplete evidence (including an incomplete or interrupted batch). No analysis
+  is written, and the decision flag is false.
 - 4: complete evidence, but a required correctness or A/B check failed. No analysis is
-  written, and supports_adoption is false.
+  written, and the decision flag is false.
 """
 
 import argparse
@@ -88,25 +97,73 @@ def decide(cases_out: dict, spec: dict, validation: dict) -> dict:
             "evidence_status": validation.get("status"), "spec": spec["name"], "missing_from_analysis": missing}
 
 
+def decide_confirm(cases_out: dict, spec: dict, validation: dict) -> dict:
+    """docs/M3_CONFIRM_PROTOCOL.md §7: confirmed only if the evidence is valid, every correctness
+    and A/B check passes, and every primary verdict (case x tier x statistic, plain e2e) is
+    batched_faster. Driven by the spec's lists; a missing verdict is a failure. Scoped to this
+    experiment: it does not replace the M3 result and does not change the default backend."""
+    gates = validation.get("status") == "valid" and validation.get("correctness_and_ab_acceptance_recomputed") is True
+    verdicts = {}
+    for L, S in spec["cases"]:
+        for tier in spec["tiers"]:
+            for st in spec["primary_statistics"]:
+                try:
+                    verdicts[f"{L}:{S} {tier} {st}"] = cases_out[f"{L}:{S}"]["tiers"][tier]["e2e"][st]["verdict"]
+                except (KeyError, TypeError):
+                    verdicts[f"{L}:{S} {tier} {st}"] = "missing"
+    need = [f"{k}: {v}" for k, v in verdicts.items() if v != "batched_faster"]
+    return {"experiment": spec["name"], "evidence_status": validation.get("status"), "spec": spec["name"],
+            "all_correctness_and_ab_checks_pass": gates, "primary_verdicts": verdicts,
+            "primary_not_established": need,
+            "established_regressions": [k for k, v in verdicts.items() if v == "batched_slower"],
+            "m3_confirm_v1_confirmed": gates and not need and len(verdicts) == len(spec["cases"]) * len(spec["tiers"]) *
+                                       len(spec["primary_statistics"]),
+            "scope": f"{spec['name']} only: this sample, machine and stack; not pooled with the M3 evaluation, "
+                     "whose supports_adoption=false is unchanged",
+            "default_backend": "baseline", "authorizes_default_change": False,
+            # reported whatever the evidence status: an invalid batch never hides a recorded failure
+            "observed_correctness_failures": list(validation.get("correctness_failures") or []),
+            "execution": (validation.get("provenance") or {}).get("execution")}
+
+
+DECIDE = {"m3_adoption": decide, "confirm_all_primary": decide_confirm}
+FLAG = {"m3_adoption": "supports_adoption", "confirm_all_primary": "m3_confirm_v1_confirmed"}
+
+
+def rule(spec) -> str:
+    return spec.get("decision_rule", "m3_adoption")
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--run-dir", required=True)
     ap.add_argument("--out-dir", default=None, help="where to write the outputs (default: the run directory)")
     ap.add_argument("--spec", default=mv.DEFAULT_SPEC, choices=sorted(mv.SPECS))
+    ap.add_argument("--freeze", default=None, help="freeze manifest (specs with one; default: the spec's path)")
+    ap.add_argument("--expect-freeze-sha256", default=None, help="the manifest SHA-256 recorded at freeze time")
     args = ap.parse_args(argv)
+    spec = mv.SPECS[args.spec]
     rd = Path(args.run_dir)
     od = Path(args.out_dir) if args.out_dir else rd
+    frozen = spec.get("provenance") == "freeze_manifest"
+    if not frozen and (args.freeze or args.expect_freeze_sha256):
+        ap.error(f"--freeze / --expect-freeze-sha256 apply only to specs with a freeze manifest, not {spec['name']}")
+    if frozen and (args.out_dir is None or od.resolve() == rd.resolve() or rd.resolve() in od.resolve().parents):
+        ap.error(f"{spec['name']} needs --out-dir outside the run directory")
     if not rd.is_dir():
         sys.exit(f"run directory {rd} does not exist")
     outs = [od / "m3_validation.json", od / "m3_analysis.json", od / "m3_analysis.md", od / "samples_chronological.csv"]
     for o in outs:
         if o.exists():
             sys.exit(f"refusing to overwrite {o}")
-    spec = mv.SPECS[args.spec]
-    validation, sessions, prof = mv.load_and_validate(rd, spec)
+    if frozen:
+        validation, sessions, prof = mv.load_and_validate(rd, spec, freeze=args.freeze,
+                                                          expect_freeze_sha256=args.expect_freeze_sha256)
+    else:
+        validation, sessions, prof = mv.load_and_validate(rd, spec)
     od.mkdir(parents=True, exist_ok=True)
     if validation["status"] != "valid":
-        validation["decision"] = decide({}, spec, validation)
+        validation["decision"] = DECIDE[rule(spec)]({}, spec, validation)
         (od / "m3_validation.json").write_text(json.dumps(validation, indent=1))
         print(render_rejected(validation))
         return EXIT[validation["status"]]
@@ -248,7 +305,7 @@ def main(argv=None) -> int:
         out["cases"][f"{L}:{S}"] = crec
 
     # ---- decision rule (protocol §8): spec-driven, gate (1) recomputed by the validation
-    out["decision"] = decide(out["cases"], spec, validation)
+    out["decision"] = DECIDE[rule(spec)](out["cases"], spec, validation)
     out["validation"] = {k: v for k, v in validation.items() if k != "per_session"}
     (od / "m3_validation.json").write_text(json.dumps({**validation, "decision": out["decision"]}, indent=1))
     if prof:
@@ -269,8 +326,8 @@ def main(argv=None) -> int:
                         f"{s['phases_ns']['restore'] / 1e6:.4f}" if s["mode"] == "synced" else "",
                         s.get("slow", ""), s["restore_len"],
                         "|".join(s["sources"]), "|".join(map(str, s["stored_chunks"]))])
-    (od / "m3_analysis.md").write_text(render(out))
-    print(render(out))
+    (od / "m3_analysis.md").write_text(render(out, spec))
+    print(render(out, spec))
     return EXIT["valid"]
 
 
@@ -278,17 +335,39 @@ def fmt_ci(r, scale=1.0, nd=2):
     return f"{r['estimate'] * scale:.{nd}f} [{r['ci'][0] * scale:.{nd}f}, {r['ci'][1] * scale:.{nd}f}]"
 
 
-def render(out) -> str:
-    L = ["# M3 analysis (generated by scripts/m3_analyze.py)", "",
+HEADINGS = {
+    "m3_adoption": {
+        "title": "# M3 analysis (generated by scripts/m3_analyze.py)",
+        "rules_doc": "docs/M3_PROTOCOL.md §6 (R1–R3)",
+        "e2e": "## End-to-end first-token latency (plain, ms)",
+        "phase": "## Restore phase (synced diagnostic samples, ms)",
+        "speed": "## Speedups (plain e2e; b = 4; three different definitions)",
+        "rules": "## Rules R1–R3 and block-length sensitivity (plain e2e)",
+        "ctx": "## Context: restore path − full (prepared-state recompute), plain e2e, b = 4 (report only)"},
+    "confirm_all_primary": {
+        "title": "# M3_CONFIRM_V1 analysis (generated by scripts/m3_analyze.py; this experiment only, not pooled with M3)",
+        "rules_doc": "docs/M3_CONFIRM_PROTOCOL.md §6 (the M3 rules R1–R3, unchanged)",
+        "e2e": "## Primary: end-to-end first-token latency (plain, ms)",
+        "phase": "## Secondary: restore phase (synced diagnostic samples, ms; reported, not part of the confirmation rule)",
+        "speed": "## Descriptive: speedups (plain e2e; b = 4; three different definitions)",
+        "rules": "## Primary: rules R1–R3 and block-length sensitivity (plain e2e)",
+        "ctx": "## Context: restore path − full (prepared-state recompute), plain e2e, b = 4 (report only)"},
+}
+
+
+def render(out, spec=None) -> str:
+    kind = rule(spec) if spec else "m3_adoption"
+    H = HEADINGS[kind]
+    L = [H["title"], "",
          "d = batched − baseline (ms), paired within a repetition. Intervals: stratified circular block "
-         "bootstrap within contiguous blocks, 95% percentile. Verdicts follow docs/M3_PROTOCOL.md §6 (R1–R3).", ""]
+         f"bootstrap within contiguous blocks, 95% percentile. Verdicts follow {H['rules_doc']}.", ""]
     L += ["## Sessions", "", "| session | seed | elapsed min | measured | excluded | correctness + A/B | SM clock median MHz | tiered_cache sha256 |",
           "|---|---|---|---|---|---|---|---|"]
     for sid, s in out["sessions"].items():
         clk = s["sm_clock_mhz"]["median"] if s["sm_clock_mhz"] else "n/a"
         L.append(f"| {sid} | {s['seed']} | {s['elapsed_min']:.1f} | {s['n_measured']} | {s['n_excluded_recomputed']} | "
                  f"{s['correctness_all_recomputed']} | {clk} | `{(s['tiered_cache_sha256'] or '')[:12]}` |")
-    L += ["", "## End-to-end first-token latency (plain, ms)", "",
+    L += ["", H["e2e"], "",
           "| case | tier | baseline median / mean | batched median / mean | median d, b=4 [CI] | mean d, b=4 [CI] | median verdict | mean verdict | slow share base / batched |",
           "|---|---|---|---|---|---|---|---|---|"]
     for key, c in out["cases"].items():
@@ -298,7 +377,7 @@ def render(out) -> str:
                      f"{e['batched']['median']:.1f} / {e['batched']['mean']:.1f} | {fmt_ci(e['median_d']['by_block_len']['4'])} | "
                      f"{fmt_ci(e['mean_d']['by_block_len']['4'])} | {e['median_d']['verdict']} | {e['mean_d']['verdict']} | "
                      f"{e['slow_share']['baseline']:.0%} / {e['slow_share']['batched']:.0%} |")
-    L += ["", "## Restore phase (synced diagnostic samples, ms)", "",
+    L += ["", H["phase"], "",
           "| case | tier | baseline median / mean | batched median / mean | median d, b=4 [CI] | mean d, b=4 [CI] | median verdict | mean verdict |",
           "|---|---|---|---|---|---|---|---|"]
     for key, c in out["cases"].items():
@@ -307,14 +386,14 @@ def render(out) -> str:
             L.append(f"| {key} | {tier} | {e['baseline']['median']:.2f} / {e['baseline']['mean']:.2f} | "
                      f"{e['batched']['median']:.2f} / {e['batched']['mean']:.2f} | {fmt_ci(e['median_d']['by_block_len']['4'])} | "
                      f"{fmt_ci(e['mean_d']['by_block_len']['4'])} | {e['median_d']['verdict']} | {e['mean_d']['verdict']} |")
-    L += ["", "## Speedups (plain e2e; b = 4; three different definitions)", "",
+    L += ["", H["speed"], "",
           "| case | tier | marginal median ratio | marginal mean ratio | median of paired ratios |", "|---|---|---|---|---|"]
     for key, c in out["cases"].items():
         for tier in TIERS:
             sp = c["tiers"][tier]["e2e"]["speedups"]
             L.append(f"| {key} | {tier} | {fmt_ci(sp['marginal_median_ratio']['4'], nd=3)} | "
                      f"{fmt_ci(sp['marginal_mean_ratio']['4'], nd=3)} | {fmt_ci(sp['median_paired_ratio']['4'], nd=3)} |")
-    L += ["", "## Rules R1–R3 and block-length sensitivity (plain e2e)", "",
+    L += ["", H["rules"], "",
           "| case | tier | stat | CI b=1 | CI b=2 | CI b=4 | CI b=8 | per-session range | R1 | R2 | span s / longest regime s | n_eff | verdict |",
           "|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
     for key, c in out["cases"].items():
@@ -325,7 +404,7 @@ def render(out) -> str:
                 L.append(f"| {key} | {tier} | {st} | {cis} | [{r['per_session_range'][0]:.2f}, {r['per_session_range'][1]:.2f}] | "
                          f"{r['R1_all_block_lengths_agree']} | {r['R2_all_sessions_agree']} | "
                          f"{r['R3']['span_s']:.0f} / {r['R3']['longest_slow_regime_s']:.1f} | {r['R3']['ar1_effective_n']:.1f} | {r['verdict']} |")
-    L += ["", "## Context: restore path − full (prepared-state recompute), plain e2e, b = 4 (report only)", "",
+    L += ["", H["ctx"], "",
           "| case | full median / mean | tier | baseline: median d / mean d | batched: median d / mean d |", "|---|---|---|---|---|"]
     for key, c in out["cases"].items():
         for tier in TIERS:
@@ -364,6 +443,8 @@ def render(out) -> str:
                 L.append(f"| {key} | {tier} | {st} | " + " | ".join(f"{ps.get(s, float('nan')):.2f}" for s in out["sessions"]) + " |")
     d, v = out["decision"], out["validation"]
     c = v["counts"]
+    if kind == "confirm_all_primary":
+        return "\n".join(L + render_confirm_decision(d, v))
     L += ["", "## Decision rule (protocol §8)", "",
           f"- evidence validation against spec `{v['spec']}`: **{v['status']}** "
           f"({len(v['sessions_expected'])} planned sessions; measured samples "
@@ -381,18 +462,51 @@ def render(out) -> str:
     return "\n".join(L)
 
 
+def render_confirm_decision(d, v) -> list[str]:
+    c, pv = v["counts"], v.get("provenance") or {}
+    return ["", "## Confirmation rule (docs/M3_CONFIRM_PROTOCOL.md §7)", "",
+            f"- evidence validation against spec `{v['spec']}`: **{v['status']}** "
+            f"({len(v['sessions_expected'])} planned sessions; " +
+            "; ".join(f"{k} {x['passed']}/{x['expected']}" for k, x in c.items()) +
+            "; warmup records kept as evidence, never used in statistics; recomputed from the detailed records)",
+            f"- freeze manifest `{pv.get('freeze_manifest')}` sha256 `{pv.get('freeze_manifest_sha256')}`; "
+            f"batch record sha256 `{pv.get('batch_record_sha256')}`",
+            f"- all correctness and A/B checks pass: {d['all_correctness_and_ab_checks_pass']}",
+            *(f"- primary verdict {k}: {x}" for k, x in d["primary_verdicts"].items()),
+            f"- established regressions: {d['established_regressions'] or 'none'}",
+            f"- **M3_CONFIRM_V1 confirmed: {d['m3_confirm_v1_confirmed']}** ({d['scope']})",
+            f"- default backend: `{d['default_backend']}`; this result does not by itself authorize a default change", ""]
+
+
 def render_rejected(v) -> str:
     c = v["counts"]
+    ex = (v.get("provenance") or {}).get("execution")
+    extra = []
+    if ex is not None:
+        extra = [f"- batch execution (as recorded; not evidence completeness): status {ex.get('execution_status')!r}, "
+                 f"stop {ex.get('stop')!r}, exit codes {ex.get('returncodes')}, not launched {ex.get('not_launched')}"]
+    if v.get("provenance") is not None and v["correctness_failures"] and v["status"] == "invalid":
+        extra.append(f"- **observed correctness / A/B failures: {len(v['correctness_failures'])}** (listed below; "
+                     f"reported although the invalid evidence takes precedence, exit 3)")
     L = [f"# M3 analysis NOT run: evidence status `{v['status']}` (spec `{v['spec']}`, run dir {v['run_dir']})", "",
+         *extra,
          f"- session files found: {v['session_files_found'] or 'none'}; planned: {v['sessions_expected']}",
          *(f"- {k}: {x['passed']} passed / {x['present']} present / {x['expected']} expected" for k, x in c.items()),
          f"- problems ({len(v['problems'])}):", *(f"  - {p}" for p in v["problems"][:40]),
          *([f"  - ... {len(v['problems']) - 40} more in m3_validation.json"] if len(v["problems"]) > 40 else []),
          f"- failed correctness / A/B checks ({len(v['correctness_failures'])}):",
          *(f"  - {p}" for p in v["correctness_failures"][:40]),
-         "", f"**supports adoption: {v['decision']['supports_adoption']}** (no performance result is drawn from "
+         "", f"**{_flag_label(v['decision'])}: {v['decision'][_flag_key(v['decision'])]}** (no performance result is drawn from "
              f"{'invalid or incomplete evidence' if v['status'] == 'invalid' else 'a run with a failed correctness check'})"]
     return "\n".join(L)
+
+
+def _flag_key(decision) -> str:
+    return FLAG["confirm_all_primary"] if "m3_confirm_v1_confirmed" in decision else FLAG["m3_adoption"]
+
+
+def _flag_label(decision) -> str:
+    return "M3_CONFIRM_V1 confirmed" if "m3_confirm_v1_confirmed" in decision else "supports adoption"
 
 
 if __name__ == "__main__":
