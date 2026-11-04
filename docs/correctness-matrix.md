@@ -1,4 +1,4 @@
-# Correctness matrix (M0, M0.1, M1, M1.1, M1.2, M2, M2.1)
+# Correctness matrix (M0, M0.1, M1, M1.1, M1.2, M2, M2.1, M3)
 
 Columns:
 - **Layer:** CPU = CPU-only unit test with synthetic tensors and real temp files.
@@ -177,3 +177,65 @@ counters, and the same 4/7 divergences.
 | Per first-visit block: M2 strict check + `full_nocache` logits bitwise = `full` | strict | PASS 26/26 |
 | Spike-probe cached forward starts at 256 and ends at 257 tokens; source K/V unchanged | as stated | PASS 10/10 sessions |
 | M2 smoke after the `perf_harness` refactor | exit 0, strict | PASS (`results/m2_1/m2_smoke_after_refactor_20261103T152815/`) |
+
+## M3 restore backends, CPU differential (`tests/test_restore_backends_cpu.py`, 24 tests; twin stores, one per backend, identical history)
+Each row compares the restore result, KV bytes (also against the source cache), counters,
+tiers, host LRU order, pins, staging state and budgets between the backends.
+
+| Scenario | Expected | Actual | Test |
+|---|---|---|---|
+| One chunk from host; one chunk from disk | identical; L = C; 1 placement | PASS | `test_one_chunk_host_and_disk` |
+| 5 host chunks, G ∈ {1, 2, 3, 5, 8} | identical; batched copies = 5, placements = ⌈5/G⌉, scratch = min(5, G)·CB; baseline copies = 5·2·layers | PASS (5) | `test_multi_chunk_host_only_for_every_group_size` |
+| Disk-only, 5 distinct payloads through the one staging slot | identical; no promotion | PASS | `test_disk_only_reads_reuse_one_staging_slot_with_distinct_payloads` |
+| Mixed tiers (disk ×3, host ×2) | identical sources in stored order | PASS | `test_mixed_tiers_follow_the_stored_order` |
+| Corrupt chunk at index 0 / 2 / 4 | L = index·C (0 → no cache), `disk_payload_crc`; only verified groups placed; later chunks untouched | PASS (3) | `test_corrupt_chunk_stops_at_the_verified_prefix` |
+| Missing middle file; absent middle chunk | `disk_file_missing` at L = C; `absent` at L = 2C | PASS | `test_missing_middle_file_and_absent_middle_chunk` |
+| Partial plans of 1–4 chunks (G = 3) | identical | PASS (4) | `test_partial_plans_and_chunk_boundaries` |
+| Repeated requests with eviction; host slab overwritten afterwards | earlier returned caches unchanged | PASS | `test_repeated_requests_with_eviction_never_change_an_earlier_cache` |
+| Returned tensors | contiguous, own exactly L tokens, no shared storage | PASS | `test_restored_tensors_own_exactly_their_bytes` |
+| Copy failure at a disk chunk / a host chunk, per backend | error propagates; pins 0; staging free; hits count completed copies only; store reusable | PASS (4) | `test_copy_failure_releases_leases_and_staging_and_propagates` |
+| Unknown backend, G < 1, invalid backend set later | `ValueError` | PASS | `test_backend_and_group_size_are_validated` |
+| Engine sequences on a tiny Qwen2 (6 prompts, eviction, disk hits) | every step bitwise = resident replay; identical across backends | PASS | `test_engine_sequences_are_bitwise_identical_across_backends` |
+
+## M3 GPU (`tests/gpu/test_m3_restore.py` 17; `tests/gpu/test_m1_tiered.py` parametrized over both backends)
+| Scenario | Expected | Actual | Test / evidence |
+|---|---|---|---|
+| Every M1 GPU scenario with the batched backend | as in M1; strict resident replay; STEPS forward calls | PASS 11/11 (+11/11 baseline, +1 namespace) | `-m "gpu and m1"` (`results/m3/logs/pytest_gpu_m1_20261103T175241.log`) |
+| A/B on one store, n ∈ {1, 3, 5, 6} × {host, disk, mixed} | KV bytes, logits, 8 greedy steps and tokens bitwise equal across backends and to the resident replay | PASS (12) | `test_batched_matches_baseline_on_identical_state` |
+| Disk-only, 5 distinct payloads via the staging slot | bytes equal resident; 5 copies, 2 placements | PASS | `test_disk_reads_reuse_the_staging_slot_with_distinct_payloads` |
+| Synchronizing copies for 6 chunks (torch sync debug mode) | baseline 336, batched 6 | PASS | `test_every_chunk_transfer_is_one_synchronizing_copy` |
+| Returned cache after later requests, evictions and slab overwrite | unchanged; owns exactly [0, L) | PASS | `test_returned_cache_is_not_changed_by_later_requests_or_buffer_reuse` |
+| Restore peak device memory | baseline ≤ 2n·CB (+2 MiB), batched ≤ (2n + min(n, G))·CB (+2 MiB); kept = n·CB | PASS | `test_transient_device_memory_is_bounded` |
+| Copy failure on GPU | leases and staging released; next request restores fully | PASS | `test_copy_failure_on_gpu_releases_leases_and_staging` |
+| M1 evidence runner with each backend | 19/19 strict, acceptance; records and counters identical across backends | PASS | `results/m3/m1_run_{baseline,batched}_20261103T175241.json` |
+| Mutants (8 CPU, 2 GPU) | each killed | 10/10 KILLED | `results/m3/mutation_check_20261103T173143.txt` |
+| M3 sessions: every timed sample (tier, L, admissions, residency, requested backend, copy count) | valid | PASS: 5,400 measured, 0 excluded | `results/m3/eval_20261103T173632/` |
+| M3 sessions: M2 strict check per backend; A/B check (KV bytes, logits, 8 steps) | strict | PASS 25/25 and 25/25 | same |
+| Full vs restored first token (report only, D10) | reported | 25/25 equal; max abs logit diff 0.20–0.39, identical for both backends | same |
+
+## M3 statistics (`tests/test_m3_stats.py`, 14 tests)
+| Scenario | Expected | Actual |
+|---|---|---|
+| Stratified indices stay within their stratum | as stated | PASS |
+| Point estimates of the 5 statistics, incl. marginal vs paired ratios differing | exact | PASS |
+| R1 / R2 / R3 each able to force "inconclusive"; "slower" detected | as stated | PASS |
+| Regime durations | exact | PASS |
+| Well-formed samples of all 9 path × backend × mode combinations valid; wrong backend, wrong copy count, wrong chunk count, missing record, restore on `full`, bad phases, wrong tier excluded | as stated | PASS (9 + 1) |
+
+## M3 analysis evidence validation (CPU; BUGLOG VAL-006, `tests/test_m3_analyze_validation.py`, 42 tests)
+Added after M3. These run the production validator (`kvlab/m3_validate.py`) and the real `scripts/m3_analyze.py` CLI on scratch copies of `results/m3/eval_20261103T173632/`. That directory is only read.
+
+| Scenario | Expected | Actual | Test |
+|---|---|---|---|
+| Spec equals the frozen protocol, the recorded commands and the runner's process-warmup plan; harness combinations equal | as stated | PASS | `test_spec_is_the_frozen_protocol_and_the_recorded_commands` |
+| Empty directory (pre-fix: exit 0, adoption true) | `invalid`, exit 3, no analysis | PASS | `test_empty_directory_is_invalid_via_the_real_cli` |
+| All (1024, 1) samples removed (pre-fix: adoption false → true) | `invalid`, exit 3 | PASS | `test_missing_required_case_1024_1_is_invalid_via_the_real_cli` |
+| Decision on the historical cases with (1024, 1) removed, and on no cases | adoption false; the rule can still pass on valid all-faster input | PASS | `test_decision_is_driven_by_the_spec_case_list…` |
+| Missing / unexpected / unreadable session file | `invalid` | PASS (3) | `test_missing_unexpected_or_unreadable_session_is_invalid` |
+| Measured samples: missing, duplicate, warmup flag either way, rep outside the plan, pair partner failing the rules, missing `t_wall` | `invalid` | PASS (7) | `test_missing_duplicate_or_unpaired_samples_are_invalid` |
+| Correctness / A/B / restore-memory records or fields missing or failed while stored summaries still pass; A/B of two misses; summary contradicting passing details | `invalid` (failed details also listed) | PASS (11) | `test_missing_or_failed_detailed_checks_with_stale_passing_summaries…` |
+| Correctness failure recorded consistently | `correctness_failed`, exit 4 | PASS | `test_consistently_recorded_correctness_failure…` |
+| Warmups (follow-up): all removed with `n_samples` adjusted; one block / one process warmup missing; same-count substitutions; relabelled measured row; flag or stage errors; out-of-order process warmup; malformed warmup | `invalid`, exit 3 | PASS (12 + 1 subprocess) | `test_missing_substituted_or_misflagged_warmup_evidence_is_invalid`, `test_all_warmups_removed_is_rejected_by_the_real_cli_subprocess` |
+| Warmup timings inflated 100× | valid; every case statistic and the decision unchanged | PASS | `test_warmup_timings_never_enter_the_statistics` |
+| Complete original evidence | `valid`, exit 0: 5,400 samples, 900 block and 180 process warmups, 50 strict and 50 A/B checks; all historical values equal; adoption false | PASS | `test_complete_valid_report_reproduces_the_historical_analysis` |
+| Existing output, or a missing run directory | refused; nothing written | PASS | `test_refuses_to_overwrite_and_writes_nothing` |
