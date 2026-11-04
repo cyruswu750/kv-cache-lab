@@ -1,0 +1,21 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   7%|▋         | 24/338 [00:00<00:01, 186.84it/s]Loading weights:  13%|█▎        | 44/338 [00:00<00:01, 193.18it/s]Loading weights:  19%|█▉        | 64/338 [00:00<00:01, 187.42it/s]Loading weights:  25%|██▍       | 84/338 [00:00<00:01, 177.67it/s]Loading weights:  30%|███       | 102/338 [00:00<00:01, 177.47it/s]Loading weights:  36%|███▌      | 120/338 [00:00<00:01, 176.79it/s]Loading weights:  41%|████      | 138/338 [00:00<00:01, 177.65it/s]Loading weights:  46%|████▋     | 157/338 [00:00<00:01, 177.18it/s]Loading weights:  53%|█████▎    | 179/338 [00:00<00:00, 182.15it/s]Loading weights:  59%|█████▊    | 198/338 [00:01<00:00, 178.46it/s]Loading weights:  65%|██████▍   | 219/338 [00:01<00:00, 187.28it/s]Loading weights:  71%|███████   | 239/338 [00:01<00:00, 190.92it/s]Loading weights: 100%|██████████| 338/338 [00:01<00:00, 259.17it/s]
+full_vs_full_repeat    N= 300 L=   0 max_abs=0.0000 rel_l2=0.00e+00 argmax_eq=True margin=10.250
+full_vs_gpu_chunked    N= 300 L= 256 max_abs=0.3535 rel_l2=3.31e-02 argmax_eq=True margin=10.250
+full_vs_full_repeat    N= 400 L=   0 max_abs=0.0000 rel_l2=0.00e+00 argmax_eq=True margin=6.250
+full_vs_gpu_chunked    N= 400 L= 256 max_abs=0.2109 rel_l2=1.22e-02 argmax_eq=True margin=6.250
+full_vs_full_repeat    N= 600 L=   0 max_abs=0.0000 rel_l2=0.00e+00 argmax_eq=True margin=9.750
+full_vs_gpu_chunked    N= 600 L= 256 max_abs=0.2891 rel_l2=2.03e-02 argmax_eq=True margin=9.750
+full_vs_gpu_chunked    N= 600 L= 512 max_abs=0.2656 rel_l2=1.90e-02 argmax_eq=True margin=9.750
+full_vs_full_repeat    N= 700 L=   0 max_abs=0.0000 rel_l2=0.00e+00 argmax_eq=True margin=5.875
+full_vs_gpu_chunked    N= 700 L= 256 max_abs=0.3438 rel_l2=1.68e-02 argmax_eq=True margin=5.875
+full_vs_gpu_chunked    N= 700 L= 512 max_abs=0.3164 rel_l2=2.34e-02 argmax_eq=True margin=5.875
+{
+  "rule": "atol = max(0.25, ceil_to_0.05(4 * M)); rtol = 0.02 (docs/decisions.md D7)",
+  "M_max_abs_err_full_vs_gpu_chunked": 0.353515625,
+  "max_rel_l2_full_vs_gpu_chunked": 0.03312830999493599,
+  "full_vs_full_max_abs_err": 0.0,
+  "derived_atol": 1.45,
+  "rtol": 0.02,
+  "argmax_all_equal": true
+}
+wrote /home/cyrus/projects/kv-cache-lab/results/m0/calibration.json

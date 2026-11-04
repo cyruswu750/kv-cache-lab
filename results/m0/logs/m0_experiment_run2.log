@@ -1,0 +1,26 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  59%|█████▊    | 198/338 [00:00<00:00, 1979.20it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2802.43it/s]
+PASS boundary_255   N= 255 eligible_L=[]
+PASS boundary_256   N= 256 eligible_L=[]
+PASS boundary_257   N= 257 eligible_L=[256]
+     L= 256 suffix=   1 bytes_eq(export,restore)=True,True max_abs=0.1875 rel_l2=1.17e-02 argmax_eq=True greedy=8/8 bitwise_vs_gpu_chunked=True neg_ctrl_max_abs=18.32
+PASS boundary_511   N= 511 eligible_L=[256]
+     L= 256 suffix= 255 bytes_eq(export,restore)=True,True max_abs=0.5625 rel_l2=2.73e-02 argmax_eq=True greedy=8/8 bitwise_vs_gpu_chunked=True neg_ctrl_max_abs=23.62
+PASS boundary_512   N= 512 eligible_L=[256]
+     L= 256 suffix= 256 bytes_eq(export,restore)=True,True max_abs=0.2500 rel_l2=1.46e-02 argmax_eq=True greedy=8/8 bitwise_vs_gpu_chunked=True neg_ctrl_max_abs=22.56
+PASS boundary_513   N= 513 eligible_L=[256, 512]
+     L= 256 suffix= 257 bytes_eq(export,restore)=True,True max_abs=0.2188 rel_l2=1.42e-02 argmax_eq=True greedy=8/8 bitwise_vs_gpu_chunked=True
+     L= 512 suffix=   1 bytes_eq(export,restore)=True,True max_abs=0.2500 rel_l2=1.87e-02 argmax_eq=True greedy=8/8 bitwise_vs_gpu_chunked=True neg_ctrl_max_abs=23.09
+PASS nat_short      N=  40 eligible_L=[]
+PASS nat_medium     N= 166 eligible_L=[]
+FAIL nat_long       N= 426 eligible_L=[256]
+     L= 256 suffix= 170 bytes_eq(export,restore)=True,True max_abs=0.3125 rel_l2=1.75e-02 argmax_eq=True greedy=6/8 bitwise_vs_gpu_chunked=True neg_ctrl_max_abs=16.28
+PASS nat_xlong      N= 611 eligible_L=[256, 512]
+     L= 256 suffix= 355 bytes_eq(export,restore)=True,True max_abs=0.2969 rel_l2=1.78e-02 argmax_eq=True greedy=8/8 bitwise_vs_gpu_chunked=True
+     L= 512 suffix=  99 bytes_eq(export,restore)=True,True max_abs=0.3047 rel_l2=2.33e-02 argmax_eq=True greedy=8/8 bitwise_vs_gpu_chunked=True neg_ctrl_max_abs=16.73
+TIMING boundary_257   N=257 L=256 full=35.93ms restore=3.25ms(wall) suffix=16.20ms
+TIMING boundary_511   N=511 L=256 full=42.72ms restore=8.53ms(wall) suffix=21.68ms
+TIMING boundary_512   N=512 L=256 full=31.21ms restore=3.12ms(wall) suffix=66.06ms
+TIMING boundary_513   N=513 L=512 full=38.58ms restore=9.63ms(wall) suffix=16.30ms
+TIMING nat_long       N=426 L=256 full=30.37ms restore=3.16ms(wall) suffix=19.89ms
+TIMING nat_xlong      N=611 L=512 full=40.89ms restore=20.85ms(wall) suffix=19.42ms
+OVERALL FAIL; wrote /home/cyrus/projects/kv-cache-lab/results/m0/m0_results.json

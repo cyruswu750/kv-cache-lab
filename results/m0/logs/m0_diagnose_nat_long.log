@@ -1,0 +1,28 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:  60%|██████    | 204/338 [00:00<00:00, 2029.61it/s]Loading weights: 100%|██████████| 338/338 [00:00<00:00, 2798.66it/s]
+step 0: A=   785 B=   785 A_margin=1.1250 Bforced_margin=1.1250 Bforced_argmax==A=True max_abs(A,Bforced)=0.3125
+    A top5: [(785, 'The', 24.75), (641, 'In', 23.625), (20629, 'Both', 22.5), (16014, 'During', 21.75), (14374, '###', 21.5)]
+    Bforced top5: [(785, 'The', 24.625), (641, 'In', 23.5), (20629, 'Both', 22.375), (16014, 'During', 21.5), (14374, '###', 21.375)]
+step 1: A=  3078 B=  3078 A_margin=0.2500 Bforced_margin=0.2500 Bforced_argmax==A=True max_abs(A,Bforced)=0.2266
+    A top5: [(3078, ' aut', 23.25), (1376, ' key', 23.0), (1849, ' system', 22.875), (1378, ' two', 22.125), (4004, ' background', 21.0)]
+    Bforced top5: [(3078, ' aut', 23.25), (1376, ' key', 23.0), (1849, ' system', 22.875), (1378, ' two', 22.125), (42578, ' transformer', 21.125)]
+step 2: A=   460 B=   460 A_margin=12.0000 Bforced_margin=11.8750 Bforced_argmax==A=True max_abs(A,Bforced)=0.3125
+    A top5: [(460, 'ore', 35.25), (538, 'og', 23.25), (11986, 'ocom', 22.375), (534, 'ode', 21.5), (3018, 'ored', 21.0)]
+    Bforced top5: [(460, 'ore', 35.25), (538, 'og', 23.375), (11986, 'ocom', 22.375), (534, 'ode', 21.625), (3018, 'ored', 21.0)]
+step 3: A= 46719 B= 46719 A_margin=14.0000 Bforced_margin=14.0000 Bforced_argmax==A=True max_abs(A,Bforced)=0.5000
+    A top5: [(46719, 'gressive', 36.75), (2483, 'gress', 22.75), (70, 'g', 22.5), (29740, 'gression', 22.375), (901, 'gr', 20.5)]
+    Bforced top5: [(46719, 'gressive', 36.5), (2483, 'gress', 22.5), (29740, 'gression', 22.375), (70, 'g', 22.25), (901, 'gr', 20.25)]
+step 4: A=  9471 B=  9471 A_margin=4.1250 Bforced_margin=4.1250 Bforced_argmax==A=True max_abs(A,Bforced)=0.2812
+    A top5: [(9471, ' generation', 29.125), (1849, ' system', 25.0), (1614, ' model', 24.375), (13823, ' generator', 24.0), (1766, ' gener', 23.75)]
+    Bforced top5: [(9471, ' generation', 29.25), (1849, ' system', 25.125), (1614, ' model', 24.375), (13823, ' generator', 24.0), (1766, ' gener', 23.875)]
+step 5: A=  1849 B=  1849 A_margin=5.0000 Bforced_margin=5.1250 Bforced_argmax==A=True max_abs(A,Bforced)=0.2930
+    A top5: [(1849, ' system', 28.625), (7481, ' described', 23.625), (1614, ' model', 23.25), (323, ' and', 22.75), (1882, ' process', 22.125)]
+    Bforced top5: [(1849, ' system', 28.625), (7481, ' described', 23.5), (1614, ' model', 23.125), (323, ' and', 22.625), (1714, ' method', 22.125)]
+step 6: A=   312 B=  7481 A_margin=0.0000 Bforced_margin=0.1250 Bforced_argmax==A=False max_abs(A,Bforced)=0.2812
+    A top5: [(312, ' re', 23.75), (7481, ' described', 23.75), (9733, ' mentioned', 21.0), (11, ',', 20.375), (5711, ' uses', 20.375)]
+    Bforced top5: [(7481, ' described', 23.875), (312, ' re', 23.75), (9733, ' mentioned', 20.875), (11, ',', 20.375), (5711, ' uses', 20.375)]
+step 7: A=  4776 B=   304 A_margin=7.8750 Bforced_margin=7.8750 Bforced_argmax==A=True max_abs(A,Bforced)=0.2500
+    A top5: [(4776, 'uses', 26.75), (12, '-', 18.875), (48561, 'claims', 18.125), (9984, 'news', 17.25), (1314, 'util', 17.125)]
+    Bforced top5: [(4776, 'uses', 26.875), (12, '-', 19.0), (48561, 'claims', 18.25), (1314, 'util', 17.375), (9984, 'news', 17.125)]
+A text: 'The autoregressive generation system reuses'
+B text: 'The autoregressive generation system described in'
+wrote /home/cyrus/projects/kv-cache-lab/results/m0/divergence_nat_long.json

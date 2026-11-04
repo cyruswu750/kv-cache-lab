@@ -1,0 +1,1171 @@
+{
+ "milestone": "M0",
+ "mode": "full",
+ "overall": "FAIL",
+ "versions": {
+  "torch": "2.14.1+cu130",
+  "torch_cuda": "13.0",
+  "transformers": "5.22.1",
+  "python": "3.14.4"
+ },
+ "gpu": "NVIDIA GeForce RTX 4080 Laptop GPU",
+ "model": {
+  "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+  "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "dtype": "torch.bfloat16",
+  "attn_implementation": "sdpa",
+  "num_hidden_layers": 28,
+  "num_key_value_heads": 2,
+  "head_dim": 128,
+  "layer_types": [
+   "full_attention"
+  ],
+  "rope_parameters": {
+   "rope_theta": 1000000.0,
+   "rope_type": "default"
+  },
+  "vocab_size": 151936
+ },
+ "chunk_size": 256,
+ "greedy_steps": 8,
+ "tolerances": {
+  "atol": 1.45,
+  "rtol": 0.02
+ },
+ "cases": [
+  {
+   "name": "boundary_255",
+   "prompt_len": 255,
+   "chunk_size": 256,
+   "eligible_restore_lens": [],
+   "restores": [],
+   "full": {
+    "first_logits_finite": true,
+    "all_step_logits_finite": true,
+    "greedy_tokens": [
+     13,
+     576,
+     326,
+     57909,
+     53416,
+     572,
+     264,
+     883
+    ]
+   },
+   "restore_len_max": 0,
+   "status_note": "no eligible chunk boundary (L must satisfy L % C == 0 and 0 < L <= N-1)",
+   "status": "PASS"
+  },
+  {
+   "name": "boundary_256",
+   "prompt_len": 256,
+   "chunk_size": 256,
+   "eligible_restore_lens": [],
+   "restores": [],
+   "full": {
+    "first_logits_finite": true,
+    "all_step_logits_finite": true,
+    "greedy_tokens": [
+     576,
+     326,
+     57909,
+     53416,
+     572,
+     264,
+     883,
+     315
+    ]
+   },
+   "restore_len_max": 0,
+   "status_note": "no eligible chunk boundary (L must satisfy L % C == 0 and 0 < L <= N-1)",
+   "status": "PASS"
+  },
+  {
+   "name": "boundary_257",
+   "prompt_len": 257,
+   "chunk_size": 256,
+   "eligible_restore_lens": [
+    256
+   ],
+   "restores": [
+    {
+     "restore_len": 256,
+     "suffix_len": 1,
+     "partial": false,
+     "restore_check": {
+      "tensors_checked": 56,
+      "all_bytes_equal": true,
+      "total_bytes": 7340032,
+      "tensor_kinds": [
+       {
+        "shape": [
+         1,
+         2,
+         256,
+         128
+        ],
+        "dtype": "torch.bfloat16",
+        "nbytes": 131072,
+        "count": 56
+       }
+      ],
+      "mismatches": []
+     },
+     "first_logits": {
+      "ref_finite": true,
+      "test_finite": true,
+      "max_abs_err": 0.1875,
+      "rel_l2_err": 0.011678546667098999,
+      "allclose": true,
+      "atol": 1.45,
+      "rtol": 0.02,
+      "ref_argmax": 1030,
+      "test_argmax": 1030,
+      "ref_top2_margin": 0.75,
+      "argmax_equal": true
+     },
+     "all_step_logits_finite": true,
+     "greedy_tokens": [
+      1030,
+      1012,
+      264,
+      326,
+      57909,
+      53416,
+      369,
+      26127
+     ],
+     "greedy": {
+      "steps": 8,
+      "matching_positions": 8,
+      "identical": true,
+      "first_divergence": null
+     },
+     "bitwise_equal_to_gpu_resident_chunked": true,
+     "negative_control_zero_kv": {
+      "max_abs_err": 18.3203125,
+      "allclose": false,
+      "argmax_equal": false
+     }
+    }
+   ],
+   "full": {
+    "first_logits_finite": true,
+    "all_step_logits_finite": true,
+    "greedy_tokens": [
+     1030,
+     1012,
+     264,
+     326,
+     57909,
+     53416,
+     369,
+     26127
+    ]
+   },
+   "restore_len_max": 256,
+   "export_check": {
+    "tensors_checked": 56,
+    "all_bytes_equal": true,
+    "total_bytes": 7340032,
+    "tensor_kinds": [
+     {
+      "shape": [
+       1,
+       2,
+       256,
+       128
+      ],
+      "dtype": "torch.bfloat16",
+      "nbytes": 131072,
+      "count": 56
+     }
+    ],
+    "mismatches": []
+   },
+   "snapshot_bytes": 7340032,
+   "snapshot_unchanged": true,
+   "status": "PASS"
+  },
+  {
+   "name": "boundary_511",
+   "prompt_len": 511,
+   "chunk_size": 256,
+   "eligible_restore_lens": [
+    256
+   ],
+   "restores": [
+    {
+     "restore_len": 256,
+     "suffix_len": 255,
+     "partial": false,
+     "restore_check": {
+      "tensors_checked": 56,
+      "all_bytes_equal": true,
+      "total_bytes": 7340032,
+      "tensor_kinds": [
+       {
+        "shape": [
+         1,
+         2,
+         256,
+         128
+        ],
+        "dtype": "torch.bfloat16",
+        "nbytes": 131072,
+        "count": 56
+       }
+      ],
+      "mismatches": []
+     },
+     "first_logits": {
+      "ref_finite": true,
+      "test_finite": true,
+      "max_abs_err": 0.5625,
+      "rel_l2_err": 0.027254201471805573,
+      "allclose": true,
+      "atol": 1.45,
+      "rtol": 0.02,
+      "ref_argmax": 4362,
+      "test_argmax": 4362,
+      "ref_top2_margin": 6.0,
+      "argmax_equal": true
+     },
+     "all_step_logits_finite": true,
+     "greedy_tokens": [
+      4362,
+      6529,
+      13,
+      7496,
+      10695,
+      1033,
+      40530,
+      13
+     ],
+     "greedy": {
+      "steps": 8,
+      "matching_positions": 8,
+      "identical": true,
+      "first_divergence": null
+     },
+     "bitwise_equal_to_gpu_resident_chunked": true,
+     "negative_control_zero_kv": {
+      "max_abs_err": 23.625,
+      "allclose": false,
+      "argmax_equal": false
+     }
+    }
+   ],
+   "full": {
+    "first_logits_finite": true,
+    "all_step_logits_finite": true,
+    "greedy_tokens": [
+     4362,
+     6529,
+     13,
+     7496,
+     10695,
+     1033,
+     40530,
+     13
+    ]
+   },
+   "restore_len_max": 256,
+   "export_check": {
+    "tensors_checked": 56,
+    "all_bytes_equal": true,
+    "total_bytes": 7340032,
+    "tensor_kinds": [
+     {
+      "shape": [
+       1,
+       2,
+       256,
+       128
+      ],
+      "dtype": "torch.bfloat16",
+      "nbytes": 131072,
+      "count": 56
+     }
+    ],
+    "mismatches": []
+   },
+   "snapshot_bytes": 7340032,
+   "snapshot_unchanged": true,
+   "status": "PASS"
+  },
+  {
+   "name": "boundary_512",
+   "prompt_len": 512,
+   "chunk_size": 256,
+   "eligible_restore_lens": [
+    256
+   ],
+   "restores": [
+    {
+     "restore_len": 256,
+     "suffix_len": 256,
+     "partial": false,
+     "restore_check": {
+      "tensors_checked": 56,
+      "all_bytes_equal": true,
+      "total_bytes": 7340032,
+      "tensor_kinds": [
+       {
+        "shape": [
+         1,
+         2,
+         256,
+         128
+        ],
+        "dtype": "torch.bfloat16",
+        "nbytes": 131072,
+        "count": 56
+       }
+      ],
+      "mismatches": []
+     },
+     "first_logits": {
+      "ref_finite": true,
+      "test_finite": true,
+      "max_abs_err": 0.25,
+      "rel_l2_err": 0.014629090204834938,
+      "allclose": true,
+      "atol": 1.45,
+      "rtol": 0.02,
+      "ref_argmax": 6529,
+      "test_argmax": 6529,
+      "ref_top2_margin": 10.125,
+      "argmax_equal": true
+     },
+     "all_step_logits_finite": true,
+     "greedy_tokens": [
+      6529,
+      13,
+      7496,
+      10695,
+      1033,
+      40530,
+      13,
+      362
+     ],
+     "greedy": {
+      "steps": 8,
+      "matching_positions": 8,
+      "identical": true,
+      "first_divergence": null
+     },
+     "bitwise_equal_to_gpu_resident_chunked": true,
+     "negative_control_zero_kv": {
+      "max_abs_err": 22.5625,
+      "allclose": false,
+      "argmax_equal": false
+     }
+    }
+   ],
+   "full": {
+    "first_logits_finite": true,
+    "all_step_logits_finite": true,
+    "greedy_tokens": [
+     6529,
+     13,
+     7496,
+     10695,
+     1033,
+     40530,
+     13,
+     362
+    ]
+   },
+   "restore_len_max": 256,
+   "export_check": {
+    "tensors_checked": 56,
+    "all_bytes_equal": true,
+    "total_bytes": 7340032,
+    "tensor_kinds": [
+     {
+      "shape": [
+       1,
+       2,
+       256,
+       128
+      ],
+      "dtype": "torch.bfloat16",
+      "nbytes": 131072,
+      "count": 56
+     }
+    ],
+    "mismatches": []
+   },
+   "snapshot_bytes": 7340032,
+   "snapshot_unchanged": true,
+   "status": "PASS"
+  },
+  {
+   "name": "boundary_513",
+   "prompt_len": 513,
+   "chunk_size": 256,
+   "eligible_restore_lens": [
+    256,
+    512
+   ],
+   "restores": [
+    {
+     "restore_len": 256,
+     "suffix_len": 257,
+     "partial": true,
+     "restore_check": {
+      "tensors_checked": 56,
+      "all_bytes_equal": true,
+      "total_bytes": 7340032,
+      "tensor_kinds": [
+       {
+        "shape": [
+         1,
+         2,
+         256,
+         128
+        ],
+        "dtype": "torch.bfloat16",
+        "nbytes": 131072,
+        "count": 56
+       }
+      ],
+      "mismatches": []
+     },
+     "first_logits": {
+      "ref_finite": true,
+      "test_finite": true,
+      "max_abs_err": 0.21875,
+      "rel_l2_err": 0.014178001321852207,
+      "allclose": true,
+      "atol": 1.45,
+      "rtol": 0.02,
+      "ref_argmax": 13,
+      "test_argmax": 13,
+      "ref_top2_margin": 8.25,
+      "argmax_equal": true
+     },
+     "all_step_logits_finite": true,
+     "greedy_tokens": [
+      13,
+      7496,
+      10695,
+      1033,
+      40530,
+      13,
+      362,
+      2421
+     ],
+     "greedy": {
+      "steps": 8,
+      "matching_positions": 8,
+      "identical": true,
+      "first_divergence": null
+     },
+     "bitwise_equal_to_gpu_resident_chunked": true
+    },
+    {
+     "restore_len": 512,
+     "suffix_len": 1,
+     "partial": false,
+     "restore_check": {
+      "tensors_checked": 112,
+      "all_bytes_equal": true,
+      "total_bytes": 14680064,
+      "tensor_kinds": [
+       {
+        "shape": [
+         1,
+         2,
+         256,
+         128
+        ],
+        "dtype": "torch.bfloat16",
+        "nbytes": 131072,
+        "count": 112
+       }
+      ],
+      "mismatches": []
+     },
+     "first_logits": {
+      "ref_finite": true,
+      "test_finite": true,
+      "max_abs_err": 0.25,
+      "rel_l2_err": 0.01868364028632641,
+      "allclose": true,
+      "atol": 1.45,
+      "rtol": 0.02,
+      "ref_argmax": 13,
+      "test_argmax": 13,
+      "ref_top2_margin": 8.25,
+      "argmax_equal": true
+     },
+     "all_step_logits_finite": true,
+     "greedy_tokens": [
+      13,
+      7496,
+      10695,
+      1033,
+      40530,
+      13,
+      362,
+      2421
+     ],
+     "greedy": {
+      "steps": 8,
+      "matching_positions": 8,
+      "identical": true,
+      "first_divergence": null
+     },
+     "bitwise_equal_to_gpu_resident_chunked": true,
+     "negative_control_zero_kv": {
+      "max_abs_err": 23.09375,
+      "allclose": false,
+      "argmax_equal": false
+     }
+    }
+   ],
+   "full": {
+    "first_logits_finite": true,
+    "all_step_logits_finite": true,
+    "greedy_tokens": [
+     13,
+     7496,
+     10695,
+     1033,
+     40530,
+     13,
+     362,
+     2421
+    ]
+   },
+   "restore_len_max": 512,
+   "export_check": {
+    "tensors_checked": 112,
+    "all_bytes_equal": true,
+    "total_bytes": 14680064,
+    "tensor_kinds": [
+     {
+      "shape": [
+       1,
+       2,
+       256,
+       128
+      ],
+      "dtype": "torch.bfloat16",
+      "nbytes": 131072,
+      "count": 112
+     }
+    ],
+    "mismatches": []
+   },
+   "snapshot_bytes": 14680064,
+   "snapshot_unchanged": true,
+   "status": "PASS"
+  },
+  {
+   "name": "nat_short",
+   "prompt_len": 40,
+   "chunk_size": 256,
+   "eligible_restore_lens": [],
+   "restores": [],
+   "full": {
+    "first_logits_finite": true,
+    "all_step_logits_finite": true,
+    "greedy_tokens": [
+     32,
+     326,
+     57909,
+     72780,
+     264,
+     6783,
+     11,
+     9906
+    ]
+   },
+   "restore_len_max": 0,
+   "status_note": "no eligible chunk boundary (L must satisfy L % C == 0 and 0 < L <= N-1)",
+   "status": "PASS"
+  },
+  {
+   "name": "nat_medium",
+   "prompt_len": 166,
+   "chunk_size": 256,
+   "eligible_restore_lens": [],
+   "restores": [],
+   "full": {
+    "first_logits_finite": true,
+    "all_step_logits_finite": true,
+    "greedy_tokens": [
+     785,
+     1887,
+     6559,
+     12462,
+     374,
+     1948,
+     4937,
+     51000
+    ]
+   },
+   "restore_len_max": 0,
+   "status_note": "no eligible chunk boundary (L must satisfy L % C == 0 and 0 < L <= N-1)",
+   "status": "PASS"
+  },
+  {
+   "name": "nat_long",
+   "prompt_len": 426,
+   "chunk_size": 256,
+   "eligible_restore_lens": [
+    256
+   ],
+   "restores": [
+    {
+     "restore_len": 256,
+     "suffix_len": 170,
+     "partial": false,
+     "restore_check": {
+      "tensors_checked": 56,
+      "all_bytes_equal": true,
+      "total_bytes": 7340032,
+      "tensor_kinds": [
+       {
+        "shape": [
+         1,
+         2,
+         256,
+         128
+        ],
+        "dtype": "torch.bfloat16",
+        "nbytes": 131072,
+        "count": 56
+       }
+      ],
+      "mismatches": []
+     },
+     "first_logits": {
+      "ref_finite": true,
+      "test_finite": true,
+      "max_abs_err": 0.3125,
+      "rel_l2_err": 0.017549321055412292,
+      "allclose": true,
+      "atol": 1.45,
+      "rtol": 0.02,
+      "ref_argmax": 785,
+      "test_argmax": 785,
+      "ref_top2_margin": 1.125,
+      "argmax_equal": true
+     },
+     "all_step_logits_finite": true,
+     "greedy_tokens": [
+      785,
+      3078,
+      460,
+      46719,
+      9471,
+      1849,
+      7481,
+      304
+     ],
+     "greedy": {
+      "steps": 8,
+      "matching_positions": 6,
+      "identical": false,
+      "first_divergence": 6
+     },
+     "bitwise_equal_to_gpu_resident_chunked": true,
+     "negative_control_zero_kv": {
+      "max_abs_err": 16.28125,
+      "allclose": false,
+      "argmax_equal": true
+     }
+    }
+   ],
+   "full": {
+    "first_logits_finite": true,
+    "all_step_logits_finite": true,
+    "greedy_tokens": [
+     785,
+     3078,
+     460,
+     46719,
+     9471,
+     1849,
+     312,
+     4776
+    ]
+   },
+   "restore_len_max": 256,
+   "export_check": {
+    "tensors_checked": 56,
+    "all_bytes_equal": true,
+    "total_bytes": 7340032,
+    "tensor_kinds": [
+     {
+      "shape": [
+       1,
+       2,
+       256,
+       128
+      ],
+      "dtype": "torch.bfloat16",
+      "nbytes": 131072,
+      "count": 56
+     }
+    ],
+    "mismatches": []
+   },
+   "snapshot_bytes": 7340032,
+   "snapshot_unchanged": true,
+   "status": "FAIL"
+  },
+  {
+   "name": "nat_xlong",
+   "prompt_len": 611,
+   "chunk_size": 256,
+   "eligible_restore_lens": [
+    256,
+    512
+   ],
+   "restores": [
+    {
+     "restore_len": 256,
+     "suffix_len": 355,
+     "partial": true,
+     "restore_check": {
+      "tensors_checked": 56,
+      "all_bytes_equal": true,
+      "total_bytes": 7340032,
+      "tensor_kinds": [
+       {
+        "shape": [
+         1,
+         2,
+         256,
+         128
+        ],
+        "dtype": "torch.bfloat16",
+        "nbytes": 131072,
+        "count": 56
+       }
+      ],
+      "mismatches": []
+     },
+     "first_logits": {
+      "ref_finite": true,
+      "test_finite": true,
+      "max_abs_err": 0.296875,
+      "rel_l2_err": 0.01781134493649006,
+      "allclose": true,
+      "atol": 1.45,
+      "rtol": 0.02,
+      "ref_argmax": 785,
+      "test_argmax": 785,
+      "ref_top2_margin": 0.75,
+      "argmax_equal": true
+     },
+     "all_step_logits_finite": true,
+     "greedy_tokens": [
+      785,
+      3364,
+      594,
+      1487,
+      2190,
+      323,
+      279,
+      1378
+     ],
+     "greedy": {
+      "steps": 8,
+      "matching_positions": 8,
+      "identical": true,
+      "first_divergence": null
+     },
+     "bitwise_equal_to_gpu_resident_chunked": true
+    },
+    {
+     "restore_len": 512,
+     "suffix_len": 99,
+     "partial": false,
+     "restore_check": {
+      "tensors_checked": 112,
+      "all_bytes_equal": true,
+      "total_bytes": 14680064,
+      "tensor_kinds": [
+       {
+        "shape": [
+         1,
+         2,
+         256,
+         128
+        ],
+        "dtype": "torch.bfloat16",
+        "nbytes": 131072,
+        "count": 112
+       }
+      ],
+      "mismatches": []
+     },
+     "first_logits": {
+      "ref_finite": true,
+      "test_finite": true,
+      "max_abs_err": 0.3046875,
+      "rel_l2_err": 0.023335300385951996,
+      "allclose": true,
+      "atol": 1.45,
+      "rtol": 0.02,
+      "ref_argmax": 785,
+      "test_argmax": 785,
+      "ref_top2_margin": 0.75,
+      "argmax_equal": true
+     },
+     "all_step_logits_finite": true,
+     "greedy_tokens": [
+      785,
+      3364,
+      594,
+      1487,
+      2190,
+      323,
+      279,
+      1378
+     ],
+     "greedy": {
+      "steps": 8,
+      "matching_positions": 8,
+      "identical": true,
+      "first_divergence": null
+     },
+     "bitwise_equal_to_gpu_resident_chunked": true,
+     "negative_control_zero_kv": {
+      "max_abs_err": 16.734375,
+      "allclose": false,
+      "argmax_equal": false
+     }
+    }
+   ],
+   "full": {
+    "first_logits_finite": true,
+    "all_step_logits_finite": true,
+    "greedy_tokens": [
+     785,
+     3364,
+     594,
+     1487,
+     2190,
+     323,
+     279,
+     1378
+    ]
+   },
+   "restore_len_max": 512,
+   "export_check": {
+    "tensors_checked": 112,
+    "all_bytes_equal": true,
+    "total_bytes": 14680064,
+    "tensor_kinds": [
+     {
+      "shape": [
+       1,
+       2,
+       256,
+       128
+      ],
+      "dtype": "torch.bfloat16",
+      "nbytes": 131072,
+      "count": 112
+     }
+    ],
+    "mismatches": []
+   },
+   "snapshot_bytes": 14680064,
+   "snapshot_unchanged": true,
+   "status": "PASS"
+  }
+ ],
+ "diagnostic_timings_not_benchmarks": [
+  {
+   "N": 257,
+   "L": 256,
+   "suffix_len": 1,
+   "snapshot_bytes": 7340032,
+   "full_prefill_N": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 35.99482700064982,
+    "wall_ms_min": 25.161419999676582,
+    "wall_ms_max": 48.47401000006357,
+    "gpu_ms_median": 35.93305587768555,
+    "gpu_ms_min": 25.11257553100586,
+    "gpu_ms_max": 48.38188934326172
+   },
+   "export_gpu_to_cpu_L": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 2.463814000293496,
+    "wall_ms_min": 2.3270649999176385,
+    "wall_ms_max": 2.5247890007449314,
+    "gpu_ms_median": 2.4344959259033203,
+    "gpu_ms_min": 2.3022398948669434,
+    "gpu_ms_max": 2.4932479858398438
+   },
+   "restore_cpu_to_gpu_L": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 3.2492410000486416,
+    "wall_ms_min": 2.944292999927711,
+    "wall_ms_max": 3.2941959998424863,
+    "gpu_ms_median": 3.209343910217285,
+    "gpu_ms_min": 2.900991916656494,
+    "gpu_ms_max": 3.270656108856201
+   },
+   "suffix_prefill_after_restore": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 16.241053999692667,
+    "wall_ms_min": 16.016899000533158,
+    "wall_ms_max": 16.474064999783877,
+    "gpu_ms_median": 16.20262336730957,
+    "gpu_ms_min": 15.985695838928223,
+    "gpu_ms_max": 16.435199737548828
+   },
+   "name": "boundary_257"
+  },
+  {
+   "N": 511,
+   "L": 256,
+   "suffix_len": 255,
+   "snapshot_bytes": 7340032,
+   "full_prefill_N": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 42.80769399974815,
+    "wall_ms_min": 41.383066999514995,
+    "wall_ms_max": 46.418818999882205,
+    "gpu_ms_median": 42.71718215942383,
+    "gpu_ms_min": 41.31532669067383,
+    "gpu_ms_max": 46.345985412597656
+   },
+   "export_gpu_to_cpu_L": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 5.550777999815182,
+    "wall_ms_min": 5.453672999465198,
+    "wall_ms_max": 5.721722000089358,
+    "gpu_ms_median": 5.519999980926514,
+    "gpu_ms_min": 5.422976016998291,
+    "gpu_ms_max": 5.6826558113098145
+   },
+   "restore_cpu_to_gpu_L": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 8.527933000550547,
+    "wall_ms_min": 8.402936000493355,
+    "wall_ms_max": 9.241243999895232,
+    "gpu_ms_median": 8.460288047790527,
+    "gpu_ms_min": 8.36847972869873,
+    "gpu_ms_max": 9.17465591430664
+   },
+   "suffix_prefill_after_restore": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 21.720356000514585,
+    "wall_ms_min": 21.635314999912225,
+    "wall_ms_max": 22.011627999745542,
+    "gpu_ms_median": 21.68115234375,
+    "gpu_ms_min": 21.597183227539062,
+    "gpu_ms_max": 21.97385597229004
+   },
+   "name": "boundary_511"
+  },
+  {
+   "N": 512,
+   "L": 256,
+   "suffix_len": 256,
+   "snapshot_bytes": 7340032,
+   "full_prefill_N": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 31.258662000254844,
+    "wall_ms_min": 31.043103999763844,
+    "wall_ms_max": 31.80932400027814,
+    "gpu_ms_median": 31.207168579101562,
+    "gpu_ms_min": 30.98214340209961,
+    "gpu_ms_max": 31.763456344604492
+   },
+   "export_gpu_to_cpu_L": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 2.4444170003334875,
+    "wall_ms_min": 2.398019999418466,
+    "wall_ms_max": 2.4863159997039475,
+    "gpu_ms_median": 2.4202880859375,
+    "gpu_ms_min": 2.373663902282715,
+    "gpu_ms_max": 2.461535930633545
+   },
+   "restore_cpu_to_gpu_L": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 3.118564000033075,
+    "wall_ms_min": 3.005379000569519,
+    "wall_ms_max": 3.2081019999168348,
+    "gpu_ms_median": 3.08735990524292,
+    "gpu_ms_min": 2.961535930633545,
+    "gpu_ms_max": 3.181567907333374
+   },
+   "suffix_prefill_after_restore": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 66.13933900007396,
+    "wall_ms_min": 65.4174539995438,
+    "wall_ms_max": 67.19611100015754,
+    "gpu_ms_median": 66.05721282958984,
+    "gpu_ms_min": 65.33222198486328,
+    "gpu_ms_max": 67.1212158203125
+   },
+   "name": "boundary_512"
+  },
+  {
+   "N": 513,
+   "L": 512,
+   "suffix_len": 1,
+   "snapshot_bytes": 14680064,
+   "full_prefill_N": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 38.62926500005415,
+    "wall_ms_min": 38.38448099941161,
+    "wall_ms_max": 38.98720399956801,
+    "gpu_ms_median": 38.58124923706055,
+    "gpu_ms_min": 38.307838439941406,
+    "gpu_ms_max": 38.9312629699707
+   },
+   "export_gpu_to_cpu_L": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 8.374172000003455,
+    "wall_ms_min": 8.195573999728367,
+    "wall_ms_max": 8.654963000481075,
+    "gpu_ms_median": 8.34937572479248,
+    "gpu_ms_min": 8.169952392578125,
+    "gpu_ms_max": 8.632543563842773
+   },
+   "restore_cpu_to_gpu_L": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 9.631551999518706,
+    "wall_ms_min": 7.286513000508421,
+    "wall_ms_max": 10.263448999467073,
+    "gpu_ms_median": 9.601344108581543,
+    "gpu_ms_min": 7.256832122802734,
+    "gpu_ms_max": 10.23481559753418
+   },
+   "suffix_prefill_after_restore": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 16.33564299936552,
+    "wall_ms_min": 15.990580000107002,
+    "wall_ms_max": 16.571859999203298,
+    "gpu_ms_median": 16.302080154418945,
+    "gpu_ms_min": 15.959039688110352,
+    "gpu_ms_max": 16.529407501220703
+   },
+   "name": "boundary_513"
+  },
+  {
+   "N": 426,
+   "L": 256,
+   "suffix_len": 170,
+   "snapshot_bytes": 7340032,
+   "full_prefill_N": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 30.440784000347776,
+    "wall_ms_min": 30.12717999990855,
+    "wall_ms_max": 30.676299999868206,
+    "gpu_ms_median": 30.372671127319336,
+    "gpu_ms_min": 30.046207427978516,
+    "gpu_ms_max": 30.601215362548828
+   },
+   "export_gpu_to_cpu_L": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 2.3828100001992425,
+    "wall_ms_min": 2.2806770002716803,
+    "wall_ms_max": 2.518928999961645,
+    "gpu_ms_median": 2.3591039180755615,
+    "gpu_ms_min": 2.259040117263794,
+    "gpu_ms_max": 2.49072003364563
+   },
+   "restore_cpu_to_gpu_L": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 3.156515000227955,
+    "wall_ms_min": 3.0472479993477464,
+    "wall_ms_max": 3.2334710003851797,
+    "gpu_ms_median": 3.1304640769958496,
+    "gpu_ms_min": 3.002592086791992,
+    "gpu_ms_max": 3.2081921100616455
+   },
+   "suffix_prefill_after_restore": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 19.93419499922311,
+    "wall_ms_min": 19.703719000062847,
+    "wall_ms_max": 21.00427999994281,
+    "gpu_ms_median": 19.892192840576172,
+    "gpu_ms_min": 19.67308807373047,
+    "gpu_ms_max": 20.973567962646484
+   },
+   "name": "nat_long"
+  },
+  {
+   "N": 611,
+   "L": 512,
+   "suffix_len": 99,
+   "snapshot_bytes": 14680064,
+   "full_prefill_N": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 41.01456900025369,
+    "wall_ms_min": 40.41800000049989,
+    "wall_ms_max": 42.47813900019537,
+    "gpu_ms_median": 40.8903694152832,
+    "gpu_ms_min": 40.34617614746094,
+    "gpu_ms_max": 42.388641357421875
+   },
+   "export_gpu_to_cpu_L": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 15.865433000726625,
+    "wall_ms_min": 14.630204999775742,
+    "wall_ms_max": 16.12998400014476,
+    "gpu_ms_median": 15.830559730529785,
+    "gpu_ms_min": 14.586976051330566,
+    "gpu_ms_max": 16.09516716003418
+   },
+   "restore_cpu_to_gpu_L": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 20.854226999290404,
+    "wall_ms_min": 20.08447000025626,
+    "wall_ms_max": 20.965666999472887,
+    "gpu_ms_median": 20.80646324157715,
+    "gpu_ms_min": 20.017152786254883,
+    "gpu_ms_max": 20.900863647460938
+   },
+   "suffix_prefill_after_restore": {
+    "reps": 5,
+    "warmup": 2,
+    "wall_ms_median": 19.454345999292855,
+    "wall_ms_min": 19.31598400005896,
+    "wall_ms_max": 34.97091000008368,
+    "gpu_ms_median": 19.42323112487793,
+    "gpu_ms_min": 19.272703170776367,
+    "gpu_ms_max": 34.929664611816406
+   },
+   "name": "nat_xlong"
+  }
+ ]
+}

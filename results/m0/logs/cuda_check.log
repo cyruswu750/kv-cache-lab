@@ -1,0 +1,8 @@
+/home/cyrus/projects/kv-cache-lab/.venv/lib/python3.14/site-packages/torch/_subclasses/functional_tensor.py:368: UserWarning: Failed to initialize NumPy: No module named 'numpy' (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:84.)
+  cpu = _conversion_method_template(device=torch.device("cpu"))
+torch 2.14.1+cu130 cuda 13.0 cudnn 92400
+available True
+NVIDIA GeForce RTX 4080 Laptop GPU (8, 9)
+mem free/total MiB 11043 12281
+matmul ok 25.544994354248047
+bf16 supported True

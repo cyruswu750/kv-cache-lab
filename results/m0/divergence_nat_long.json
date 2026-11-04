@@ -1,0 +1,749 @@
+{
+ "name": "nat_long",
+ "N": 426,
+ "L": 256,
+ "tokens_A": [
+  785,
+  3078,
+  460,
+  46719,
+  9471,
+  1849,
+  312,
+  4776
+ ],
+ "tokens_B": [
+  785,
+  3078,
+  460,
+  46719,
+  9471,
+  1849,
+  7481,
+  304
+ ],
+ "text_A": "The autoregressive generation system reuses",
+ "text_B": "The autoregressive generation system described in",
+ "steps": [
+  {
+   "step": 0,
+   "token_A": 785,
+   "token_B": 785,
+   "A_top5": [
+    [
+     785,
+     "The",
+     24.75
+    ],
+    [
+     641,
+     "In",
+     23.625
+    ],
+    [
+     20629,
+     "Both",
+     22.5
+    ],
+    [
+     16014,
+     "During",
+     21.75
+    ],
+    [
+     14374,
+     "###",
+     21.5
+    ]
+   ],
+   "B_top5": [
+    [
+     785,
+     "The",
+     24.625
+    ],
+    [
+     641,
+     "In",
+     23.5
+    ],
+    [
+     20629,
+     "Both",
+     22.375
+    ],
+    [
+     16014,
+     "During",
+     21.5
+    ],
+    [
+     14374,
+     "###",
+     21.375
+    ]
+   ],
+   "A_top2_margin": 1.125,
+   "B_forced_on_A_tokens_top5": [
+    [
+     785,
+     "The",
+     24.625
+    ],
+    [
+     641,
+     "In",
+     23.5
+    ],
+    [
+     20629,
+     "Both",
+     22.375
+    ],
+    [
+     16014,
+     "During",
+     21.5
+    ],
+    [
+     14374,
+     "###",
+     21.375
+    ]
+   ],
+   "B_forced_top2_margin": 1.125,
+   "B_forced_argmax_equals_A": true,
+   "max_abs_A_vs_B_forced": 0.3125
+  },
+  {
+   "step": 1,
+   "token_A": 3078,
+   "token_B": 3078,
+   "A_top5": [
+    [
+     3078,
+     " aut",
+     23.25
+    ],
+    [
+     1376,
+     " key",
+     23.0
+    ],
+    [
+     1849,
+     " system",
+     22.875
+    ],
+    [
+     1378,
+     " two",
+     22.125
+    ],
+    [
+     4004,
+     " background",
+     21.0
+    ]
+   ],
+   "B_top5": [
+    [
+     3078,
+     " aut",
+     23.25
+    ],
+    [
+     1376,
+     " key",
+     23.0
+    ],
+    [
+     1849,
+     " system",
+     22.875
+    ],
+    [
+     1378,
+     " two",
+     22.125
+    ],
+    [
+     42578,
+     " transformer",
+     21.125
+    ]
+   ],
+   "A_top2_margin": 0.25,
+   "B_forced_on_A_tokens_top5": [
+    [
+     3078,
+     " aut",
+     23.25
+    ],
+    [
+     1376,
+     " key",
+     23.0
+    ],
+    [
+     1849,
+     " system",
+     22.875
+    ],
+    [
+     1378,
+     " two",
+     22.125
+    ],
+    [
+     42578,
+     " transformer",
+     21.125
+    ]
+   ],
+   "B_forced_top2_margin": 0.25,
+   "B_forced_argmax_equals_A": true,
+   "max_abs_A_vs_B_forced": 0.2265625
+  },
+  {
+   "step": 2,
+   "token_A": 460,
+   "token_B": 460,
+   "A_top5": [
+    [
+     460,
+     "ore",
+     35.25
+    ],
+    [
+     538,
+     "og",
+     23.25
+    ],
+    [
+     11986,
+     "ocom",
+     22.375
+    ],
+    [
+     534,
+     "ode",
+     21.5
+    ],
+    [
+     3018,
+     "ored",
+     21.0
+    ]
+   ],
+   "B_top5": [
+    [
+     460,
+     "ore",
+     35.25
+    ],
+    [
+     538,
+     "og",
+     23.375
+    ],
+    [
+     11986,
+     "ocom",
+     22.375
+    ],
+    [
+     534,
+     "ode",
+     21.625
+    ],
+    [
+     3018,
+     "ored",
+     21.0
+    ]
+   ],
+   "A_top2_margin": 12.0,
+   "B_forced_on_A_tokens_top5": [
+    [
+     460,
+     "ore",
+     35.25
+    ],
+    [
+     538,
+     "og",
+     23.375
+    ],
+    [
+     11986,
+     "ocom",
+     22.375
+    ],
+    [
+     534,
+     "ode",
+     21.625
+    ],
+    [
+     3018,
+     "ored",
+     21.0
+    ]
+   ],
+   "B_forced_top2_margin": 11.875,
+   "B_forced_argmax_equals_A": true,
+   "max_abs_A_vs_B_forced": 0.3125
+  },
+  {
+   "step": 3,
+   "token_A": 46719,
+   "token_B": 46719,
+   "A_top5": [
+    [
+     46719,
+     "gressive",
+     36.75
+    ],
+    [
+     2483,
+     "gress",
+     22.75
+    ],
+    [
+     70,
+     "g",
+     22.5
+    ],
+    [
+     29740,
+     "gression",
+     22.375
+    ],
+    [
+     901,
+     "gr",
+     20.5
+    ]
+   ],
+   "B_top5": [
+    [
+     46719,
+     "gressive",
+     36.5
+    ],
+    [
+     2483,
+     "gress",
+     22.5
+    ],
+    [
+     29740,
+     "gression",
+     22.375
+    ],
+    [
+     70,
+     "g",
+     22.25
+    ],
+    [
+     901,
+     "gr",
+     20.25
+    ]
+   ],
+   "A_top2_margin": 14.0,
+   "B_forced_on_A_tokens_top5": [
+    [
+     46719,
+     "gressive",
+     36.5
+    ],
+    [
+     2483,
+     "gress",
+     22.5
+    ],
+    [
+     29740,
+     "gression",
+     22.375
+    ],
+    [
+     70,
+     "g",
+     22.25
+    ],
+    [
+     901,
+     "gr",
+     20.25
+    ]
+   ],
+   "B_forced_top2_margin": 14.0,
+   "B_forced_argmax_equals_A": true,
+   "max_abs_A_vs_B_forced": 0.5
+  },
+  {
+   "step": 4,
+   "token_A": 9471,
+   "token_B": 9471,
+   "A_top5": [
+    [
+     9471,
+     " generation",
+     29.125
+    ],
+    [
+     1849,
+     " system",
+     25.0
+    ],
+    [
+     1614,
+     " model",
+     24.375
+    ],
+    [
+     13823,
+     " generator",
+     24.0
+    ],
+    [
+     1766,
+     " gener",
+     23.75
+    ]
+   ],
+   "B_top5": [
+    [
+     9471,
+     " generation",
+     29.25
+    ],
+    [
+     1849,
+     " system",
+     25.125
+    ],
+    [
+     1614,
+     " model",
+     24.375
+    ],
+    [
+     13823,
+     " generator",
+     24.0
+    ],
+    [
+     1766,
+     " gener",
+     23.875
+    ]
+   ],
+   "A_top2_margin": 4.125,
+   "B_forced_on_A_tokens_top5": [
+    [
+     9471,
+     " generation",
+     29.25
+    ],
+    [
+     1849,
+     " system",
+     25.125
+    ],
+    [
+     1614,
+     " model",
+     24.375
+    ],
+    [
+     13823,
+     " generator",
+     24.0
+    ],
+    [
+     1766,
+     " gener",
+     23.875
+    ]
+   ],
+   "B_forced_top2_margin": 4.125,
+   "B_forced_argmax_equals_A": true,
+   "max_abs_A_vs_B_forced": 0.28125
+  },
+  {
+   "step": 5,
+   "token_A": 1849,
+   "token_B": 1849,
+   "A_top5": [
+    [
+     1849,
+     " system",
+     28.625
+    ],
+    [
+     7481,
+     " described",
+     23.625
+    ],
+    [
+     1614,
+     " model",
+     23.25
+    ],
+    [
+     323,
+     " and",
+     22.75
+    ],
+    [
+     1882,
+     " process",
+     22.125
+    ]
+   ],
+   "B_top5": [
+    [
+     1849,
+     " system",
+     28.625
+    ],
+    [
+     7481,
+     " described",
+     23.5
+    ],
+    [
+     1614,
+     " model",
+     23.125
+    ],
+    [
+     323,
+     " and",
+     22.625
+    ],
+    [
+     1714,
+     " method",
+     22.125
+    ]
+   ],
+   "A_top2_margin": 5.0,
+   "B_forced_on_A_tokens_top5": [
+    [
+     1849,
+     " system",
+     28.625
+    ],
+    [
+     7481,
+     " described",
+     23.5
+    ],
+    [
+     1614,
+     " model",
+     23.125
+    ],
+    [
+     323,
+     " and",
+     22.625
+    ],
+    [
+     1714,
+     " method",
+     22.125
+    ]
+   ],
+   "B_forced_top2_margin": 5.125,
+   "B_forced_argmax_equals_A": true,
+   "max_abs_A_vs_B_forced": 0.29296875
+  },
+  {
+   "step": 6,
+   "token_A": 312,
+   "token_B": 7481,
+   "A_top5": [
+    [
+     312,
+     " re",
+     23.75
+    ],
+    [
+     7481,
+     " described",
+     23.75
+    ],
+    [
+     9733,
+     " mentioned",
+     21.0
+    ],
+    [
+     11,
+     ",",
+     20.375
+    ],
+    [
+     5711,
+     " uses",
+     20.375
+    ]
+   ],
+   "B_top5": [
+    [
+     7481,
+     " described",
+     23.875
+    ],
+    [
+     312,
+     " re",
+     23.75
+    ],
+    [
+     9733,
+     " mentioned",
+     20.875
+    ],
+    [
+     11,
+     ",",
+     20.375
+    ],
+    [
+     5711,
+     " uses",
+     20.375
+    ]
+   ],
+   "A_top2_margin": 0.0,
+   "B_forced_on_A_tokens_top5": [
+    [
+     7481,
+     " described",
+     23.875
+    ],
+    [
+     312,
+     " re",
+     23.75
+    ],
+    [
+     9733,
+     " mentioned",
+     20.875
+    ],
+    [
+     11,
+     ",",
+     20.375
+    ],
+    [
+     5711,
+     " uses",
+     20.375
+    ]
+   ],
+   "B_forced_top2_margin": 0.125,
+   "B_forced_argmax_equals_A": false,
+   "max_abs_A_vs_B_forced": 0.28125
+  },
+  {
+   "step": 7,
+   "token_A": 4776,
+   "token_B": 304,
+   "A_top5": [
+    [
+     4776,
+     "uses",
+     26.75
+    ],
+    [
+     12,
+     "-",
+     18.875
+    ],
+    [
+     48561,
+     "claims",
+     18.125
+    ],
+    [
+     9984,
+     "news",
+     17.25
+    ],
+    [
+     1314,
+     "util",
+     17.125
+    ]
+   ],
+   "B_top5": [
+    [
+     3403,
+     " above",
+     24.5
+    ],
+    [
+     304,
+     " in",
+     24.5
+    ],
+    [
+     5711,
+     " uses",
+     23.375
+    ],
+    [
+     312,
+     " re",
+     23.0
+    ],
+    [
+     1588,
+     " here",
+     21.875
+    ]
+   ],
+   "A_top2_margin": 7.875,
+   "B_forced_on_A_tokens_top5": [
+    [
+     4776,
+     "uses",
+     26.875
+    ],
+    [
+     12,
+     "-",
+     19.0
+    ],
+    [
+     48561,
+     "claims",
+     18.25
+    ],
+    [
+     1314,
+     "util",
+     17.375
+    ],
+    [
+     9984,
+     "news",
+     17.125
+    ]
+   ],
+   "B_forced_top2_margin": 7.875,
+   "B_forced_argmax_equals_A": true,
+   "max_abs_A_vs_B_forced": 0.25
+  }
+ ]
+}

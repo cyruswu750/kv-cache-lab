@@ -1,0 +1,37 @@
+{
+  "os": "Ubuntu 26.04.1 LTS",
+  "kernel": "6.18.54.1-microsoft-standard-WSL2",
+  "wsl": true,
+  "python": "3.14.4",
+  "venv": "/home/cyrus/projects/kv-cache-lab/.venv",
+  "packages": {
+    "torch": "2.14.1+cu130",
+    "transformers": "5.22.1",
+    "tokenizers": "0.23.3",
+    "safetensors": "0.8.0",
+    "huggingface_hub": "2.4.0",
+    "numpy": "2.5.4",
+    "pytest": "9.2.0"
+  },
+  "torch_cuda_runtime": "13.0",
+  "cudnn": 92400,
+  "cuda_available": true,
+  "nvidia_smi": "NVIDIA GeForce RTX 4080 Laptop GPU, 12282 MiB, 11995 MiB, 596.49, 8.9",
+  "nvidia_smi_cuda_version": "13.2",
+  "disk_free_gib_project_fs": 939.9,
+  "host_mem_total": "7720152 kB",
+  "cpu_count": 32,
+  "hf_home": "/home/cyrus/projects/kv-cache-lab/.hf_cache",
+  "model_id": "Qwen/Qwen2.5-1.5B-Instruct",
+  "model_revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306",
+  "requested_dtype": "torch.bfloat16",
+  "requested_attn_implementation": "sdpa",
+  "gpu_name": "NVIDIA GeForce RTX 4080 Laptop GPU",
+  "gpu_capability": [
+    8,
+    9
+  ],
+  "gpu_mem_total_mib": 12281,
+  "gpu_mem_free_mib": 11043,
+  "bf16_supported": true
+}
