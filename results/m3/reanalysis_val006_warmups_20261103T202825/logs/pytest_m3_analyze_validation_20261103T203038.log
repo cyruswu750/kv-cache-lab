@@ -1,0 +1,117 @@
+# .venv/bin/python -m pytest -p no:cacheprovider tests/test_m3_analyze_validation.py -v   (20261103T203038)
+============================= test session starts ==============================
+platform linux -- Python 3.14.4, pytest-9.2.0, pluggy-1.7.0 -- /home/cyrus/projects/kv-cache-lab/.venv/bin/python
+rootdir: /home/cyrus/projects/kv-cache-lab
+configfile: pyproject.toml
+plugins: anyio-4.16.0
+collecting ... collected 42 items
+
+tests/test_m3_analyze_validation.py::test_spec_is_the_frozen_protocol_and_the_recorded_commands PASSED [  2%]
+tests/test_m3_analyze_validation.py::test_empty_directory_is_invalid_via_the_real_cli PASSED [  4%]
+tests/test_m3_analyze_validation.py::test_missing_required_case_1024_1_is_invalid_via_the_real_cli PASSED [  7%]
+tests/test_m3_analyze_validation.py::test_decision_is_driven_by_the_spec_case_list_not_by_the_loaded_cases PASSED [  9%]
+tests/test_m3_analyze_validation.py::test_missing_unexpected_or_unreadable_session_is_invalid[missing] PASSED [ 11%]
+tests/test_m3_analyze_validation.py::test_missing_unexpected_or_unreadable_session_is_invalid[unexpected] PASSED [ 14%]
+tests/test_m3_analyze_validation.py::test_missing_unexpected_or_unreadable_session_is_invalid[unreadable] PASSED [ 16%]
+tests/test_m3_analyze_validation.py::test_missing_duplicate_or_unpaired_samples_are_invalid[missing] PASSED [ 19%]
+tests/test_m3_analyze_validation.py::test_missing_duplicate_or_unpaired_samples_are_invalid[duplicate] FAILED [ 21%]
+tests/test_m3_analyze_validation.py::test_missing_duplicate_or_unpaired_samples_are_invalid[measured_flagged_warmup] PASSED [ 23%]
+tests/test_m3_analyze_validation.py::test_missing_duplicate_or_unpaired_samples_are_invalid[warmup_flagged_measured] PASSED [ 26%]
+tests/test_m3_analyze_validation.py::test_missing_duplicate_or_unpaired_samples_are_invalid[rep_outside_plan] PASSED [ 28%]
+tests/test_m3_analyze_validation.py::test_missing_duplicate_or_unpaired_samples_are_invalid[pair_partner_fails_rules] PASSED [ 30%]
+tests/test_m3_analyze_validation.py::test_missing_duplicate_or_unpaired_samples_are_invalid[missing_t_wall] PASSED [ 33%]
+tests/test_m3_analyze_validation.py::test_missing_or_failed_detailed_checks_with_stale_passing_summaries_are_invalid[correctness_record_missing] PASSED [ 35%]
+tests/test_m3_analyze_validation.py::test_missing_or_failed_detailed_checks_with_stale_passing_summaries_are_invalid[all_correctness_records_missing] PASSED [ 38%]
+tests/test_m3_analyze_validation.py::test_missing_or_failed_detailed_checks_with_stale_passing_summaries_are_invalid[correctness_detail_missing] PASSED [ 40%]
+tests/test_m3_analyze_validation.py::test_missing_or_failed_detailed_checks_with_stale_passing_summaries_are_invalid[ab_record_missing] PASSED [ 42%]
+tests/test_m3_analyze_validation.py::test_missing_or_failed_detailed_checks_with_stale_passing_summaries_are_invalid[all_ab_records_missing] PASSED [ 45%]
+tests/test_m3_analyze_validation.py::test_missing_or_failed_detailed_checks_with_stale_passing_summaries_are_invalid[ab_detail_missing] PASSED [ 47%]
+tests/test_m3_analyze_validation.py::test_missing_or_failed_detailed_checks_with_stale_passing_summaries_are_invalid[restore_memory_missing] PASSED [ 50%]
+tests/test_m3_analyze_validation.py::test_missing_or_failed_detailed_checks_with_stale_passing_summaries_are_invalid[correctness_detail_failed] PASSED [ 52%]
+tests/test_m3_analyze_validation.py::test_missing_or_failed_detailed_checks_with_stale_passing_summaries_are_invalid[ab_detail_failed] PASSED [ 54%]
+tests/test_m3_analyze_validation.py::test_missing_or_failed_detailed_checks_with_stale_passing_summaries_are_invalid[ab_compared_two_misses] PASSED [ 57%]
+tests/test_m3_analyze_validation.py::test_missing_or_failed_detailed_checks_with_stale_passing_summaries_are_invalid[summary_contradicts_details] PASSED [ 59%]
+tests/test_m3_analyze_validation.py::test_consistently_recorded_correctness_failure_is_reported_as_such PASSED [ 61%]
+tests/test_m3_analyze_validation.py::test_complete_valid_report_reproduces_the_historical_analysis PASSED [ 64%]
+tests/test_m3_analyze_validation.py::test_refuses_to_overwrite_and_writes_nothing PASSED [ 66%]
+tests/test_m3_analyze_validation.py::test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[all_warmups_removed_n_samples_adjusted] PASSED [ 69%]
+tests/test_m3_analyze_validation.py::test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[one_block_warmup_missing] PASSED [ 71%]
+tests/test_m3_analyze_validation.py::test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[one_process_warmup_missing] PASSED [ 73%]
+tests/test_m3_analyze_validation.py::test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[block_warmup_substituted_same_count] PASSED [ 76%]
+tests/test_m3_analyze_validation.py::test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[process_warmup_substituted_same_count] PASSED [ 78%]
+tests/test_m3_analyze_validation.py::test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[process_warmup_replaced_by_relabelled_measured_row] PASSED [ 80%]
+tests/test_m3_analyze_validation.py::test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[process_warmup_flagged_measured] PASSED [ 83%]
+tests/test_m3_analyze_validation.py::test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[process_warmup_with_block_stage] PASSED [ 85%]
+tests/test_m3_analyze_validation.py::test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[block_warmup_with_process_stage] PASSED [ 88%]
+tests/test_m3_analyze_validation.py::test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[warmup_with_unknown_stage] PASSED [ 90%]
+tests/test_m3_analyze_validation.py::test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[process_warmup_after_block_samples] PASSED [ 92%]
+tests/test_m3_analyze_validation.py::test_missing_substituted_or_misflagged_warmup_evidence_is_invalid[block_warmup_malformed] PASSED [ 95%]
+tests/test_m3_analyze_validation.py::test_all_warmups_removed_is_rejected_by_the_real_cli_subprocess PASSED [ 97%]
+tests/test_m3_analyze_validation.py::test_warmup_timings_never_enter_the_statistics PASSED [100%]
+
+=================================== FAILURES ===================================
+______ test_missing_duplicate_or_unpaired_samples_are_invalid[duplicate] _______
+
+tmp_path = PosixPath('/tmp/pytest-of-cyrus/pytest-99/test_missing_duplicate_or_unpa1')
+texts = {'session_prof.json': '{\n "meta": {\n  "session": "prof",\n  "args": {\n   "out_dir": "results/m3/eval_20261103T17363...th": true,\n   "cudnn": true\n  },\n  "tf32_matmul": false,\n  "cudnn_benchmark": false\n },\n "excluded": []\n}', ...}
+edit = <function _duplicate at 0x73bec9b1dbc0>
+expect = "s2: duplicate sample identity (block, rep, path, backend, mode) = (3, 5, 'host', 'batched', 'plain')"
+
+    @pytest.mark.parametrize("edit, expect", [
+        (_drop_one, "s2: 1 of 1080 planned measured samples missing, so their pairs are incomplete"),
+        (_duplicate, "s2: duplicate sample identity (block, rep, path, backend, mode) = (3, 5, 'host', 'batched', 'plain')"),
+        (_measured_as_warmup, "warmup flag True for repetition 5"),
+        (_warmup_as_measured, "warmup flag False for repetition 0"),
+        (_outside_plan, "block/rep 3/14 outside the plan"),
+        (_partner_fails_rules, "fails the validity rules, so its pair is incomplete"),
+        (_no_t_wall, "fails the validity rules, so its pair is incomplete: ['t_wall']"),
+    ], ids=["missing", "duplicate", "measured_flagged_warmup", "warmup_flagged_measured", "rep_outside_plan",
+            "pair_partner_fails_rules", "missing_t_wall"])
+    def test_missing_duplicate_or_unpaired_samples_are_invalid(tmp_path, texts, edit, expect):
+        code, val = cli(make_run(tmp_path, texts, edits={"session_s2.json": edit}))
+>       assert_rejected(code, val, tmp_path / "run", expect=[expect])
+
+tests/test_m3_analyze_validation.py:229: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+code = 3
+val = {'spec': 'm3_eval_20261103T173632', 'spec_source': 'docs/M3_PROTOCOL.md (frozen 2026-11-03) + results/m3/eval_20261103...mmands.txt', 'run_dir': '/tmp/pytest-of-cyrus/pytest-99/test_missing_duplicate_or_unpa1/run', 'status': 'invalid', ...}
+out_dir = PosixPath('/tmp/pytest-of-cyrus/pytest-99/test_missing_duplicate_or_unpa1/run')
+status = 'invalid'
+expect = ["s2: duplicate sample identity (block, rep, path, backend, mode) = (3, 5, 'host', 'batched', 'plain')"]
+
+    def assert_rejected(code, val, out_dir, status="invalid", expect=()):
+        assert code == m3_analyze.EXIT[status] and code != 0
+        assert val["status"] == status
+        assert val["decision"]["supports_adoption"] is False
+        assert val["decision"]["evidence_status"] == status
+        assert val["decision"]["all_correctness_and_ab_checks_pass"] is False
+        assert val["correctness_and_ab_acceptance_recomputed"] is False
+        for name in ("m3_analysis.json", "m3_analysis.md", "samples_chronological.csv"):
+            assert not (out_dir / name).exists()  # no performance result is drawn
+        for e in expect:
+>           assert any(e in p for p in val["problems"]), (e, val["problems"][:10])
+E           AssertionError: ("s2: duplicate sample identity (block, rep, path, backend, mode) = (3, 5, 'host', 'batched', 'plain')", ["s2: duplicate measured sample identity (block, rep, path, backend, mode) = (3, 5, 'host', 'batched', 'plain')", 's2: stored n_samples/n_measured/n_excluded/len(excluded) (1296, 1080, 0, 0) != recomputed (1297, 1081, 0, 0)'])
+E           assert False
+E            +  where False = any(<generator object assert_rejected.<locals>.<genexpr> at 0x73bdc01c35a0>)
+
+tests/test_m3_analyze_validation.py:84: AssertionError
+----------------------------- Captured stdout call -----------------------------
+# M3 analysis NOT run: evidence status `invalid` (spec `m3_eval_20261103T173632`, run dir /tmp/pytest-of-cyrus/pytest-99/test_missing_duplicate_or_unpa1/run)
+
+- session files found: ['prof', 's1', 's2', 's3', 's4', 's5']; planned: ['s1', 's2', 's3', 's4', 's5']
+- measured_samples: 5400 passed / 5400 present / 5400 expected
+- block_warmup_samples: 900 passed / 900 present / 900 expected
+- process_warmup_samples: 180 passed / 180 present / 180 expected
+- correctness_checks: 50 passed / 50 present / 50 expected
+- ab_checks: 50 passed / 50 present / 50 expected
+- problems (2):
+  - s2: duplicate measured sample identity (block, rep, path, backend, mode) = (3, 5, 'host', 'batched', 'plain')
+  - s2: stored n_samples/n_measured/n_excluded/len(excluded) (1296, 1080, 0, 0) != recomputed (1297, 1081, 0, 0)
+- failed correctness / A/B checks (0):
+
+**supports adoption: False** (no performance result is drawn from invalid or incomplete evidence)
+=========================== short test summary info ============================
+FAILED tests/test_m3_analyze_validation.py::test_missing_duplicate_or_unpaired_samples_are_invalid[duplicate]
+======================== 1 failed, 41 passed in 22.45s =========================
+exit 1

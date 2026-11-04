@@ -1,0 +1,50 @@
+# warmup follow-up preservation check 2026-11-03T20:32:54-08:00
+== every file under results/ that existed before this follow-up (results/m3/reanalysis_val006_warmups_20261103T202825/pre_fix_results_manifest.sha256):
+   272/272 OK (byte-identical)
+== the original evaluation run (session files, monitor CSVs, logs, historical analysis):
+   24 files OK
+== results/ files added by this follow-up:
+   16 files, all under results/m3/reanalysis_val006_warmups_20261103T202825
+== cache, measurement, statistics code and frozen protocol (unchanged):
+   kvlab/tiered_cache.py: OK
+   kvlab/m3_bench.py: OK
+   kvlab/m3_stats.py: OK
+   scripts/m3_measure.py: OK
+   kvlab/perf.py: OK
+   kvlab/perf_stats.py: OK
+   kvlab/perf_harness.py: OK
+   docs/M3_PROTOCOL.md: OK
+== files changed by this follow-up (expected to differ):
+   kvlab/m3_validate.py: FAILED
+   scripts/m3_analyze.py: FAILED
+   tests/test_m3_analyze_validation.py: FAILED
+   docs/BUGLOG.md: FAILED
+   docs/M3_REVIEW.md: FAILED
+== default backend (kvlab/tiered_cache.py, byte-unchanged): 135:                 restore_backend: str = "baseline", restore_staging_chunks: int = 4): 
+== git: HEAD 362ee40aeaaae204b2b1dc88398b46bc5826f410; staged files: 0
+    M README.md
+    M docs/BUGLOG.md
+    M docs/M2_1_REVIEW.md
+    M docs/M2_REVIEW.md
+    M docs/correctness-matrix.md
+    M docs/decisions.md
+    M docs/design.md
+    M kvlab/tiered_cache.py
+    M pyproject.toml
+    M scripts/m1_run.py
+    M tests/gpu/test_m1_tiered.py
+   ?? docs/M3_DESIGN.md
+   ?? docs/M3_PROTOCOL.md
+   ?? docs/M3_REVIEW.md
+   ?? docs/M3_WALKTHROUGH.md
+   ?? kvlab/m3_bench.py
+   ?? kvlab/m3_stats.py
+   ?? kvlab/m3_validate.py
+   ?? results/m3/
+   ?? scripts/m3_analyze.py
+   ?? scripts/m3_measure.py
+   ?? scripts/m3_mutation_check.py
+   ?? tests/gpu/test_m3_restore.py
+   ?? tests/test_m3_analyze_validation.py
+   ?? tests/test_m3_stats.py
+   ?? tests/test_restore_backends_cpu.py

@@ -1,0 +1,15 @@
+# warmup-evidence gap AFTER this follow-up: kvlab/m3_validate.py sha256 defe6cd9adbff78a..., scripts/m3_analyze.py 7df48f9df1e54706...
+# same inputs as repro_before.log, rebuilt fresh; CUDA hidden
+2026-11-03T20:32:01-08:00
+== no_warmups: exit 3 | status invalid | supports_adoption False | analysis written False
+   problem: s1: 180 of 180 planned block-warmup samples missing (by case {(4096, 64): 36, (1536, 128): 36, (3072, 256): 36, (1024, 1): 36, (256, 32): 36}; first (0, 0, 'full', 'none', 'plain'))
+   problem: s1: process-warmup records differ from the plan (36 = 2 cases x 9 combinations x 2): missing {((256, 32), ('full', 'none', 'plain')): '0/2', ((256, 32), ('host', 'baseline', 'plain')): '0/2', ((256, 32), ('host', 'batche
+   problem: s2: 180 of 180 planned block-warmup samples missing (by case {(3072, 256): 36, (256, 32): 36, (1536, 128): 36, (1024, 1): 36, (4096, 64): 36}; first (0, 0, 'full', 'none', 'plain'))
+   problems in total: 10
+== block_warmup_substituted: exit 3 | status invalid | supports_adoption False | analysis written False
+   problem: s2: duplicate block-warmup sample identity (block, rep, path, backend, mode) = (3, 0, 'host', 'batched', 'plain')
+   problem: s2: 1 of 180 planned block-warmup samples missing (by case {(1024, 1): 1}; first (3, 1, 'host', 'batched', 'plain'))
+   problems in total: 2
+== process_warmup_substituted: exit 3 | status invalid | supports_adoption False | analysis written False
+   problem: s2: process-warmup records differ from the plan (36 = 2 cases x 9 combinations x 2): missing {((256, 32), ('disk', 'batched', 'synced')): '1/2'}; surplus {((256, 32), ('host', 'batched', 'synced')): '3/2'}
+   problems in total: 1

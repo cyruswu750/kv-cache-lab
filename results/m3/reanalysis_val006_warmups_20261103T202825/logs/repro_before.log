@@ -1,0 +1,6 @@
+# warmup-evidence gap BEFORE this follow-up: kvlab/m3_validate.py sha256 97f4a282289b7704..., scripts/m3_analyze.py fef8b69b221d69fe...
+# inputs: make_warmup_variants.py on copies of results/m3/eval_20261103T173632/session_s1..s5.json; CUDA hidden
+2026-11-03T20:28:38-08:00
+== no_warmups: exit 0 | status valid | problems 0 | acceptance True | supports_adoption False | required_but_not_established ['1024:1 host median_d: inconclusive', '1024:1 host mean_d: inconclusive', '1024:1 disk median_d: inconclusive', '1024:1 disk mean_d: inconclusive']
+== block_warmup_substituted: exit 0 | status valid | problems 0 | acceptance True | supports_adoption False | required_but_not_established ['1024:1 host median_d: inconclusive', '1024:1 host mean_d: inconclusive', '1024:1 disk median_d: inconclusive', '1024:1 disk mean_d: inconclusive']
+== process_warmup_substituted: exit 0 | status valid | problems 0 | acceptance True | supports_adoption False | required_but_not_established ['1024:1 host median_d: inconclusive', '1024:1 host mean_d: inconclusive', '1024:1 disk median_d: inconclusive', '1024:1 disk mean_d: inconclusive']
