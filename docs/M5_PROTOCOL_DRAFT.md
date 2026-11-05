@@ -1,6 +1,6 @@
 # M5 calibration and evaluation protocol — DRAFT (not frozen, not approved)
 
-**Status, 2026-11-05 (M5b preparation): DRAFT.**
+**Status, 2026-11-05: DRAFT.**
 - **Implemented and tested on CPU only** (tiny random model, temporary stores, synthetic timings):
   - the specification (`kvlab/m5_spec.py`);
   - state preparation and reset (`kvlab/m5_state.py`);
@@ -10,8 +10,15 @@
   - the analysis (`kvlab/m5_analysis.py`);
   - the CLIs (`scripts/m5_run.py`, `m5_fit.py`, `m5_analyze.py`, `m5_gate.py`);
   - the GPU correctness gate (`tests/gpu/test_m5_policy.py`).
-- **NOT RUN:** the GPU correctness gate, any timing pilot, calibration and evaluation. No number in this
-  document is measured. Runtimes are planning estimates.
+- **Executed once each (correctness and feasibility only):**
+  - the GPU correctness gate (stage A): PASS, 47 tests (M1 23, M3 17, M5 7);
+  - one diagnostic calibration-only pilot session (stage B, session s01 of `M5_CAL_V1`): it completed all
+    1,134 samples and passed the session-level validator.
+
+  The pilot is diagnostic only. It is excluded from fitting and from any formal evidence, and its timings are
+  not performance results.
+- **NOT RUN:** the formal calibration batch, fitting and prediction freezing, and held-out evaluation. Runtimes
+  below are planning estimates unless stated otherwise.
 
 Every GPU stage needs its own authorization. Design: `docs/M5_DESIGN.md`. Decisions: D40–D43.
 
@@ -25,12 +32,12 @@ On the declared grid, on this machine and stack (batch 1, synchronous first-toke
 No speedup, interior optimum, tail benefit or agreement threshold is required. A degenerate or unfavourable
 result is a valid outcome.
 
-## 2. Stages, commands and deadlines (none has run)
+## 2. Stages, commands and deadlines (A and B executed once; C–F NOT RUN)
 
 | Stage | Command (from the repository root, `HF_HOME=<weights> HF_HUB_OFFLINE=1`) | Deadline |
 |---|---|---|
-| A. GPU correctness gate | `.venv/bin/python scripts/m5_gate.py --out-dir local/m5_gate_<ts>` | 900 s (M1 + M3 + M5 GPU suites) |
-| B. Optional calibration-only feasibility pilot | one `session` of `M5_CAL_V1` in a separate run directory; never used for fitting or evaluation | to be set |
+| A. GPU correctness gate (executed once: PASS) | `.venv/bin/python scripts/m5_gate.py --out-dir local/m5_gate_<ts>` | 900 s (M1 + M3 + M5 GPU suites) |
+| B. Calibration-only feasibility pilot (executed once: session s01) | the unchanged s01 `session` command of `M5_CAL_V1`, run through `run_batch` in a separate ignored run directory; never used for fitting or evaluation | 900 s outer budget |
 | C. Calibration batch | `.venv/bin/python scripts/m5_run.py batch --split calibration --run-dir results/m5/M5_CAL_V1_run` | 2,400 s |
 | D. Fit and freeze (CPU) | `.venv/bin/python scripts/m5_fit.py --cal-run-dir results/m5/M5_CAL_V1_run --out-dir results/m5/M5_FIT_V1` | — |
 | E. Evaluation batch | `.venv/bin/python scripts/m5_run.py batch --split evaluation --run-dir results/m5/M5_EVAL_V1_run --cost-model results/m5/M5_FIT_V1/cost_model.json --predictions results/m5/M5_FIT_V1/predictions.json` | 2,400 s |
@@ -119,8 +126,22 @@ k+1 candidates contributes k+1 rows. cal-10 is 15 of 81 rows; cal-06 is 1. The a
 | Calibration | 81 | 1,134 | 2,916 | 3,402 | ≈ 1,390 s |
 | Evaluation | 71 | 852 | 2,840 | 3,408 | ≈ 1,410 s |
 
-The estimates assume 0.35 s per sample, 3 s per case setup and 30 s of model load per session. They are not
-measured; a stage-B pilot would establish feasibility.
+The estimates assume 0.35 s per sample, 3 s per case setup and 30 s of model load per session.
+
+**Pilot observation.** The stage-B session s01 took 262.4 s from process launch to exit, about 0.22 s per sample
+overall. Three sessions extrapolate to about 790 s. That is an estimate from a single session, not a confidence
+interval: session-to-session and thermal variation are unknown from one session.
+
+**Calibration conditions (declared before the formal batch):**
+- **Start:** no unrelated GPU workload; the current device settings (no clock locking, power or fan changes, and
+  no cooling intervals between sessions).
+- **Sessions:** the three run consecutively through the existing batch runner, with the unchanged spec and the
+  2,400 s deadline.
+- **Telemetry:** an external, read-only `nvidia-smi` monitor covers the whole batch, session transitions included.
+  It runs outside the benchmark processes and the timed region, and keeps timestamps for alignment. Its records
+  are stored outside the formal run directory. Telemetry is context only; it is never a sample-exclusion rule.
+- **Samples:** slow and throttled samples are all kept. No retries, replacement sessions or filtering.
+- **Pilot data:** never reused.
 
 **Resources per case (planning):**
 - a pinned host slab of at most 13 chunks (≈ 95 MB);
@@ -317,14 +338,22 @@ matched-memory, cold-NVMe or production claim.
 2. **The drop_pagecache rule:**
    - **The rule:** a cache drop inside any sample's window, from its preparation to the end of its request,
      invalidates the batch.
-   - **The risk:** M4 recorded WSL cache drops about every 22 minutes, and the summed sample windows of a batch
-     could be several hundred seconds. That makes a nontrivial fraction of batches likely to be invalidated by
-     one drop (an estimate, not measured).
+   - **The risk:** WSL page-cache drops (increments of the `drop_pagecache` counter) occurred during earlier
+     M4 work. Their future incidence during a batch is unknown. None occurred during the stage-B pilot.
    - **The alternative:** a per-sample rule with a predeclared replacement procedure.
-   - **Status:** neither is implemented beyond the strict rule.
-3. **No GPU clock monitor** is recorded (M2–M4 had one as context). Whether to add one.
+   - **Status:** the strict rule is kept for calibration; no alternative is implemented.
+3. **GPU monitor:** the session code records none. For calibration, the external read-only monitor described in
+   §3 is used as context.
 4. **Evidence location** (results/m5/) and its archival.
 5. **Sessions:** the number of sessions (3 and 4) limits interval precision, and whether that is acceptable.
+6. **Known blocker before the formal calibration batch** (found 2026-11-05 before launch; the batch was not run):
+   - **The conflict:** `scripts/m5_run.py batch` writes `spec.json` and `batch_plan.json` into the formal run
+     directory under `results/m5/` before the sessions start. That directory is untracked and not ignored, so
+     every session would record a non-empty `git status --porcelain`, and the validator requires an empty one.
+   - **The consequence:** the evidence would be rejected and no fit would be possible.
+   - **What resolving it needs:** a reviewed change to how a session's source cleanliness is defined, or to where
+     formal evidence is written. It also needs CPU tests and a repeat of the GPU correctness gate before any
+     formal batch.
 
 ## 12. Out of scope
 Trace-level replay with the policy, matched-resource or tail comparisons, cold NVMe, admission policy,
