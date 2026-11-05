@@ -387,7 +387,7 @@ Earlier runs: the first run left two survivors (refresh on store, the 95% level)
 hand-worked test was added for each. The last two mutants were added with the review
 corrections.
 
-## M4_EVAL_V2 preparation (DRAFT; CPU only; `tests/test_warm_disk.py` 32 tests, `tests/test_m4_v2_evidence_cpu.py` 50 tests; correctness, not performance)
+## M4_EVAL_V2 preparation (CPU only; `tests/test_warm_disk.py` 32 tests, `tests/test_m4_v2_evidence_cpu.py` 50 tests; correctness, not performance)
 | Check | Expected | Result | Test |
 |---|---|---|---|
 | Candidate planner vs the reads the unchanged engine attempts (`DiskStore.read_into` recorded): prompt lengths 4, 5, 8, 9, 12, 13 at C = 4, with every complete chunk on disk | candidates [], [0], [0], [0,1], [0,1], [0,1,2] (stated literally) and equal to the reads | PASS (6) | `test_exact_chunk_boundaries_follow_the_first_token_rule` |
@@ -404,7 +404,7 @@ corrections.
 | drop_pagecache: session/request snapshots missing, unreadable, unavailable or different; batch record missing, increment, decrease, start unavailable, end unreadable or never written, format; (review P2-1) identity fields missing, another experiment or counter, read times missing or reversed, a start read after the first launch, an end read before the sessions ended | invalid, exit 3 | PASS (19) | `test_session_drop_pagecache_observations_must_equal_the_batch_start`, `test_batch_drop_pagecache_rule` |
 | `scripts/m4_eval.py` batch bracket: start written before the launch, end after; an existing run directory; the wrapper raising | both reads recorded; refused before running; end still recorded | PASS (2) | `test_m4_eval_brackets_the_batch_with_two_counter_reads`, `test_m4_eval_records_the_end_even_when_the_batch_wrapper_raises` |
 | An extra file in a V2 run directory; `batch_interference.json` expected only for V2 | invalid; as stated | PASS | `test_an_unexpected_file_is_still_rejected_and_the_v2_record_is_expected` |
-| Spec and freeze: V1's digest `442e13ec…` unchanged; V2 differs only in name, run_dir, protocol_doc and warm_disk; the V2 freeze binds both protocols and refuses while V2 is a DRAFT; V1-shaped specs keep the whole-tier rule | as stated | PASS (4) | `tests/test_m4_v2_evidence_cpu.py` |
+| Spec and freeze: V1's digest `442e13ec…` unchanged; V2 differs only in name, run_dir, protocol_doc and warm_disk; the V2 freeze binds both protocols and refuses a DRAFT V2 protocol (fixture roots, independent of the real protocol's state); V1-shaped specs keep the whole-tier rule | as stated | PASS (4) | `tests/test_m4_v2_evidence_cpu.py` |
 
 Mutation check on scratch copies under the ignored `local/`; the worktree was never modified. It ran twice:
 - **First run:** its harness was defective. The copies lacked `requirements.txt`, so an unrelated freeze test

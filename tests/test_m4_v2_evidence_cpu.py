@@ -506,12 +506,14 @@ def _fixture_root(tmp_path, spec, first_line) -> Path:
     return root
 
 
-def test_v2_freeze_binds_both_protocols_and_refuses_while_v2_is_a_draft(tmp_path):
+def test_v2_freeze_binds_both_protocols_and_refuses_a_draft_v2_protocol(tmp_path):
+    """Fixture roots only: the refusal and the manifest do not depend on the real protocol's lifecycle state."""
     assert mf.documents(ms.M4_EVAL_V1) == mf.DOCUMENTS == ("docs/M4B_PROTOCOL.md", "requirements.txt")
     assert mf.documents(ms.M4_EVAL_V2) == ("docs/M4B_PROTOCOL.md", "requirements.txt", "docs/M4_EVAL_V2_PROTOCOL.md")
-    assert "DRAFT" in (ROOT / "docs/M4_EVAL_V2_PROTOCOL.md").read_text().splitlines()[0]
+    draft = _fixture_root(tmp_path / "a", ms.M4_EVAL_V2, "# M4_EVAL_V2 protocol (DRAFT): fixture")
     with pytest.raises(mc.Refused, match="DRAFT"):
-        mf.build_manifest(_fixture_root(tmp_path / "a", ms.M4_EVAL_V2, None), ms.M4_EVAL_V2, stack={"python": "x"})
+        mf.build_manifest(draft, ms.M4_EVAL_V2, stack={"python": "x"})
+    assert not (draft / mf.manifest_path(ms.M4_EVAL_V2)).exists()  # nothing written
     root = _fixture_root(tmp_path / "b", ms.M4_EVAL_V2, "# M4_EVAL_V2 protocol (approved)")
     m, _diff = mf.build_manifest(root, ms.M4_EVAL_V2, stack={"python": "x"}, now=1.0e9)
     assert set(m["documents_sha256"]) == set(mf.documents(ms.M4_EVAL_V2))
