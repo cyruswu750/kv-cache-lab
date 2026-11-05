@@ -1,0 +1,384 @@
+{
+ "analysis_files_sha256": {
+  "kvlab/boundaries.py": "3d919e1142fe1555fd772ac0029f8c555ae235f7f02310baa627cc7609c32d72",
+  "kvlab/identity.py": "e016ad9fda3383cf1cd55e254be5913bfe0299a7737587ed8afbc1921cc20fd0",
+  "kvlab/m3_confirm.py": "9d148b46617d34ab9f69a00f167b4eb7afde941f38a7cc85fcaccc2dad1bafaf",
+  "kvlab/m3_stats.py": "a84562445effddf6f91eb757a014715ffe2920786dcf4ea9ecf22689f9eec5fe",
+  "kvlab/m4_analysis.py": "8f3be9780bfece81bd918a32615bdb559f9a6c64590e09379160556fa3fe3f21",
+  "kvlab/m4_freeze.py": "e7116d993b0793ea0852d631ce8a4564ccd27db9f70beda07912141cb58ae619",
+  "kvlab/m4_spec.py": "e820c9527bf283a5eb262d980a587089c2b36af429f80039fe885284de8656e5",
+  "kvlab/m4_stats.py": "127b782ccea4b0cbb9f9d3c3508c05d6651984b24573a52c03d50eac0feb8d58",
+  "kvlab/m4_validate.py": "a65e62f4e4c508573ad5f5c56d563f52ae6e7864b36d2ce6ae596af4fc2b44f1",
+  "kvlab/perf_stats.py": "8b3d8bd37f798ab85472b639167215d10875148afc27b4b88a186d5619e1e77d",
+  "kvlab/trace_models.py": "afd5d6eecc9b62536366b33f049cf372921336ce5c937d458ea8c35301393d6d",
+  "kvlab/traces.py": "f9f97d51c1f32db13fddb0e2d5bcac832824fc74a241efe3d15e15237ecc6734",
+  "scripts/m4_analyze.py": "e9a17246bbe59fa57a6129c7ad718ae442ab63c8c864986bb5a600894a086c14"
+ },
+ "base_git_head": "b858d9e9f1ff78bd157b2af80720b54ae85cda84",
+ "budget_s": 2700,
+ "commands": [
+  {
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e01",
+    "--seed",
+    "44001"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "e01"
+  },
+  {
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e02",
+    "--seed",
+    "44002"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "e02"
+  },
+  {
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e03",
+    "--seed",
+    "44003"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "e03"
+  },
+  {
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e04",
+    "--seed",
+    "44004"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "e04"
+  },
+  {
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e05",
+    "--seed",
+    "44005"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "e05"
+  },
+  {
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e06",
+    "--seed",
+    "44006"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "e06"
+  },
+  {
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e07",
+    "--seed",
+    "44007"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "e07"
+  },
+  {
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e08",
+    "--seed",
+    "44008"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "e08"
+  },
+  {
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e09",
+    "--seed",
+    "44009"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "e09"
+  },
+  {
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e10",
+    "--seed",
+    "44010"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "e10"
+  }
+ ],
+ "documents_sha256": {
+  "docs/M4B_PROTOCOL.md": "adae50484edd35cb758b48080fba180a30f7bf1be9375fe19c79b37c951aec6f",
+  "requirements.txt": "db9500bc2cd0873d350f874db6820b571b9b7299284845d659297c7eeeb48b73"
+ },
+ "experiment": "M4_EVAL_V1",
+ "files_sha256": {
+  "kvlab/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "kvlab/always_restore.py": "a704b63bf6496c71fc5a6a7731463706ded366d45c96c17ddf73dc792aa1f7a3",
+  "kvlab/boundaries.py": "3d919e1142fe1555fd772ac0029f8c555ae235f7f02310baa627cc7609c32d72",
+  "kvlab/chunk_format.py": "55a9ab997cbe3190641a5ad332e007c974d0abe2433d52071e9f43b4c288b894",
+  "kvlab/diag_harness.py": "89c715b2dddb7d4f8f2cdf0311204ac1bb713516f312474843434fa0a729c88c",
+  "kvlab/disk_store.py": "f56a935c524613a54473430bf79b58822760a0d29b53d277b333bda9e7476736",
+  "kvlab/experiment.py": "546a8307ab76e6237ea432603aaa8c5be45d769781e9981d1a6c50fd5b354bf9",
+  "kvlab/fixtures.py": "5dd353014dbde98c18ab87a445ab02a39ae4d14d4392a4acc62e441c1b83a277",
+  "kvlab/gpu_prefix_cache.py": "e52bb13b42c1f4d6ceafc966498c722e02aa14f84d8b2048327df6243113cb9b",
+  "kvlab/host_store.py": "ceba0f739d9e661b02f13a1e3d0f24664acc1abde63ec4c4ca3738a5129aeb8b",
+  "kvlab/identity.py": "e016ad9fda3383cf1cd55e254be5913bfe0299a7737587ed8afbc1921cc20fd0",
+  "kvlab/kv_snapshot.py": "d97f2ea2624530f91c2d496c754377b97a5e99dc7414fe3e0fb7dcc6fb6e9b2f",
+  "kvlab/m3_bench.py": "025725da8c87333803e5f66694c2f8d18572b47427d5591c948c75b1ea32636f",
+  "kvlab/m3_confirm.py": "9d148b46617d34ab9f69a00f167b4eb7afde941f38a7cc85fcaccc2dad1bafaf",
+  "kvlab/m3_stats.py": "a84562445effddf6f91eb757a014715ffe2920786dcf4ea9ecf22689f9eec5fe",
+  "kvlab/m3_validate.py": "0174f7eb3a5b11f680a9ccf8f0f9f40cdd729eb51fea08f0a55f472a76534710",
+  "kvlab/m4_analysis.py": "8f3be9780bfece81bd918a32615bdb559f9a6c64590e09379160556fa3fe3f21",
+  "kvlab/m4_bench.py": "c7763cfac531a0084d22962921545ee9db7914d01030b33531bfb3758888f231",
+  "kvlab/m4_freeze.py": "e7116d993b0793ea0852d631ce8a4564ccd27db9f70beda07912141cb58ae619",
+  "kvlab/m4_spec.py": "e820c9527bf283a5eb262d980a587089c2b36af429f80039fe885284de8656e5",
+  "kvlab/m4_stats.py": "127b782ccea4b0cbb9f9d3c3508c05d6651984b24573a52c03d50eac0feb8d58",
+  "kvlab/m4_validate.py": "a65e62f4e4c508573ad5f5c56d563f52ae6e7864b36d2ce6ae596af4fc2b44f1",
+  "kvlab/metrics.py": "1563d82427e3a440d8cf3c251d4f50dfc07bc997fcace0b3322fe423bcf5e556",
+  "kvlab/model.py": "821e0e5bbf0f1ec3eda1e62acb9542cc43c4c4383c5d37f23714d598de2bfb0a",
+  "kvlab/perf.py": "a263c948f19f20650a0e4b8ce0c998e6f21e9a9f3d1968eb61246f777e1b1f58",
+  "kvlab/perf_harness.py": "d2a76ff12d1acf02345d36fb19b676b649bac884a15ffdf5de2d74463c81ece8",
+  "kvlab/perf_stats.py": "8b3d8bd37f798ab85472b639167215d10875148afc27b4b88a186d5619e1e77d",
+  "kvlab/prefix_aware_cache.py": "d3dc1a4f6f49151ff5450b489d8c96c623f6699d06099ac33b1775bb2ac66d84",
+  "kvlab/resident_reference.py": "b14da5c95ffad3af4d122b459d7bd2085e6485183a4f8fc9b3e367b5223546f0",
+  "kvlab/tiered_cache.py": "1cdbd53a38347210f0be4df3a5bcc85762d3078042a0a03e79d97f8f0e297df6",
+  "kvlab/tolerances.py": "35afa3f52b002b4a3af7be968639ee64e7c946cc73e9fd3174ee487db6add9ae",
+  "kvlab/trace_models.py": "afd5d6eecc9b62536366b33f049cf372921336ce5c937d458ea8c35301393d6d",
+  "kvlab/trace_replay.py": "cd9421eb5455ceb9e1608aee2c818c34bfef7b70a18dea5a8a3421cdb3c3e5e2",
+  "kvlab/traces.py": "f9f97d51c1f32db13fddb0e2d5bcac832824fc74a241efe3d15e15237ecc6734",
+  "pyproject.toml": "576717323184f2f0132bb28c27b814c51683ce8b499650352c95edfb0586def4",
+  "scripts/env_report.py": "e5ae16c90825709d26dbf471280ebd970085951095d0b77fc6499845dea5a883",
+  "scripts/m0_1_audit.py": "f2ad04412ee00355653a96e87c2c2b09b11c820d0337324470256d395b8e47f1",
+  "scripts/m0_calibrate.py": "129db017c0bcc4acaa1b972978200d5df7910449abf63727dd7cb37d98dfcc30",
+  "scripts/m0_diagnose_divergence.py": "af7d57e0898fcb7487cd97ce1fe2f38ad569e3a8801a168a6689fd2906f0e31a",
+  "scripts/m0_experiment.py": "5635e4e67f034c715ee2d0e4d250c5166c874f8e59d221364955d38533784033",
+  "scripts/m1_1_repro_review_issues.py": "ce6194c0b84a27418c11b99e97f8eb1cf0e50c5842b262077734ec51d8d94f23",
+  "scripts/m1_mutation_check.py": "8ae3499372a07ed3a2f3407dc1c181c07dc40eb11d2fd15e2ecef6aaab6c70c4",
+  "scripts/m1_run.py": "80016d9b97efadfac7096df07b83dd1049d57e0efb4ce524ee4dc5ca133daada",
+  "scripts/m2_1_analyze_diag.py": "891a6fb8d9bbb6ae67096333d9433a15ea9098f4c353617fa7f4934d6f77f76f",
+  "scripts/m2_1_diagnose.py": "a0bf0ecfe11f955c19ae1a9ac5b270dc0d30b0b61403fa231027e545a5562ce8",
+  "scripts/m2_1_reanalyze.py": "c7274246aa59d6eeb1b3b38081442aafeb9f84811ba76e8509211781d06cbb01",
+  "scripts/m2_1_regimes.py": "5a7f6ab02ae9ec8185916b7f9223261ef9f0943096087c81b8e1ca1c4953ca87",
+  "scripts/m2_fit_predict.py": "c363114161d613c979f704a7a3a4d477dc9c8792789a28491bef9484e19672e4",
+  "scripts/m2_measure.py": "2e07b48533987bf0b93fb8bd5438836841747782c1ec9cbc3ff0713ae9efff38",
+  "scripts/m2_score.py": "81ad78d30f236dfb5183e6e39aeac0e351f877a14fd98923d3ed4b5af8d45f2d",
+  "scripts/m2_spike_probe.py": "3967488edff29bfe0fa01383c6d23574da83063027306c78e8d34f7396343519",
+  "scripts/m3_analyze.py": "078e126f12f0c8d113fd403bc739241b96929851531bb52ed480a1552a2bb22d",
+  "scripts/m3_confirm.py": "1a94993c680d038aa5e7661c7c4ec1aadf9fd7f50ef20c7a0795695ec48783ac",
+  "scripts/m3_confirm_reconstruct.py": "3c240000a222d01e73ae36afe2e3c2832eabcb9ab3beaf00fb0a2c4fd493ddb5",
+  "scripts/m3_measure.py": "6d4c50467e21fc6dffdc8e2c98ffea1d9721b3053aa205ba489d3cd35f599550",
+  "scripts/m3_mutation_check.py": "03ac32c13841eeb02453d39def9d39aca4842f0ffa9d750c7e352101b39d001a",
+  "scripts/m4_analyze.py": "e9a17246bbe59fa57a6129c7ad718ae442ab63c8c864986bb5a600894a086c14",
+  "scripts/m4_eval.py": "50558d77f16addc255d3409ef15b7e8f7decba4789fdfe2d711c1079d6b179e2",
+  "scripts/m4_gate.py": "be7f0e3916ed485fc5c166de44ab35044c83f1b2f1fc09386d271636087fcf63",
+  "scripts/m4_measure.py": "e9e72cddf06261590d441b912947499adcd090155ea33fa8a39c11e470b92769",
+  "tests/gpu/test_gpu_roundtrip.py": "2768dd152fd046afe5227d6cd408e30ff49231fc96d5da728193e9a3e4e8647e",
+  "tests/gpu/test_m0_1_controls.py": "cb64b06e4eda911674a340dd9ef7b0fafc64811834c8d902fb37f6265ca869e1",
+  "tests/gpu/test_m1_tiered.py": "c866609eb632b02cd11efe856abac71a9ecd4da11744fcddbbaa22c1dc608d51",
+  "tests/gpu/test_m3_restore.py": "f0363d4a738ab970e62e159bc3a0183ea1bc7d7bfbe6c6ae198bd96f0035c35b",
+  "tests/gpu/test_m4_replay.py": "edfd40ad101326cbeb073a715c1e148b03b897c8a9b120efba00c78a768f9794",
+  "tests/m1_toy.py": "3189d88798771c5488936b98c5ddca60ac8c724d724bb5696bc073b880941db1",
+  "tests/test_boundaries.py": "c09d0e7805d5f1304cd4915b136cd039331da8277085bd10e5b2acf18be67960",
+  "tests/test_chunk_format.py": "51f331ca769d7099a44c98f625b44a92787400d806736e14ea8a04c9708ce356",
+  "tests/test_diag_bookkeeping.py": "1358fdbaccebf3aa4c5ac69c1ffcb4739f38650dad1824ab803cc801af9965b6",
+  "tests/test_disk_store.py": "918e3e031ef6f36d1988f135c07b03de461f82f37cc3d5fec2f44d60884ad095",
+  "tests/test_engine_cpu.py": "a5f0d2674f777f482c161536915c2eab0f737cd6acc894c7ea00ee45417bd594",
+  "tests/test_host_store.py": "cc78f8d7229eacecc623c951de4f52e25177f3c20ed0b05a518567b56297912a",
+  "tests/test_identity.py": "5905a3b7c36175a25d8eb22a2b16ff39c693637c9529dcaebe2e6d0f8c82d69c",
+  "tests/test_m1_run_validation.py": "3761fd928b890ba022f179cd2a74826a1c2a8949f5d439a14830ddc4d6b163ab",
+  "tests/test_m3_analyze_validation.py": "1d3708372153329a1b5c0b3bd106491d02af849cb6c24074144334d60c24b4dd",
+  "tests/test_m3_confirm.py": "e6a5935a89f0c9aef7a7baf2e767f2c53f0c4f1f420b7d63a2bf363046ec53dc",
+  "tests/test_m3_stats.py": "52f2a85ef3147df60f771be629af289c015729264f7ca2ed7c6f5c46023d64c2",
+  "tests/test_m4_batch.py": "3c4404098fc7456bb520d4f79a0bc1e1117c3b8b85839035e0f2395e0db128cf",
+  "tests/test_m4_evidence_cpu.py": "5e485416cb2d607784ee212c45bf6cf011e5e6556e1ab66d38cf670caf762ab4",
+  "tests/test_m4_gate_checks_cpu.py": "9b1470045ae4fbd4c928a42983a1296280fcda6a26c455f7293943cb300d03a4",
+  "tests/test_m4_gate_real_pytest.py": "13cf1341a2afd808655eb52cb1ec5411930e69dad82075b5891aa081b0b961be",
+  "tests/test_m4_spec_offline.py": "72d8466d709b7cb9b64e6d6eb19dd2965e7e6f90cddad2774203d6ce3d0a20d0",
+  "tests/test_m4_stats.py": "c8fcded71455c5b8b8963c5372b8bd88926845f69301649a419e75f6f7d34551",
+  "tests/test_perf.py": "7db1007d5bb44f2840da556c3ba262587f53afdc358e1d701f49142a6699f6c8",
+  "tests/test_perf_stats.py": "05a3a77d66eaf1a1226bac49907dd8eddaa3007179f93e030942c7ba6c524ace",
+  "tests/test_prefix_aware_cache.py": "587d2649d6c3b2eb5d230ee6c88e594180e78daf7a6c1f01d79aa1e1131da906",
+  "tests/test_restore_backends_cpu.py": "c188e6403516a6cd3df471bf860df12b9ebe997566a4b61100e53d6de789ebed",
+  "tests/test_snapshot_cpu.py": "e1f6e32528d61bb7a9b0b2be8b618e56ce0c9958118e00e2c218aaa0a99642ee",
+  "tests/test_tiered_cpu.py": "9ee06a21397a3c707377052c854125ca9627c2929d39530cae709a1ce825966a",
+  "tests/test_trace_models.py": "8e4afa5ba539aed78e92a3a6e28b272a5a77677193954a60f1aff392857f753d",
+  "tests/test_trace_replay_cpu.py": "7ff8575688e01527e3a468d04737f6beb15185607ed83e7e37d9f1e3d1589fb9",
+  "tests/test_traces.py": "e2496fd1cdb7c8ffffbd3f72a9510acdea4114ba13b3e3800221998ab8ba0c54"
+ },
+ "frozen_at": "2026-11-04T19:34:39-0800",
+ "frozen_unix": 1793849679.0190253,
+ "git_diff_file": "M4_EVAL_V1.freeze.diff",
+ "git_diff_file_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "git_diff_head_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+ "git_status_porcelain": [],
+ "manifest_version": 1,
+ "note": "hashes of the working tree at freeze time; no commit is required; the manifest does not hash itself",
+ "run_dir": "results/m4/M4_EVAL_V1_run",
+ "spec_sha256": "442e13ecd69cc7e13d9a3f3bf7eb1be616456feb576f7cbf5e604f51b0bab541",
+ "stack": {
+  "cpu": "AMD Ryzen 9 7945HX with Radeon Graphics",
+  "driver_version": "596.49",
+  "gpu_name": "NVIDIA GeForce RTX 4080 Laptop GPU",
+  "kernel": "6.18.54.1-microsoft-standard-WSL2",
+  "packages": {
+   "huggingface_hub": "2.4.0",
+   "numpy": "2.5.4",
+   "nvidia-cublas": "13.1.1.3",
+   "nvidia-cuda-cupti": "13.0.85",
+   "nvidia-cuda-nvrtc": "13.0.88",
+   "nvidia-cuda-runtime": "13.0.96",
+   "nvidia-cudnn-cu13": "9.24.0.43",
+   "nvidia-cufft": "12.0.0.61",
+   "nvidia-cufile": "1.15.1.6",
+   "nvidia-curand": "10.4.0.35",
+   "nvidia-cusolver": "12.0.4.66",
+   "nvidia-cusparse": "12.6.3.3",
+   "nvidia-cusparselt-cu13": "0.8.1",
+   "nvidia-nccl-cu13": "2.30.7",
+   "nvidia-nvjitlink": "13.4.92",
+   "nvidia-nvshmem-cu13": "3.4.5",
+   "nvidia-nvtx": "13.0.85",
+   "safetensors": "0.8.0",
+   "tokenizers": "0.23.3",
+   "torch": "2.14.1+cu130",
+   "transformers": "5.22.1",
+   "triton": "3.8.0"
+  },
+  "python": "3.14.4",
+  "weights": {
+   ".gitattributes": {
+    "blob": "a6344aac8c09253b3b630fb776ae94478aa0275b",
+    "bytes": 1519
+   },
+   "LICENSE": {
+    "blob": "6634c8cc3133b3848ec74b9f275acaaa1ea618ab",
+    "bytes": 11343
+   },
+   "README.md": {
+    "blob": "b3327a17e2ffa52e0fd941a2810b18a9fd0e7d94",
+    "bytes": 4917
+   },
+   "config.json": {
+    "blob": "f81ead14ab072d65a07817f83a3ee0e5a1890d10",
+    "bytes": 660
+   },
+   "generation_config.json": {
+    "blob": "dfc11073787daf1b0f9c0f1499487ab5f4c93738",
+    "bytes": 242
+   },
+   "merges.txt": {
+    "blob": "20024bfe7c83998e9aeaf98a0cd6a2ce6306c2f0",
+    "bytes": 1671839
+   },
+   "model.safetensors": {
+    "blob": "dd924a11b4c220f385b51ffa522daea7c9f3d850e31b162bb5661df483c6d3ee",
+    "bytes": 3087467144
+   },
+   "tokenizer.json": {
+    "blob": "443909a61d429dff23010e5bddd28ff530edda00",
+    "bytes": 7031645
+   },
+   "tokenizer_config.json": {
+    "blob": "07bfe0640cb5a0037f9322287fbfc682806cf672",
+    "bytes": 7305
+   },
+   "vocab.json": {
+    "blob": "4783fe10ac3adce15ac8f358ef5462739852c569",
+    "bytes": 2776833
+   }
+  }
+ },
+ "untracked_files_sha256": {}
+}
