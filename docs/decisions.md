@@ -584,3 +584,31 @@ for the feasibility decision; this is the separate decision to proceed to the fr
 - **What it authorizes:** removing the protocol's DRAFT marker, then creating and verifying the
   premeasurement freeze, in the manner of D31.
 - **What it does not authorize:** the evaluation batch, which needs separate approval.
+
+## D36. (M4_EVAL_V2, DRAFT; CPU only) A request-scoped warm-disk preparation and a batch page-cache interference rule
+Proposed on 2026-11-04 after M4_EVAL_V1 was executed once and its evidence was invalid under the frozen
+whole-tier warm-disk rule (12 of 4,480 C2 requests below full residency after one prewarm; no performance
+verdict). A post-outcome diagnostic replay did not reproduce the losses, and their cause is unresolved. This is
+a design change for a new spec. It does not correct, reinterpret or re-analyse V1.
+- **Change:** before each C2 request, only the request's candidate disk files are handled: the files its restore
+  reads on the normal path, computed without side effects. The procedure is one initial `mincore` pass, at most
+  one whole-file read per candidate below full residency (no retry) and one final pass. Then the unchanged timed
+  region starts. Details: `docs/M4_EVAL_V2_PROTOCOL.md` §3.
+- **Claim, narrowed on purpose:** every candidate was observed fully resident in the one verification pass
+  immediately before the request. It is not a simultaneous snapshot, and not a guarantee at timer start or
+  during the read. Pages are not pinned.
+- **Interference rule:** any change of `drop_pagecache` between the batch's start and end reads, or any
+  missing, unreadable or differing reading in the sessions, invalidates the batch. Ordinary reclaim counters are
+  context only.
+- **Why:**
+  - V1's whole-tier condition covered files the request never reads. Its sequential, unpinned check could not be
+    a simultaneous guarantee.
+  - The request-scoped condition matches the direct disk reads more closely.
+  - Pinning, retries, system tuning and threshold relaxation are not justified by the evidence (diagnosis review).
+- **Unchanged:** V1's spec dict and digest, its protocol (byte-identical), its evidence and its invalid status;
+  every V2 parameter other than the name, run directory, protocol document and `warm_disk`; the restore path;
+  `baseline` as the default.
+- **Known risk:** WSL's `mini_init` dropped caches 18 times in about 6.7 h of uptime on this host, at gaps of
+  42–4,291 s. A V2 batch that overlaps such an event is invalid by this rule.
+- **Not authorized by this entry:** approval of the protocol, removal of its DRAFT marker, any GPU session or
+  calibration run, the freeze, or the batch.
