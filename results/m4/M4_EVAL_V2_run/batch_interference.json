@@ -1,0 +1,50 @@
+{
+ "format": "m4-batch-interference-v1",
+ "experiment": "M4_EVAL_V2",
+ "counter": "drop_pagecache",
+ "rule": "invalid unless start and end were read and drop_pagecache did not change; every drop_pagecache value recorded in the sessions must equal the start value",
+ "start": {
+  "status": "ok",
+  "vmstat": {
+   "workingset_refault_file": 3146123,
+   "allocstall_normal": 428,
+   "allocstall_movable": 1946,
+   "pgsteal_kswapd": 8479662,
+   "pgsteal_direct": 121718,
+   "pgscan_kswapd": 10521676,
+   "pgscan_direct": 158579,
+   "pgsteal_file": 8509721,
+   "drop_pagecache": 29,
+   "drop_slab": 29
+  },
+  "meminfo_kib": {
+   "MemAvailable": 6550332,
+   "Cached": 714232,
+   "Active(file)": 498600,
+   "Inactive(file)": 231772
+  }
+ },
+ "start_unix": 1793868076.6059456,
+ "end": {
+  "status": "ok",
+  "vmstat": {
+   "workingset_refault_file": 5426634,
+   "allocstall_normal": 448,
+   "allocstall_movable": 2441,
+   "pgsteal_kswapd": 11798756,
+   "pgsteal_direct": 145026,
+   "pgscan_kswapd": 14700434,
+   "pgscan_direct": 189456,
+   "pgsteal_file": 11812692,
+   "drop_pagecache": 29,
+   "drop_slab": 29
+  },
+  "meminfo_kib": {
+   "MemAvailable": 6673128,
+   "Cached": 4364116,
+   "Active(file)": 4201020,
+   "Inactive(file)": 170532
+  }
+ },
+ "end_unix": 1793870082.5949023
+}
