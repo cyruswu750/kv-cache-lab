@@ -1,4 +1,4 @@
-# Design (M1 scope, with M1.1 fixes; M2 measurement additions in §10; M3 restore backends in §11; M4-A CPU-only trace replay in §12; M5a opt-in restore-length policy in §14)
+# Design (M1 scope, with M1.1 fixes; M2 measurement additions in §10; M3 restore backends in §11; M4-A CPU-only trace replay in §12; M5a opt-in restore-length policy in §14; M5b measurement harness in §15)
 
 This is the authoritative design for what is implemented. Anything not described here is
 not implemented; planned but unimplemented work is listed under **Excluded** in §1.
@@ -482,3 +482,16 @@ Status 2026-11-05: implemented and tested on CPU only. GPU correctness, calibrat
   with a positive candidate outside its projection onto the objective's inputs falls back to always-restore). It is separate from the frozen
   M2 model, which nothing at runtime loads.
 - **Unchanged:** the storage format, tiers, eviction, budgets, counters' schema and the default backend.
+
+## 15. M5b preparation: the candidate-measurement harness (CPU only; NOT RUN on the GPU)
+Implemented and CPU-tested 2026-11-05. The GPU gate, calibration and evaluation are **NOT RUN**. Protocol:
+`docs/M5_PROTOCOL_DRAFT.md` (DRAFT); decisions D42–D43.
+- **Spec:** `kvlab/m5_spec.py` declares the grid (fully specified chunk states, every feasible candidate, admissions,
+  capacities, provenance), the seeded schedule, the domain, the design check and the bounded counts.
+- **State:** `kvlab/m5_state.py` (benchmark only) builds a case's stores from one source bank and resets them after
+  every sample with public store operations, verified by a structural fingerprint; production stores are unchanged.
+- **Session:** `kvlab/m5_bench.py` measures FixedChunks candidates and real policy runs. The timed region is exactly
+  synchronize, then `prefill_request`, then the first-token argmax. The strict checks of the actual split run
+  untimed.
+- **Validation, fit and analysis:** `kvlab/m5_validate.py` (fail-closed), `kvlab/m5_fit.py` (fit and frozen
+  predictions) and `kvlab/m5_analysis.py` (multi-candidate statistics).

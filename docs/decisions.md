@@ -757,3 +757,65 @@ Implemented on branch `m5a-restore-policy`, 2026-11-05 (`docs/M5_DESIGN.md`). No
 - **Fit isolation:** fitting refuses declared evaluation cases, undeclared, duplicate or missing cases, and
   incomplete candidate sets. Nothing is filtered silently.
 - **Not done:** calibration, evaluation and GPU correctness. Tests use synthetic coefficients only.
+
+## D42. (M5b preparation; CPU only) A bounded candidate-measurement harness with a declared grid and fail-closed evidence
+Implemented on branch `m5b-prep` (child of `m5a-restore-policy`), 2026-11-05. Protocol: `docs/M5_PROTOCOL_DRAFT.md`
+(DRAFT). **Not run:** the GPU gate, any pilot, calibration and evaluation.
+- **Specification** (`kvlab/m5_spec.py`):
+  - **The grid:** 12 calibration and 8 evaluation cases are declared before any measurement (no timing chose
+    them). Every case lists the state of each complete chunk; the candidates, admissions, capacities and
+    provenance are derived from that.
+  - **The backend:** `batched` with a staging group of 4, selected for performance. The default stays `baseline`.
+  - **Checks before measurement:** the calibration design is checked on CPU (rank 9 of 9, condition number 28.4).
+    The declared domain covers every evaluation case; one outside would be a build error, never dropped.
+  - **The holdout:** separated by configuration signature (the id and the prompt seed excluded), and prompts are
+    disjoint.
+- **State** (`kvlab/m5_state.py`):
+  - **Preparation:** one bank per case (one full prefill of `prompt[:P]` through the M1 store path) fills the
+    stores and seeds the `ResidentReference`.
+  - **Reset:** it uses only public store operations (discard in reverse allocation order, lease or `put` in
+    declared order).
+  - **Verification:** a structural fingerprint before every sample, and content hashes at the case's start and
+    end.
+- **Samples** (`kvlab/m5_bench.py`):
+  - **Runs:** every candidate through FixedChunks; in evaluation, real CostAware, AlwaysRestore and Recompute
+    runs. The orders are seeded.
+  - **Page cache:** the common `warm_disk.prepare` over the maximal prefix's disk files.
+  - **The timed region:** exactly synchronize, then `prefill_request`, then the first-token argmax.
+  - **The strict check:** every sample's actual split, untimed. The collector runs once per repetition.
+- **Validation** (`kvlab/m5_validate.py`):
+  - **What is recomputed:** every expectation, from the spec and the recorded namespace.
+  - **What is reused:** `m3_confirm.run_batch` and `batch_problems` for execution (one deadline, stop on a nonzero
+    exit, no retries).
+  - **Exit codes:** 3 for any invalidity, 4 for a strict mismatch alone.
+  - **After the focused review:** non-object files are rejected, a fully successful batch is required, the frozen
+    predictions are recomputed from the bound cost model (before launch and in validation), page-cache records
+    are checked for schema, bounds and chronology, and identity fields are required.
+- **Rejected alternatives:**
+  - a per-sample forward hook in the timed region (instrumentation);
+  - a per-sample content hash of every payload (redundant with the restored-byte check and the setup and end
+    hashes, and it would double the I/O);
+  - reopening the disk store between samples (it deletes files);
+  - resetting production counters (falsifies accounting);
+  - an independent recomputation of the reference (different provenance);
+  - a new orchestration framework or freeze manifest.
+
+## D43. (M5b preparation) Multi-candidate statistics: three separate quantities, a cross-evaluated difference and per-case simultaneous ambiguity
+- **The three quantities** (`kvlab/m5_analysis.py`):
+  - candidate selection quality (FixedChunks latency of the selected candidate);
+  - delivered policy latency (the policy runs themselves);
+  - prediction error.
+
+  They are never substituted for one another.
+- **The best measured candidate:** the argmin of the candidate means (ties go to the larger L). Naive regret
+  against it is labelled a biased, descriptive estimate. The cross-evaluated difference (select on one session
+  half, evaluate on the other, swap, weights ½ and ½) keeps its sign, and it is not called unbiased regret.
+- **Ambiguity:** studentized-max simultaneous bootstrap intervals over all pairwise candidate differences of one
+  case give the possibly-best set. A winner is never selected first and then tested against the runner-up.
+- **Uncertainty:**
+  - whole-repetition resampling, with circular blocks within each (case, session) stream;
+  - sessions are fixed strata; the case grid is fixed (no claim beyond it);
+  - equal case weights;
+  - "inadequate" instead of an interval when the data are too few.
+- **Primary practical report:** the paired delivered differences against AlwaysRestore and Recompute, in either
+  direction. There are no tail, TTFT, matched-memory or cold-storage claims.

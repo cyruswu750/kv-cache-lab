@@ -508,3 +508,50 @@ and skip the admitted-range check in `predict_ms`. The mutants cover:
 
 An earlier ad-hoc run of 18 of these mutants edited the worktree files in place and restored them afterwards. It
 found one survivor, an infeasible length within the eligible range, and the hole tests were then added.
+
+## M5b preparation: specification, harness, validation, fit and analysis (CPU only; 90 tests in 5 files; tiny random Qwen2, temporary stores, FakeTiming synthetic latencies; correctness, not performance)
+GPU correctness gate, calibration and evaluation: **NOT RUN**. Results after the focused-review corrections:
+- **Focused M5a + M5b run:** 212 passed (122 + 90).
+- **Full CPU suite:** 1160 passed, 71 deselected (70 GPU tests, the 7 new M5 ones included, and the `nvidia-smi` test).
+
+| Check | Expected | Result | Test |
+|---|---|---|---|
+| Declared grid: every case's chunk states, candidates (all feasible), admissions (= absent chunks), capacities and provenance P | as derived; prompts reproducible from their seeds | PASS | `test_cases_declare_every_feasible_candidate_and_their_admissions` |
+| Coverage: short prefixes, S > C, host-only, disk-only, both mixed orders, distinct N, m variation; batched G = 4; counts; estimates labelled | as stated; estimated batch time below the deadline | PASS | `test_grid_coverage_and_counts` |
+| Calibration design before measurement; a synthetic fit on it | rank 9 of 9, condition number < 100, 81 rows (cal-10 15/81); the fit's domain equals the declared domain | PASS | `test_calibration_design_is_identifiable_before_any_measurement` |
+| Every evaluation case against the calibration domain, checked by the model itself | no decision- or prediction-domain violation; `predict_ms` succeeds for every candidate | PASS | `test_evaluation_cases_are_inside_both_domains_by_the_model_itself` |
+| A renamed calibration configuration, a reused prompt seed, a duplicate in the split | `SpecError` | PASS | `test_holdout_is_separated_by_configuration_not_by_ids` |
+| Out-of-domain evaluation cases (N, restore, host, disk chunks, m) | `SpecError` naming the field; never dropped | PASS (5) | `test_out_of_domain_evaluation_cases_are_refused_not_dropped` |
+| Host-only calibration grid; another backend; a bad session partition; no calibration spec; a malformed case | `SpecError` | PASS | `test_unidentifiable_or_inconsistent_specs_are_refused` |
+| Schedule per session | reproducible; every repetition a permutation of every run label; warmups and measured; case orders differ between sessions; evaluation includes the three policies | PASS | `test_schedule_is_seeded_complete_and_reproducible` |
+| Spec digests and bindings; torch-free spec/validator/fit/analysis; the `plan` CLI | as stated | PASS (3) | `test_spec_binding_and_digest`, `test_spec_validator_fit_and_analysis_modules_do_not_import_torch`, `test_plan_cli_runs_on_cpu` |
+| Prepared state of seven case shapes | equal to `expected_structure`; LRU orders and capacities as declared; content and fingerprint checks pass | PASS (7) | `test_prepared_state_is_exactly_the_declared_one` |
+| Reset after 8 runs in mixed order (FixedChunks 3, 0, 1, AlwaysRestore, Recompute, 2, 3, 1), both backends | admissions exactly [3]; host LRU, free list and structure restored after every run; production counters keep counting | PASS (2) | `test_reset_restores_state_across_candidates_and_policies_in_any_order` |
+| Admission cleanup alone; disk recency after reads | the LRU difference is detected; the full reset restores both orders | PASS (2) | `test_admission_cleanup_alone_does_not_restore_lru_order`, `test_disk_recency_is_reestablished_after_reads` |
+| Tampering: a host LRU move, a rewritten file (new inode/mtime), a payload bit, a held lease | `StateError` or content mismatch | PASS | `test_checks_detect_tampering` |
+| Bank provenance | restored bytes equal the bank-seeded reference; the same-split reference logits are equal | PASS | `test_bank_is_the_single_provenance_of_stores_and_reference` |
+| An existing case directory | refused (never reopened); its files untouched | PASS | `test_a_case_never_reuses_or_reopens_an_existing_directory` |
+| End to end: tiny calibration sessions, then the real `run_batch` (fake interpreter copying the recorded sessions), validation, fit, predictions, evaluation sessions with real policy runs, validation, analysis | both valid; calibration means equal the synthetic truth although warmups are +1000 ms; coefficients recovered; CostAware's choices equal the truth argmin; the delivered difference equals the candidate difference plus the overhead difference | PASS | `test_valid_calibration_fit_predictions_and_evaluation` |
+| `scripts/m5_fit.py` and `m5_analyze.py` | new directories only; invalid evidence leaves only `validation.json`; a different frozen fit fails the bindings | PASS | `test_scripts_fit_and_analyze_write_new_outputs_only` |
+| 25 session tampers (missing, duplicate, reordered, relabelled or reflagged samples; selected/actual length; admissions; write skips; spills; zero, bool and float timing; fingerprint; residency; drop_pagecache; status; spec digest; dirty source; namespace; content; missing case; plan; reason; miss reason) | exit 3 with the matching reason; no sessions returned | PASS (25) | `test_tampered_calibration_sessions_are_invalid` |
+| Strict mismatches (logits, restored bytes, first token) in complete evidence | exit 4 | PASS (3) | `test_strict_mismatches_in_complete_evidence_are_exit_4` |
+| Evaluation bindings: CostAware selection and objectives vs the predictions, tampered predictions, predictions frozen after launch, artifact digest, missing frozen files, a calibration session loading a model | invalid | PASS | `test_evaluation_specific_bindings` |
+| File and batch level: a missing session, an extra file, a modified spec.json, a failed batch status, a session over the deadline, a modified plan, unreadable JSON | invalid | PASS | `test_file_level_and_batch_level_problems` |
+| A strict failure during a session; an unintended read fault in a performance case | the session stops and keeps its failing record; truncation makes the evidence invalid | PASS (2) | `test_a_strict_failure_stops_the_session_and_keeps_its_record`, `test_an_unintended_read_fault_in_a_performance_case_makes_the_evidence_invalid` |
+| Hand-calculated analysis: best and ties, naive regret, signed cross-evaluated differences (−0.5, −1.0, +1.0), the hand example's means, regrets, cross differences, delivered differences, equal-weight aggregates, prediction errors | as computed in the test comments; candidate latency (8.0) is distinguished from delivered latency (8.5) | PASS (3) | `test_best_candidate_ties_and_naive_regret`, `test_cross_evaluated_difference_is_signed`, `test_hand_calculated_analysis` |
+| Warmup timings changed by a factor of 5 × 10^6; whole-repetition shifts | identical results; zero-width intervals for paired differences; strata never crossed | PASS (2) | `test_warmup_timings_never_affect_the_statistics`, `test_resampling_keeps_whole_repetitions_and_sessions` |
+| Ambiguity and adequacy; invalid or incomplete evidence | a noisy pair ambiguous, a clear case not; too few blocks gives "inadequate" with no interval; `ValueError` | PASS (3) | `test_ambiguity_uses_simultaneous_intervals_and_flags_inadequate_data`, `test_invalid_evidence_gets_no_analysis`, `test_incomplete_measured_repetitions_are_refused` |
+| Review regressions: `[]` or `null` in place of the batch record, batch plan or spec.json; a consistently recorded final nonzero exit; predictions not produced by the bound model (digest recomputed), also before launch; zero-page, out-of-order or late page-cache records and an inconsistent gap; missing identity fields (and `require_cuda` without a GPU identity); `cases: null` in the predictions; too few sessions per partition half | invalid (exit 3) with the matching reason, never a crash; no cross-evaluated interval ("inadequate") | PASS (11) | `test_review_*` in `tests/test_m5_pipeline.py` and `tests/test_m5_analysis.py` |
+| The GPU-gate bodies on CPU (forced 0/intermediate/maximal with a long suffix, CostAware with a synthetic artifact, truncation and no read beyond, the harness smoke sessions through the session validator), both backends; the GPU file calls exactly these bodies | PASS; on the GPU NOT RUN | PASS (8) | `tests/test_m5_gate_cpu.py` (GPU: `tests/gpu/test_m5_policy.py`, 7 collected, not run) |
+
+Mutation check on a scratch copy under the ignored `local/` (the worktree was never modified). It ran in three
+stages:
+- **Run 1, before the review:** 18/19 killed. One kill came from a collection error, because the mutant itself was
+  syntactically broken. One mutant survived: warmups admitted into the analysis, which was equivalent for ordered
+  evidence because the measured cells overwrote the warmup ones.
+- **Run 2:** the analysis now refuses a measured cell filled twice, and the broken mutant was fixed. Both were
+  then killed (2/2).
+- **Run 3:** on the post-review tree, with four more validator mutants (page-cache chronology, prediction
+  recomputation, identity requirement, batch success). The unmutated copy passed 90 tests, and 23/23 were
+  killed. The copy was taken before the final tightening of the identity check (model-file and package
+  entries), which is covered by its own regression test.

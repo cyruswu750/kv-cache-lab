@@ -3,7 +3,8 @@
 **Status, 2026-11-05.** Implemented and tested on **CPU only**: a tiny random Qwen2, temporary stores
 and synthetic data. **GPU correctness, calibration and evaluation: NOT RUN.** No calibrated model
 exists, and nothing here makes a decision-quality or performance claim. The next stage is drafted in
-`docs/M5_PROTOCOL_DRAFT.md`. Decisions D40 and D41.
+`docs/M5_PROTOCOL_DRAFT.md`. Decisions D40 and D41. The M5b preparation (harness, validation, fit, analysis
+and GPU gate; CPU only, NOT RUN on the GPU) is in that protocol and decisions D42–D43.
 
 ## 1. Scope
 **New:**
