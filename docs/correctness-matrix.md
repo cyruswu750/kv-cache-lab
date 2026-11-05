@@ -448,3 +448,63 @@ Mutation check on scratch copies under the ignored `local/`; the worktree was ne
   - `compare`: types, floats, missing files, the line count and formatting-only differences;
   - the relocation rule: the root boundary, the relative part, the single file, the bytes beyond `run_dir`,
     Markdown leniency and the required validation output.
+
+## M5a restore-length policy and cost model (CPU only; `tests/test_restore_policy.py` 60 tests, `tests/test_restore_cost.py` 62 tests; tiny random Qwen2, temp stores, synthetic coefficients; correctness, not performance)
+GPU correctness, calibration and evaluation: **NOT RUN**. Results after the review corrections: focused run
+122 passed; full CPU suite 1070 passed, 64 deselected (63 GPU tests and the `nvidia-smi` test
+`test_m3_confirm.py::test_run_refuses_without_a_matching_manifest`). Before the review the counts were 121 and
+1069.
+
+| Check | Expected | Result | Test |
+|---|---|---|---|
+| Candidates at N = 0, 1, C−1, C, C+1, 2C, 2C+1, 5C+3 with every chunk indexed | `0, C, …, max_restore_len(N, C)`; the last chunk of an exact multiple is never a candidate | PASS (8) | `test_candidates_follow_the_first_token_rule_when_everything_is_indexed` |
+| A hole, a leading absence, mixed tiers, no staging buffer after host chunks or first, host only without staging | stop at the first absent chunk, or at the first disk chunk without staging; stop reason; `indexed_not_validated` | PASS (7) | `test_holes_mixed_tiers_and_missing_staging` |
+| Wrong key count, a boolean prompt length, an unknown backend | ValueError before any choice | PASS | `test_planner_rejects_inconsistent_inputs` |
+| Planning on a real store with a corrupt indexed chunk, with file system calls, leases, staging, allocation, restore destinations, `DynamicCache` and `restore()` forbidden | no call; counters, LRU orders, pins, free slots, staging, disk accounting, file inode/size/mtime/bytes, slab bytes and `last_restore` unchanged; no forward call; the corrupt chunk still planned (presence only) | PASS (2 backends) | `test_planning_has_no_side_effects` |
+| Plan vs the M4_EVAL_V2 warm-disk planner (unchanged) for five prompts, with and without staging, with a hole | eligible and present counts, stop, the disk files of the maximal prefix and the host count agree | PASS | `test_planner_agrees_with_the_m4_v2_warm_disk_planner` |
+| Policy outputs: bool, float, numpy float, negative, misaligned, beyond the eligible length, empty reason, a list of objectives, a bare int, None; aligned lengths past a hole | `PolicyError` before any restore, prefill or state change | PASS (11) | `test_invalid_policy_outputs_are_rejected_before_any_restore`, `test_selection_beyond_a_hole_is_rejected_before_restore` |
+| numpy integer selection; `FixedChunks` beyond the candidates; `AlwaysRestore`/`Recompute` choices | accepted; `PolicyError` (never substituted); as defined | PASS | `test_validate_selection_accepts_numpy_integers_and_fixed_chunks_never_substitutes` |
+| Forced L = 0, C, 2C, 3C on disk/host/host, both backends | selected = actual; sources; no stores; only restored host chunks touched, in order; miss counters unchanged; `last_restore` None for L = 0; restored bytes and outputs strict against `ResidentReference` with the actual length and stores | PASS (8) | `test_forced_restore_lengths_are_executed_exactly` |
+| Long suffixes (S = 23, 27, 3, 19 at C = 4), batched | strict; no misses | PASS | `test_long_suffix_execution` |
+| `Recompute` after a restoring request | L = 0, no miss counted, `miss_reason` None, `last_restore` None | PASS | `test_policy_recompute_is_not_a_miss_and_clears_last_restore` |
+| Phase marks and `prefill_request` with a policy; JSON record | `ingest, decide, restore, prefill, store`; the decision recorded | PASS | `test_policy_marks_and_prefill_request_use_the_attached_policy` |
+| `allow_restore=False` with a policy that raises if consulted | not consulted; M2 behaviour and marks | PASS | `test_allow_restore_false_never_consults_the_policy` |
+| A hole: policy=None vs `AlwaysRestore` | same L, stores and logits; policy=None counts the `absent` miss, the policy records it in the plan only | PASS | `test_always_restore_policy_does_not_fabricate_lookup_misses` |
+| CRC failure, missing file, injected EIO inside a selected 3-chunk prefix, both backends | actual = verified prefix, `truncated`, the reason in both records, one miss, the dropped chunk re-admitted, strict, one prefill | PASS (6) | `test_failure_inside_the_chosen_prefix_truncates_to_the_verified_prefix` |
+| A corrupt chunk just beyond the selected prefix (`read_into` recorded) | only chunk 0 read; the bad file untouched and still indexed; no miss | PASS | `test_bad_chunk_beyond_the_chosen_prefix_is_never_read` |
+| ENOSPC on both admission spills under `Recompute`, `AlwaysRestore`, `FixedChunks(2)` (INJ) | `STEPS` forward calls; stores [6, 7]; spill failures 2; no temp or undeletable bytes | PASS (3) | `test_write_failures_never_repeat_or_abort_inference` |
+| No staging buffer (a host store too small for any slot) sharing a disk tier | policy=None: misses `absent` and `no_staging_buffer`; `AlwaysRestore`: no candidate, no miss; `STEPS` calls | PASS | `test_no_staging_buffer_limits_candidates_without_a_counted_miss` |
+| `CostAware` through the engine with hand-computed synthetic coefficients | L = 0 chosen and executed, objectives as computed; a tie between positive candidates goes to the longest | PASS | `test_cost_aware_choice_is_executed_and_recorded` |
+| `CostAware` with a backend-incompatible artifact | `IncompatibleModelError` before restore; counters unchanged | PASS | `test_cost_aware_incompatibility_raises_before_any_work` |
+| `CostAware` outside / inside the declared prompt range | always-restore with `out_of_domain_always_restore:prompt_len` / the model's choice | PASS | `test_cost_aware_out_of_domain_falls_back_to_always_restore` |
+| policy=None vs an adapted copy (`self` → `eng`) of the pre-M5a `prefill_request` body (fill, restore, extension, hole, CRC failure, `allow_restore=False`, two `run()`s), both backends; planning patched to fail | equal fields, logits, cache bytes, counters, marks, forward calls, callbacks, `restore()` key counts, LRU orders, `last_restore`; `decision` None | PASS (2) | `test_policy_none_matches_the_pre_m5a_engine` |
+| Fit on exact synthetic cases, both weightings; input order | coefficients recovered (rel 1e-7); rank 9; domain, ids, provenance and digest recorded; order-independent artifact | PASS (3) | `test_fit_recovers_known_coefficients_and_records_domain_and_provenance`, `test_case_order_does_not_change_the_artifact` |
+| NNLS vs `perf.nnls_small` (≤ 8 columns) and KKT with 9 columns; noisy data | equal; KKT holds; coefficients ≥ 0 | PASS (2) | `test_nnls_matches_perf_nnls_small_and_satisfies_kkt_with_nine_columns`, `test_noisy_fit_keeps_coefficients_non_negative` |
+| A declared evaluation case, an undeclared, duplicate or missing case, overlapping or duplicate declarations, a string id list | `FitError`; nothing filtered | PASS | `test_fit_refuses_evaluation_unexpected_duplicate_or_missing_cases` |
+| 15 malformed cases (NaN/inf/0/bool means, zero samples, float/bool N, misaligned, missing or duplicate candidate, unknown tier, first-token violation, impossible m, unknown fields) | `FitError` | PASS (15) | `test_fit_rejects_malformed_case_inputs` |
+| 40 cases (> 90 rows) at one N; no disk chunk; constant m; m always 0 | `FitError`: rank, or features never exercised | PASS (4) | `test_rank_is_checked_not_row_counts`, `test_unidentifiable_calibration_designs_are_rejected` |
+| Bad weighting, backend, staging group (baseline non-null, batched 0), digest case, non-finite provenance | `FitError` | PASS | `test_fit_rejects_bad_configuration` |
+| Save/load; overwrite; a tampered coefficient; a NaN token in the file; NaN in a dict | identical model; `FileExistsError`; `ArtifactError` | PASS (2) | `test_artifact_round_trip_and_tamper_evidence`, `test_non_json_values_are_rejected` |
+| 17 malformed artifacts, each re-digested (schema, keys, units, objective, features, negative or string or missing coefficients, compatibility, rank, method, domain, ids, provenance) | `ArtifactError` | PASS (17) | `test_malformed_artifacts_are_rejected_even_when_redigested` |
+| Decisions after loading with digest, canonical JSON and validation patched to fail | still decided (validated once) | PASS | `test_model_is_validated_once_not_per_candidate` |
+| Namespace, chunk size, backend, staging-group mismatches (also with no positive candidate); baseline ignores the group | `IncompatibleModelError`; accepted | PASS | `test_incompatible_plans_raise_instead_of_falling_back` |
+| Prompt length, restore, host, disk and suffix bounds; no positive candidate | always-restore with the field as reason; L = 0 without the model | PASS (6) | `test_out_of_domain_plans_fall_back_to_always_restore_with_a_reason` |
+| `predict_ms`: admission term, out-of-domain m, inconsistent or boolean inputs, an impossible m (more than the complete chunks after L; review finding) | a·m added; `OutOfDomainError`; ValueError | PASS | `test_predict_ms_checks_inputs_and_domain_and_includes_admission` |
+| A plan (N = 1500, chunks 0-1 in host, 2-4 absent) whose request admits m = 3, outside the declared m range [0, 1] (review finding) | decision domain unaffected (m is prediction-only), the model's choice; `predict_ms` raises `OutOfDomainError` | PASS | `test_admitted_range_is_a_prediction_domain_not_a_decision_domain` |
+| Hand-computed objectives at N = 1000, C = 256 (interior minimum 512); recompute, longest, all-tied and two-way-tied coefficients; staging-limited candidates | as computed; ties to the larger L; only feasible candidates scored | PASS (6) | `test_hand_computed_interior_choice_and_recorded_objectives`, `test_hand_computed_choices_and_deterministic_ties`, `test_feasibility_limits_the_candidates_the_model_sees` |
+| Backend names | equal to `RESTORE_BACKENDS` | PASS | `test_backend_names_match_the_store` |
+
+Mutation check on a scratch copy under the ignored `local/` (the worktree was not modified by these runs).
+Before the review, the unmutated copy passed 121 tests and 24/24 mutants were killed. After the review
+corrections, it passed 122 tests and 26/26 were killed; the two added mutants accept an impossible admitted count
+and skip the admitted-range check in `predict_ms`. The mutants cover:
+- the engine: restoring beyond the selection, a stale `last_restore`, consulting the policy without restore,
+  planning on the default path, dropping the truncation reason, skipping validation;
+- the planner: an LRU touch, the staging rule, holes, the first-token rule;
+- validation and policies: accepting booleans, accepting infeasible lengths, the tie rule, the domain fallback,
+  a `FixedChunks` clamp;
+- the fit and model: the evaluation and undeclared case checks, the rank check, swapped tier features, the pair
+  feature, the suffix bound, the staging-group check, the digest and coefficient validation.
+
+An earlier ad-hoc run of 18 of these mutants edited the worktree files in place and restored them afterwards. It
+found one survivor, an infeasible length within the eligible range, and the hole tests were then added.

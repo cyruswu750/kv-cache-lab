@@ -1,4 +1,4 @@
-# Design (M1 scope, with M1.1 fixes; M2 measurement additions in §10; M3 restore backends in §11; M4-A CPU-only trace replay in §12)
+# Design (M1 scope, with M1.1 fixes; M2 measurement additions in §10; M3 restore backends in §11; M4-A CPU-only trace replay in §12; M5a opt-in restore-length policy in §14)
 
 This is the authoritative design for what is implemented. Anything not described here is
 not implemented; planned but unimplemented work is listed under **Excluded** in §1.
@@ -466,3 +466,19 @@ The design choices in this section preceded all GPU work.
 - **At D35 approval, not yet done:** the freeze, any evaluation session and any performance
   measurement. The runtime restore-length policy, cost-model refit and asynchronous restoration
   are out of scope.
+
+## 14. M5a: an opt-in restore-length policy and a versioned cost model (CPU only)
+Status 2026-11-05: implemented and tested on CPU only. GPU correctness, calibration and evaluation are
+**NOT RUN**, and no calibrated model exists. Details: `docs/M5_DESIGN.md`; decisions D40–D41; next stage
+`docs/M5_PROTOCOL_DRAFT.md` (DRAFT).
+- **Default unchanged:** `AlwaysRestoreEngine(model, tiered, *, policy=None)`; with `policy=None` the §8 flow
+  is unchanged, and `allow_restore=False` never consults a policy.
+- **With a policy:** a side-effect-free plan (`kvlab/restore_policy.py`: index membership only, candidates
+  `0, C, …` under §2, stopping at the first absent chunk or, without staging, the first disk chunk), a
+  validated choice, then `TieredKVCache.restore()` of exactly the chosen prefix. Validation failures keep the
+  verified prefix (§7); there is exactly one prefill from the actual length.
+- **Policies:** `AlwaysRestore`, `Recompute`, `FixedChunks` and `CostAware`. The last minimizes the objective of
+  a `kvlab/restore_cost.py` artifact (schema `kvlab-restore-cost-v1`: digest, compatibility, a box domain; a plan
+  with a positive candidate outside its projection onto the objective's inputs falls back to always-restore). It is separate from the frozen
+  M2 model, which nothing at runtime loads.
+- **Unchanged:** the storage format, tiers, eviction, budgets, counters' schema and the default backend.

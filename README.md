@@ -17,7 +17,12 @@
 | M4-B preparation | Prefix-aware GPU-only baseline C1-PA (D33), session runner, fail-closed validator, session-level analysis, batch control (`docs/M4B_PROTOCOL.md`, approved for freeze, D35) | CPU preparation done. GPU correctness gate (§9) **passed**: 46 tests, strict replays, with counters reconciled against the models. One timing-only feasibility pilot on calibration traces (D34). Protocol approved for freeze (D35). Formal evaluation **M4_EVAL_V1** executed once: **invalid** under its frozen whole-tier warm-disk rule (12 of 4,480 C2 requests not fully resident after the prewarm); **no performance result**, cause unresolved |
 | M4_EVAL_V2 | Request-scoped warm-disk preparation (`kvlab/warm_disk.py`) and a page-cache interference rule (`docs/M4_EVAL_V2_PROTOCOL.md`, D36–D38); evidence archived with V1's (D39) | done: one batch, 10 sessions, valid (11,200 strictly compared evaluation records, 0 mismatches). Primary family (15): 5 A faster, 5 A slower, 5 inconclusive; conditional on independent, approximately normal session differences; synthetic traces, this machine and stack only (`docs/results.md`, M4). No default change |
 
-Not implemented yet: a runtime cost-aware policy (M2's model is offline only),
+M5a (branch `m5a-restore-policy`, CPU only): an opt-in restore-length policy (`AlwaysRestore`, `Recompute`,
+`FixedChunks`, `CostAware`) and a separately versioned cost-model interface. GPU correctness, calibration and
+evaluation are **NOT RUN**: no calibrated model exists, and there is no decision-quality or performance result
+(`docs/M5_DESIGN.md`; next stage `docs/M5_PROTOCOL_DRAFT.md`, DRAFT). The default path is unchanged.
+
+Not implemented yet: a calibrated runtime cost model and its held-out evaluation (M2's model is offline only),
 async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `docs/design.md` §1).
 
 - Results, scope and limitations per milestone: `docs/results.md`
@@ -31,6 +36,7 @@ async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `
 - M3 design note: `docs/M3_DESIGN.md`; frozen comparison protocol: `docs/M3_PROTOCOL.md`
 - M3_CONFIRM_V1 confirmation protocol (frozen before measurement): `docs/M3_CONFIRM_PROTOCOL.md`; dated clarifications: `docs/M3_CONFIRM_CLARIFICATIONS.md`
 - M4 evaluation protocols (frozen): `docs/M4B_PROTOCOL.md` (M4_EVAL_V1) and `docs/M4_EVAL_V2_PROTOCOL.md` (M4_EVAL_V2)
+- M5a design: `docs/M5_DESIGN.md`; next-stage protocol (DRAFT, not run): `docs/M5_PROTOCOL_DRAFT.md`
 
 Reference harness: Hugging Face Transformers + PyTorch (decisions D1).
 Model: `Qwen/Qwen2.5-1.5B-Instruct@989aa7980e4cf806f80c7fef2b1adb7bc71aa306`, **bf16**, **SDPA**, chunk = 256 tokens.
@@ -68,6 +74,8 @@ kvlab/prefix_aware_cache.py M4-B: C1-PA, prefix-closed leaf-LRU GPU-only baselin
 kvlab/trace_models.py      M4-B: independent key-level models of C1-PA, C1-LRU and C2 (CPU)
 kvlab/m4_spec.py, m4_bench.py, m4_validate.py, m4_stats.py, m4_analysis.py, m4_freeze.py   M4-B: spec, session driver, validator, statistics, analysis, freeze
 kvlab/warm_disk.py         M4_EVAL_V2: request-scoped warm-disk planner and preparation
+kvlab/restore_policy.py    M5a: side-effect-free restore planner, opt-in policies, selection validation (CPU-tested)
+kvlab/restore_cost.py      M5a: versioned restore cost model: fit, artifact validation, domain, prediction (no torch; no artifact ships)
 scripts/                   m0_*, m0_1_audit, m1_run, m1_mutation_check, m2_measure, m2_fit_predict, m2_score, m2_spike_probe, m2_1_reanalyze, m2_1_diagnose, m2_1_analyze_diag, m2_1_regimes, m3_measure, m3_analyze, m3_mutation_check, m3_confirm, m3_confirm_reconstruct, m4_measure, m4_analyze, m4_eval, m4_gate, m4_reconstruct, env_report
 tests/                     CPU tests; tests/gpu/ GPU tests (markers: gpu + m0_strict | m0_1 | m1 | m3 | m4)
 results/m0/ (read-only), results/m0_1/, results/m1/, results/m1_1/, results/m1_2/, results/m2/, results/m2_1/, results/m3/, results/m3_confirm/, results/m4/   machine-readable evidence and logs
@@ -93,6 +101,7 @@ snapshot_download('Qwen/Qwen2.5-1.5B-Instruct', revision='989aa7980e4cf806f80c7f
 # CPU: boundaries, snapshots, identity, file format, host/disk stores, tiered logic (no GPU)
 .venv/bin/python -m pytest -q                                          # 408 passed at M3; 436 passed after the VAL-006 fix (last full CPU run)
 .venv/bin/python -m pytest -q tests/test_m3_analyze_validation.py tests/test_m3_stats.py   # 56 passed after the VAL-006 warmup follow-up (focused run; full suite not rerun)
+.venv/bin/python -m pytest -q tests/test_restore_policy.py tests/test_restore_cost.py   # M5a planner, policies, engine hook, cost model (CPU)
 
 # GPU suites (each selectable; `-m gpu` runs all of them)
 HF_HUB_OFFLINE=1 .venv/bin/python -m pytest -m "gpu and m1" -v          # M1 integration, both restore backends: 23 passed

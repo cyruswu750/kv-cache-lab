@@ -699,3 +699,61 @@ D38, which authorized only the freeze, the batch and its frozen analysis.
   - This does not re-establish the live stack. The batch records keep the pre-launch verification that ran on the
     recording machine.
 - **Not authorized:** GPU runs, new experiments, refreezing, pushing, merging, tagging or a default change.
+
+## D40. (M5a; CPU only) An opt-in restore-length policy with side-effect-free planning
+Implemented on branch `m5a-restore-policy`, 2026-11-05 (`docs/M5_DESIGN.md`). No GPU run, calibration or measurement.
+- **Hook:** `AlwaysRestoreEngine(model, tiered, *, policy=None)`.
+  - `policy=None` keeps the M1 operational flow unchanged; the only additions are a `decision = None` default and
+    a policy check. A CPU differential test compares it with an adapted copy of the pre-M5a `prefill_request`
+    body, and planning is patched to fail during that test.
+  - `allow_restore=False` never consults a policy.
+- **Planning** (`kvlab/restore_policy.py`):
+  - **Inputs:** index membership and configuration only. A planned chunk is indexed, not validated.
+  - **Candidates:** `0, C, …, k·C` under the first-token rule, stopping at the first absent chunk and, without a
+    staging buffer, at the first disk chunk.
+- **Selection** is validated before any restore. Booleans, non-integers, negative, misaligned and out-of-set values
+  raise `PolicyError`. Nothing is clamped, and `FixedChunks` never substitutes another length.
+- **Execution** restores exactly `keys[:selected // C]` through the unchanged `TieredKVCache.restore()`.
+  - A validation failure inside the selected prefix keeps the verified prefix (`actual_len < selected_len`), with
+    no re-plan and exactly one prefill.
+  - L = 0 skips `restore()`, clears `last_restore` and is not a miss.
+- **Records and counters:**
+  - **Record:** `RestoreDecision`, on `Prefilled.decision` and `RequestResult.decision` (default `None`).
+  - **Counters:** no field was added. Under a policy, miss counters cover only failures inside the selected
+    prefix; limits found by planning are in the plan.
+- **Rejected alternatives:**
+  - a per-call policy argument: the constructor hook is smaller, and `engine.policy` can be swapped;
+  - re-planning after truncation: a second decision path with no measured benefit;
+  - silently clamping invalid outputs: it would hide policy bugs and corrupt candidate measurements;
+  - counting plan limits as misses: it would fabricate lookup events the opt-in path never performs.
+
+## D41. (M5a; CPU only) A separately versioned cost model; no artifact ships
+- **Why a new model** (`kvlab/restore_cost.py`, schema `kvlab-restore-cost-v1`): the M2 model describes the
+  baseline backend, S ≤ C, medians and all-host or all-disk prefixes. It is frozen and is not reused, and neither
+  are its coefficients.
+- **Basis (9 non-negative coefficients):**
+  - the full-prefill path: const, N, N²/2;
+  - the suffix path: const, host chunks, disk chunks, S, S·(L + S/2);
+  - one admission term (admitted chunks), shared by both paths.
+
+  The pair features are query-key pair counts; omitting a free S² term is a chosen model constraint, not an
+  identifiability limit. Full column rank of the column-scaled design is required, not a row count.
+- **Target:** case means per candidate, because the future metric is mean regret.
+- **Fit:** NNLS by exact support enumeration, with an explicit `uniform` or `inverse_mean` weighting.
+  `perf.nnls_small` caps at 8 columns and is frozen, so it is not reused.
+- **Objective:** the policy omits the admission term. It is identical for every candidate when a candidate does
+  not change what is admitted, which the draft protocol requires (no admission spill). Admission stays in
+  predictions and in every measurement.
+- **Artifact:**
+  - **Contents:** a canonical-JSON digest over the schema, units, compatibility (namespace, chunk size, backend,
+    staging group), coefficients, fit diagnostics, a box domain, the calibration and evaluation ids and the
+    provenance.
+  - **Validation:** once, at load.
+  - **Errors:** an incompatible artifact raises. A plan with no positive candidate is decided (L = 0) before any
+    domain check. Otherwise decisions check the box projected onto the objective's inputs (N, and S and the chunk
+    counts of each positive candidate; S bounds apply to L > 0 only): inside it the policy uses the model; outside
+    it the policy falls back to always-restore with a recorded reason. The admitted-chunk range is prediction-only
+    (`predict_ms`), because m does not enter the objective. Arbitrary errors are never caught as a fallback.
+- **Fit isolation:** fitting refuses declared evaluation cases, undeclared, duplicate or missing cases, and
+  incomplete candidate sets. Nothing is filtered silently.
+- **Not done:** calibration, evaluation and GPU correctness. Tests use synthetic coefficients only.
