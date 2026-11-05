@@ -1,6 +1,6 @@
 # kv-cache-lab — Cost-Aware Tiered KV Cache for LLM Inference
 
-**Status: M0, M0.1, M1, M1.1, M1.2 (runner validation fix), M2 (performance calibration + offline cost model), M2.1 (measurement audit + slow-mode diagnosis) and M3 (batched KV restoration, opt-in; analysis validation fix VAL-006) done. M3_CONFIRM_V1 (preregistered confirmation of the batched backend) measured: confirmed; the default backend stays `baseline`. M4 (trace evaluation, branch `m4a-trace-replay`): implemented and verified on CPU, GPU correctness gate passed, protocol approved for freeze (D35); the formal evaluation has not run.**
+**Status: M0, M0.1, M1, M1.1, M1.2 (runner validation fix), M2 (performance calibration + offline cost model), M2.1 (measurement audit + slow-mode diagnosis) and M3 (batched KV restoration, opt-in; analysis validation fix VAL-006) done. M3_CONFIRM_V1 (preregistered confirmation of the batched backend) measured: confirmed; the default backend stays `baseline`. M4 (trace evaluation of C0 / C1-PA / C2; branches `m4a-trace-replay` and `m4-eval-v2`): M4_EVAL_V1 ran once and is invalid under its frozen warm-disk rule (no performance result); M4_EVAL_V2, with a request-scoped warm-disk preparation, ran once and is valid: of 15 primary comparisons, 5 "A faster", 5 "A slower" and 5 inconclusive under the predeclared joint rule, with stated statistical assumptions and scope (`docs/results.md`, M4). The default backend stays `baseline`.**
 
 | Milestone | What it covers | Status |
 |---|---|---|
@@ -14,7 +14,8 @@
 | M3 | Opt-in `batched` restore backend: one contiguous H2D per chunk into bounded chunk-major device staging, one placement per group; strict A/B against the baseline; interleaved 5-session comparison | done (restore calls 896 → 16 memcpy at 16 chunks; median e2e 1.07–2.29× faster in this sample). `supports_adoption` is **false**: under the frozen rule, (1024, 1) is inconclusive (R3, measured stretch too short), so the default stays `baseline`. The analysis now validates evidence against the frozen spec first (BUGLOG VAL-006); the reanalysis reproduced every number and the verdict |
 | M3_CONFIRM_V1 | Preregistered confirmation of (1024, 1) and the fresh (1280, 96): own validator spec, premeasurement freeze manifest, budgeted batch wrapper | done: one batch, 8,640 measured samples, valid; all 8 primary verdicts batched faster (median paired d −14.0 to −16.8 ms), so `m3_confirm_v1_confirmed` is true. Restoration microbenchmark only; not pooled with M3, whose `supports_adoption` stays **false**; the default stays `baseline` (`docs/results.md`; D31) |
 | M4-A | Synthetic request traces T0–T3, a bounded GPU-only prefix cache (C1) and C0/C1/C2 trace replay (branch `m4a-trace-replay`) | done; verified on CPU (tiny random model). Its replay paths are exercised on the GPU by the M4-B correctness gate |
-| M4-B preparation | Prefix-aware GPU-only baseline C1-PA (D33), session runner, fail-closed validator, session-level analysis, batch control (`docs/M4B_PROTOCOL.md`, approved for freeze, D35) | CPU preparation done. GPU correctness gate (§9) **passed**: 46 tests, strict replays, with counters reconciled against the models. One timing-only feasibility pilot on calibration traces (D34). Protocol approved for freeze (D35). **Formal evaluation NOT RUN; no performance result** |
+| M4-B preparation | Prefix-aware GPU-only baseline C1-PA (D33), session runner, fail-closed validator, session-level analysis, batch control (`docs/M4B_PROTOCOL.md`, approved for freeze, D35) | CPU preparation done. GPU correctness gate (§9) **passed**: 46 tests, strict replays, with counters reconciled against the models. One timing-only feasibility pilot on calibration traces (D34). Protocol approved for freeze (D35). Formal evaluation **M4_EVAL_V1** executed once: **invalid** under its frozen whole-tier warm-disk rule (12 of 4,480 C2 requests not fully resident after the prewarm); **no performance result**, cause unresolved |
+| M4_EVAL_V2 | Request-scoped warm-disk preparation (`kvlab/warm_disk.py`) and a page-cache interference rule (`docs/M4_EVAL_V2_PROTOCOL.md`, D36–D38); evidence archived with V1's (D39) | done: one batch, 10 sessions, valid (11,200 strictly compared evaluation records, 0 mismatches). Primary family (15): 5 A faster, 5 A slower, 5 inconclusive; conditional on independent, approximately normal session differences; synthetic traces, this machine and stack only (`docs/results.md`, M4). No default change |
 
 Not implemented yet: a runtime cost-aware policy (M2's model is offline only),
 async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `docs/design.md` §1).
@@ -29,6 +30,7 @@ async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `
 - M2.1 diagnostic plan: `docs/M2_1_DIAGNOSTIC_PLAN.md`
 - M3 design note: `docs/M3_DESIGN.md`; frozen comparison protocol: `docs/M3_PROTOCOL.md`
 - M3_CONFIRM_V1 confirmation protocol (frozen before measurement): `docs/M3_CONFIRM_PROTOCOL.md`; dated clarifications: `docs/M3_CONFIRM_CLARIFICATIONS.md`
+- M4 evaluation protocols (frozen): `docs/M4B_PROTOCOL.md` (M4_EVAL_V1) and `docs/M4_EVAL_V2_PROTOCOL.md` (M4_EVAL_V2)
 
 Reference harness: Hugging Face Transformers + PyTorch (decisions D1).
 Model: `Qwen/Qwen2.5-1.5B-Instruct@989aa7980e4cf806f80c7fef2b1adb7bc71aa306`, **bf16**, **SDPA**, chunk = 256 tokens.
@@ -64,10 +66,11 @@ kvlab/gpu_prefix_cache.py  M4-A: C1, bounded GPU-only prefix cache, plain chunk 
 kvlab/trace_replay.py      M4-A: C0/C1/C2 replay with separate resource terms and the strict check
 kvlab/prefix_aware_cache.py M4-B: C1-PA, prefix-closed leaf-LRU GPU-only baseline (D33)
 kvlab/trace_models.py      M4-B: independent key-level models of C1-PA, C1-LRU and C2 (CPU)
-kvlab/m4_spec.py, m4_bench.py, m4_validate.py, m4_stats.py, m4_analysis.py, m4_freeze.py   M4-B: spec, session driver, validator, statistics, analysis, freeze (formal evaluation not run)
-scripts/                   m0_*, m0_1_audit, m1_run, m1_mutation_check, m2_measure, m2_fit_predict, m2_score, m2_spike_probe, m2_1_reanalyze, m2_1_diagnose, m2_1_analyze_diag, m2_1_regimes, m3_measure, m3_analyze, m3_mutation_check, m3_confirm, m3_confirm_reconstruct, m4_measure, m4_analyze, m4_eval, m4_gate, env_report
+kvlab/m4_spec.py, m4_bench.py, m4_validate.py, m4_stats.py, m4_analysis.py, m4_freeze.py   M4-B: spec, session driver, validator, statistics, analysis, freeze
+kvlab/warm_disk.py         M4_EVAL_V2: request-scoped warm-disk planner and preparation
+scripts/                   m0_*, m0_1_audit, m1_run, m1_mutation_check, m2_measure, m2_fit_predict, m2_score, m2_spike_probe, m2_1_reanalyze, m2_1_diagnose, m2_1_analyze_diag, m2_1_regimes, m3_measure, m3_analyze, m3_mutation_check, m3_confirm, m3_confirm_reconstruct, m4_measure, m4_analyze, m4_eval, m4_gate, m4_reconstruct, env_report
 tests/                     CPU tests; tests/gpu/ GPU tests (markers: gpu + m0_strict | m0_1 | m1 | m3 | m4)
-results/m0/ (read-only), results/m0_1/, results/m1/, results/m1_1/, results/m1_2/, results/m2/, results/m2_1/, results/m3/, results/m3_confirm/   machine-readable evidence and logs
+results/m0/ (read-only), results/m0_1/, results/m1/, results/m1_1/, results/m1_2/, results/m2/, results/m2_1/, results/m3/, results/m3_confirm/, results/m4/   machine-readable evidence and logs
 ```
 
 ## Setup (no sudo; nothing outside the project is modified)
@@ -120,7 +123,7 @@ What the GPU acceptance checks mean (design §9):
   - the original M0 strict FAIL is kept as recorded.
 
   Restored output is **not** claimed to equal full-prefill output.
-- Performance numbers exist only for M2 and M3. They are synchronous, single-request,
+- Performance numbers exist only for M2, M3 (with M3_CONFIRM_V1) and M4_EVAL_V2. They are synchronous, single-request,
   tokenized-input first-token latencies on one WSL2 laptop GPU, with platform
   drift documented in `docs/results.md` (M2). They are not service TTFT and
   not cold-NVMe or p99 figures. M2.1 qualifies the M2 decision claims (block-bootstrap
@@ -151,4 +154,10 @@ HF_HUB_OFFLINE=1 .venv/bin/python scripts/m3_measure.py --out-dir results/m3/eva
 .venv/bin/python scripts/m3_analyze.py --spec M3_CONFIRM_V1 --run-dir results/m3_confirm/M3_CONFIRM_V1_run --out-dir <new dir> --expect-freeze-sha256 dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216
 # After later changes: reconstruct the frozen tree (verified against the manifest), then run its own analyzer (docs/results.md)
 .venv/bin/python scripts/m3_confirm_reconstruct.py --out <new dir> --tree-rev 13afde2 --expect-freeze-sha256 dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216
+
+# M4 (CPU): rebuild a frozen M4 tree from its manifest's base commit, run that tree's own analyzer, compare with the
+# archived outputs (V1: --spec M4_EVAL_V1, digest 137220aa1f40c9604fda983380f03d2e4f897cb2a8b6ad64ac97eabd3a3625b2; docs/results.md, M4)
+.venv/bin/python scripts/m4_reconstruct.py build --spec M4_EVAL_V2 --out <new dir> --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a
+cd <new dir> && <repo>/.venv/bin/python scripts/m4_analyze.py --spec M4_EVAL_V2 --run-dir results/m4/M4_EVAL_V2_run --out-dir <new out dir> --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a
+cd <repo> && .venv/bin/python scripts/m4_reconstruct.py compare --archived results/m4/M4_EVAL_V2_analysis --regenerated <new out dir> --archived-root /home/cyrus/projects/kv-cache-lab-m4v2 --regenerated-root <new dir>
 ```

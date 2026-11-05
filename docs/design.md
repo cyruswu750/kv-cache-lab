@@ -359,8 +359,13 @@ commit that records this status, and its digest is kept outside the repository.
 - **Implementation:** implemented and tested on CPU.
 - **GPU correctness gate:** passed on its third attempt (below).
 - **Timing pilot:** one timing-only feasibility pilot ran on calibration traces (D34).
-- **Formal evaluation:** not run. No evaluation session has taken place, and no performance
-  claim exists.
+- **Formal evaluation** (status updated 2026-11-05; results and limits in `docs/results.md`, M4):
+  - **M4_EVAL_V1:** ran once. It is invalid under its frozen whole-tier warm-disk rule (§6 of the
+    protocol), so it has no performance conclusion. The cause is unresolved.
+  - **M4_EVAL_V2** (`docs/M4_EVAL_V2_PROTOCOL.md`, D36–D38): ran once and is valid. It replaces only
+    the warm-disk preparation with a request-scoped one (`kvlab/warm_disk.py`) and adds a page-cache
+    interference rule.
+  - **Archive:** both evaluations are archived under `results/m4/` (D39).
 
 The design choices in this section preceded all GPU work.
 
