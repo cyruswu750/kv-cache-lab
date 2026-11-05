@@ -15,10 +15,13 @@ import json
 import math
 import os
 import random
+import re
+import shutil
 import signal
 import subprocess
 import sys
 import textwrap
+import threading
 import time
 from pathlib import Path
 
@@ -28,7 +31,7 @@ from kvlab import m3_confirm as mc
 from kvlab import m3_validate as mv
 from kvlab import perf
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent  # the live checkout: only read, never a lifecycle state
 SPEC = mv.M3_CONFIRM_V1
 OLD = mv.FROZEN_M3_EVAL
 M3_EVAL = ROOT / "results" / "m3" / "eval_20261103T173632"
@@ -36,6 +39,88 @@ _spec = importlib.util.spec_from_file_location("m3_analyze_confirm_tests", ROOT 
 m3_analyze = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(m3_analyze)
 CB = 7340032
+
+# ---------------------------------------------------------------------------------------------
+# Explicit repository-lifecycle fixtures. The tests never depend on the live checkout's current
+# state (whether its protocol is still a draft, or whether real freeze/run outputs already exist).
+# Each fixture is an isolated git repository holding a copy of the live development sources
+# (results/ is never copied) in one declared state:
+# - "draft":   protocol line 1 ends "(DRAFT pending premeasurement freeze)"; no outputs;
+# - "frozen":  protocol line 1 ends "(frozen <date>, before any measurement)"; no outputs;
+# - "outputs": "frozen", and the real freeze-manifest, sidecar and run-directory paths exist;
+# - "checkout": the protocol exactly as in this checkout (draft or frozen); no outputs. The analysis
+#   checks its OWN tree's analysis files and documents (the production binding: kvlab.m3_validate
+#   validates against the checkout it is imported from), so manifests for the analysis-side tests
+#   are built from this state, without the protocol-state precondition (as the original tests did);
+#   the draft/frozen/outputs behaviour of the freeze is tested on the explicit states above.
+# Only line 1 of the protocol differs between draft and frozen, as the protocol prescribes. The
+# preparation files are left untracked and README.md carries a tracked edit, so the manifest's
+# untracked-file and diff handling stay exercised. The live checkout, its protocol and its
+# results are never modified. Historical reproduction of the measured experiment uses the
+# preserved frozen tree instead (commit 13afde2, scripts/m3_confirm_reconstruct.py).
+PROTO_LINE1 = re.compile(r"^(?P<title># M3_CONFIRM_V1 protocol: .*?) \((?:DRAFT pending premeasurement freeze|frozen \S+, "
+                         r"before any measurement)\)$")
+DRAFT_TAIL, FROZEN_TAIL = "(DRAFT pending premeasurement freeze)", "(frozen 2026-11-04T01:22-08:00, before any measurement)"
+PREP_FILES = ("docs/M3_CONFIRM_PROTOCOL.md", "kvlab/m3_confirm.py", "scripts/m3_confirm.py", "tests/test_m3_confirm.py")
+REVIEWED_DRAFT_SHA256 = "2068026d24e171e84144ae371452a1419266eb884242a2005c85117a3bfa4b8c"  # pre-freeze review
+FROZEN_PROTOCOL_SHA256 = "78bfdedd19f8c90f789452600d425267642f10689558455c1fad55129aee6530"  # the freeze manifest
+
+
+def _git(root, *args) -> str:
+    env = {**os.environ, "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1"}
+    return subprocess.run(["git", "-c", "user.name=fixture", "-c", "user.email=fixture@invalid",
+                           "-c", "commit.gpgsign=false", *args], cwd=root, env=env, check=True,
+                          capture_output=True, text=True).stdout
+
+
+def make_repo(dest: Path, state: str, *, venv: bool = False) -> Path:
+    """An isolated repository in lifecycle `state` ("draft", "frozen" or "outputs"); see above.
+    With `venv`, `.venv` is a symlink to the interpreter environment already running the tests
+    (nothing is installed), so documented `.venv/bin/python` commands run inside the fixture."""
+    if state not in ("draft", "frozen", "outputs", "checkout"):
+        raise ValueError(state)
+    dest = Path(dest)
+    dest.mkdir(parents=True)
+    files = [f for f in _git(ROOT, "ls-files").splitlines() + _git(ROOT, "ls-files", "--others", "--exclude-standard")
+             .splitlines() if f and not f.startswith("results/") and (ROOT / f).is_file()]
+    for f in files:
+        (dest / f).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(ROOT / f, dest / f)
+    doc = dest / mc.PROTOCOL_DOC
+    first, rest = doc.read_text().split("\n", 1)
+    m = PROTO_LINE1.match(first)
+    assert m, f"unexpected protocol title line: {first!r}"
+    if state != "checkout":
+        doc.write_text(f"{m['title']} {DRAFT_TAIL if state == 'draft' else FROZEN_TAIL}\n{rest}")
+    _git(dest, "init", "-q")
+    (dest / ".git" / "info" / "exclude").write_text("/.venv\n")
+    _git(dest, "add", "--", *[f for f in files if f not in PREP_FILES])
+    _git(dest, "commit", "-q", "-m", f"fixture: {state}")
+    with open(dest / "README.md", "a") as f:
+        f.write("\n<!-- lifecycle fixture: a tracked edit, so git diff HEAD is not empty -->\n")
+    if state == "outputs":
+        for rel in (SPEC["freeze_manifest"], mc.diff_sidecar(SPEC)):
+            (dest / rel).parent.mkdir(parents=True, exist_ok=True)
+            (dest / rel).write_text("{}")
+        (dest / SPEC["run_dir"]).mkdir(parents=True)
+    if venv:
+        (dest / ".venv").symlink_to(Path(sys.prefix), target_is_directory=True)
+    return dest
+
+
+@pytest.fixture(scope="module")
+def repo_frozen(tmp_path_factory):
+    return make_repo(tmp_path_factory.mktemp("lifecycle") / "frozen", "frozen")
+
+
+@pytest.fixture(scope="module")
+def repo_checkout(tmp_path_factory):
+    return make_repo(tmp_path_factory.mktemp("lifecycle") / "checkout", "checkout")
+
+
+@pytest.fixture(scope="module")
+def repo_draft(tmp_path_factory):
+    return make_repo(tmp_path_factory.mktemp("lifecycle") / "draft", "draft")
 T_FREEZE = 1_800_000_000.0
 T_LAUNCH = T_FREEZE + 60.0
 SIDS = list(SPEC["sessions"])
@@ -157,10 +242,13 @@ def synth_session(sid, manifest, t_start, pid, speed=None):
 
 
 @pytest.fixture(scope="module")
-def frozen(tmp_path_factory):
-    """A real freeze manifest of the current working tree (synthetic stack), and its file."""
+def frozen(tmp_path_factory, repo_checkout):
+    """A real freeze manifest (synthetic stack) of an output-free copy of this checkout's sources
+    and documents ("checkout" state), and its file. The analysis validates against the checkout's
+    own analysis files and documents, so this holds in a draft or a frozen checkout alike; the
+    protocol-state precondition is tested separately on explicit fixtures."""
     d = tmp_path_factory.mktemp("freeze")
-    manifest, diff = mc.build_manifest(ROOT, SPEC, stack=STACK, now=T_FREEZE, require_frozen_protocol=False)
+    manifest, diff = mc.build_manifest(repo_checkout, SPEC, stack=STACK, now=T_FREEZE, require_frozen_protocol=False)
     manifest["git_diff_file_sha256"] = mc.sha256_bytes(diff.encode())
     path = d / "M3_CONFIRM_V1.freeze.json"
     path.write_text(json.dumps(manifest, indent=1))
@@ -290,7 +378,9 @@ def test_spec_counts_commands_and_runner_semantics():
     assert "for L, S in sorted({min(cases), max(cases)}):" in runner and "rng.shuffle(order)" in runner
     assert 'ap.add_argument("--profile-reps", type=int, default=5)' in runner  # expected_args' profile_reps
     doc = (ROOT / mc.PROTOCOL_DOC).read_text()
-    assert mc.DRAFT_MARKER in doc.splitlines()[0]  # still a draft: the freeze refuses
+    # lifecycle-independent: line 1 has the draft or the frozen form (the behaviour of each state is
+    # tested on explicit fixtures in the freeze tests below, not on the live checkout)
+    assert PROTO_LINE1.match(doc.splitlines()[0]), doc.splitlines()[0]
     for s in ("8,640", "720", "180", "1,800 s", "32001–32005", "(1280, 96)", "5 sessions × 2 cases × 4 blocks × 24 reps × 9 combinations"):
         assert s in doc, s
     # the frozen M3 spec is untouched
@@ -981,20 +1071,47 @@ def test_cli_usage_guards():
 
 # ---------------------------------------------------------------------------------------------
 # premeasurement freeze
-def test_freeze_refuses_a_draft_protocol_and_a_different_stack():
-    with pytest.raises(mc.Refused) as e:
-        mc.build_manifest(ROOT, SPEC, stack=STACK, now=T_FREEZE)
+def test_lifecycle_fixtures_reproduce_the_recorded_protocol_states(repo_draft, repo_frozen, repo_checkout):
+    """The draft fixture's protocol is byte-identical to the reviewed pre-freeze draft, and the
+    frozen fixture's to the bytes the freeze manifest recorded (only line 1 differs). The
+    checkout-state fixture copies this checkout's protocol verbatim, whatever its state."""
+    assert mc.sha256_file(repo_draft / mc.PROTOCOL_DOC) == REVIEWED_DRAFT_SHA256
+    assert mc.sha256_file(repo_frozen / mc.PROTOCOL_DOC) == FROZEN_PROTOCOL_SHA256
+    assert mc.sha256_file(repo_checkout / mc.PROTOCOL_DOC) == mc.sha256_file(ROOT / mc.PROTOCOL_DOC)
+    for r in (repo_draft, repo_frozen, repo_checkout):
+        assert not (r / "results").exists() and _git(r, "rev-parse", "HEAD").strip()
+        assert set(PREP_FILES) <= set(_git(r, "ls-files", "--others", "--exclude-standard").split())
+
+
+def test_freeze_refuses_a_draft_protocol_and_a_different_stack(repo_draft, repo_frozen):
+    with pytest.raises(mc.Refused) as e:                           # draft state: refused
+        mc.build_manifest(repo_draft, SPEC, stack=STACK, now=T_FREEZE)
     assert any("still marked DRAFT" in p for p in e.value.problems)
+    m, _ = mc.build_manifest(repo_frozen, SPEC, stack=STACK, now=T_FREEZE)   # frozen state: accepted
+    assert m["documents_sha256"][mc.PROTOCOL_DOC] == FROZEN_PROTOCOL_SHA256
     other = {**STACK, "packages": {**STACK["packages"], "transformers": "5.23.0"}, "driver_version": "600.10"}
     with pytest.raises(mc.Refused) as e:
-        mc.build_manifest(ROOT, SPEC, stack=other, now=T_FREEZE, require_frozen_protocol=False)
+        mc.build_manifest(repo_frozen, SPEC, stack=other, now=T_FREEZE)
     assert any("transformers" in p and "('5.23.0', '5.22.1')" in p for p in e.value.problems)
     assert any("driver_version '600.10', required '596.49'" in p for p in e.value.problems)
-    assert not (ROOT / SPEC["freeze_manifest"]).exists() and not (ROOT / SPEC["run_dir"]).exists()
+    for r in (repo_draft, repo_frozen):                             # nothing was written
+        assert not (r / SPEC["freeze_manifest"]).exists() and not (r / SPEC["run_dir"]).exists()
 
 
-def test_manifest_records_the_tree_without_hashing_itself(frozen):
+def test_freeze_refuses_when_outputs_already_exist(tmp_path):
+    """Existing-output state: the freeze refuses and names each existing path, without writing."""
+    r = make_repo(tmp_path / "outputs", "outputs")
+    before = {p: p.read_bytes() for p in (r / SPEC["freeze_manifest"], r / mc.diff_sidecar(SPEC))}
+    with pytest.raises(mc.Refused) as e:
+        mc.build_manifest(r, SPEC, stack=STACK, now=T_FREEZE)
+    for rel in (SPEC["freeze_manifest"], mc.diff_sidecar(SPEC), SPEC["run_dir"]):
+        assert any(rel in p and "already exists" in p for p in e.value.problems), rel
+    assert {p: p.read_bytes() for p in before} == before and not any((r / SPEC["run_dir"]).iterdir())
+
+
+def test_manifest_records_the_tree_without_hashing_itself(frozen, repo_checkout):
     m, _ = frozen
+    ROOT = repo_checkout  # the tree the manifest describes
     src = mc.source_identity(ROOT)
     assert m["base_git_head"] == src["git_head"] and m["git_diff_head_sha256"] == src["git_diff_head_sha256"]
     assert m["files_sha256"] == src["files_sha256"]
@@ -1010,7 +1127,8 @@ def test_manifest_records_the_tree_without_hashing_itself(frozen):
     assert mc.manifest_problems(m, SPEC, ROOT) == []
 
 
-def test_freeze_writes_once_and_verify_detects_drift(tmp_path):
+def test_freeze_writes_once_and_verify_detects_drift(tmp_path, repo_frozen):
+    ROOT = repo_frozen  # an explicit frozen-state fixture, not the live checkout
     spec = {**SPEC, "freeze_manifest": str(tmp_path / "f" / "M3_CONFIRM_V1.freeze.json"), "run_dir": str(tmp_path / "run")}
     path = mc.freeze(ROOT, spec, stack=STACK, now=T_FREEZE, require_frozen_protocol=False)
     side = path.parent / "M3_CONFIRM_V1.freeze.diff"
@@ -1034,9 +1152,11 @@ def test_freeze_writes_once_and_verify_detects_drift(tmp_path):
         f"diff sidecar {side.name} is missing or differs"]
 
 
-def test_run_refuses_without_a_matching_manifest(tmp_path, frozen, capsys):
+def test_run_refuses_without_a_matching_manifest(tmp_path, frozen, repo_checkout, capsys):
     """The CLI refusal paths launch nothing. A real manifest with one wrong hash, and a wrong
-    expected SHA-256, guarantee the refusal, so no GPU process can start here."""
+    expected SHA-256, guarantee the refusal, so no GPU process can start here. Run against the
+    tree the manifest describes, which has no run directory."""
+    ROOT = repo_checkout
     bad = copy.deepcopy(frozen[0])
     bad["files_sha256"]["scripts/m3_measure.py"] = "8" * 64
     p = write_manifest(tmp_path, bad)
@@ -1057,6 +1177,16 @@ DUMMY = textwrap.dedent("""
     def report(obj):
         with open(os.path.join(run, f"session_{sid}.json"), "w") as f:
             f.write(json.dumps(obj))
+
+    def signal_wrapper(pid):
+        # SIGTERM to the wrapper's main thread (on Linux its thread id is the process id). The wrapper
+        # (here the pytest process) blocks the stop signals in that thread and receives them with
+        # sigtimedwait. A process-directed kill could be delivered to another, unblocking thread, such as
+        # a torch intra-op worker left by an earlier test, and terminate the process.
+        import ctypes
+        libc = ctypes.CDLL(None, use_errno=True)
+        if libc.tgkill(pid, pid, signal.SIGTERM) != 0:
+            raise OSError(ctypes.get_errno(), "tgkill")
     open(os.path.join(run, f"session_{sid}.gpu_monitor.csv"), "w").write("x\\n")
     print(f"start {sid}", flush=True)
     if mode == "grandchild":  # a helper in the session's process group, like the GPU monitor
@@ -1066,12 +1196,12 @@ DUMMY = textwrap.dedent("""
     elif mode == "hang":
         time.sleep(120)
     elif mode == "signal_wrapper":
-        os.kill(int(extra[0]), signal.SIGTERM)
+        signal_wrapper(int(extra[0]))
         time.sleep(120)
     elif mode == "ignore_term_and_signal":  # needs SIGKILL; keeps signalling the wrapper meanwhile
         signal.signal(signal.SIGTERM, signal.SIG_IGN)
         for _ in range(6000):
-            os.kill(int(extra[0]), signal.SIGTERM)
+            signal_wrapper(int(extra[0]))
             time.sleep(0.02)
     elif mode == "wait_release":  # exits 0 with a report once the test releases it
         while not os.path.exists(os.path.join(run, "release")):
@@ -1280,6 +1410,15 @@ def test_deadline_is_rechecked_before_the_next_launch(tmp_path):
     assert rec["execution_status"] == "failed" and mc.exit_code(rec) == 3
 
 
+def signal_the_wrapper(sig):
+    """Deliver `sig` to the thread running run_batch, as a stop signal reaches the single-threaded
+    production wrapper. run_batch blocks the stop signals in its own thread and receives them with
+    sigtimedwait. A process-directed os.kill could instead be delivered to another thread of the
+    pytest process that does not block them (for example torch's intra-op workers, after an earlier
+    test ran a model), and its default action would terminate pytest."""
+    signal.pthread_kill(threading.main_thread().ident, sig)
+
+
 @pytest.mark.parametrize("sig", [signal.SIGTERM, signal.SIGINT, signal.SIGHUP], ids=lambda s: s.name)
 def test_signal_right_after_launch_terminates_and_reaps_the_session(tmp_path, sig):
     """Review finding 2: a stop signal delivered in the launch-to-wait interval (here by the
@@ -1291,7 +1430,7 @@ def test_signal_right_after_launch_terminates_and_reaps_the_session(tmp_path, si
 
     def log(s):
         if s.startswith("launched"):
-            os.kill(os.getpid(), sig)
+            signal_the_wrapper(sig)
     rec = run(tmp_path, m, grace_s=2.0, log=log)
     assert current_mask() == mask
     assert rec["stop"]["reason"] == "operator_signal" and rec["stop"]["session"] == "d1"
@@ -1307,7 +1446,7 @@ def test_signal_between_sessions_launches_nothing_further(tmp_path):
 
     def log(s):
         if s.startswith("finished d1"):
-            os.kill(os.getpid(), signal.SIGTERM)
+            signal_the_wrapper(signal.SIGTERM)
     rec = run(tmp_path, m, log=log)
     assert rec["stop"] == {"reason": "operator_signal", "session": None, "detail": "SIGTERM before launching d2"}
     assert rec["not_launched"] == ["d2"] and rec["sessions"][0]["returncode"] == 0
@@ -1385,8 +1524,8 @@ def test_killed_wrapper_takes_its_session_down(tmp_path):
 
 # ---------------------------------------------------------------------------------------------
 # the documented shell procedure (review finding 4)
-def _documented_block():
-    doc = (ROOT / mc.PROTOCOL_DOC).read_text()
+def _documented_block(root=ROOT):
+    doc = (root / mc.PROTOCOL_DOC).read_text()
     sec = doc[doc.index("## 11."):]
     return sec[sec.index("```bash\n") + len("```bash\n"):sec.index("\n```", sec.index("```bash\n"))]
 
@@ -1395,10 +1534,12 @@ def test_documented_procedure_preserves_the_failing_wrapper_status(tmp_path):
     """Runs the documented §11 block with bash, on the real CLIs. No freeze manifest and no run
     directory exist, so `run` refuses (exit 1) and the analysis refuses (exit 1) without
     launching anything. The documented capture must report those statuses although `tee`
-    succeeds; the old form (`cmd | tee log` then `$?`) reports 0."""
-    if (ROOT / SPEC["freeze_manifest"]).exists() or (ROOT / SPEC["run_dir"]).exists():
-        pytest.skip("a real freeze manifest or run directory exists; this test must not touch it")
-    block = _documented_block()
+    succeeds; the old form (`cmd | tee log` then `$?`) reports 0. It runs in an explicit
+    frozen-state fixture (no outputs; `.venv` links to the running interpreter's environment), so
+    it does not depend on, and never touches, the live checkout's outputs."""
+    ROOT = make_repo(tmp_path / "repo", "frozen", venv=True)
+    assert not (ROOT / SPEC["freeze_manifest"]).exists() and not (ROOT / SPEC["run_dir"]).exists()
+    block = _documented_block(ROOT)
     assert "m3_confirm.py freeze" not in block  # the executed block can never freeze
     lines = block.splitlines()
     run_line = next(i for i, ln in enumerate(lines) if "scripts/m3_confirm.py run" in ln)
