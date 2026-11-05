@@ -1,0 +1,14 @@
+{
+ "spec": "M4_EVAL_V2",
+ "spec_sha256": "d5c51a5a3aff97cec6b9e1effbc130156ec3e9ee62b76eaaa42a3e3c248f7972",
+ "run_dir": "/home/cyrus/projects/kv-cache-lab-m4v2/results/m4/M4_EVAL_V2_run",
+ "status": "valid",
+ "frozen": true,
+ "problems": [],
+ "correctness_failures": [],
+ "counts": {
+  "sessions": 10,
+  "evaluation_records": 11200,
+  "warmup_records": 1000
+ }
+}
