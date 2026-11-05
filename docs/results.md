@@ -43,6 +43,14 @@ are not established.**
   - **What it does not change:** it is not pooled with M3, and M3's `supports_adoption`
     stays **false**. The default backend remains **`baseline`**: the confirmation does not
     authorize a default change.
+- **M4** (trace evaluation of C0, C1-PA and C2; details and limits below):
+  - **M4_EVAL_V1** ran once and is **invalid** under its frozen whole-tier warm-disk rule. It has
+    no performance conclusion, and the cause of its residency failures is unresolved.
+  - **M4_EVAL_V2**, with a request-scoped warm-disk preparation, ran once and is **valid**. Of
+    its 15 primary comparisons, 5 are "A faster", 5 "A slower" and 5 inconclusive under the
+    predeclared joint rule. Every verdict is conditional on the stated statistical assumptions
+    and scope.
+  - **The default backend remains `baseline`.** M4 does not change it.
 
 ## Test status (only runs that actually occurred)
 | Run | Result | Log |
@@ -488,6 +496,274 @@ preserved raw evidence. Neither relaxes a frozen check.
        `out_dir`.
    - **Requirement:** the Python environment must still hold the frozen package versions
      (`requirements.txt`, recorded in the manifest).
+
+## M4: trace evaluation of C0, C1-PA and C2 (M4_EVAL_V1 invalid; M4_EVAL_V2 valid)
+Protocols:
+- `docs/M4B_PROTOCOL.md` for M4_EVAL_V1 (decisions D33–D35);
+- `docs/M4_EVAL_V2_PROTOCOL.md` for M4_EVAL_V2 (D36–D38). It amends only the warm-disk preparation
+  and adds a page-cache interference rule.
+
+Both protocol documents are frozen, so their status notes predate the batches. Archive and
+reproduction: D39. Evidence: `results/m4/`.
+
+**Design common to both evaluations:**
+- **Traces:** four synthetic traces (evaluation seeds 42001–42004):
+  - T0, a no-reuse control;
+  - T1, a shared system prompt;
+  - T2, multi-turn conversations;
+  - T3, document reuse.
+- **Configurations:** every session replays every trace through all of them. Requests are
+  interleaved in a seeded order, with fresh state per trace.
+  - **C0:** no cache, the full prefill.
+  - **C1-PA(W) and C1-PA(W/2):** this project's GPU-only, prefix-aware LRU cache, with the
+    trace's working set of W chunks or with ⌈W/2⌉ chunks (an artificial cap).
+  - **C2-base and C2-batch:** tiered always-restore, with a pinned host slab of ⌈W/2⌉ slots and
+    a disk tier. C2-base uses the default `baseline` restore backend; C2-batch uses the opt-in
+    `batched` backend.
+- **Metric:** for each session, trace and configuration, the trace-mean synchronous first-token
+  latency (D22). For a comparison A − B, D_s = mean_A,s − mean_B,s.
+- **Sessions:** one batch of R = 10 fresh-process sessions under a 2,700 s deadline. It was
+  launched once from a freeze manifest whose SHA-256 had already been recorded outside the
+  repository.
+- **Primary family:** 15 comparisons, fixed in advance:
+  - on T1, T2 and T3: each C2 backend against C0, and against C1-PA(W/2);
+  - on T0: C2-base − C0, C2-batch − C0 and C1-PA(W/2) − C0.
+- **Joint decision rule:** a verdict needs both of the following; otherwise the result is
+  inconclusive:
+  - all 10 D_s share one sign;
+  - the Bonferroni-level (1 − 0.05/15) t-interval excludes 0.
+
+### M4_EVAL_V1: executed once; invalid; no performance conclusion
+- **Freeze:** `results/m4/M4_EVAL_V1.freeze.json`, from commit `b858d9e`. Its SHA-256 is
+  `137220aa1f40c9604fda983380f03d2e4f897cb2a8b6ad64ac97eabd3a3625b2`.
+- **Execution (2026-11-04):**
+  - 10/10 sessions exited 0, in 1,833.1 s of the 2,700 s deadline;
+  - the strict comparison of the 11,200 evaluation records found 0 mismatches. The 1,000
+    warmup records are not strict-checked.
+- **Invalid under its frozen warm-disk rule.**
+  - **The rule:** before every C2 request, every chunk file of that instance's whole disk tier
+    had to be fully resident in the page cache (`mincore`), after a prewarm of any file below
+    full residency.
+  - **The failure:** for 12 of the 4,480 C2 evaluation requests (sessions e04, e05 and e09),
+    the resident fraction stayed below 1.0 after the prewarm.
+  - **The consequence:** the frozen analyzer exited 3 and wrote only
+    `results/m4/M4_EVAL_V1_analysis/m4_validation.json`, which lists the 12 problems.
+- **No performance conclusion.**
+  - None of the 15 primary comparisons is evaluated, in either direction.
+  - The batch is not re-analysed in part, by session, trace or request.
+- **The cause is unresolved.** The batch kept no synchronized memory or reclaim history, so
+  page-cache reclaim, a WSL cache drop and contention cannot be told apart.
+- **Provenance:**
+  - These files are byte-for-byte copies of the untracked evidence in the `m4a-trace-replay`
+    worktree at `b858d9e`. They sit at the same relative paths, which the manifest and the
+    frozen analyzer use.
+  - The absolute `run_dir` recorded in `m4_validation.json` names that worktree.
+
+### M4_EVAL_V2: one valid batch
+**What V2 changes** (`docs/M4_EVAL_V2_PROTOCOL.md`; `kvlab/warm_disk.py`): only the warm-disk
+preparation, plus one validity rule.
+- **Preparation:** before each C2 request, untimed, the runner:
+  1. plans the request's candidate files, the disk files its restore reads on the normal path;
+  2. observes their residency once;
+  3. reads in full, at most once and with no retry, each file that is not fully resident;
+  4. observes all of them once more.
+
+  The timer starts after that final pass.
+- **Validity:**
+  - every candidate must be fully resident in the final pass;
+  - the batch is invalid if the WSL `drop_pagecache` counter changes during it. Ordinary
+    reclaim counters are recorded as context only.
+- **Relation to V1:** V2 is a different procedure, not a correction of V1. The two evaluations are
+  not compared.
+
+**Execution:**
+- **Freeze:** once, at `d2122d7`: `results/m4/M4_EVAL_V2.freeze.json`, with an empty diff
+  sidecar. Its SHA-256 is `150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a`.
+- **The batch:** one, on 2026-11-05. `execution_status` is `succeeded`, and 10/10 sessions
+  exited 0 in 2,005.68 s of the 2,700 s deadline. No session was stopped, retried or replaced.
+
+**Evidence: valid.** The frozen analyzer exited 0, with 0 problems and 0 correctness failures
+(`results/m4/M4_EVAL_V2_analysis/m4_validation.json`).
+- **Records:**
+  - 11,200 evaluation records, each strictly compared with a resident-GPU reference replay of
+    its own configuration's decisions: 0 mismatches;
+  - 1,000 warmup records, which are not strict-checked.
+- **Warm disk:** all 4,880 C2 records passed the request-scoped rule: 2,120 `verified`, and
+  2,760 with an empty candidate set.
+  - **Prewarms:** 22 needed-prewarm operations, each one whole-file read, completed
+    successfully. Each was followed by a fully resident final pass. They occurred in sessions
+    e05, e08, e09 and e10, on traces T2 and T3.
+  - **What this does not show:** it shows only that these 22 prewarms completed as specified in
+    this batch. It does not show that page-cache eviction is fixed, and it does not identify
+    V1's cause.
+- **Interference:** `drop_pagecache` was unchanged in all 9,782 snapshots (batch, session and
+  request). Ordinary reclaim did occur; it is context only.
+- **Other checks:** all passed:
+  - decisions and counters against the independent key-level models;
+  - faults, storage and copy traffic;
+  - coverage;
+  - source and stack binding.
+
+**Primary results.**
+- **The table below** restates the frozen results, rounded to 0.01 ms directly from the
+  full-precision values in `m4_analysis.json`. The frozen Markdown table,
+  `results/m4/M4_EVAL_V2_analysis/m4_analysis.md`, shows them to 0.001 ms.
+- **The sign counts** come from the per-session D_s.
+- **The complete record,** including every D_s, is `.primary` in `m4_analysis.json` (same
+  directory).
+
+d = mean_A − mean_B, in ms; d < 0 means A is faster.
+
+> All intervals and verdicts are conditional on treating the ten session-level differences as
+> independent and approximately normally distributed. Fresh processes do not establish
+> independence, persistent machine/driver/thermal regimes are possible, and ten sessions cannot
+> establish normality.
+
+| Trace | A − B | Mean d (ms) | 95% t-interval | Bonferroni interval (99.67%) | Sessions D_s < 0 / > 0 | Verdict |
+|---|---|---|---|---|---|---|
+| T1 | C2-base − C0 | −5.76 | [−14.38, 2.86] | [−20.83, 9.31] | 5 / 5 | inconclusive |
+| T1 | C2-base − C1-PA(W/2) | +23.39 | [15.42, 31.35] | [9.46, 37.32] | 1 / 9 | inconclusive (not unanimous) |
+| T1 | C2-batch − C0 | −37.89 | [−42.88, −32.89] | [−46.62, −29.15] | 10 / 0 | **A faster** |
+| T1 | C2-batch − C1-PA(W/2) | −8.74 | [−13.41, −4.08] | [−16.89, −0.59] | 10 / 0 | **A faster** |
+| T2 | C2-base − C0 | −0.37 | [−6.21, 5.46] | [−10.57, 9.83] | 6 / 4 | inconclusive |
+| T2 | C2-base − C1-PA(W/2) | +0.97 | [−4.33, 6.28] | [−8.29, 10.24] | 6 / 4 | inconclusive |
+| T2 | C2-batch − C0 | −16.41 | [−20.18, −12.64] | [−23.00, −9.82] | 10 / 0 | **A faster** |
+| T2 | C2-batch − C1-PA(W/2) | −15.06 | [−17.76, −12.36] | [−19.78, −10.35] | 10 / 0 | **A faster** |
+| T3 | C2-base − C0 | +1.96 | [−5.71, 9.62] | [−11.45, 15.36] | 6 / 4 | inconclusive |
+| T3 | C2-base − C1-PA(W/2) | +30.87 | [25.80, 35.94] | [22.00, 39.74] | 0 / 10 | **A slower** |
+| T3 | C2-batch − C0 | −20.10 | [−24.84, −15.35] | [−28.39, −11.81] | 10 / 0 | **A faster** |
+| T3 | C2-batch − C1-PA(W/2) | +8.82 | [6.79, 10.84] | [5.28, 12.36] | 0 / 10 | **A slower** |
+| T0 | C2-base − C0 | +62.17 | [48.62, 75.73] | [38.48, 85.87] | 0 / 10 | **A slower** |
+| T0 | C2-batch − C0 | +60.54 | [48.19, 72.90] | [38.95, 82.14] | 0 / 10 | **A slower** |
+| T0 | C1-PA(W/2) − C0 | +5.90 | [2.83, 8.98] | [0.52, 11.29] | 0 / 10 | **A slower** |
+
+**Interpretation:**
+- **Counts:** under the predeclared joint rule, 5 are "A faster", 5 "A slower" and 5
+  inconclusive.
+- **Inconclusive does not mean equivalent.** Take T1 C2-base − C1-PA(W/2): its Bonferroni
+  interval lies above 0, but one of the ten sessions has D_s < 0. It therefore fails unanimity
+  and stays inconclusive.
+- **No other verdicts.** The following are reported in `m4_analysis.json` with no verdict, and
+  they acquire none here:
+  - the 13 secondary comparisons, including C2-batch − C2-base and the comparisons against
+    C1-PA(W);
+  - the steady-state versions;
+  - the bootstrap sensitivity analysis;
+  - the descriptive statistics.
+- **No batched-versus-baseline verdict.** C2-batch − C2-base is a secondary comparison. No
+  verdict between the two C2 restore backends is inferred from their separate comparisons with
+  C0 or C1-PA(W/2).
+- **Adoption:** M4 does not change the default (`docs/M4B_PROTOCOL.md` §4). `baseline` remains
+  the default restore backend. M3's `supports_adoption = false` and the M3_CONFIRM_V1
+  conclusions are unchanged.
+
+**Scope** (the analysis's `claim_limits`, in full):
+- **Workload and platform:** synthetic traces, on the recorded machine, model and software stack
+  only.
+- **Metric:** sequential, batch-1, synchronous first-token latency; not service TTFT.
+- **An interleaved, co-resident experiment, not a standalone deployment:**
+  - both C1 caches stay allocated while every configuration runs;
+  - all configurations share one allocator, page cache and thermal state.
+- **Unequal total resources:**
+  - C1 holds persistent GPU KV;
+  - C2 holds none on the GPU, but a pinned host slab, a disk tier and an uncounted page cache;
+  - every GPU budget below the device's free memory is an artificial cap.
+- **Allocator peaks** are whole-process figures, never per-configuration GPU peaks.
+- **Residency is a request-scoped observation:**
+  - per-file point observations in one pass before each request, not a simultaneous snapshot;
+  - not guaranteed residency at the timer start or during the timed reads, since pages are not
+    pinned;
+  - a warm page cache only.
+- **The baseline:** C1 is this project's own baseline. This is not a comparison with vLLM or
+  SGLang.
+- **Not claimed:** service TTFT, p99/tail latency, throughput, concurrency, cold-NVMe or
+  production behaviour.
+
+### Reproducing and verifying the M4 evidence (CPU only)
+Three kinds of check must be kept apart.
+1. **Offline evidence and source verification, and analysis reproduction** (below):
+   - CPU only, from committed files;
+   - no model, no GPU query and no package check.
+2. **Live environment verification:** `scripts/m4_eval.py verify --spec <name>` compares the
+   checkout and the live stack with the manifest. The live stack includes an `nvidia-smi` query.
+   - **When it passed:** before each batch, on the recording machine. Each batch record keeps the
+     result, `pre_launch_verification: {"problems": []}`.
+   - **Why it now fails:** it is a pre-launch check that binds HEAD and the source set, so it
+     fails in this checkout after the archive commits. That is expected. It was not weakened, and
+     no manifest was regenerated.
+   - **What the offline steps do not do:** they do not re-establish the live stack.
+3. **A fresh GPU experiment:** none was run for the archive. A new batch would need a new spec,
+   a new freeze and the owner's approval.
+
+**Current-tree check (V2 only).**
+- **Why it still works:** the V2 analyzer compares only its 13 analysis files and 3 documents
+  with the manifest. The archive commits change none of them, so it runs in this checkout:
+
+  ```bash
+  .venv/bin/python scripts/m4_analyze.py --spec M4_EVAL_V2 --run-dir results/m4/M4_EVAL_V2_run \
+    --out-dir <new dir> \
+    --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a
+  ```
+
+- **Why V1 is different:** this branch changed 4 of V1's 13 bound analysis files
+  (`kvlab/m4_validate.py`, `m4_analysis.py`, `m4_spec.py` and `m4_freeze.py`).
+  - In this checkout, V1's analysis reports those 4 files as differing from their frozen bytes,
+    in addition to the 12 residency problems, and exits 3.
+  - That is intended, and it is not a reproduction. V1 is reproduced only from its frozen
+    revision (below).
+
+**Frozen-revision reconstruction (V1 and V2).** `scripts/m4_reconstruct.py` runs in three
+steps.
+1. **`build`:**
+   - extracts the manifest's base commit (`b858d9e` for V1, `d2122d7` for V2) into a new
+     directory;
+   - checks every manifest hash: the source set, with no extra files, plus the documents and
+     analysis files;
+   - copies in the manifest, the sidecar and the run directory, compared byte for byte.
+2. **Analysis:** that tree's own `scripts/m4_analyze.py` runs from inside it, into another new
+   directory.
+3. **`compare`:** compares the regenerated outputs with the archived ones, JSON value by value and
+   Markdown line by line. Both directories must hold `m4_validation.json`.
+   - **The one allowed path-only difference:** the top-level `run_dir` of `m4_validation.json`.
+     The archived value must lie below the archived root, and the regenerated value below the
+     reconstruction, with the same relative part. The file's bytes must otherwise be identical.
+   - Every other difference, a missing file or an extra file is substantive.
+
+```bash
+.venv/bin/python scripts/m4_reconstruct.py build --spec M4_EVAL_V2 --out <new dir> \
+  --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a
+cd <new dir> && <repo>/.venv/bin/python scripts/m4_analyze.py --spec M4_EVAL_V2 \
+  --run-dir results/m4/M4_EVAL_V2_run --out-dir <new out dir> \
+  --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a
+cd <repo> && .venv/bin/python scripts/m4_reconstruct.py compare \
+  --archived results/m4/M4_EVAL_V2_analysis --regenerated <new out dir> \
+  --archived-root /home/cyrus/projects/kv-cache-lab-m4v2 --regenerated-root <new dir>
+```
+
+For V1, use:
+- `--spec M4_EVAL_V1` and the digest
+  `137220aa1f40c9604fda983380f03d2e4f897cb2a8b6ad64ac97eabd3a3625b2`;
+- `results/m4/M4_EVAL_V1_run` and `results/m4/M4_EVAL_V1_analysis`;
+- the archived root `/home/cyrus/projects/kv-cache-lab-m4a`.
+
+Its analyzer is expected to exit 3.
+
+**Executed on 2026-11-05,** with this tool on the archived bytes:
+
+| Step | V2 (`d2122d7`) | V1 (`b858d9e`) |
+|---|---|---|
+| `build` | VERIFIED: 95 source files, 3 documents, 13 analysis files; 34 evidence files copied | VERIFIED: 92 source files, 2 documents, 13 analysis files; 33 evidence files copied |
+| Frozen analyzer | exit 0: valid, 0 problems, 0 correctness failures | exit 3: invalid, 12 problems, 0 correctness failures; validation output only |
+| `compare` | `m4_analysis.json` and `m4_analysis.md` byte-identical; `m4_validation.json` differs only in `run_dir` (path-only) | `m4_validation.json` differs only in `run_dir` (path-only) |
+| Current-tree check | exit 0; all three outputs byte-identical | exit 3 with the 4 changed analysis files reported (not a reproduction, as intended) |
+
+- **The path-only difference is expected:** the validator records the absolute run directory of
+  the tree it ran in.
+- **Everything else agrees exactly:** every statistical value, verdict, count and problem
+  string.
+- **Requirement:** the Python environment must hold the frozen package versions
+  (`requirements.txt`; recorded in each manifest's `stack`).
+- **Tests:** `tests/test_m4_reconstruct.py` covers the tool on fixture repositories.
 
 ## Reproducing
 Commands are in the README. Each evidence directory keeps its raw session JSON, logs and
