@@ -559,3 +559,28 @@ Decided by the project owner on 2026-11-04, after the §9 correctness gate passe
 - **Not decided by it:** no policy, configuration, evaluation seed, budget, metric, threshold,
   statistical rule, session count or deadline was selected or changed. It is not performance
   evidence, and it does not authorize the freeze.
+
+## D35. (M4-B) Proceed to the M4_EVAL_V1 freeze on the basis of the single pilot
+Decided by the project owner on 2026-11-04, after D34's pilot. D34 authorized only the pilot,
+for the feasibility decision; this is the separate decision to proceed to the freeze.
+- **Basis:** the owner accepts the single D34 pilot as the planning basis, with its documented
+  uncertainty:
+  - **Gate attempt 3:** passed, with 46/46 tests.
+  - **Pilot session:** one complete calibration session of 189.1 s, which passed validation.
+  - **Projections:** the pre-declared ten-session projections are 1,891 s, 1,920 s and 1,935 s,
+    all below the 2,160 s (80%) planning threshold.
+  - **Pilot outcome review:** it passed, with qualifications about extrapolation.
+- **Accepted uncertainty:**
+  - one pilot does not establish session-to-session variability;
+  - the calibration-to-evaluation workload mapping is approximate;
+  - the batch's overhead between sessions may differ.
+- **Unchanged:**
+  - 2,700 s remains the hard batch deadline. A timeout, or incomplete or inconsistent evidence,
+    remains invalid (exit 3), with no performance verdict;
+  - no additional sessions, retries, extensions or parameter changes are authorized;
+  - the workload, seeds, configurations, budgets, R = 10, statistics, the 15 primary comparisons,
+    the validity checks and the stopping rules;
+  - `baseline` stays the default.
+- **What it authorizes:** removing the protocol's DRAFT marker, then creating and verifying the
+  premeasurement freeze, in the manner of D31.
+- **What it does not authorize:** the evaluation batch, which needs separate approval.
