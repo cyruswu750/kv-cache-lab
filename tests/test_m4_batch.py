@@ -70,21 +70,40 @@ def test_exit_zero_without_a_report_stops_the_batch(tmp_path):
     assert rec["stop"]["reason"] == "missing_report" and rec["not_launched"] == ["e02"] and probs
 
 
+def fixture_root(tmp_path, first_line: str) -> Path:
+    """A copy of the files the manifest hashes, with the protocol's first line replaced. The tests then
+    exercise the freeze checks without depending on the real tree's lifecycle state: DRAFT, or
+    frozen with an existing manifest."""
+    root = tmp_path / "root"
+    files = [*mf.DOCUMENTS, *mf.ANALYSIS_FILES, "pyproject.toml",
+             *(str(p.relative_to(ROOT)) for pat in ("kvlab/*.py", "scripts/*.py", "tests/**/*.py") for p in ROOT.glob(pat))]
+    for f in sorted(set(files)):
+        (root / f).parent.mkdir(parents=True, exist_ok=True)
+        (root / f).write_bytes((ROOT / f).read_bytes())
+    doc = root / ms.M4_EVAL_V1["protocol_doc"]
+    doc.write_text(first_line + "\n" + doc.read_text().split("\n", 1)[1])
+    return root
+
+
 def test_m4_commands_and_the_freeze_refuse_a_draft_protocol(tmp_path):
     spec = ms.M4_EVAL_V1
     cmds = ms.commands_for(spec)
     assert [c["session"] for c in cmds] == [f"e{i:02d}" for i in range(1, 11)]
     assert cmds[0]["argv"][1:] == ["scripts/m4_measure.py", "--spec", "M4_EVAL_V1", "--out-dir",
                                    "results/m4/M4_EVAL_V1_run", "--session", "e01", "--seed", "44001"]
-    assert "DRAFT" in (ROOT / spec["protocol_doc"]).read_text().splitlines()[0]
+    root = fixture_root(tmp_path, "# M4-B protocol (DRAFT)")
     with pytest.raises(mc.Refused, match="DRAFT"):
-        mf.build_manifest(ROOT, spec, stack={"python": "x"})
-    assert not (ROOT / mf.manifest_path(spec)).exists()  # nothing written
+        mf.build_manifest(root, spec, stack={"python": "x"})
+    assert not (root / mf.manifest_path(spec)).exists()  # nothing written
+    m, _diff = mf.build_manifest(fixture_root(tmp_path / "final", "# M4-B protocol (approved)"), spec,
+                                 stack={"python": "x"})  # without the marker the DRAFT check passes
+    assert m["experiment"] == spec["name"] and m["commands"] == cmds
 
 
-def test_manifest_problems_detect_changed_analysis_bytes():
+def test_manifest_problems_detect_changed_analysis_bytes(tmp_path):
     spec = ms.M4_EVAL_V1
-    m, _diff = mf.build_manifest(ROOT, spec, stack={"python": "x"}, require_frozen_protocol=False, now=1.0e9)
+    ROOT = fixture_root(tmp_path, "# M4-B protocol (approved)")  # noqa: N806  (shadows the real root here)
+    m, _diff = mf.build_manifest(ROOT, spec, stack={"python": "x"}, now=1.0e9)
     assert mf.manifest_problems(m, spec, ROOT) == []
     bad = json.loads(json.dumps(m))
     bad["analysis_files_sha256"]["kvlab/m4_stats.py"] = "0" * 64
