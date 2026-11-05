@@ -241,12 +241,33 @@ Added after M3. These run the production validator (`kvlab/m3_validate.py`) and 
 | Complete original evidence | `valid`, exit 0: 5,400 samples, 900 block and 180 process warmups, 50 strict and 50 A/B checks; all historical values equal; adoption false | PASS | `test_complete_valid_report_reproduces_the_historical_analysis` |
 | Existing output, or a missing run directory | refused; nothing written | PASS | `test_refuses_to_overwrite_and_writes_nothing` |
 
-## M3_CONFIRM_V1 preparation (CPU; `tests/test_m3_confirm.py`, 127 tests; no measurement)
+## M3_CONFIRM_V1 preparation (CPU; `tests/test_m3_confirm.py`, 129 tests; no measurement)
+**Lifecycle isolation (development tree):**
+- **Fixtures:** the tests build explicit, isolated fixture repositories in three lifecycle
+  states:
+  - draft: protocol line 1 says DRAFT, no outputs;
+  - frozen: protocol as frozen, no outputs;
+  - outputs: frozen, with the real output paths present.
+- **What they replace:** the live checkout's current state. The fixtures copy the live
+  development sources, never `results/`, and leave the live protocol and evidence untouched.
+- **Fidelity:** the draft fixture's protocol is byte-identical to the reviewed pre-freeze
+  draft, and the frozen fixture's to the bytes the freeze manifest recorded.
+- **Analysis-side tests:** they build their manifest from a fourth, "checkout" state: an
+  output-free copy with this checkout's documents verbatim. The analysis validates against its
+  own tree's analysis files and documents (the production binding), so these tests hold in a
+  draft or a frozen checkout alike.
+- **History:** the frozen experiment's own copy of this file (SHA-256 `6fb0d417…`) assumed the
+  pre-freeze checkout. It is preserved in commit `13afde2`. Historical reproduction uses that
+  frozen tree (`scripts/m3_confirm_reconstruct.py`). This development copy is not part of the
+  frozen analysis inputs.
+
 Synthetic evidence from a generator that mirrors the `scripts/m3_measure.py` loop, bound to a real freeze manifest of the working tree (synthetic stack equal to the required one). The wrapper tests use dummy child processes only; no test starts a GPU process.
 
 | Scenario | Expected | Actual | Test |
 |---|---|---|---|
-| Spec counts (8,640 / 720 / 180 / 20 / 20 / 10), commands, runner semantics; draft protocol; old spec untouched | as stated | PASS | `test_spec_counts_commands_and_runner_semantics` |
+| Spec counts (8,640 / 720 / 180 / 20 / 20 / 10), commands, runner semantics; the protocol title in its draft or frozen form; old spec untouched | as stated | PASS | `test_spec_counts_commands_and_runner_semantics` |
+| Lifecycle fixtures: draft protocol = the reviewed draft (`2068026d…`), frozen protocol = the manifest's (`78bfdedd…`), checkout state = this checkout's protocol verbatim; no `results/`; HEAD present; preparation files untracked | as stated | PASS | `test_lifecycle_fixtures_reproduce_the_recorded_protocol_states` |
+| Existing-output state: the freeze names each existing path and writes nothing | refused | PASS | `test_freeze_refuses_when_outputs_already_exist` |
 | Required stack equals the recorded M3 stack; model constants pinned | as stated | PASS | `test_required_stack_is_the_recorded_m3_stack` |
 | Torch-free identity records equal the runner's (`source_identity`, packages, weights); the validator imports no torch | equal | PASS | `test_torch_free_identity_mirrors_the_runner` |
 | Seed replay reproduces all 6,480 recorded M3 sample identities in order | equal | PASS | `test_sequence_replay_reproduces_the_recorded_m3_order` |
@@ -264,12 +285,12 @@ Synthetic evidence from a generator that mirrors the `scripts/m3_measure.py` loo
 | Out-of-band manifest SHA-256 wrong / right; manifest missing | invalid / valid; invalid | PASS (2) | `test_manifest_must_match_the_out_of_band_sha256`, `test_missing_manifest_is_invalid` |
 | Correctness failure recorded consistently in c5 (exit 1, the batch stopped with nothing left to launch); the same in c2 (c3–c5 never launched); OOM-like report in c5; five processes exiting 0 with one empty report | exit 4 (failure listed); exit 3 with the c2 failure still listed explicitly; exit 3; exit 3 | PASS (4) | `test_correctness_failure_in_the_last_session_exits_4`, `…_before_the_last_session_is_invalid_but_reported`, `test_oom_report_in_the_last_session_is_invalid`, `test_all_processes_ran_but_a_report_is_empty` |
 | CLI: confirm spec without a separate out-dir; old spec with `--freeze` | usage error, exit 2 | PASS | `test_cli_usage_guards` |
-| Freeze: draft protocol, different stack; records actual bytes incl. untracked files, never itself; writes once; launch check detects tree, stack and environment drift | refused / as stated | PASS (3) | `test_freeze_refuses_…`, `test_manifest_records_the_tree_…`, `test_freeze_writes_once_and_verify_detects_drift` |
+| Freeze, on the draft and frozen fixtures: draft refused; frozen accepted; different stack; records actual bytes incl. untracked files, never itself; writes once; launch check detects tree, stack and environment drift | refused / as stated | PASS (3) | `test_freeze_refuses_…`, `test_manifest_records_the_tree_…`, `test_freeze_writes_once_and_verify_detects_drift` |
 | `run` without a matching manifest | refused; nothing launched | PASS | `test_run_refuses_without_a_matching_manifest` |
 | Wrapper: every session exits 0; any nonzero exit (exit 1 with an OOM-like or empty report, a crash), including the last session's, stops it with nothing further launched and wrapper exit 3; exit 0 without a report stops it; the signal mask is restored | as stated | PASS (6) | `test_batch_runs_every_session_in_order`, `test_any_nonzero_exit_stops_the_batch`, `test_nonzero_exit_of_the_last_session_…`, `test_exit_0_without_a_report_…` |
 | Wrapper deadline: still running at the deadline (only the session group is killed, helper included, bystander untouched, only its scratch removed); an exit first observed after the deadline (deterministic, child-driven clock); the deadline rechecked before the next launch | execution failed, never success | PASS (3) | `test_deadline_while_running_…`, `test_exit_observed_after_the_deadline_is_not_success`, `test_deadline_is_rechecked_before_the_next_launch` |
 | Wrapper signals and cleanup: SIGTERM, SIGINT or SIGHUP right after launch (from the launch-log callback); a signal between sessions; a wrapper error after launch; a session ignoring SIGTERM while signalling the wrapper (SIGKILL escalation, cleanup not aborted); a signal while waiting; wrapper SIGKILLed (parent-death signal only) | the session group terminated and reaped, nothing further launched, record finalized (except after SIGKILL) | PASS (8) | `test_signal_right_after_launch_…`, `test_signal_between_sessions_…`, `test_wrapper_error_after_launch_…`, `test_cleanup_escalates_…`, `test_operator_signal_while_waiting`, `test_killed_wrapper_…` |
-| Documented §11 Bash procedure, run on the real CLIs with no manifest (both refuse) | `pipefail` and `${PIPESTATUS[0]}` report exit 1 for the wrapper and the analysis; the old `cmd \| tee` form reports 0 | PASS | `test_documented_procedure_preserves_the_failing_wrapper_status` |
+| Documented §11 Bash procedure, run on the real CLIs inside a frozen-state fixture with no outputs (both refuse; no skip) | `pipefail` and `${PIPESTATUS[0]}` report exit 1 for the wrapper and the analysis; the old `cmd \| tee` form reports 0 | PASS | `test_documented_procedure_preserves_the_failing_wrapper_status` |
 
 ## M4-A trace replay (CPU only; `tests/test_traces.py` 30 tests, `tests/test_trace_replay_cpu.py` 50 tests; tiny random model; correctness, not performance)
 | Scenario | Expected | Actual | Test |
@@ -294,3 +315,74 @@ Synthetic evidence from a generator that mirrors the `scripts/m3_measure.py` loo
 | C2 wrapper vs `AlwaysRestoreEngine.run()` | identical records and outputs | PASS | `test_tiered_configuration_is_the_unchanged_engine` |
 | Resource terms per configuration, both C2 backends: zeros for C0; C1 persistent ≤ budget, scratch = L × per-token bytes; C2 host slab, scratch = destination (+ batched staging), disk within budget | as stated | PASS (2) | `test_resource_terms_are_reported_separately` |
 | CUDA never initialised by these tests | not initialised | PASS | module fixture `cpu_only` |
+
+## M4-B preparation (CPU only; 167 tests in 8 files; tiny random model and key-level checks; correctness, not performance)
+`tests/test_prefix_aware_cache.py` (7), `tests/test_trace_models.py` (34), `tests/test_m4_stats.py` (15),
+`tests/test_m4_batch.py` (14), `tests/test_m4_evidence_cpu.py` (74), `tests/test_m4_spec_offline.py` (3),
+`tests/test_m4_gate_real_pytest.py` (4), `tests/test_m4_gate_checks_cpu.py` (16).
+
+**The GPU gate** `tests/gpu/test_m4_replay.py` (markers `gpu`, `m4`):
+- **Tests:** five replay cases plus a final diagnostics-completeness test.
+- **Runs:** only through `scripts/m4_gate.py`, with GPU results kept with the local gate
+  evidence. The current version's checks are described in its module docstring.
+- **CPU coverage:** its check helpers and per-case driver run on CPU in
+  `tests/test_m4_gate_checks_cpu.py` (rows below).
+- **GPU result (2026-11-04):** attempt 3 passed at the current gate version, with all 46 gate
+  tests passing (m1 23, m3 17, m4 6). The earlier attempts were a harness failure and a pass with
+  coverage gaps. The evidence is kept locally, not committed.
+
+| Scenario | Expected | Actual | Test |
+|---|---|---|---|
+| Oversized prompt (5 chunks, capacity 3) three times | C1-PA keeps A0–A2 and restores 0, 12, 12, with 3 admission stops (6 chunks refused); plain LRU restores 0, 0, 0 | PASS | `test_oversized_prompt_keeps_its_leading_chunks_and_stops` |
+| Shared root vs an overflowing request (capacity 4: X, Z, Y, Z, Z) | C1-PA restores 0, 8, 8, 8, 8 (evicts leaves x3 and x2, stops at y4); plain LRU restores 0, 8, 8, 0, 8 | PASS | `test_shared_root_survives_an_overflowing_request` |
+| 12 random overlapping traces × capacities 0, 1, 2, 3, 5 | decisions and evictions equal `pa_model`; prefix closure; retained bytes = entries × payload ≤ budget; bitwise equal to `ResidentReference` of C1-PA's own decisions | PASS | `test_random_traces_keep_closure_follow_the_model_and_match_the_reference` |
+| Continuation ownership: request KV storage vs entries; in-place writes to the request KV | no overlap; entries unchanged | PASS | `test_continuation_never_aliases_or_mutates_the_cache` |
+| Corrupted entry identity on a hit; corrupted child count | raise (not a miss); invariant check raises | PASS | `test_identity_mismatch_raises_and_broken_bookkeeping_is_detected` |
+| Storing does not refresh present chunks (capacity 3, two competing leaves; hand-worked) | 0, 0, 4, 0, 4, 4 (a refreshing store would give 0, 0, 4, 0, 0, 8) | PASS | `test_storing_does_not_refresh_present_chunks` |
+| The reviewed plain-LRU C1 against `lru_model` and `traces.lru_restore_lengths`; dead entries of the oversized case | equal; 3 dead | PASS | `test_plain_lru_is_preserved_for_the_offline_diagnostic` |
+| `tiered_model` vs the real `TieredKVCache` + `AlwaysRestoreEngine`, both backends, 4 traces × (host, disk) ∈ {(1, 2), (2, 3), (2, 100), (6, 100)} | restore length, sources, stored chunks, spills, disk evictions and occupancy equal per request; no fault; with an ample disk, the oracle | PASS (32) | `test_tiered_model_equals_the_real_tiered_cache` |
+| Hand-worked two-tier sequence; oracle and LRU models vs the reviewed statistics; prefix-aware ≤ oracle (= oracle when ample) | as hand-computed; equal | PASS (2) | `test_tiered_model_hand_worked`, `test_oracle_and_lru_models_agree_with_the_reviewed_statistics` |
+| t quantiles vs published values (df 1, 2, 4, 9, 30); t CDF vs Simpson integration of the density at the Bonferroni level | within 2e-7; within 1e-9 | PASS (10) | `test_t_quantiles_match_published_values`, `test_t_cdf_matches_numeric_integration_at_the_bonferroni_level` |
+| Hand-calculated session differences: interval, level 1 − 0.05/15, faster and slower verdicts; unanimity without an excluding interval, and vice versa; secondary has no verdict; too few or non-finite values | as computed; inconclusive; None; refused | PASS (2) | `test_hand_calculated_interval_and_verdicts`, `test_unanimity_without_an_excluding_interval_is_inconclusive_and_vice_versa` |
+| Unanimous with a 95% interval excluding 0 but not the Bonferroni-level interval | inconclusive | PASS | `test_verdicts_use_the_bonferroni_level_not_95_percent` |
+| The declared family of 15 and the draft parameters (10 sessions, 2,700 s, α 0.05, steps 1, C 256) | as declared | PASS | `test_declared_family_is_exactly_the_protocol_s_fifteen` |
+| Gate driver `run_case` on CPU (probe at C = 4; 6 configurations): all checks pass; the diagnostics file is complete; counters reconciled with nonzero C1-PA stops (4, 5), refusals (4, 9), evictions (6, 4; LRU 23) and C2 host/disk hits (4/14), spills (10); a tight disk reconciles disk evictions | as stated | PASS (2) | `test_run_case_passes_and_writes_complete_diagnostics`, `test_run_case_with_a_tight_disk_reconciles_disk_evictions` |
+| Lifetime: with cyclic GC disabled, `run_case` leaves no C1 cache alive (the restore observers are detached, so no cache -> observer -> cache cycle keeps entries into the next case) | all 3 freed | PASS | `test_run_case_frees_its_c1_caches_without_cyclic_gc` |
+| Gate scenarios (C = 256, models only): every reconciled C1/C2 counter that can occur is nonzero in some case; the refactored probe equals the attempt-2 probe | as stated | PASS (2) | `test_gate_scenarios_make_the_reconciled_counters_nonzero`, `test_gate_probe_is_the_attempt_2_probe` |
+| Targeted mismatches through `run_case`: an extra refused chunk, a missing admission stop, an extra LRU eviction, an extra C2 disk hit, restored bytes differing from the entry | each detected (AssertionError); an incomplete diagnostics file is kept | PASS (5) | `test_an_extra_refused_chunk_is_detected` and 4 others |
+| Direct restored-vs-entry check: one flipped byte, chunks out of order, an alias of an entry's storage, wrong length / identity / LRU order / early stop / keys / sources | each reported exactly | PASS (4) | `test_direct_check_detects_*` |
+| Diagnostics validator (missing record, incomplete, failure, segments, counters, logical terms, request identity, configurations, trace digest); no overwrite; the GPU module's completeness test in a real pytest child without / with an empty gate output directory | each detected; `FileExistsError`; FAIL both | PASS (2) | `test_the_diagnostics_validator_detects_incomplete_documents`, `test_the_gate_completeness_test_fails_without_the_output_directory` |
+| `run_batch` (reused unchanged) with M4-shaped manifests and dummy processes: success; nonzero exit; deadline; SIGTERM to the wrapper; exit 0 without a report | succeeded with no problems; stopped, nothing relaunched or replaced, remaining sessions not launched, problems reported; the running group killed, never success; stopped and cleaned up | PASS (5) | `tests/test_m4_batch.py` |
+| M4 session commands; the freeze refuses a DRAFT protocol and writes nothing; changed analysis bytes (incl. `kvlab/m4_freeze.py`, review P2) or spec digest | as declared; refused; problems | PASS (2) | `test_m4_commands_and_the_freeze_refuse_a_draft_protocol`, `test_manifest_problems_detect_changed_analysis_bytes` |
+| Complete toy evidence (3 CPU sessions) + a run_batch-shaped record | valid, exit 0; analysis labelled UNFROZEN; 15 primary results; no allocator figures on CPU; batched placement traffic = H2D, baseline 0; never overwrites | PASS | `test_complete_toy_evidence_is_valid_and_analysed` |
+| Hand-calculated copy accounting (toy T1, L = 8): C1 gather and constructor; C2 H2D, constructor, batched placement; C0 nothing; C1 persistent growth = stored × payload | as computed | PASS | `test_hand_calculated_copy_accounting_in_the_records` |
+| A strict mismatch in complete evidence, consistently recorded (digest, runner count, last session exit 4) | valid with 1 correctness failure, exit 4, no analysis | PASS | `test_strict_mismatch_in_complete_evidence_exits_4` |
+| Session exits vs recorded results (review P1): a final exit 7 with a consistent stop; a final exit 4 without a mismatch; a mismatch the runner did not count; a mismatch in a non-final session | invalid, exit 3, no analysis (the CLI); the non-final failure still listed | PASS (4) | `test_session_exits_must_be_explained_by_the_recorded_result` |
+| An injected ENOSPC on every disk write (real engine), outputs still bitwise correct | invalid, exit 3, fault reported | PASS | `test_injected_enospc_spill_failure_is_invalid_although_outputs_stay_correct` |
+| 43 tampers through the validator and the real CLI (exit 3, a validation report, no analysis, never a crash), each rejected for its own reason. They include the review's malformed inputs: missing `restore_scratch_bytes`, a non-mapping `c1_retained_after`, a latency beyond the float range, a non-string reference digest, a batched hit reporting the baseline backend, negative destination storage, disk usage or slab, missing `miss_reasons`, inflated host hits, and a missing device, namespace, session start or runner mismatch count. Also: a missing `last_restore`, a non-string namespace digest, non-mapping warmup C2 counters, and inflated full-recompute, miss, absent-miss, host-eviction and C1-miss counters. No case reaches the backstop. The original 21: decision, residency, forward calls, spill, CRC-read and undeletable faults, traffic, C1 counters, dropped or swapped records, trace/budget/spec digests, unfinished, trace order, missing reference digest, allocator figures on CPU, NaN, non-chronological times, request KV size, missing warmup block | invalid, exit 3, the matching reason | PASS (43) | `test_tampered_or_inconsistent_evidence_is_invalid` |
+| Allocator schema (negative A0; P below A0) on a CUDA-labelled record; `M4_EVAL_V1` requires CUDA and a 7,340,032 B payload | malformed; as declared | PASS | `test_allocator_schema_and_device_requirements` |
+| Missing session; truncated JSON; extra file; deadline stop; nonzero exit with sessions not launched; elapsed over budget; session file changed after the batch; warmup-coverage rule | invalid; as stated | PASS (8) | `test_incomplete_or_contradictory_runs_are_invalid`, `test_warmup_coverage_rule` |
+| Freeze-manifest binding: matching; wrong spec digest, source files, stack, commands; batch bound to another manifest | valid (frozen); invalid | PASS | `test_freeze_manifest_binding` |
+| Gate wrapper `scripts/m4_gate.py` with dummy suites: all pass; a failing second suite; a sleeping suite past a 1.5 s cap; an existing output directory | PASS; FAIL with the third suite never run; FAIL by deadline with the group killed; refused | PASS | `test_gate_wrapper_passes_fails_fast_and_enforces_one_deadline` |
+| Gate wrapper interrupted by SIGINT while a suite runs | FAIL (operator_signal); the suite's group terminated and reaped; the next suite never run; the record written; handlers restored | PASS | `test_gate_wrapper_cleans_up_and_records_fail_when_interrupted` |
+| The four reconciled counters (`full_recompute_requests`, `chunk_misses`, `miss_reasons["absent"]`, `host_evictions`): positive control with all four nonzero; each missing, +1 and −1 | valid; invalid, exit 3, no analysis (12 cases) | PASS (13) | `test_the_four_counters_are_nonzero_in_the_positive_control`, `test_each_counter_must_reconcile_missing_or_off_by_one` |
+| Gate wrapper interrupted by SIGINT or SIGTERM: the owned process group probed with `killpg(pgid, 0)` after return | gone (`ProcessLookupError`); FAIL; nothing further launched; handlers restored | PASS (2) | `test_no_owned_process_group_survives_an_interrupted_gate` |
+| Gate ownership of the process group: a leader exiting 0 with a live descendant; an injected wrapper error after the leader exited, with a descendant alive; a caller with SIGTERM blocked | FAIL (`leftover_processes`), the group gone; the error re-raised, FAIL (`wrapper_error`), the group gone; the caller's mask kept, the suite started with an empty mask, PASS | PASS (3) | `test_leader_exit_does_not_release_a_group_with_live_descendants`, `test_wrapper_error_after_the_leader_exits_still_cleans_up_the_group`, `test_gate_restores_the_callers_signal_mask_and_children_start_unmasked` |
+| Gate with REAL pytest children, through `run_gate()` and the production `gate_commands()` layout (only the selection replaced by synthetic CPU suites using `tmp_path`): fresh output; existing output; a failing middle suite; a suite leaving a descendant. This regresses the first GPU attempt's defect, a missing `<out>/basetemp` parent: pytest creates an explicit basetemp non-recursively | PASS with three separate suite basetemps, and the logs and record intact; refused, contents unchanged; later suites not run; FAIL `leftover_processes`, the group gone. Before the fix, 3 of the 4 fail with the attempt's `FileNotFoundError` | PASS (4) | `tests/test_m4_gate_real_pytest.py` |
+| Steady-state means and ratios (review P3, hand-worked: A = 100, 100, 1 × 6, B = 2 × 8) | D = −1, means 1 and 2, ratio 0.5 | PASS | `test_steady_state_means_and_ratios_use_the_same_sliced_series` |
+| M4_EVAL_V1 offline: trace digests and statistics, budgets, plain-LRU/C1-PA/oracle restored tokens, T0 evictions 164, C2 = oracle on T1–T3; warmup coverage proof | equal to the protocol tables; coverage holds | PASS (3) | `tests/test_m4_spec_offline.py` |
+| CUDA never initialised by the CPU tests | not initialised | PASS | module fixtures `cpu_only` |
+
+Mutation check (run once during preparation on a scratch copy outside the repository, whose
+mutation script is not committed; the worktree was never modified): 12/12 semantic mutants
+killed:
+- C1-PA: protection, leaf-only eviction, no refresh on store, the refused count;
+- validator: the fault and residency checks, and session-exit reconciliation;
+- statistics: verdict unanimity and the Bonferroni level;
+- the batched placement traffic;
+- `kvlab/m4_freeze.py` as an analysis file;
+- the disk touch in the tiered model.
+
+Earlier runs: the first run left two survivors (refresh on store, the 95% level), and a
+hand-worked test was added for each. The last two mutants were added with the review
+corrections.

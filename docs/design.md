@@ -278,9 +278,10 @@ current/peak host and disk bytes.
   `docs/results.md` (M3).
 
 
-## 12. M4-A: synthetic traces, a GPU-only prefix cache and trace replay (CPU only; no GPU validation yet)
-Status: implemented and tested on CPU with a tiny random model only. Nothing here has run on a
-GPU. No timing, calibration or performance claim comes from it. Decision D32.
+## 12. M4-A: synthetic traces, a GPU-only prefix cache and trace replay
+Status: implemented and tested on CPU with a tiny random model. When M4-A was completed, nothing
+here had run on a GPU. Since then, the M4-B correctness gate (§13) has exercised its replay paths
+on the GPU. No timing, calibration or performance claim comes from M4-A. Decision D32.
 
 - **Traces** (`kvlab/traces.py`):
   - **Synthetic, seeded token sequences.** They model the structure of prefix reuse, not
@@ -350,3 +351,111 @@ GPU. No timing, calibration or performance claim comes from it. Decision D32.
   - any timing;
   - budget selection from trace statistics;
   - the evaluation protocol.
+
+## 13. M4-B preparation: C1-PA, the trace-evaluation runner, validator and analysis
+Status, 2026-11-04. The protocol is `docs/M4B_PROTOCOL.md`, DRAFT and not frozen, with decisions
+D33 and D34.
+- **Implementation:** implemented and tested on CPU.
+- **GPU correctness gate:** passed on its third attempt (below).
+- **Timing pilot:** one timing-only feasibility pilot ran on calibration traces (D34).
+- **Formal evaluation:** not run. No evaluation session and no freeze have taken place, and no
+  performance claim exists.
+
+The design choices in this section preceded all GPU work.
+
+- **C1-PA** (`kvlab/prefix_aware_cache.py`): a subclass of the unchanged plain-LRU
+  `GPUPrefixCache`.
+  - **Inherited:** lookup, identity checks, owned storage, the copy semantics on a hit (gather,
+    then the D4 constructor copy) and the byte budget.
+  - **New admission:** it preserves prefix closure, evicts only unprotected leaves in LRU
+    order, and stops admitting when no victim exists.
+  - **Protected set:** the current request's chunks, from the moment the store loop reaches
+    each of them until `store()` returns.
+- **Independent key-level models** (`kvlab/trace_models.py`): C1-PA, C1-LRU (with dead
+  entries) and C2's two LRU tiers (spill, no promotion). The validator compares every recorded
+  decision and counter with them.
+- **Session driver** (`kvlab/m4_bench.py`): the warmup traces, then the four evaluation traces.
+  - **Instances:** fresh ones of C0, C1-PA(W), C1-PA(⌈W/2⌉), C2-base and C2-batch per trace.
+  - **Order:** per-request interleaving in a seeded order.
+  - **Timed region (D22):** synchronize, then `prefill()`, then argmax on the device; `.item()`
+    is the end.
+  - **Untimed:** the strict check against `ResidentReference` of each configuration's own
+    decisions, recorded as logit digests. Nothing is caught: errors end the session.
+- **The terms are kept distinct in every record and summary:**
+  - **persistent cache bytes:** C1 `retained_bytes()` before and after each request, so growth
+    during the request is explicit; C2's pinned slab, host occupancy and disk used and peak;
+  - **transient storage:** C1's gather scratch; C2's device destination and batched staging;
+    the request KV;
+  - **logical copy traffic:** bytes moved per path. It covers the gather, the D4 constructor,
+    admission, H2D, batched placement, D2H, and disk reads and writes. These are counted from
+    the code paths, not profiled;
+  - **allocator observations:** CUDA only. A0 before the request and P, the peak, are
+    whole-process figures that include every co-resident configuration. P − A0 is the
+    incremental process-allocation peak, including persistent C1 growth. It is never a
+    per-configuration GPU peak;
+  - **storage and page-cache observations:** the mincore resident fraction of every C2 chunk
+    file before each C2 request, with files warmed if below 1.0. It is a point observation, not
+    a budget.
+- **Comparisons** are made within one process, with both C1 caches resident throughout. They
+  describe this co-resident, interleaved experiment, not standalone deployments, and equal GPU
+  budgets do not mean equal total resources.
+- **Validator** (`kvlab/m4_validate.py`): fail-closed, recomputing everything from the spec.
+  - **Schema pass:** types and ranges of every field are checked before any semantic check.
+    Malformed evidence is exit 3, never a crash or a correctness failure. Records that fail the
+    schema never reach a semantic check. A fail-closed backstop reports anything still
+    uninterpretable as malformed; it can never make evidence valid.
+  - **Exit reconciliation:** each session's exit must equal 4 if a strict mismatch is
+    recomputed there, else 0. So an unexplained nonzero exit can never yield verdicts.
+  - **Exit 3:** any missing, malformed, inconsistent or out-of-order record; a decision or
+    counter that disagrees with the models; an unintended fault (spill or admission failures
+    such as ENOSPC, read failures, temp or undeletable bytes); residency below 1.0; missing
+    warmup coverage; or a batch-record problem (`kvlab.m3_confirm.batch_problems`: deadline,
+    stop, launch order, contradictions).
+  - **Exit 4:** a strict mismatch in complete evidence.
+  - **Without a freeze manifest:** only explicitly unfrozen analyses run, labelled as not
+    evaluation evidence.
+- **Statistics** (`kvlab/m4_stats.py`, `kvlab/m4_analysis.py`):
+  - **Unit:** the session.
+  - **Primary family:** 15 comparisons. A verdict needs all session differences to share one
+    sign, and the t-interval at level 1 − 0.05/15 to exclude 0.
+  - **Assumptions:** independence and approximate normality, stated with every result. Fresh
+    processes do not prove independence.
+  - **Secondary results:** reported without verdicts, including the M3 block bootstrap as a
+    sensitivity analysis.
+- **GPU gate** (`tests/gpu/test_m4_replay.py`): run only through `scripts/m4_gate.py`.
+  - One 900 s deadline covers the M1, M3 and M4 GPU suites.
+  - `pytest -x` per suite, with a stop at the first failure.
+  - On a stop signal or a wrapper error, the running group is still terminated, and a FAIL
+    record is still written.
+  - Cleanup is of the process group, independent of whether its leader has exited. Descendants
+    left by a suite make the gate FAIL.
+  - Each suite has its own pytest `--basetemp`, `<out>/basetemp/<suite>`.
+    - `run_gate()` creates the common parent, because pytest's mkdir of an explicit basetemp is
+      not recursive. It does so only after creating the fresh output directory.
+    - The output directory itself is never a basetemp.
+    - The first GPU attempt failed because that parent was missing.
+  - The wrapper passes the fresh output directory to the suites as `KVLAB_M4_GATE_OUT_DIR`. The
+    M4 suite writes structured per-request diagnostics under it (`m4_diagnostics/<case>.json`):
+    the allocator figures A0, P and P − A0, labelled whole-process, and the logical storage terms.
+    A final test fails the gate if any case's file is missing or incomplete.
+  - **Checks**, beyond the strict replay against `ResidentReference`:
+    - C1 restored bytes compared directly with the cached entries at the instant `restore()`
+      returns: lengths, order, identity and no shared storage;
+    - all C1 and C2 counters reconciled with the key-level models;
+    - fault counters zero; prefix closure; budgets; storage overlap.
+  - Elapsed times are recorded as a feasibility diagnostic.
+  - **Outcome:**
+    - attempt 1 failed (the basetemp defect);
+    - attempt 2 passed, with three coverage gaps found in its review;
+    - attempt 3 passed at the strengthened version: 46 tests, 311 s of 900 s. Its evidence is
+      kept locally, not in the repository.
+- **Batch control** (`kvlab/m4_freeze.py`, `scripts/m4_eval.py`): freeze, verify and run.
+  - `run` reuses `kvlab.m3_confirm.run_batch` unchanged: one deadline, a stop on any nonzero
+    exit, and no retries.
+  - The freeze refuses a DRAFT protocol.
+- **Timing-only feasibility pilot (D34):** one fresh session of the full calibration traces
+  and the warmup, run through a private local adapter (not committed) around the unchanged
+  `run_session`. It took 189 s. Ten-session projections are 1,891–1,935 s, below 80% of the
+  2,700 s deadline. One session does not establish variability or guarantee completion.
+- **Not done:** the freeze, any evaluation session and any performance measurement. The runtime
+  restore-length policy, cost-model refit and asynchronous restoration are out of scope.
