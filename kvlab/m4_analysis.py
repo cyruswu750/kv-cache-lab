@@ -32,6 +32,21 @@ CLAIM_LIMITS = [
     "C1 is this project's GPU-only baseline (prefix-aware LRU), not vLLM or SGLang; C1-LRU is offline only",
     "no p99/tail, throughput, concurrency or production claims; this machine, model and stack only",
 ]
+WHOLE_TIER_LIMIT = CLAIM_LIMITS[5]
+REQUEST_SCOPED_LIMIT = (
+    "warm disk (M4_EVAL_V2): each C2 request's candidate files (the disk files its restore reads on the normal "
+    "path) were observed fully resident by mincore in one verification pass immediately before the request, "
+    "after at most one prewarm read per file; these are per-file point observations, not a simultaneous snapshot, "
+    "and not a guarantee at timer start or during the timed read (pages are not pinned); warm page cache only, no "
+    "cold-NVMe, storage-device or production claim (D26); not procedurally comparable with M4_EVAL_V1's "
+    "whole-tier preparation, and not a correction of V1")
+
+
+def claim_limits(spec: dict) -> list:
+    """CLAIM_LIMITS, with the warm-disk statement of the spec's rule."""
+    if spec.get("warm_disk") == "request_candidates":
+        return [REQUEST_SCOPED_LIMIT if x == WHOLE_TIER_LIMIT else x for x in CLAIM_LIMITS]
+    return list(CLAIM_LIMITS)
 
 
 def _series(sessions: dict, C: int) -> dict:
@@ -149,7 +164,7 @@ def analyze(validation: dict, spec: dict) -> dict:
     return {"spec": spec["name"], "spec_sha256": spec["spec_sha256"], "frozen": validation["frozen"],
             "evidence_label": "evaluation evidence" if validation["frozen"] else
             "UNFROZEN: not evaluation evidence; no performance claim may be made from it",
-            "assumptions": st.ASSUMPTIONS, "claim_limits": CLAIM_LIMITS, "n_sessions": len(sids),
+            "assumptions": st.ASSUMPTIONS, "claim_limits": claim_limits(spec), "n_sessions": len(sids),
             "primary_family_size": len(fam), "alpha": alpha, "primary": primary, "secondary": secondary,
             "steady_state": steady, "steady_state_secondary": steady_secondary, "per_session": per_session,
             "across_sessions": across,
