@@ -1,9 +1,9 @@
 """Premeasurement freeze manifest and launch check for M4-B (the D31 pattern; CPU only, no torch).
 
-`freeze()` refuses while the protocol's first line contains "DRAFT". The manifest records the tree
-to be measured
+`freeze()` refuses while the first line of the spec's protocol contains "DRAFT". The manifest records the
+tree to be measured
 (base HEAD, `git diff HEAD --binary` and its sidecar, every source file, untracked files, the
-protocol documents, the analysis files, the stack and the exact commands). `verify_tree()` must
+protocol documents (`documents(spec)`), the analysis files, the stack and the exact commands). `verify_tree()` must
 pass before `run`; the analysis rejects the evidence while an analysis file or document differs
 from its frozen bytes (`manifest_problems`).
 
@@ -29,6 +29,14 @@ ANALYSIS_FILES = ("kvlab/m4_validate.py", "kvlab/m4_stats.py", "kvlab/m4_analysi
                   "kvlab/trace_models.py", "kvlab/traces.py", "kvlab/boundaries.py", "kvlab/identity.py",
                   "kvlab/m3_confirm.py", "kvlab/m3_stats.py", "kvlab/perf_stats.py", "scripts/m4_analyze.py")
 MODEL_ID, REVISION = "Qwen/Qwen2.5-1.5B-Instruct", "989aa7980e4cf806f80c7fef2b1adb7bc71aa306"
+
+
+def documents(spec: dict) -> tuple:
+    """The documents a freeze binds: DOCUMENTS, plus the spec's own protocol when it is another file. For
+    M4_EVAL_V1 that is exactly DOCUMENTS. M4_EVAL_V2's protocol amends docs/M4B_PROTOCOL.md, so both are
+    bound."""
+    extra = (spec["protocol_doc"],) if spec.get("protocol_doc") else ()
+    return tuple(dict.fromkeys((*DOCUMENTS, *extra)))
 
 
 def manifest_path(spec: dict) -> str:
@@ -81,7 +89,7 @@ def build_manifest(root: Path, spec: dict, *, stack: dict, now=None, require_fro
         "git_diff_head_sha256": src["git_diff_head_sha256"], "git_diff_file": Path(sidecar_path(spec)).name,
         "files_sha256": src["files_sha256"],
         "untracked_files_sha256": {f: mc.sha256_file(root / f) for f in _untracked(root) if (root / f).is_file()},
-        "documents_sha256": {d: mc.sha256_file(root / d) for d in DOCUMENTS},
+        "documents_sha256": {d: mc.sha256_file(root / d) for d in documents(spec)},
         "analysis_files_sha256": {f: mc.sha256_file(root / f) for f in ANALYSIS_FILES},
         "stack": stack, "run_dir": spec["run_dir"], "budget_s": spec["budget_s"], "commands": ms.commands_for(spec),
         "note": "hashes of the working tree at freeze time; no commit is required; the manifest does not hash itself"}
@@ -113,7 +121,7 @@ def manifest_problems(manifest, spec: dict, root: Path, *, current_analysis=True
     if not mc.finite(manifest.get("frozen_unix")):
         out.append("freeze manifest frozen_unix missing or not finite")
     if current_analysis:
-        for key, files in (("analysis_files_sha256", ANALYSIS_FILES), ("documents_sha256", DOCUMENTS)):
+        for key, files in (("analysis_files_sha256", ANALYSIS_FILES), ("documents_sha256", documents(spec))):
             rec = manifest.get(key) if isinstance(manifest.get(key), dict) else {}
             if set(rec) != set(files):
                 out.append(f"freeze manifest {key} lists {sorted(rec)}, expected {sorted(files)}")
