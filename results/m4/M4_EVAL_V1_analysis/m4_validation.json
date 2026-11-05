@@ -1,0 +1,27 @@
+{
+ "spec": "M4_EVAL_V1",
+ "spec_sha256": "442e13ecd69cc7e13d9a3f3bf7eb1be616456feb576f7cbf5e604f51b0bab541",
+ "run_dir": "/home/cyrus/projects/kv-cache-lab-m4a/results/m4/M4_EVAL_V1_run",
+ "status": "invalid",
+ "frozen": true,
+ "problems": [
+  "e04 evaluation T2 r38 C2_batch: page residency before the request {'files': 17, 'min_fraction_before': 0.0050195203569436695, 'prewarmed_files': 2, 'resident_fraction_before': 0.9643056330172894}, required 1.0",
+  "e04 evaluation T2 r39 C2_base: page residency before the request {'files': 19, 'min_fraction_before': 0.0, 'prewarmed_files': 3, 'resident_fraction_before': 0.0005577244841048522}, required 1.0",
+  "e05 evaluation T0 r13 C2_batch: page residency before the request {'files': 22, 'min_fraction_before': 0.14333519241494702, 'prewarmed_files': 2, 'resident_fraction_before': 0.9643056330172894}, required 1.0",
+  "e05 evaluation T0 r13 C2_base: page residency before the request {'files': 22, 'min_fraction_before': 0.0, 'prewarmed_files': 8, 'resident_fraction_before': 0.03569436698271054}, required 1.0",
+  "e05 evaluation T0 r14 C2_batch: page residency before the request {'files': 28, 'min_fraction_before': 0.0, 'prewarmed_files': 8, 'resident_fraction_before': 0.0}, required 1.0",
+  "e05 evaluation T0 r14 C2_base: page residency before the request {'files': 28, 'min_fraction_before': 0.0, 'prewarmed_files': 6, 'resident_fraction_before': 0.3931957612939208}, required 1.0",
+  "e05 evaluation T0 r19 C2_batch: page residency before the request {'files': 51, 'min_fraction_before': 0.0, 'prewarmed_files': 6, 'resident_fraction_before': 0.9643056330172894}, required 1.0",
+  "e05 evaluation T0 r20 C2_batch: page residency before the request {'files': 57, 'min_fraction_before': 0.0, 'prewarmed_files': 13, 'resident_fraction_before': 0.0}, required 1.0",
+  "e09 evaluation T0 r12 C2_batch: page residency before the request {'files': 17, 'min_fraction_before': 0.0, 'prewarmed_files': 5, 'resident_fraction_before': 0.0011154489682097045}, required 1.0",
+  "e09 evaluation T0 r13 C2_batch: page residency before the request {'files': 22, 'min_fraction_before': 0.0, 'prewarmed_files': 5, 'resident_fraction_before': 0.0011154489682097045}, required 1.0",
+  "e09 evaluation T0 r15 C2_base: page residency before the request {'files': 33, 'min_fraction_before': 0.0, 'prewarmed_files': 7, 'resident_fraction_before': 0.9988845510317903}, required 1.0",
+  "e09 evaluation T0 r18 C2_batch: page residency before the request {'files': 47, 'min_fraction_before': 0.0, 'prewarmed_files': 5, 'resident_fraction_before': 0.0016731734523145567}, required 1.0"
+ ],
+ "correctness_failures": [],
+ "counts": {
+  "sessions": 10,
+  "evaluation_records": 11200,
+  "warmup_records": 1000
+ }
+}
