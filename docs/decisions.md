@@ -634,3 +634,42 @@ separate from approval of the V2 protocol, which stays DRAFT.
 - **Not authorized:** protocol approval, removal of the DRAFT marker, the freeze, the formal batch, pushing,
   merging, tagging and default changes.
 - **Records:** the calibration adapter and its evidence are kept locally, not in the repository.
+
+## D38. (M4_EVAL_V2) Approve the V2 protocol for freeze and one formal batch
+Decided by the project owner on 2026-11-05, after D37's single calibration session. It is separate from D37, which
+authorized only the calibration.
+- **Basis:** the D37 calibration, a private spec with the calibration traces and session seed 45001.
+  - Its launcher passed: 197.6 s of the 600 s cap, with the group reaped.
+  - Its evidence was valid under the V2 rules:
+    - 1,220 records (100 warmup and 1,120 timed), with 0 strict mismatches in the 1,120 timed records;
+    - all 488 C2 records `verified` or `empty`, with 0 prewarms;
+    - `drop_pagecache` unchanged.
+  - Its pre-declared ten-session projections were 1,976 s, 2,005 s and 2,021 s, all below the 2,160 s planning
+    threshold.
+  - Its pre-run and outcome reviews were resolved.
+  - It is not performance evidence and not a guarantee.
+- **Accepted uncertainty:**
+  - the calibration-to-evaluation workload mapping is approximate;
+  - the overhead between sessions and the variability from session to session are unmeasured;
+  - the branch where a candidate needs a prewarm never executed on the GPU;
+  - ordinary page-cache reclaim and WSL `drop_pagecache` events can occur during the batch. One WSL
+    `drop_pagecache` event during the batch makes it invalid; ordinary reclaim counters remain context only;
+  - a formal batch may be invalid despite the successful calibration.
+- **Unchanged:**
+  - the environment, the workload, seeds, configurations, budgets, R = 10, the statistics and the 15 primary
+    comparisons;
+  - the request-scoped warm-disk rule, the batch interference rule and every other validity rule;
+  - the 2,700 s hard deadline and the stopping rules;
+  - M4_EVAL_V1's protocol, its invalid result, its freeze and its evidence;
+  - `baseline` as the default.
+- **What it authorizes:**
+  - removing the DRAFT marker from `docs/M4_EVAL_V2_PROTOCOL.md`;
+  - freezing and verifying `M4_EVAL_V2`;
+  - at most ONE formal ten-session batch;
+  - the frozen validation and analysis of its evidence.
+- **What it does not authorize:**
+  - retries, replacement sessions, a second batch, deadline extensions or parameter changes;
+  - system or WSL setting changes, page pinning, cache drops, or relaxed checks;
+  - pushing, merging, tagging or default changes.
+
+  A failed, timed-out or invalid batch is kept and reported, with no performance statement.
