@@ -419,3 +419,32 @@ Mutation check on scratch copies under the ignored `local/`; the worktree was ne
     request observations, the prewarm requirement.
 
   It ran before the review corrections; those were checked by the tests added with them.
+
+## M4 archive reconstruction (CPU only; `tests/test_m4_reconstruct.py`, 38 tests; fixture git repositories)
+| Check | Expected | Result | Test |
+|---|---|---|---|
+| `build` after later commits that change a source file, a document and the source set | the base revision's bytes, not the later ones; the manifest, sidecar and run files copied byte for byte; VERIFIED; the repository unmodified | PASS | `test_build_rebuilds_the_base_revision_after_later_commits_and_copies_the_evidence` |
+| A wrong expected digest; an existing output directory; an unknown spec | exit 3 with nothing written; usage error (2) with nothing written; usage error | PASS (3) | `test_a_wrong_expected_digest_refuses_before_writing`, `test_an_existing_output_directory_is_a_usage_error`, `test_an_unknown_spec_is_a_usage_error` |
+| Manifest disagreements: a source hash; an extra or a missing source file; a document hash; an analysis-file hash; another experiment; untracked files; a dirty status; an unknown base commit; a run_dir with `..` or absolute; an empty hash set | MISMATCH, exit 3; the structural ones refused before anything is written | PASS (12) | `test_manifest_disagreements_are_mismatches` |
+| A non-empty diff sidecar; evidence already present in the frozen tree | refused, exit 3 | PASS (2) | `test_a_nonempty_diff_sidecar_is_refused`, `test_evidence_already_present_in_the_frozen_tree_is_a_mismatch` |
+| `compare`: identical outputs; the top-level `run_dir` of `m4_validation.json` relocated from the archived root to the reconstruction; V1's validation-only shape | exit 0; reported IDENTICAL / PATH-ONLY | PASS (3) | `test_identical_outputs_compare_equal`, `test_the_recorded_run_directory_is_a_path_only_difference`, `test_validation_only_outputs_compare` |
+| `compare`, review corrections: the root relocated anywhere else (a Markdown line, a `run_dir` in the analysis JSON, another validation field); sibling directories of the two roots (`…_backup`); a formatting change beside the relocated `run_dir`; two empty directories, or directories without `m4_validation.json` | substantive (DIFFERENT), exit 3; NOT COMPARED, exit 3 | PASS (8) | `test_a_relocated_root_anywhere_else_is_substantive`, `test_a_sibling_of_the_roots_is_not_a_relocation`, `test_a_formatting_change_beside_the_relocated_run_dir_is_substantive`, `test_directories_without_a_validation_output_are_not_compared` |
+| `compare`: a last-digit numeric change, a verdict, `True` vs `1`, NaN vs 0.0, an extra line, a Markdown-only line, a run_dir with another relative part, a missing or extra file, reformatted JSON with equal values | substantive (DIFFERENT), exit 3 | PASS (9) | `test_substantive_differences_fail`, `test_a_markdown_only_line_change_is_substantive`, `test_a_path_change_plus_another_change_in_the_same_string_is_substantive`, `test_a_missing_or_extra_file_is_substantive`, `test_reformatted_but_equal_json_is_still_reported` |
+
+Mutation check on scratch copies under the ignored `local/`; the worktree was never modified.
+- **First comparator (before the review), 16 mutants, three runs:**
+  - **First run:** 15/16 killed. The survivor accepted any changed Markdown line as path-only, and the
+    Markdown-only test was added.
+  - **Second run:** not evidence. The new test's own assertion was wrong, so it also failed on the unmutated
+    code. The assertion was corrected; the tool was not changed.
+  - **Third run:** 16/16 killed.
+- **After the review:** the review found that path-only matching ignored root boundaries and that two empty
+  directories compared as equal. The comparator now allows exactly one relocated field, refuses directories
+  without `m4_validation.json`, and gained the tests above.
+- **Fourth run, on the corrected tool, 20 mutants:** 20/20 killed, with all 38 tests passing on the unmutated
+  code. The mutants cover:
+  - `build`: the extra-file, document, analysis-file, digest, sidecar, untracked, experiment and
+    existing-evidence checks, and archiving HEAD instead of the base commit;
+  - `compare`: types, floats, missing files, the line count and formatting-only differences;
+  - the relocation rule: the root boundary, the relative part, the single file, the bytes beyond `run_dir`,
+    Markdown leniency and the required validation output.
