@@ -673,3 +673,29 @@ authorized only the calibration.
   - pushing, merging, tagging or default changes.
 
   A failed, timed-out or invalid batch is kept and reported, with no performance statement.
+
+## D39. (M4) Archive the executed M4 evaluations on `m4-eval-v2` and reproduce them from their frozen revisions
+Decided by the project owner on 2026-11-05, after the one M4_EVAL_V2 batch and its outcome review. It is separate from
+D38, which authorized only the freeze, the batch and its frozen analysis.
+- **What is committed, byte for byte, under `results/m4/`:**
+  - **M4_EVAL_V2:** the freeze manifest and its empty diff sidecar, the run directory and the frozen validation and
+    analysis outputs. Until now they were untracked in this worktree.
+  - **M4_EVAL_V1:** the freeze manifest and its empty sidecar, the run directory and the frozen validation output.
+    The analyzer exited 3, so there are no statistics.
+    - These are copies of the untracked files in the `m4a-trace-replay` worktree at `b858d9e`, at the same
+      relative paths. Each manifest's `run_dir` and the frozen analyzer's manifest path are relative to the
+      repository root, and the paths are distinct from V2's.
+    - The V1 worktree is not modified. V1 stays invalid, with no performance conclusion.
+- **Unchanged:**
+  - no manifest is regenerated;
+  - no evidence file, recorded path or analysis output is edited. The absolute `run_dir` in each
+    `m4_validation.json` names the worktree that analysis ran in;
+  - the frozen protocols and every rule, M3, and `baseline` as the default.
+- **Verification after these commits:**
+  - `scripts/m4_eval.py verify` binds HEAD and the source set, so it now fails for this checkout. That is expected,
+    and it is not weakened.
+  - The analyses are reproduced offline instead, by each frozen revision's own analyzer, using
+    `scripts/m4_reconstruct.py` (`docs/results.md`, M4).
+  - This does not re-establish the live stack. The batch records keep the pre-launch verification that ran on the
+    recording machine.
+- **Not authorized:** GPU runs, new experiments, refreezing, pushing, merging, tagging or a default change.
