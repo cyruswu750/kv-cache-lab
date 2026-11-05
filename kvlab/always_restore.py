@@ -58,9 +58,11 @@ class AlwaysRestoreEngine:
     def prefill_request(self, token_ids, allow_restore: bool = True, on_restored=None, mark=None) -> Prefilled:
         """Everything before the first token is selected, in run() order: ingest (ids to
         device, chain keys), restore, prefill, store. `allow_restore=False` skips the
-        restore lookup; it exists only to measure full recomputation offline (run() always
-        restores), and it never consults a policy. `mark(phase)` is called after each phase
-        (diagnostic timing only); with a policy, "decide" comes between "ingest" and "restore"."""
+        restore lookup; it exists only to measure full recomputation offline, and it never
+        consults a policy. run() always allows restoration: with policy=None it restores the
+        longest valid prefix, and with an attached policy that policy may still choose L = 0
+        (recomputation). `mark(phase)` is called after each phase (diagnostic timing only);
+        with a policy, "decide" comes between "ingest" and "restore"."""
         mark = mark or _no_mark
         token_ids = list(token_ids)
         n = len(token_ids)
