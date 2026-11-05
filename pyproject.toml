@@ -13,5 +13,6 @@ markers = [
     "m0_1: M0.1 audit regressions (resident vs restored, negative controls)",
     "m1: M1 tiered-cache GPU integration suite",
     "m3: M3 batched-restore GPU checks",
+    "m4: M4-B GPU correctness gate (C0/C1-PA/C1-LRU/C2 replays; strict, no timing)",
 ]
 addopts = "-m 'not gpu'"
