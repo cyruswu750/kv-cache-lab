@@ -1,0 +1,422 @@
+{
+ "record_version": 2,
+ "experiment": "M4_EVAL_V1",
+ "freeze_manifest_sha256": "137220aa1f40c9604fda983380f03d2e4f897cb2a8b6ad64ac97eabd3a3625b2",
+ "pre_launch_verification": {
+  "problems": []
+ },
+ "budget_s": 2700,
+ "clock": "time.monotonic; deadline = first launch + budget_s",
+ "wrapper_pid": 38975,
+ "execution_status": "succeeded",
+ "stop": null,
+ "launched_at": "2026-11-04T19:57:50-0800",
+ "launched_unix": 1793851070.1796634,
+ "sessions": [
+  {
+   "session": "e01",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e01",
+    "--seed",
+    "44001"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_e01.log",
+   "pid": 38981,
+   "started_s": 0.0018495759995857952,
+   "ended_s": 183.82098667399987,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "a5f9dfa5e30532679c1b9d494c0fe49be94ca1372255e6507a51872a535622e3",
+    "bytes": 2477599
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "e02",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e02",
+    "--seed",
+    "44002"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_e02.log",
+   "pid": 39254,
+   "started_s": 183.93183015000068,
+   "ended_s": 380.24034841899993,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "28a96d22539c49b49706c54352114c5073e8ca6a661ef011bffb4d3f469fc0bc",
+    "bytes": 2478596
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "e03",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e03",
+    "--seed",
+    "44003"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_e03.log",
+   "pid": 39532,
+   "started_s": 380.2802653430008,
+   "ended_s": 565.5346044670005,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "16dec824467e279d583a206ede7c044d75c216611f243a9234596d54df05db66",
+    "bytes": 2477860
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "e04",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e04",
+    "--seed",
+    "44004"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_e04.log",
+   "pid": 39797,
+   "started_s": 565.5687116370009,
+   "ended_s": 749.1380667619997,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "00dfc633ab2dde377188cd960976e99d6fcb11dc7571c8587884ed4b4818fb63",
+    "bytes": 2478109
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "e05",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e05",
+    "--seed",
+    "44005"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_e05.log",
+   "pid": 40073,
+   "started_s": 749.1686386029996,
+   "ended_s": 931.0461289899995,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "d988b8d49d9423c9136259aa95b3ad68e4145352f15889de6e7093e42acc9a84",
+    "bytes": 2478116
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "e06",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e06",
+    "--seed",
+    "44006"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_e06.log",
+   "pid": 40372,
+   "started_s": 931.0762655039998,
+   "ended_s": 1108.991217535,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "744c999ced697123f50acac2f06e39260462ba1f3db7bb428bfad3cc6471054a",
+    "bytes": 2477951
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "e07",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e07",
+    "--seed",
+    "44007"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_e07.log",
+   "pid": 40638,
+   "started_s": 1109.050788290002,
+   "ended_s": 1292.1860684050007,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "8b39090db1fde075303a46d17942cd99435b9a08b0e94a88f635a605d9755b52",
+    "bytes": 2477981
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "e08",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e08",
+    "--seed",
+    "44008"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_e08.log",
+   "pid": 40915,
+   "started_s": 1292.2282891600007,
+   "ended_s": 1475.3205713009993,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "aa37d79c25d47427778ea8e28aa28a12457ebebf04e2059cd2ccf4877917a07c",
+    "bytes": 2478100
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "e09",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e09",
+    "--seed",
+    "44009"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_e09.log",
+   "pid": 41211,
+   "started_s": 1475.357805650001,
+   "ended_s": 1655.6857062550007,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "947c65cb6ee894430801535d6d03483f2296a6b16d1751da3cc30c61ad876465",
+    "bytes": 2478130
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "e10",
+   "argv": [
+    ".venv/bin/python",
+    "scripts/m4_measure.py",
+    "--spec",
+    "M4_EVAL_V1",
+    "--out-dir",
+    "results/m4/M4_EVAL_V1_run",
+    "--session",
+    "e10",
+    "--seed",
+    "44010"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_e10.log",
+   "pid": 41482,
+   "started_s": 1655.7160111660014,
+   "ended_s": 1833.1021022329987,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "0a2b2fb6282deec96e34275612d7ead811cb2437339a2928d5d6293dd66d3e16",
+    "bytes": 2477882
+   },
+   "monitor_csv_present": true,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  }
+ ],
+ "not_launched": [],
+ "elapsed_s": 1833.1021022329987,
+ "finalized_s": 1833.1311235380017,
+ "signals_received": [],
+ "finished_at": "2026-11-04T20:28:23-0800"
+}
