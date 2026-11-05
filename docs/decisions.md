@@ -483,3 +483,79 @@ from `858f952`) did not yet contain it; `main` was merged in afterwards.
   - CPU correctness only;
   - no GPU execution, timing, calibration, runtime policy or framework integration;
   - GPU validation is deferred to M4-B.
+
+## D33. (M4-B, CPU preparation) Prefix-aware LRU as the primary GPU-only baseline; plain LRU kept as an offline diagnostic
+Decided by the project owner on 2026-11-04, on the evidence of the M4-B draft review. The
+protocol is `docs/M4B_PROTOCOL.md` (DRAFT).
+- **Problem:** the M4-A C1 uses plain chunk LRU, the same rule as the host tier (D32). Under a
+  tight GPU cap, CPU probes on the unchanged class showed three failure modes:
+  - a prompt with more new chunks than the capacity evicts its own leading chunks, and keeps an
+    unreachable tail;
+  - root-first hit touches let an overflowing request evict a shared root while its
+    descendants stay cached;
+  - such dead entries still count against the budget.
+
+  On the draft T1 trace at ⌈W/2⌉ = 3 chunks, plain LRU restores 0 tokens, against an oracle of
+  96,768. Comparing the tiered cache with that baseline would compare it with a degenerate
+  GPU-only cache.
+- **Choice:** C1-PA (`kvlab/prefix_aware_cache.py`), a separate subclass. The reviewed
+  `GPUPrefixCache` is unchanged.
+  - **Kept:** identity checks, lookup, owned storage and the byte budget.
+  - **Admission:** keeps the cache prefix-closed. When full, it evicts the least recently used
+    leaf that is not one of the current request's chunks; if none exists, it stops admitting
+    that request.
+  - **Protection lifecycle:** a request's chunks join the protected set as the store loop
+    reaches them, and the set is dropped when store() returns.
+  - **Offline effect:** on the draft traces C1-PA restores 48,384 / 8,448 / 65,536 tokens at
+    ⌈W/2⌉ (T1 / T2 / T3), against plain LRU's 0 / 8,192 / 63,744. It is never below plain LRU
+    on any request there.
+- **Basis:** the choice rests on CPU mechanics and deterministic trace statistics only. No GPU
+  timing informed it.
+- **Departure from the M4 planning note:** the note excluded prefix-aware eviction from M4.
+  This decision re-admits it for C1 only. C2's host and disk tiers keep plain chunk LRU,
+  unchanged.
+  - The asymmetry is disclosed.
+  - No direction of latency bias is claimed: prefix maintenance and different
+    restore/recompute splits have their own costs.
+- **Also decided:**
+  - plain C1-LRU is an offline diagnostic (`kvlab.trace_models.lru_model`), not a timed arm;
+  - both C2 backends run, explicitly selected: `baseline`, which remains the project default,
+    and `batched`, opt-in;
+  - draft parameters: 10 sessions, a 2,700 s deadline and a 15-minute GPU correctness gate;
+  - GPU execution needs a later, separate approval.
+- **Rejected:**
+  - timing plain LRU as another arm: more GPU time for a baseline already known to be
+    degenerate under these caps;
+  - changing the reviewed M4-A class in place: it would silently change reviewed behavior;
+  - prefix-aware eviction in C2: it would change the measured engine.
+
+## D34. (M4-B) One timing-only feasibility pilot on calibration traces
+Decided by the project owner on 2026-11-04, after the §9 correctness gate passed (attempt 3).
+- **Problem:** protocol §9.5 requires that the evaluation batch be projected to finish within
+  80% of its 2,700 s deadline. The existing evidence did not support such an estimate either
+  way:
+  - the M2 cost model's projection was about 1,400 s;
+  - scaled by the gate's ratio of measured to predicted time, it rose to about 2,300 s.
+- **Decision:** one fresh-process session, with a 600 s cap, using:
+  - the full calibration traces (41001–41004), the protocol's warmup, the five configurations,
+    steps = 1, the strict checks, mincore/prewarm and the full records;
+  - a private local adapter, not committed, that runs the unchanged `kvlab.m4_bench.run_session`
+    with an isolated pilot spec;
+  - no evaluation seed.
+
+  This is a limited exception to the rule that no calibration timing is analysed. It is
+  allowed solely for the feasibility decision.
+- **Pre-declared before the run:** the inputs, the validity rules, the projection formulas, the
+  workload mapping and the readings.
+- **Result:**
+  - the session passed its validation (0 strict mismatches) and took 189 s end to end;
+  - the ten-session projections are 1,891 s (10 × the session), and 1,920 s and 1,935 s when
+    adjusted for the evaluation workload by the M2 model and by the token count;
+  - all are below 2,160 s.
+- **Limits:**
+  - one session measures no run-to-run variability, and does not guarantee that ten sessions
+    finish in time (M3 recorded a persistent platform slow mode);
+  - the batch's own deadline and stopping rule remain the protection.
+- **Not decided by it:** no policy, configuration, evaluation seed, budget, metric, threshold,
+  statistical rule, session count or deadline was selected or changed. It is not performance
+  evidence, and it does not authorize the freeze.
