@@ -1,5 +1,6 @@
-# Environments
+# Environments (a .venv symlink to an existing environment is not a directory to git: ignore it too)
 .venv/
+.venv
 __pycache__/
 *.pyc
 .pytest_cache/
