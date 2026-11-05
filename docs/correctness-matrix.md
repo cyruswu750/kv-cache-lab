@@ -386,3 +386,36 @@ killed:
 Earlier runs: the first run left two survivors (refresh on store, the 95% level), and a
 hand-worked test was added for each. The last two mutants were added with the review
 corrections.
+
+## M4_EVAL_V2 preparation (DRAFT; CPU only; `tests/test_warm_disk.py` 32 tests, `tests/test_m4_v2_evidence_cpu.py` 50 tests; correctness, not performance)
+| Check | Expected | Result | Test |
+|---|---|---|---|
+| Candidate planner vs the reads the unchanged engine attempts (`DiskStore.read_into` recorded): prompt lengths 4, 5, 8, 9, 12, 13 at C = 4, with every complete chunk on disk | candidates [], [0], [0], [0,1], [0,1], [0,1,2] (stated literally) and equal to the reads | PASS (6) | `test_exact_chunk_boundaries_follow_the_first_token_rule` |
+| Empty cache; first chunk absent with later disk files; a hole; mixed host/disk; host only; a key in both tiers | candidates equal the reads; host precedence; the stop reason | PASS (6) | `test_candidates_equal_the_actual_reads_on_the_normal_path` |
+| No staging buffer | no candidate, no read, miss `no_staging_buffer` | PASS | `test_no_staging_buffer_means_no_candidate_and_no_read` |
+| Payload CRC failure, injected EIO, missing file on the second of four disk chunks | the reads (2) are a prefix of the candidates (4): a conservative superset | PASS (3) | `test_invalid_or_failed_file_gives_a_conservative_superset` |
+| Planning with `open`/`os.open` refused; LRU orders, pins, free slots, staging flag, counters, files, `last_restore` | no file opened; state identical; a corrupt file not detected or removed | PASS | `test_planning_has_no_side_effect_and_opens_no_file` |
+| A shuffled multi-turn and document-reuse replay (spills, disk evictions, mixed requests) on two instances, one planning before every request | every plan equals the next reads; identical decisions and final state | PASS | `test_trace_replay_candidates_equal_reads_and_planning_changes_nothing` |
+| Preparation with scripted observations: order, only the closing clock read after the final pass (outcome and labels computed by `complete()` after the timed region), final pass without prewarms, no retry after a still-nonresident read, a loss between the passes, errors (initial, final, read, short read, empty file), a programming error, an empty candidate set; the real mincore/read primitives on real files; the counter reader | order counters, initial pass, reads, final pass; outcomes `verified`, `not_resident`, `error`, `empty`; one read at most; errors recorded; TypeError propagates | PASS (14) | `tests/test_warm_disk.py` |
+| V2 toy sessions (scripted counters) through the validator and the analysis | valid; restore disk bytes = candidates x file size; empty sets with nonempty tiers; V2 claim limit | PASS | `test_v2_toy_evidence_is_valid_request_scoped_and_matches_the_actual_reads` |
+| The runner's event order around each C2 request | prepare (no outcome yet), then exactly time.time, t0, t1, the counter snapshot, `complete()`; V1's scan never called | PASS | `test_preparation_is_the_last_step_before_the_timer` |
+| Every candidate still nonresident after its one prewarm (scripted) | recorded `not_resident`; one read per candidate; the session finishes; invalid only for the warm-disk rule | PASS | `test_not_resident_after_one_prewarm_is_recorded_and_makes_the_evidence_invalid` |
+| 21 record tampers (candidates, indices, final residency, prewarm rules, errors, timestamps, phases, counts, plan, empty set, size, missing or V1-shaped record, page size, outcome, timer interval) | invalid, exit 3, the matching reason | PASS (21) | `test_tampered_warm_disk_records_are_invalid` |
+| drop_pagecache: session/request snapshots missing, unreadable, unavailable or different; batch record missing, increment, decrease, start unavailable, end unreadable or never written, format; (review P2-1) identity fields missing, another experiment or counter, read times missing or reversed, a start read after the first launch, an end read before the sessions ended | invalid, exit 3 | PASS (19) | `test_session_drop_pagecache_observations_must_equal_the_batch_start`, `test_batch_drop_pagecache_rule` |
+| `scripts/m4_eval.py` batch bracket: start written before the launch, end after; an existing run directory; the wrapper raising | both reads recorded; refused before running; end still recorded | PASS (2) | `test_m4_eval_brackets_the_batch_with_two_counter_reads`, `test_m4_eval_records_the_end_even_when_the_batch_wrapper_raises` |
+| An extra file in a V2 run directory; `batch_interference.json` expected only for V2 | invalid; as stated | PASS | `test_an_unexpected_file_is_still_rejected_and_the_v2_record_is_expected` |
+| Spec and freeze: V1's digest `442e13ec…` unchanged; V2 differs only in name, run_dir, protocol_doc and warm_disk; the V2 freeze binds both protocols and refuses while V2 is a DRAFT; V1-shaped specs keep the whole-tier rule | as stated | PASS (4) | `tests/test_m4_v2_evidence_cpu.py` |
+
+Mutation check on scratch copies under the ignored `local/`; the worktree was never modified. It ran twice:
+- **First run:** its harness was defective. The copies lacked `requirements.txt`, so an unrelated freeze test
+  failed in every copy. Its candidate-comparison mutant also disabled only part of the condition. Its results
+  are kept but are not evidence.
+- **Corrected second run:** 14/14 mutants killed by the tests aimed at them. They cover:
+  - the planner: the first-token rule, an off-by-one eligible length, the first-absent stop, host precedence,
+    the staging rule, an LRU touch;
+  - the preparation: a retried prewarm, a skipped final pass;
+  - the runner: a counter read between the final pass and the timer;
+  - the validator: the candidate comparison, acceptance of `not_resident`, a batch increment, session and
+    request observations, the prewarm requirement.
+
+  It ran before the review corrections; those were checked by the tests added with them.
