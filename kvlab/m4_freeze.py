@@ -1,7 +1,7 @@
 """Premeasurement freeze manifest and launch check for M4-B (the D31 pattern; CPU only, no torch).
 
-Nothing here was executed against the real tree: the protocol is a DRAFT, and `freeze()` refuses
-while its first line contains "DRAFT". The manifest records the tree that would be measured
+`freeze()` refuses while the protocol's first line contains "DRAFT". The manifest records the tree
+to be measured
 (base HEAD, `git diff HEAD --binary` and its sidecar, every source file, untracked files, the
 protocol documents, the analysis files, the stack and the exact commands). `verify_tree()` must
 pass before `run`; the analysis rejects the evidence while an analysis file or document differs

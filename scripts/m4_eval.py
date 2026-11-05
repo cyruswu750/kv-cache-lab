@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""M4-B batch control: freeze / verify / run (the D31 pattern). NOT EXECUTED in M4-B preparation.
+"""M4-B batch control: freeze / verify / run (the D31 pattern).
 
-  .venv/bin/python scripts/m4_eval.py freeze --spec M4_EVAL_V1     # refuses while the protocol is DRAFT
-  .venv/bin/python scripts/m4_eval.py verify --spec M4_EVAL_V1
+  HF_HOME=<weights cache> .venv/bin/python scripts/m4_eval.py freeze --spec M4_EVAL_V1   # refuses while DRAFT
+  HF_HOME=<weights cache> .venv/bin/python scripts/m4_eval.py verify --spec M4_EVAL_V1
   HF_HOME=<weights cache> .venv/bin/python scripts/m4_eval.py run --spec M4_EVAL_V1 --expect-freeze-sha256 <hex>
+
+Use the same HF_HOME for all three: the frozen stack includes the weight snapshot found through it,
+and verify and run compare the current stack with the frozen one.
 
 `run` executes the frozen session commands one after another with kvlab.m3_confirm.run_batch (reused
 unchanged): one monotonic deadline (the spec's budget_s), each session in its own process group, no

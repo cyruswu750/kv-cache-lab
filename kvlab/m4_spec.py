@@ -1,9 +1,9 @@
-"""The M4-B evaluation spec (DRAFT; docs/M4B_PROTOCOL.md). CPU only: no torch.
+"""The M4-B evaluation spec (docs/M4B_PROTOCOL.md). CPU only: no torch.
 
-`make_spec()` builds a spec dict; `M4_EVAL_V1` is the draft evaluation spec. Tests build scaled-down
-specs (tiny traces, C = 4) through the same function, so the runner, validator and analysis are
-exercised on the same code paths. Nothing here is frozen: the freeze (kvlab/m4_freeze.py) refuses
-while the protocol's first line says DRAFT.
+`make_spec()` builds a spec dict; `M4_EVAL_V1` is the evaluation spec. Tests build scaled-down specs
+(tiny traces, C = 4) through the same function, so the runner, validator and analysis are exercised
+on the same code paths. The freeze (kvlab/m4_freeze.py) refuses while the protocol's first line says
+DRAFT, and its manifest records these bytes.
 
 Roles of the trace seeds, fixed before any GPU run:
 - `calibration` (41001-41004): used ONLY by the bounded GPU correctness gate
