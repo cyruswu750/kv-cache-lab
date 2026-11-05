@@ -612,3 +612,25 @@ a design change for a new spec. It does not correct, reinterpret or re-analyse V
   42–4,291 s. A V2 batch that overlaps such an event is invalid by this rule.
 - **Not authorized by this entry:** approval of the protocol, removal of its DRAFT marker, any GPU session or
   calibration run, the freeze, or the batch.
+
+## D37. (M4_EVAL_V2, DRAFT) One bounded calibration session of the committed V2 implementation
+Authorized by the project owner on 2026-11-04, after the V2 implementation was reviewed and committed. It is
+separate from approval of the V2 protocol, which stays DRAFT.
+- **Scope:**
+  - exactly one session of a private calibration spec, not registered in `kvlab.m4_spec.SPECS`;
+  - every experimental field of `M4_EVAL_V2`, including the request-scoped warm-disk preparation;
+  - the full calibration traces (41001–41004) in the timed slot, the unchanged warmup (43001–43004) and session
+    seed 45001, the D34 pilot's;
+  - no evaluation seed.
+- **Execution:**
+  - the D34 pilot's bounded launcher, with one absolute 600 s deadline that includes termination and reaping;
+  - the committed source, bound by HEAD and a clean tree, and the verified interpreter, weights cache and stack;
+  - batch-style `drop_pagecache` reads around the single launch.
+- **Validity:** the V2 rules apply without exception. These include the warm-disk rule on every C2 record and the
+  interference rule. A failure, timeout or invalid result is kept as evidence and is not retried or replaced.
+- **Purpose:** execution correctness, V2 evidence validity, and a runtime-feasibility projection with D34's
+  pre-declared formulas and mapping, compared with 2,160 s and 2,700 s.
+- **Not a basis for:** any performance, latency or backend conclusion.
+- **Not authorized:** protocol approval, removal of the DRAFT marker, the freeze, the formal batch, pushing,
+  merging, tagging and default changes.
+- **Records:** the calibration adapter and its evidence are kept locally, not in the repository.
