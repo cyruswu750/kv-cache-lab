@@ -14,5 +14,6 @@ markers = [
     "m1: M1 tiered-cache GPU integration suite",
     "m3: M3 batched-restore GPU checks",
     "m4: M4-B GPU correctness gate (C0/C1-PA/C1-LRU/C2 replays; strict, no timing)",
+    "m5: M5 GPU correctness gate (restore-policy paths, harness smoke session; strict, no timing)",
 ]
 addopts = "-m 'not gpu'"
