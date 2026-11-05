@@ -15,9 +15,21 @@ One session = one process. It runs:
 
 Timed region (D22): synchronize (CUDA); start; config.prefill(tokens) (restore, suffix prefill,
 admission); argmax on the device; .item() = end. Logits are copied to the host only after the
-end. Outside the region, per C2 request: the page-cache residency check of every chunk file of
-that instance's disk tier (mincore; warmed and re-measured if below 1.0, as M2/M3 did); memory
-readouts; records; checks.
+end. Outside the region, per C2 request: the warm-disk preparation (below); memory readouts; records;
+checks.
+
+Warm-disk preparation, chosen by the spec (kvlab.m4_spec.warm_disk_protocol):
+- "whole_tier" (M4_EVAL_V1, unchanged): `_residency`, a mincore check of every chunk file of that
+  instance's disk tier, warming and re-measuring the files below 1.0 (as M2/M3 did). It runs before the
+  C1 occupancy and allocator readouts.
+- "request_candidates" (M4_EVAL_V2): kvlab.warm_disk.prepare. It plans the files this request's restore
+  will read, observes them, prewarms each at most once, and observes them once more. It runs after the
+  readouts, so that only its closing clock read and return, the forward-call count, the wall-clock read
+  and the synchronize separate its final pass from the timer start. After the end (untimed),
+  kvlab.warm_disk.complete adds the outcome, phase labels and prewarm count, the interval from the final
+  pass to the timer start, and a second counter snapshot. A post-request page observation is not taken:
+  it could not tell a cache hit from pages brought in by the read itself. The session report also gets
+  counter snapshots at its start and end (the drop_pagecache rule; docs/M4_EVAL_V2_PROTOCOL.md).
 
 Nothing is caught: any exception (including CUDA errors and OOM) propagates. The session then
 exits nonzero, the batch stops (D31) and the evidence is incomplete (exit 3). Fault counters
@@ -33,6 +45,7 @@ import torch
 
 from kvlab import chunk_format as cf
 from kvlab import m4_spec as ms
+from kvlab import warm_disk as wd
 from kvlab.always_restore import AlwaysRestoreEngine
 from kvlab.disk_store import DiskStore
 from kvlab.host_store import HostStore
@@ -144,6 +157,7 @@ def replay_trace(model, ns, spec, trace, name: str, role: str, seed: int, b: dic
     """One trace through all five configurations, interleaved per request."""
     dev = next(model.parameters()).device
     cuda = dev.type == "cuda"
+    request_scoped = ms.warm_disk_protocol(spec) == wd.PROTOCOL
     C, payload = ns.chunk_size, cf.payload_len(ns)
     inst = Instances(model, ns, spec, b, disk_root, pin=cuda, disk_write_fn=disk_write_fn)
     calls = []
@@ -156,13 +170,15 @@ def replay_trace(model, ns, spec, trace, name: str, role: str, seed: int, b: dic
                 cfg = inst.cfg[cname]
                 c2t = inst.c2.get(cname)
                 c2_before = c2t.counters.to_dict() if c2t is not None else None
-                residency = _residency(c2t) if c2t is not None else None
+                residency = _residency(c2t) if c2t is not None and not request_scoped else None
                 c1_before = inst.c1_retained()
                 mem = None
                 if cuda:
                     torch.cuda.synchronize()
                     torch.cuda.reset_peak_memory_stats()
                     mem = {"A0_allocated": torch.cuda.memory_allocated(), "persistent_c1_retained_at_A0": dict(c1_before)}
+                if c2t is not None and request_scoped:
+                    residency = wd.prepare(c2t, tokens)  # the last preparation step before the timer
                 n0 = len(calls)
                 t_wall = time.time()
                 if cuda:
@@ -174,6 +190,8 @@ def replay_trace(model, ns, spec, trace, name: str, role: str, seed: int, b: dic
                 if cuda:
                     mem["P_max_allocated"] = torch.cuda.max_memory_allocated()
                     mem["note"] = "process-global allocator figures (all co-resident configurations); not per configuration"
+                if c2t is not None and request_scoped:  # untimed, after the end
+                    wd.complete(residency, t0, wd.counters())
                 fwd = len(calls) - n0
                 digest = logits_digest(p.logits)
                 request_kv = cache_storage_bytes(p.cache)
@@ -223,6 +241,8 @@ def run_session(model, ns, spec: dict, session: str, seed: int, disk_root: Path,
     disk_root = Path(disk_root)
     if disk_root.exists():
         raise FileExistsError(f"{disk_root} exists; a session starts with no disk-tier state")
+    request_scoped = ms.warm_disk_protocol(spec) == wd.PROTOCOL
+    interference = {"start": wd.counters()} if request_scoped else None
     t_start = time.time()
     warm_traces = {t: ms.trace(spec, t, "warmup") for t in ms.TRACE_NAMES}
     warm_b = ms.budgets(spec, "warmup", warm_traces)
@@ -234,6 +254,8 @@ def run_session(model, ns, spec: dict, session: str, seed: int, disk_root: Path,
     evaluation = [replay_trace(model, ns, spec, ev_traces[t], t, "evaluation", seed, ev_b[t],
                                disk_root / "evaluation" / t, strict=True, disk_write_fn=disk_write_fn) for t in order]
     shutil.rmtree(disk_root)
+    if request_scoped:
+        interference["end"] = wd.counters()
     mism = sum(1 for blk in evaluation for r in blk["records"]
                if r["ref_logits_sha256"] != r["logits_sha256"] or r["ref_token"] != r["token"])
     return {"format": SESSION_FORMAT, "strict_mismatches": mism, "spec": spec["name"], "spec_sha256": spec["spec_sha256"], "session": session,
@@ -241,4 +263,5 @@ def run_session(model, ns, spec: dict, session: str, seed: int, disk_root: Path,
             "namespace_sha256": ns.digest().hex(), "chunk_size": ns.chunk_size,
             "payload_bytes": cf.payload_len(ns), "file_bytes": cf.file_size(ns), "source": source,
             "environment": environment, "started_unix": t_start, "ended_unix": time.time(),
-            "warmup": warmup, "evaluation": evaluation, "finished": True}
+            "warmup": warmup, "evaluation": evaluation, "finished": True,
+            **({"interference": interference} if request_scoped else {})}

@@ -1,9 +1,16 @@
-"""The M4-B evaluation spec (docs/M4B_PROTOCOL.md). CPU only: no torch.
+"""The M4-B evaluation specs (docs/M4B_PROTOCOL.md; docs/M4_EVAL_V2_PROTOCOL.md). CPU only: no torch.
 
-`make_spec()` builds a spec dict; `M4_EVAL_V1` is the evaluation spec. Tests build scaled-down specs
-(tiny traces, C = 4) through the same function, so the runner, validator and analysis are exercised
-on the same code paths. The freeze (kvlab/m4_freeze.py) refuses while the protocol's first line says
-DRAFT, and its manifest records these bytes.
+`make_spec()` builds a spec dict. Tests build scaled-down specs (tiny traces, C = 4) through the same
+function, so the runner, validator and analysis are exercised on the same code paths. The freeze
+(kvlab/m4_freeze.py) refuses while the protocol's first line says DRAFT, and its manifest records these bytes.
+
+- `M4_EVAL_V1`: frozen at b858d9e and executed once; its evidence is invalid (the whole-tier warm-disk
+  rule). Its dict, and therefore its spec_sha256, are unchanged here. Its frozen tree remains the only
+  place where its evidence can be re-verified.
+- `M4_EVAL_V2`: V1's workload, seeds, sessions, configurations, budgets, statistics, deadline and stopping
+  rules, with the request-scoped warm-disk preparation (`warm_disk="request_candidates"`,
+  kvlab/warm_disk.py) and the batch drop_pagecache interference rule. Its protocol is a DRAFT; nothing for
+  it is frozen or run. A spec without a `warm_disk` key uses V1's whole-tier rule.
 
 Roles of the trace seeds, fixed before any GPU run:
 - `calibration` (41001-41004): used ONLY by the bounded GPU correctness gate
@@ -65,7 +72,7 @@ WARMUP_OVERRIDES = {"T0": {"n_requests": 4}, "T1": {"n_requests": 4},
 def make_spec(*, name, chunk_size, params, warmup_overrides, seeds, sessions, budget_s, run_dir,
               staging_chunks=4, alpha=0.05, steady_fraction=0.25, vocab=(10, 150000), protocol_doc=None,
               python=".venv/bin/python", session_env=None, require_cuda=False,
-              expected_payload_bytes=None) -> dict:
+              expected_payload_bytes=None, warm_disk=None) -> dict:
     spec = {
         "name": name, "chunk_size": chunk_size, "params": copy.deepcopy(params),
         "warmup_overrides": copy.deepcopy(warmup_overrides), "seeds": copy.deepcopy(seeds),
@@ -80,8 +87,20 @@ def make_spec(*, name, chunk_size, params, warmup_overrides, seeds, sessions, bu
         "verdict_rule": "faster/slower iff all session differences share one sign AND the Bonferroni-level "
                         "t-interval excludes 0 in that direction; otherwise inconclusive; no equivalence claims",
     }
+    if warm_disk is not None:  # absent for V1, whose dict (and digest) must not change
+        if warm_disk not in WARM_DISK_PROTOCOLS[1:]:
+            raise ValueError(f"warm_disk must be one of {WARM_DISK_PROTOCOLS[1:]}, got {warm_disk!r}")
+        spec["warm_disk"] = warm_disk
     spec["spec_sha256"] = spec_digest(spec)
     return spec
+
+
+WARM_DISK_PROTOCOLS = ("whole_tier", "request_candidates")  # V1 rule (no key), V2 rule
+
+
+def warm_disk_protocol(spec: dict) -> str:
+    """"whole_tier" (V1, no `warm_disk` key) or "request_candidates" (V2)."""
+    return spec.get("warm_disk", "whole_tier")
 
 
 def spec_digest(spec: dict) -> str:
@@ -97,8 +116,13 @@ M4_EVAL_V1 = make_spec(
     sessions={f"e{i:02d}": 44000 + i for i in range(1, 11)},
     budget_s=2700, run_dir="results/m4/M4_EVAL_V1_run", protocol_doc="docs/M4B_PROTOCOL.md",
     require_cuda=True, expected_payload_bytes=7_340_032)  # Qwen2.5-1.5B bf16, C = 256: 28 x 2 x 2 x 256 x 128 x 2 B
+M4_EVAL_V2 = make_spec(
+    name="M4_EVAL_V2", chunk_size=256, params=EVAL_PARAMS, warmup_overrides=WARMUP_OVERRIDES,
+    seeds=M4_EVAL_V1["seeds"], sessions=M4_EVAL_V1["sessions"],
+    budget_s=2700, run_dir="results/m4/M4_EVAL_V2_run", protocol_doc="docs/M4_EVAL_V2_PROTOCOL.md",
+    require_cuda=True, expected_payload_bytes=7_340_032, warm_disk="request_candidates")
 GATE_CAP_S = 900  # the bounded GPU correctness gate (docs/M4B_PROTOCOL.md §9)
-SPECS = {M4_EVAL_V1["name"]: M4_EVAL_V1}
+SPECS = {s["name"]: s for s in (M4_EVAL_V1, M4_EVAL_V2)}
 
 
 def trace(spec: dict, name: str, role: str) -> tr.Trace:
