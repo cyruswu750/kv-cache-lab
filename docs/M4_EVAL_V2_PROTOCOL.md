@@ -1,11 +1,27 @@
-# M4_EVAL_V2 protocol (DRAFT): M4-B trace evaluation with a request-scoped warm-disk preparation
+# M4_EVAL_V2 protocol: M4-B trace evaluation with a request-scoped warm-disk preparation (approved for freeze 2026-11-05, decision D38)
 
-> **Status: DRAFT, not approved for freeze.**
-> - Implemented and tested on CPU only.
-> - Nothing for M4_EVAL_V2 has been frozen or run: no GPU session, pilot or evaluation.
-> - `scripts/m4_eval.py freeze --spec M4_EVAL_V2` refuses while this first line says DRAFT.
-> - Approval of this protocol, any calibration session, the freeze and the batch each need a separate owner
->   decision (decision D36).
+> **Status: approved for freeze (2026-11-05, decision D38).**
+> - Until that approval this document was a DRAFT (decision D36). The approval changes no experimental rule.
+> - **Implementation:** reviewed, and committed in `2ec8151`..`29db781`.
+> - **Calibration (D37):** one private session on the calibration traces (session seed 45001, no evaluation seed),
+>   run on 2026-11-05.
+>   - Its launcher passed: 197.6 s of a 600 s cap.
+>   - Its evidence was valid under the V2 rules:
+>     - 0 strict mismatches;
+>     - all 488 C2 records `verified` or `empty`, with 0 prewarms;
+>     - `drop_pagecache` unchanged in every snapshot.
+>   - Its pre-declared ten-session projections were 1,976 s, 2,005 s and 2,021 s, below the 2,160 s planning
+>     threshold.
+>   - It is not performance evidence and not a guarantee. It never needed a prewarm, so that branch has run only in
+>     CPU tests. A WSL `drop_caches` event occurred about 120 s after it ended.
+>   - Its evidence is kept locally, not committed.
+> - **Accepted uncertainty (D38):** the approximate workload mapping; the unmeasured overhead and variability between
+>   sessions; possible ordinary reclaim and WSL `drop_pagecache` interference; and a formal batch that may be
+>   invalid despite the calibration.
+> - **Authorized (D38):** the freeze and its verification, at most ONE formal ten-session batch, and its frozen
+>   validation and analysis. The freeze manifest is created from the commit that contains this revision.
+> - **Not done when this revision was approved:** the freeze and the batch. No formal V2 session has run, and no V2
+>   performance result exists.
 
 This document amends `docs/M4B_PROTOCOL.md`, the frozen M4_EVAL_V1 protocol, which this branch keeps
 byte-identical (SHA-256 `adae50484edd35cb758b48080fba180a30f7bf1be9375fe19c79b37c951aec6f`, commit `b858d9e`).
@@ -218,11 +234,15 @@ definition. The analysis output states it with these limits (`kvlab.m4_analysis.
 - `tests/test_m4_v2_evidence_cpu.py`: V2 sessions, validator tampers, the interference rule, and the spec and
   freeze binding.
 
-**Not done:** any GPU session, pilot, calibration run, freeze or evaluation under this protocol.
+**Done:** the one D37 calibration session (see the status note).
+
+**Not done when this revision was approved (D38):** the freeze and the formal batch.
 
 ## 9. Before any V2 batch (each step needs separate owner approval)
 1. Review and approve this protocol, including §5's feasibility risk. Then remove DRAFT from the first line.
+   **Done:** D38.
 2. Recommended: one bounded calibration-input session under the V2 code (no evaluation seed), to check the new
    records, the interference record and the runtime, before any freeze. It is no performance evidence.
-3. Freeze `M4_EVAL_V2` (D31 pattern) and verify it.
-4. The single V2 batch, then the frozen analysis.
+   **Done:** D37, one session.
+3. Freeze `M4_EVAL_V2` (D31 pattern) and verify it. **Authorized by D38.**
+4. The single V2 batch, then the frozen analysis. **Authorized by D38:** at most one batch.
