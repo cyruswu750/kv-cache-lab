@@ -353,13 +353,14 @@ on the GPU. No timing, calibration or performance claim comes from M4-A. Decisio
   - the evaluation protocol.
 
 ## 13. M4-B preparation: C1-PA, the trace-evaluation runner, validator and analysis
-Status, 2026-11-04. The protocol is `docs/M4B_PROTOCOL.md`, DRAFT and not frozen, with decisions
-D33 and D34.
+Status, 2026-11-04. The protocol is `docs/M4B_PROTOCOL.md`, approved for freeze (D35), with
+decisions D33–D35. The freeze manifest (`results/m4/M4_EVAL_V1.freeze.json`) is created from the
+commit that records this status, and its digest is kept outside the repository.
 - **Implementation:** implemented and tested on CPU.
 - **GPU correctness gate:** passed on its third attempt (below).
 - **Timing pilot:** one timing-only feasibility pilot ran on calibration traces (D34).
-- **Formal evaluation:** not run. No evaluation session and no freeze have taken place, and no
-  performance claim exists.
+- **Formal evaluation:** not run. No evaluation session has taken place, and no performance
+  claim exists.
 
 The design choices in this section preceded all GPU work.
 
@@ -457,5 +458,6 @@ The design choices in this section preceded all GPU work.
   and the warmup, run through a private local adapter (not committed) around the unchanged
   `run_session`. It took 189 s. Ten-session projections are 1,891–1,935 s, below 80% of the
   2,700 s deadline. One session does not establish variability or guarantee completion.
-- **Not done:** the freeze, any evaluation session and any performance measurement. The runtime
-  restore-length policy, cost-model refit and asynchronous restoration are out of scope.
+- **At D35 approval, not yet done:** the freeze, any evaluation session and any performance
+  measurement. The runtime restore-length policy, cost-model refit and asynchronous restoration
+  are out of scope.
