@@ -15,6 +15,14 @@ __pycache__/
 results/**/*.pt
 results/**/*.npy
 
+# M5 output directories, generated while the stages run (docs/M5_PROTOCOL_DRAFT.md §11 item 6). They are
+# ignored so that a running stage's own outputs do not appear in the source state its sessions record; the
+# source-cleanliness and evidence-integrity checks are unchanged. Ignoring them does not publish or archive them.
+/results/m5/M5_CAL_V1_run/
+/results/m5/M5_FIT_V1/
+/results/m5/M5_EVAL_V1_run/
+/results/m5/M5_EVAL_V1_analysis/
+
 # Secrets / machine-specific
 .env
 *.token

@@ -44,7 +44,8 @@ result is a valid outcome.
 | F. Analysis (CPU) | `.venv/bin/python scripts/m5_analyze.py --eval-run-dir results/m5/M5_EVAL_V1_run --fit-dir results/m5/M5_FIT_V1 --out-dir results/m5/M5_EVAL_V1_analysis` | — |
 
 **`batch` refuses to start** unless:
-- the source tree is clean;
+- the source tree is clean: an empty `git status --porcelain`, in which the git-ignored output directories of
+  this table do not appear (§11 item 6);
 - the run directory is new;
 - for evaluation, the predictions' digest and their bindings to the artifact and to both spec digests hold.
 
@@ -344,16 +345,30 @@ matched-memory, cold-NVMe or production claim.
    - **Status:** the strict rule is kept for calibration; no alternative is implemented.
 3. **GPU monitor:** the session code records none. For calibration, the external read-only monitor described in
    §3 is used as context.
-4. **Evidence location** (results/m5/) and its archival.
+4. **Evidence location** (results/m5/) and its archival. The four declared output directories are git-ignored
+   during execution (item 6). Archiving them into Git later is a separate, explicit decision.
 5. **Sessions:** the number of sessions (3 and 4) limits interval precision, and whether that is acceptable.
-6. **Known blocker before the formal calibration batch** (found 2026-11-05 before launch; the batch was not run):
+6. **Generated output directories and source cleanliness** (blocker found 2026-11-05 before launch; resolved by
+   ignore rules; the batch was not run before the fix):
    - **The conflict:** `scripts/m5_run.py batch` writes `spec.json` and `batch_plan.json` into the formal run
-     directory under `results/m5/` before the sessions start. That directory is untracked and not ignored, so
-     every session would record a non-empty `git status --porcelain`, and the validator requires an empty one.
-   - **The consequence:** the evidence would be rejected and no fit would be possible.
-   - **What resolving it needs:** a reviewed change to how a session's source cleanliness is defined, or to where
-     formal evidence is written. It also needs CPU tests and a repeat of the GPU correctness gate before any
-     formal batch.
+     directory under `results/m5/` before the sessions start. When that directory was untracked and not ignored,
+     every session would have recorded a non-empty `git status --porcelain`, and the validator requires an empty
+     one. The evidence would have been rejected and no fit would have been possible.
+   - **The resolution:** `.gitignore` ignores exactly the four declared output directories of stages C–F:
+     `/results/m5/M5_CAL_V1_run/`, `/results/m5/M5_FIT_V1/`, `/results/m5/M5_EVAL_V1_run/` and
+     `/results/m5/M5_EVAL_V1_analysis/`. Nothing else under `results/` is ignored by this rule, and no executable
+     file lies inside these directories.
+   - **What is unchanged:**
+     - every source-cleanliness check: `batch`'s pre-launch check and the validator still require an empty
+       `git status --porcelain`, so any tracked modification or any other non-ignored untracked file still
+       blocks a launch and invalidates a session;
+     - the source hashes;
+     - the evidence-integrity checks: the expected file set of the run directory, the spec and plan bindings, and
+       the batch record;
+     - the benchmark, specification, runner, cost model and tests.
+
+     This is an ignore and documentation change only, so the GPU correctness gate (stage A, which passed on the
+     same executable code) was not repeated.
 
 ## 12. Out of scope
 Trace-level replay with the policy, matched-resource or tail comparisons, cold NVMe, admission policy,
