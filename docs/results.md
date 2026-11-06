@@ -962,17 +962,19 @@ weights):
 |---:|---:|---:|---:|---:|---:|---:|
 | 47 | 0 | 0 | −0.649002 ms | 4.444747 ms | 5.009176% | 31.151968% |
 
-- **Largest errors**, all under-predictions:
+- **The five largest errors** (all 47 rows ranked by absolute relative error; signed, negative means
+  under-prediction):
 
   | Case, L | Relative error |
   |---|---:|
   | ev-01 L=256 | −31.15% |
   | ev-08 L=768 | −30.01% |
   | ev-02 L=512 | −21.23% |
-  | ev-06 L=2560 | −9.18% |
-  | ev-07 L=3328 | −8.22% |
+  | ev-02 L=0 | +12.38% |
+  | ev-08 L=256 | +10.91% |
 
-  The largest three are the maximal candidates of the three shortest prompts.
+  The largest three are under-predictions of the maximal candidates of the three shortest prompts. Across all 47
+  rows, 27 errors are over-predictions and 20 under-predictions.
 - **Weighting:** the prediction-error aggregates weight the 47 candidate rows equally. The policy aggregates (A
   and B) weight the 8 cases equally.
 - **Reading:** a mean absolute relative error of 5.01% is not "95% accuracy". It hides errors of up to 31% on
