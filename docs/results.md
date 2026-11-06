@@ -51,6 +51,15 @@ are not established.**
     predeclared joint rule. Every verdict is conditional on the stated statistical assumptions
     and scope.
   - **The default backend remains `baseline`.** M4 does not change it.
+- **M5** (opt-in runtime restore-length policies and a held-out evaluation of a calibrated cost model; details
+  and limits below):
+  - **Validity:** calibration (3,402 samples) and evaluation (3,408) each ran once and are **valid**.
+  - **Choices:** on all 8 evaluation cases, **CostAware chose the same restore length as AlwaysRestore**. An
+    incremental benefit over AlwaysRestore was **not demonstrated**, and the delivered difference between them is
+    inconclusive.
+  - **Against Recompute:** both restoring policies were faster in aggregate on this grid, on this machine, with a
+    warm page cache.
+  - **The default backend remains `baseline`.** M5 does not change it.
 
 ## Test status (only runs that actually occurred)
 | Run | Result | Log |
@@ -63,9 +72,12 @@ are not established.**
 | GPU M0 strict (original criteria) | 10 passed, **1 FAILED (`nat_long`, known)** | `results/m3/logs/pytest_gpu_m0_strict_20261103T175241.log` |
 | M1 evidence runner, baseline and batched | 19/19 strict records each, identical records and counters | `results/m3/m1_run_{baseline,batched}_20261103T175241.json` |
 | Restore-backend mutation check | 10/10 killed (an earlier run: 9/10; a test was strengthened) | `results/m3/mutation_check_20261103T173143.txt` |
+| Full CPU suite, M5b preparation (after its review corrections) | **1160 passed**, 71 deselected | local record, not published |
+| M5 GPU correctness gate at `9785c33`: the GPU M1, M3 and M5 suites | 23 + 17 + 7 = **47 passed** | local record, not published |
 
-The full CPU suite was not rerun after the warmup follow-up. The GPU suites were last run in M3,
-before VAL-006.
+Within M3, the full CPU suite was not rerun after the warmup follow-up, and the GPU suites were last run
+before VAL-006. The M4 GPU gate (46 tests) is recorded in `docs/M4B_PROTOCOL.md` and `docs/design.md`. The M5
+gate reran the GPU M1 and M3 suites; it did not include the GPU M0.1 or M0 strict suites.
 
 ## M0 and M0.1: KV round trip, numerical contract, audit
 **M0** (`results/m0/`, read-only) exported a real KV prefix GPU → CPU → GPU and restored it.
@@ -764,6 +776,287 @@ Its analyzer is expected to exit 3.
 - **Requirement:** the Python environment must hold the frozen package versions
   (`requirements.txt`; recorded in each manifest's `stack`).
 - **Tests:** `tests/test_m4_reconstruct.py` covers the tool on fixture repositories.
+
+## M5: runtime restore-length policies and a held-out evaluation of a calibrated cost model
+Protocol: `docs/M5_PROTOCOL_DRAFT.md`. It was executed once (stages A–F) and has a retrospective status update.
+Design: `docs/M5_DESIGN.md`. Decisions: D40–D43.
+
+**Headline:**
+- **Choices:** on all 8 held-out evaluation cases, **CostAware chose the same restore length as
+  AlwaysRestore**: the maximal feasible prefix.
+- **Selection quality:** on this grid the calibrated cost model did not change any decision, so an incremental
+  benefit of CostAware over AlwaysRestore was **not demonstrated**.
+- **Delivered latency:** the measured difference between the two policies is inconclusive. Both restoring
+  policies were faster than Recompute in aggregate.
+
+### What was built (opt-in; the default path is unchanged)
+**The engine** (`kvlab/restore_policy.py`):
+- **Planner:** side-effect free. It lists the feasible restore lengths `0, C, …` under the first-token rule,
+  using index membership only.
+- **Policies:**
+  - **AlwaysRestore:** the longest feasible prefix;
+  - **Recompute:** L = 0;
+  - **FixedChunks(k):** exactly k chunks;
+  - **CostAware:** the candidate that minimizes a cost-model objective.
+- **Execution:** the engine validates the selection and restores exactly the chosen prefix, falling back to the
+  verified prefix on a read failure.
+- **Default:** with `policy=None` the M1–M4 flow is unchanged, and the default backend stays `baseline`.
+
+**The cost model** (`kvlab/restore_cost.py`): schema `kvlab-restore-cost-v1`. It has 9 non-negative
+coefficients fitted by exact NNLS. It records a digest, a compatibility record and a declared domain, and falls
+back to always-restore outside that domain.
+
+**Recompute is not a cache-disabled baseline:**
+- it runs through the same planner and engine with L = 0, so the whole prompt is prefilled;
+- the request's admissions (its absent complete chunks) are still stored, exactly as for every other run.
+
+**Backend for every M5 measurement:** the opt-in `batched` backend with a staging group of 4:
+- restoration is synchronous, with one contiguous host-to-device copy per chunk into bounded staging;
+- it is not pipelined and does not overlap with compute.
+
+### Setup
+- **Grid and holdout:**
+  - **Calibration:** 12 cases, 81 (case, candidate) rows.
+  - **Evaluation:** 8 cases and 47 candidates.
+  - **Holdout:** the two are separated by configuration, not by id: new prompt lengths, tier layouts and
+    admission counts, with new token content, inside the calibrated domain.
+  - **Fixed in advance:** the full grid, prompts and seeds (protocol §3).
+- **Evaluation cases** (tiers by chunk: h = host, d = disk; m = admitted chunks):
+
+  | Case | N | Tiers | m | Candidates L |
+  |---|---:|---|---:|---|
+  | ev-01 | 400 | d | 0 | 0, 256 |
+  | ev-02 | 700 | hh | 0 | 0–512 |
+  | ev-03 | 1250 | dhd | 1 | 0–768 |
+  | ev-04 | 1700 | hd | 4 | 0–512 |
+  | ev-05 | 2400 | hhhdd | 4 | 0–1280 |
+  | ev-06 | 3000 | ddddhhhhhh | 1 | 0–2560 |
+  | ev-07 | 3850 | hhhhhhhhhhddd | 2 | 0–3328 |
+  | ev-08 | 1000 | ddd | 0 | 0–768 |
+
+  Candidates run in steps of 256.
+- **Runs:** every evaluation repetition runs each case's candidates as FixedChunks, plus CostAware,
+  AlwaysRestore and Recompute: 71 runs.
+- **State:** every sample starts from the same declared state, reset after each run.
+- **Timed region:** synchronize, then `prefill_request`, then the first-token argmax. It therefore includes
+  planning and, for CostAware, the model evaluation.
+- **Strict checks (untimed, every sample):**
+  - the restored bytes are compared with the case's source bank;
+  - the first-token logits are compared bitwise with a reference seeded from the same bank at the same split,
+    that is, the sample's actual restore length. The reference has the same provenance and the same split.
+
+  This is not a comparison with full-prefill output (D10).
+- **Page cache:** warm. The disk files are verified resident before every sample. Under the strict rule, any
+  `drop_pagecache` change inside a sample window invalidates the batch.
+
+### Execution and validity
+
+| Stage | Source | Sessions | Samples | Elapsed | Outcome |
+|---|---|---:|---|---:|---|
+| A. GPU correctness gate | `9785c33` | — | 47 tests (M1 23, M3 17, M5 7) | 106.2 s | PASS |
+| B. Diagnostic pilot (calibration s01 only) | `9785c33` | 1 | 1,134 | 262.4 s | session-valid; **diagnostic only**, excluded from every result |
+| C. Calibration `M5_CAL_V1` | `a3c6341` | 3 | 3,402 = 486 warmup + 2,916 measured | 773.7 s | succeeded; full validation passed |
+| D. Fit and frozen predictions `M5_FIT_V1` | `a3c6341` | — | 81 rows; predictions for 47 candidates | — | exit 0 |
+| E. Evaluation `M5_EVAL_V1` | `a3c6341` | 4 | 3,408 = 568 warmup + 2,840 measured | 660.1 s | succeeded; full validation passed |
+| F. Analysis | `a3c6341` | — | — | — | exit 0 |
+
+- **Executions:** each stage ran once, with no retry, replacement or filtering. The executable code was
+  byte-identical across all stages (`a3c6341` differs from `9785c33` only in documentation and an ignore rule
+  for the M5 output directories).
+- **Both full validations:**
+  - 0 problems and 0 strict problems;
+  - logits equal, restored bytes equal, and selected = actual length for all 3,402 + 3,408 samples;
+  - on the evaluation runs, every policy sample executed its frozen choice;
+  - no page-cache error or non-resident file;
+  - `drop_pagecache` constant within each batch.
+- **Predictions:** frozen before the evaluation launch and bound to it by digest.
+
+### The fitted model (`M5_FIT_V1`)
+- **Artifact:** digest `f9fe6543f09b893b3b2815da9664eac0560e4eada20ce3585a9772979fff5d76`; uniform weighting
+  (one row per calibration case and candidate).
+- **Fit:** 12 cases, 81 rows, rank 9 of 9, condition number 28.4.
+- **In-sample residuals:** max |residual| 22.8 ms, max relative 53%. These are training residuals, not
+  held-out accuracy.
+- **Coefficients (ms):**
+
+  | Path | Coefficients |
+  |---|---|
+  | full | const 20.88, N_kt 40.63, N_kt²/2 7.63 |
+  | partial | const 17.65, host_chunks **0.0**, disk_chunks 1.52, S_kt 53.78, S_kt·(L_kt + S_kt/2) 8.66 |
+  | shared | admitted_chunks 5.50 |
+
+- **The zero `host_chunks` coefficient:** it is a fitted value at the non-negativity bound, the marginal
+  per-host-chunk term given the other terms on this calibration design. It does **not** mean that host
+  restoration is free.
+
+### Results (stage F; `analysis.json`; 2,000 block-bootstrap replicates; 95% intervals)
+"Best" means best among the measured candidates: the smallest mean of the measured FixedChunks latencies, with
+ties going to the larger L. The possibly-best set comes from simultaneous pairwise intervals within a case
+(α = 0.05).
+
+**Per case:**
+
+| Case | Measured best | Possibly-best set | CostAware = AlwaysRestore chose | Naive regret (ms) | Cross-evaluated (ms) |
+|---|---:|---|---:|---:|---:|
+| ev-01 | 0 | {0, 256} (ambiguous) | 256 | 3.610106 | 3.610106 |
+| ev-02 | 512 | {512} | 512 | 0 | −5.737238 |
+| ev-03 | 768 | {768} | 768 | 0 | 0 |
+| ev-04 | 512 | {512} | 512 | 0 | 0 |
+| ev-05 | 1280 | {1280} | 1280 | 0 | 0 |
+| ev-06 | 2560 | {2560} | 2560 | 0 | 0 |
+| ev-07 | 3328 | {3328} | 3328 | 0 | 0 |
+| ev-08 | 512 | {512, 768} (ambiguous) | 768 | 2.036428 | 2.036428 |
+
+Recompute (L = 0) was the measured best only on ev-01.
+
+**A. Candidate selection quality** (the FixedChunks latencies of each policy's selected candidate; equal case
+weights):
+
+| Policy | Agreement with the measured best (noisy point estimate) | Naive mean regret (ms) | Signed cross-evaluated mean (ms) |
+|---|---:|---|---|
+| CostAware | 6/8 | 0.705817 [0.026955, 1.698408] | −0.011338 [−1.233775, 1.452197] |
+| AlwaysRestore | 6/8 | 0.705817 [0.026955, 1.698408] | −0.011338 [−1.233775, 1.452197] |
+| Recompute | 1/8 | 48.271094 [47.277654, 49.497355] | 47.553939 [45.934567, 49.195781] |
+
+- **Identical rows:** CostAware's and AlwaysRestore's rows are identical because their choices are identical.
+- **The ambiguous cases:** on ev-01 and ev-08 the chosen candidate lies inside the possibly-best set. That is
+  not proof that the choice is optimal, or equivalent to the measured best.
+- **Naive regret:** descriptive and biased high.
+- **The cross-evaluated value:**
+  - **definition:** select the reference on one session partition and evaluate it on the other ({s01, s03}
+    and {s02, s04}, weights ½ and ½);
+  - **sign:** it is signed, and negative values are kept;
+  - **the near-zero aggregate includes cancellation:** it is the equal-weight mean of +3.610106 (ev-01),
+    −5.737238 (ev-02), +2.036428 (ev-08) and 0 on the other five cases;
+  - **ev-02's negative contribution:** the reference selected on {s02, s04} was L = 256. On {s01, s03} it
+    measured 11.47 ms slower than the chosen 512. The 512 candidate itself averaged 28.36 ms on {s01, s03} and
+    44.63 ms on {s02, s04}: a large between-session difference.
+
+**B. Delivered policy latency** (the policy runs themselves, paired per repetition; equal case weights):
+
+| Difference | Mean (ms) | 95% interval (ms) | Direction |
+|---|---:|---|---|
+| CostAware − AlwaysRestore | +1.036899 | [−0.071463, 2.146296] | inconclusive |
+| CostAware − Recompute | −46.479271 | [−48.010157, −44.972222] | below 0 |
+| AlwaysRestore − Recompute | −47.516170 | [−48.984543, −45.960384] | below 0 |
+
+- **Per-case point estimates** (no per-case intervals are reported):
+
+  | Difference | ev-01 | ev-02 | ev-03 | ev-04 | ev-05 | ev-06 | ev-07 | ev-08 |
+  |---|---:|---:|---:|---:|---:|---:|---:|---:|
+  | CostAware − AlwaysRestore | −1.549 | +4.307 | −0.0002 | +1.122 | +2.011 | +0.916 | −0.574 | +2.063 |
+  | AlwaysRestore − Recompute | **+4.591** | −10.110 | −25.812 | −11.566 | −48.778 | −114.825 | −165.065 | −8.565 |
+
+- **ev-01's +4.591 ms** is the AlwaysRestore − Recompute point estimate for that one case (N = 400, one disk
+  chunk, L = 256). It is not a general "restore overhead".
+- **The CostAware − AlwaysRestore difference:**
+  - **not a selection effect:** both policies made identical choices, so the difference cannot be attributed to
+    better or worse candidate selection;
+  - **not an isolated measurement of planning overhead:** the policy runs are separate samples at different
+    positions in each repetition's seeded order, so they are exposed to the same noise and thermal drift as
+    everything else.
+
+**C. Prediction error** (`predict_ms` with the case's admission count, minus the measured candidate mean):
+
+| Rows | Unavailable | Fallbacks | Mean signed error | Mean absolute error | Mean absolute relative error | Max absolute relative error |
+|---:|---:|---:|---:|---:|---:|---:|
+| 47 | 0 | 0 | −0.649002 ms | 4.444747 ms | 5.009176% | 31.151968% |
+
+- **Largest errors**, all under-predictions:
+
+  | Case, L | Relative error |
+  |---|---:|
+  | ev-01 L=256 | −31.15% |
+  | ev-08 L=768 | −30.01% |
+  | ev-02 L=512 | −21.23% |
+  | ev-06 L=2560 | −9.18% |
+  | ev-07 L=3328 | −8.22% |
+
+  The largest three are the maximal candidates of the three shortest prompts.
+- **Weighting:** the prediction-error aggregates weight the 47 candidate rows equally. The policy aggregates (A
+  and B) weight the 8 cases equally.
+- **Reading:** a mean absolute relative error of 5.01% is not "95% accuracy". It hides errors of up to 31% on
+  individual candidates.
+
+### Telemetry (context only; never an exclusion or weighting rule)
+- **The monitor:** external and read-only, polling `nvidia-smi` about every 500 ms, outside the benchmark
+  processes. Its rows are sampled observations.
+- **Coverage:**
+  - calibration: 1,482 rows in the batch window (95.8% of nominal);
+  - evaluation: 1,259 rows (95.4%);
+  - every sample had a monitor row within 0.6 s.
+- **Software thermal slowdown**, the share of monitor rows by session. It rose across consecutive sessions, with
+  no cooling intervals, as declared:
+
+  | Batch | s01 | s02 | s03 | s04 |
+  |---|---:|---:|---:|---:|
+  | calibration | 30/491 | 139/494 | 162/496 | — |
+  | evaluation | 1/312 | 40/324 | 96/322 | 117/299 |
+
+- **Measured samples whose nearest monitor row showed the flag:**
+
+  | Batch | Samples |
+  |---|---:|
+  | calibration | 548/2,916 |
+  | evaluation | 513/2,840 |
+
+  These are associations with the nearest sampled row. They are not continuous proof that a particular request
+  was throttled.
+- **No hardware flags:** no hardware slowdown, hardware thermal or power-brake flag appeared.
+
+### Scope and limitations
+- **Setting:** one machine and software stack (RTX 4080 Laptop GPU under WSL2), a warm page cache, batch 1,
+  synchronous first-token latency.
+- **Grid:** one fixed 8-case evaluation grid (not sampled) and one fitted model.
+- **Intervals:**
+  - they are conditional bootstrap intervals, given the fixed model, the grid and the observed sessions (whole
+    repetitions resampled in circular blocks of 3 within each session; sessions are fixed strata);
+  - they do not cover all shared thermal drift between back-to-back sessions, dependence across cases, or the
+    uncertainty of fitting the model;
+  - there is no error control across cases.
+- **Not claimed:** p95 or tail latency, service-level TTFT, matched-memory superiority, cold-device
+  performance, pipelining or overlap, vLLM integration, or production performance.
+
+### Completion and future work
+**Completed:**
+- the runtime restore-length policy implementation (opt-in);
+- this first calibration and held-out evaluation.
+
+**Not demonstrated:** incremental value of CostAware over AlwaysRestore.
+
+**Future work:**
+- **What could be studied:** regimes where restoring and recomputing cross over (for example short, disk-only
+  prefixes such as ev-01, where Recompute measured best), and the large under-predictions for short prompts.
+- **How:** in a separately declared experiment, with its own grid, holdout and analysis plan fixed before
+  measurement. Workloads must not be chosen merely to obtain a favourable result.
+- **The current evaluation data have been observed:** they cannot serve as an untouched holdout for later model
+  development.
+
+### Evidence identifiers
+- **Sources:**
+  - **Experiment source:** `a3c63419b6504b20ce419eff62fea2c64f26fb3e` (stages C–F).
+  - **Gate and pilot source:** `9785c33cd1fb753c46f97cd7930d763ed49e94b1`.
+  - **This documentation:** written in later commits that change documentation only.
+- **Specifications:**
+  - calibration `M5_CAL_V1`: `ab1a506ebf1440e46c9166712b3253e3b6ffadf0e52a8b099dae99199631812c`;
+  - evaluation `M5_EVAL_V1`: `5e6ecdc4c6b8bb503eaba3b62a1b956f5e9cbda05efe749bf3f5e636cc9675af`.
+- **Batch plans** (sha256, recorded as `freeze_manifest_sha256`):
+  - calibration: `322b6ef8837b121c352c16250b31714da88a1f5aacc4db9ea6e052d65677bbce`;
+  - evaluation: `e9b0ade40760fa3582ca10d21942dfe3f3912a84e49e3f546a5a6a6124b267c6`.
+- **Cost model:**
+  - artifact digest `f9fe6543f09b893b3b2815da9664eac0560e4eada20ce3585a9772979fff5d76`;
+  - file sha256 `c461ffe14e906938b76211309685bd15b4988a95a45e4c872495eb1f47858266`.
+- **Predictions:**
+  - internal digest `e0d5c335cc059088486b7b5925c334e1db7b1b34b42ab54c42fa40f868aa5741`;
+  - file sha256 `49440d341c3e249228785c0ba53aa905cc72f2630c8d20fca518ba662c67de3c`.
+- **Analysis:** `analysis.json` sha256 `b49e0af63097201c274c0489f4674ceee1ad38db3fa36485935e864d7782f682`.
+- **Raw artifacts:** retained locally and **not yet published**. They are git-ignored:
+  - `results/m5/M5_CAL_V1_run/`;
+  - `results/m5/M5_FIT_V1/`;
+  - `results/m5/M5_EVAL_V1_run/`;
+  - `results/m5/M5_EVAL_V1_analysis/`.
+
+  The private records of the execution conditions and the telemetry are local and not part of the repository.
 
 ## Reproducing
 Commands are in the README. Each evidence directory keeps its raw session JSON, logs and
