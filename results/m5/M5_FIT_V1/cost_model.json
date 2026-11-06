@@ -1,0 +1,124 @@
+{
+ "calibration": {
+  "case_ids": [
+   "cal-01",
+   "cal-02",
+   "cal-03",
+   "cal-04",
+   "cal-05",
+   "cal-06",
+   "cal-07",
+   "cal-08",
+   "cal-09",
+   "cal-10",
+   "cal-11",
+   "cal-12"
+  ],
+  "cases_sha256": "32c0c866f8fd8e612475004e6560fd0a4a672d920934b92e49dd79d4e051c542",
+  "evaluation_case_ids": [
+   "ev-01",
+   "ev-02",
+   "ev-03",
+   "ev-04",
+   "ev-05",
+   "ev-06",
+   "ev-07",
+   "ev-08"
+  ]
+ },
+ "coefficients_ms": {
+  "full": {
+   "const": 20.8823169779709,
+   "n_kt": 40.629576750031454,
+   "n_pairs_kt2": 7.630342967351315
+  },
+  "partial": {
+   "const": 17.650102773885603,
+   "disk_chunks": 1.5237433868916201,
+   "host_chunks": 0.0,
+   "s_kt": 53.78470662157151,
+   "s_pairs_kt2": 8.658398566334231
+  },
+  "shared": {
+   "admitted_chunks": 5.504209152850419
+  }
+ },
+ "compatibility": {
+  "chunk_size": 256,
+  "namespace_digest": "e0b859da5ae19b728e7ee4d941914d59928bca54d582b444645f4db8ab33bde3",
+  "restore_backend": "batched",
+  "restore_staging_chunks": 4
+ },
+ "digest": "f9fe6543f09b893b3b2815da9664eac0560e4eada20ce3585a9772979fff5d76",
+ "domain": {
+  "admitted_chunks": [
+   0,
+   4
+  ],
+  "disk_chunks_max": 12,
+  "host_chunks_max": 12,
+  "prompt_len": [
+   300,
+   4000
+  ],
+  "restore_chunks_max": 14,
+  "suffix_len": [
+   44,
+   3744
+  ]
+ },
+ "features": {
+  "full": [
+   "const",
+   "n_kt",
+   "n_pairs_kt2"
+  ],
+  "partial": [
+   "const",
+   "host_chunks",
+   "disk_chunks",
+   "s_kt",
+   "s_pairs_kt2"
+  ],
+  "shared": [
+   "admitted_chunks"
+  ]
+ },
+ "fit": {
+  "condition_number": 28.373228779554815,
+  "max_abs_relative_residual": 0.5315063895445693,
+  "max_abs_residual_ms": 22.829037631279625,
+  "method": "nnls_exact_support_enumeration_column_scaled",
+  "n_cases": 12,
+  "n_rows": 81,
+  "rank": 9,
+  "weighting": "uniform"
+ },
+ "objective": "policy objective = predicted latency minus the shared admitted_chunks term, which is identical for every candidate of one request when the candidate does not change what is admitted",
+ "provenance": {
+  "calibration_evidence_sha256": {
+   "batch_plan.json": "322b6ef8837b121c352c16250b31714da88a1f5aacc4db9ea6e052d65677bbce",
+   "batch_record.json": "ec966aa3f307c75d03e29bdb3028ffe8e2969f7e4ebbe65b08acf6be771f5df7",
+   "logs/session_s01.log": "be37d21f2d8d7eeddff6ef7dce7e751d88a1eef2b86e34e2a58fd5d600a87a69",
+   "logs/session_s02.log": "4a4085806ac35b2cbc43a10ab1ec2cb832194fc5861343ba5259b3b9df0817d3",
+   "logs/session_s03.log": "977ed55d36dc37e1f0132773e6b882d9c7a1873903b4dd6d81f1f3464dd14ef7",
+   "session_s01.json": "eb01ed0d401376178eb09d02b505f165e57442991939fce0c67b0a8e6283dacf",
+   "session_s02.json": "32185d8d4b556e1e057f79c1daad22bf468d34ceda821d265db9183cfee5f6db",
+   "session_s03.json": "c529f17e83771c2c368063c6e5f37007cf8b6d395b02b7a8aa483ad049fc4c29",
+   "spec.json": "f355717927f4d5fdeec1ebe0956e41e51a2832aef8a92f46fc5298250a7200ab"
+  },
+  "calibration_spec_sha256": "ab1a506ebf1440e46c9166712b3253e3b6ffadf0e52a8b099dae99199631812c",
+  "evaluation_spec_sha256": "5e6ecdc4c6b8bb503eaba3b62a1b956f5e9cbda05efe749bf3f5e636cc9675af",
+  "means": "arithmetic mean of measured FixedChunks latencies over all sessions (warmups excluded)",
+  "source_files_sha256": "195c173660d7de103b41c187c27f87d2d1b9404967aa5f4807865712b15f3960",
+  "source_git_head": "a3c63419b6504b20ce419eff62fea2c64f26fb3e"
+ },
+ "schema": "kvlab-restore-cost-v1",
+ "target": "case mean of synchronous first-token latency (ms) of one candidate restore length, measured from a controlled pre-request state",
+ "units": {
+  "chunk_features": "chunks",
+  "latency": "ms",
+  "pair_features": "kt^2",
+  "token_features": "kilotokens (1 kt = 1000 tokens)"
+ }
+}

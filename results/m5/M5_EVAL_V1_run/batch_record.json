@@ -1,0 +1,195 @@
+{
+ "record_version": 2,
+ "experiment": "M5_EVAL_V1",
+ "freeze_manifest_sha256": "e9b0ade40760fa3582ca10d21942dfe3f3912a84e49e3f546a5a6a6124b267c6",
+ "pre_launch_verification": {
+  "problems": [],
+  "checks": "clean source, new run dir, frozen-file bindings"
+ },
+ "budget_s": 2400,
+ "clock": "time.monotonic; deadline = first launch + budget_s",
+ "wrapper_pid": 176601,
+ "execution_status": "succeeded",
+ "stop": null,
+ "launched_at": "2026-11-05T16:41:51-0800",
+ "launched_unix": 1793925711.987202,
+ "sessions": [
+  {
+   "session": "s01",
+   "argv": [
+    "/home/cyrus/projects/kv-cache-lab/.venv/bin/python",
+    "scripts/m5_run.py",
+    "session",
+    "--split",
+    "evaluation",
+    "--run-dir",
+    "results/m5/M5_EVAL_V1_run",
+    "--session",
+    "s01",
+    "--cost-model",
+    "results/m5/M5_FIT_V1/cost_model.json",
+    "--predictions",
+    "results/m5/M5_FIT_V1/predictions.json"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_s01.log",
+   "pid": 176655,
+   "started_s": 0.012210500994115137,
+   "ended_s": 162.80405770499783,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "51e6b4215fff64b8792d4378789a3b1f77d039659d17cf9c486301f744294441",
+    "bytes": 4343890
+   },
+   "monitor_csv_present": false,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "s02",
+   "argv": [
+    "/home/cyrus/projects/kv-cache-lab/.venv/bin/python",
+    "scripts/m5_run.py",
+    "session",
+    "--split",
+    "evaluation",
+    "--run-dir",
+    "results/m5/M5_EVAL_V1_run",
+    "--session",
+    "s02",
+    "--cost-model",
+    "results/m5/M5_FIT_V1/cost_model.json",
+    "--predictions",
+    "results/m5/M5_FIT_V1/predictions.json"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_s02.log",
+   "pid": 176795,
+   "started_s": 163.0347631540062,
+   "ended_s": 333.9369640980003,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "0f5e817c12b0f12cdd80ec0620aea13b25225604a1458a1bde4cc4fdd5f3fb55",
+    "bytes": 4344203
+   },
+   "monitor_csv_present": false,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "s03",
+   "argv": [
+    "/home/cyrus/projects/kv-cache-lab/.venv/bin/python",
+    "scripts/m5_run.py",
+    "session",
+    "--split",
+    "evaluation",
+    "--run-dir",
+    "results/m5/M5_EVAL_V1_run",
+    "--session",
+    "s03",
+    "--cost-model",
+    "results/m5/M5_FIT_V1/cost_model.json",
+    "--predictions",
+    "results/m5/M5_FIT_V1/predictions.json"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_s03.log",
+   "pid": 176938,
+   "started_s": 334.2307298550004,
+   "ended_s": 503.337413043002,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "fbc65a4bc9246507839b8efd12380b83a86a4b2778941c5d21ca235d6e37deb5",
+    "bytes": 4343897
+   },
+   "monitor_csv_present": false,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  },
+  {
+   "session": "s04",
+   "argv": [
+    "/home/cyrus/projects/kv-cache-lab/.venv/bin/python",
+    "scripts/m5_run.py",
+    "session",
+    "--split",
+    "evaluation",
+    "--run-dir",
+    "results/m5/M5_EVAL_V1_run",
+    "--session",
+    "s04",
+    "--cost-model",
+    "results/m5/M5_FIT_V1/cost_model.json",
+    "--predictions",
+    "results/m5/M5_FIT_V1/predictions.json"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "log": "logs/session_s04.log",
+   "pid": 177058,
+   "started_s": 503.41640357299184,
+   "ended_s": 660.1303366640059,
+   "returncode": 0,
+   "killed": false,
+   "leftover_cleanup": null,
+   "session_json": {
+    "present": true,
+    "parses": true,
+    "sha256": "ce86fb2ad05dcbd9be0bdaab5b5e23f8d803fc4eeea88e21d299fbf2645bca93",
+    "bytes": 4343920
+   },
+   "monitor_csv_present": false,
+   "runner_reported": {
+    "correctness_all": null,
+    "n_block_failures": null,
+    "n_excluded": null,
+    "n_measured": null,
+    "n_samples": null
+   },
+   "scratch_removed": null
+  }
+ ],
+ "not_launched": [],
+ "elapsed_s": 660.1303366640059,
+ "finalized_s": 660.2209511709952,
+ "signals_received": [],
+ "finished_at": "2026-11-05T16:52:52-0800"
+}

@@ -1,0 +1,583 @@
+[
+ {
+  "admitted_chunks": 0,
+  "candidates": [
+   {
+    "mean_ms": 41.40509041666666,
+    "n_samples": 36,
+    "restore_len": 0
+   },
+   {
+    "mean_ms": 42.95157702777777,
+    "n_samples": 36,
+    "restore_len": 256
+   }
+  ],
+  "case_id": "cal-01",
+  "prompt_len": 300,
+  "tiers": [
+   "host"
+  ]
+ },
+ {
+  "admitted_chunks": 0,
+  "candidates": [
+   {
+    "mean_ms": 40.92002819444445,
+    "n_samples": 36,
+    "restore_len": 0
+   },
+   {
+    "mean_ms": 40.30675763888888,
+    "n_samples": 36,
+    "restore_len": 256
+   },
+   {
+    "mean_ms": 36.53860369444445,
+    "n_samples": 36,
+    "restore_len": 512
+   }
+  ],
+  "case_id": "cal-02",
+  "prompt_len": 600,
+  "tiers": [
+   "disk",
+   "disk"
+  ]
+ },
+ {
+  "admitted_chunks": 1,
+  "candidates": [
+   {
+    "mean_ms": 69.67199958333335,
+    "n_samples": 36,
+    "restore_len": 0
+   },
+   {
+    "mean_ms": 64.38320527777779,
+    "n_samples": 36,
+    "restore_len": 256
+   },
+   {
+    "mean_ms": 57.01968727777777,
+    "n_samples": 36,
+    "restore_len": 512
+   },
+   {
+    "mean_ms": 47.15433441666667,
+    "n_samples": 36,
+    "restore_len": 768
+   }
+  ],
+  "case_id": "cal-03",
+  "prompt_len": 1100,
+  "tiers": [
+   "host",
+   "disk",
+   "host"
+  ]
+ },
+ {
+  "admitted_chunks": 3,
+  "candidates": [
+   {
+    "mean_ms": 104.00345555555556,
+    "n_samples": 36,
+    "restore_len": 0
+   },
+   {
+    "mean_ms": 106.99095761111113,
+    "n_samples": 36,
+    "restore_len": 256
+   },
+   {
+    "mean_ms": 91.04014374999998,
+    "n_samples": 36,
+    "restore_len": 512
+   }
+  ],
+  "case_id": "cal-04",
+  "prompt_len": 1500,
+  "tiers": [
+   "disk",
+   "host"
+  ]
+ },
+ {
+  "admitted_chunks": 4,
+  "candidates": [
+   {
+    "mean_ms": 150.30328802777774,
+    "n_samples": 36,
+    "restore_len": 0
+   },
+   {
+    "mean_ms": 159.48654327777777,
+    "n_samples": 36,
+    "restore_len": 256
+   },
+   {
+    "mean_ms": 143.32910505555554,
+    "n_samples": 36,
+    "restore_len": 512
+   },
+   {
+    "mean_ms": 127.54918347222221,
+    "n_samples": 36,
+    "restore_len": 768
+   },
+   {
+    "mean_ms": 114.89389377777778,
+    "n_samples": 36,
+    "restore_len": 1024
+   }
+  ],
+  "case_id": "cal-05",
+  "prompt_len": 2100,
+  "tiers": [
+   "host",
+   "host",
+   "disk",
+   "disk"
+  ]
+ },
+ {
+  "admitted_chunks": 3,
+  "candidates": [
+   {
+    "mean_ms": 75.6728261111111,
+    "n_samples": 36,
+    "restore_len": 0
+   }
+  ],
+  "case_id": "cal-06",
+  "prompt_len": 900,
+  "tiers": []
+ },
+ {
+  "admitted_chunks": 2,
+  "candidates": [
+   {
+    "mean_ms": 122.50269702777774,
+    "n_samples": 36,
+    "restore_len": 0
+   },
+   {
+    "mean_ms": 126.09632702777776,
+    "n_samples": 36,
+    "restore_len": 256
+   },
+   {
+    "mean_ms": 112.89311533333334,
+    "n_samples": 36,
+    "restore_len": 512
+   },
+   {
+    "mean_ms": 99.49541008333334,
+    "n_samples": 36,
+    "restore_len": 768
+   },
+   {
+    "mean_ms": 84.02515211111111,
+    "n_samples": 36,
+    "restore_len": 1024
+   },
+   {
+    "mean_ms": 75.1295166388889,
+    "n_samples": 36,
+    "restore_len": 1280
+   }
+  ],
+  "case_id": "cal-07",
+  "prompt_len": 1800,
+  "tiers": [
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "disk"
+  ]
+ },
+ {
+  "admitted_chunks": 1,
+  "candidates": [
+   {
+    "mean_ms": 216.41753369444444,
+    "n_samples": 36,
+    "restore_len": 0
+   },
+   {
+    "mean_ms": 256.578656,
+    "n_samples": 36,
+    "restore_len": 256
+   },
+   {
+    "mean_ms": 240.08482644444445,
+    "n_samples": 36,
+    "restore_len": 512
+   },
+   {
+    "mean_ms": 221.19272230555555,
+    "n_samples": 36,
+    "restore_len": 768
+   },
+   {
+    "mean_ms": 209.06804358333332,
+    "n_samples": 36,
+    "restore_len": 1024
+   },
+   {
+    "mean_ms": 187.18522022222223,
+    "n_samples": 36,
+    "restore_len": 1280
+   },
+   {
+    "mean_ms": 167.66566352777778,
+    "n_samples": 36,
+    "restore_len": 1536
+   },
+   {
+    "mean_ms": 147.5914,
+    "n_samples": 36,
+    "restore_len": 1792
+   },
+   {
+    "mean_ms": 129.315609,
+    "n_samples": 36,
+    "restore_len": 2048
+   },
+   {
+    "mean_ms": 111.88320136111112,
+    "n_samples": 36,
+    "restore_len": 2304
+   },
+   {
+    "mean_ms": 99.37667044444444,
+    "n_samples": 36,
+    "restore_len": 2560
+   },
+   {
+    "mean_ms": 79.73639533333333,
+    "n_samples": 36,
+    "restore_len": 2816
+   },
+   {
+    "mean_ms": 63.69322255555557,
+    "n_samples": 36,
+    "restore_len": 3072
+   }
+  ],
+  "case_id": "cal-08",
+  "prompt_len": 3500,
+  "tiers": [
+   "host",
+   "host",
+   "host",
+   "host",
+   "host",
+   "host",
+   "host",
+   "host",
+   "host",
+   "host",
+   "host",
+   "host"
+  ]
+ },
+ {
+  "admitted_chunks": 2,
+  "candidates": [
+   {
+    "mean_ms": 230.96809874999997,
+    "n_samples": 36,
+    "restore_len": 0
+   },
+   {
+    "mean_ms": 285.65272641666667,
+    "n_samples": 36,
+    "restore_len": 256
+   },
+   {
+    "mean_ms": 268.0152974166666,
+    "n_samples": 36,
+    "restore_len": 512
+   },
+   {
+    "mean_ms": 249.56176833333333,
+    "n_samples": 36,
+    "restore_len": 768
+   },
+   {
+    "mean_ms": 233.5259923611111,
+    "n_samples": 36,
+    "restore_len": 1024
+   },
+   {
+    "mean_ms": 213.55393569444448,
+    "n_samples": 36,
+    "restore_len": 1280
+   },
+   {
+    "mean_ms": 202.65851305555555,
+    "n_samples": 36,
+    "restore_len": 1536
+   },
+   {
+    "mean_ms": 189.35263083333334,
+    "n_samples": 36,
+    "restore_len": 1792
+   },
+   {
+    "mean_ms": 167.36240527777778,
+    "n_samples": 36,
+    "restore_len": 2048
+   },
+   {
+    "mean_ms": 150.3021431666667,
+    "n_samples": 36,
+    "restore_len": 2304
+   },
+   {
+    "mean_ms": 131.08548980555554,
+    "n_samples": 36,
+    "restore_len": 2560
+   },
+   {
+    "mean_ms": 112.58949108333333,
+    "n_samples": 36,
+    "restore_len": 2816
+   },
+   {
+    "mean_ms": 104.45918547222225,
+    "n_samples": 36,
+    "restore_len": 3072
+   }
+  ],
+  "case_id": "cal-09",
+  "prompt_len": 3700,
+  "tiers": [
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "disk"
+  ]
+ },
+ {
+  "admitted_chunks": 1,
+  "candidates": [
+   {
+    "mean_ms": 250.71965647222225,
+    "n_samples": 36,
+    "restore_len": 0
+   },
+   {
+    "mean_ms": 311.54292241666667,
+    "n_samples": 36,
+    "restore_len": 256
+   },
+   {
+    "mean_ms": 285.59098400000005,
+    "n_samples": 36,
+    "restore_len": 512
+   },
+   {
+    "mean_ms": 271.7772798611111,
+    "n_samples": 36,
+    "restore_len": 768
+   },
+   {
+    "mean_ms": 252.4876792222222,
+    "n_samples": 36,
+    "restore_len": 1024
+   },
+   {
+    "mean_ms": 237.37235944444444,
+    "n_samples": 36,
+    "restore_len": 1280
+   },
+   {
+    "mean_ms": 227.7523170277778,
+    "n_samples": 36,
+    "restore_len": 1536
+   },
+   {
+    "mean_ms": 202.64764116666666,
+    "n_samples": 36,
+    "restore_len": 1792
+   },
+   {
+    "mean_ms": 184.22453344444446,
+    "n_samples": 36,
+    "restore_len": 2048
+   },
+   {
+    "mean_ms": 165.12656133333334,
+    "n_samples": 36,
+    "restore_len": 2304
+   },
+   {
+    "mean_ms": 147.0601679444445,
+    "n_samples": 36,
+    "restore_len": 2560
+   },
+   {
+    "mean_ms": 128.63735727777774,
+    "n_samples": 36,
+    "restore_len": 2816
+   },
+   {
+    "mean_ms": 115.22642627777776,
+    "n_samples": 36,
+    "restore_len": 3072
+   },
+   {
+    "mean_ms": 95.78182861111111,
+    "n_samples": 36,
+    "restore_len": 3328
+   },
+   {
+    "mean_ms": 77.05651216666666,
+    "n_samples": 36,
+    "restore_len": 3584
+   }
+  ],
+  "case_id": "cal-10",
+  "prompt_len": 4000,
+  "tiers": [
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "host",
+   "host",
+   "host",
+   "host",
+   "host",
+   "host",
+   "host",
+   "host"
+  ]
+ },
+ {
+  "admitted_chunks": 0,
+  "candidates": [
+   {
+    "mean_ms": 164.50563491666668,
+    "n_samples": 36,
+    "restore_len": 0
+   },
+   {
+    "mean_ms": 186.97198855555555,
+    "n_samples": 36,
+    "restore_len": 256
+   },
+   {
+    "mean_ms": 165.16408508333336,
+    "n_samples": 36,
+    "restore_len": 512
+   },
+   {
+    "mean_ms": 148.25415030555553,
+    "n_samples": 36,
+    "restore_len": 768
+   },
+   {
+    "mean_ms": 131.96977725,
+    "n_samples": 36,
+    "restore_len": 1024
+   },
+   {
+    "mean_ms": 115.05812855555557,
+    "n_samples": 36,
+    "restore_len": 1280
+   },
+   {
+    "mean_ms": 105.35891616666667,
+    "n_samples": 36,
+    "restore_len": 1536
+   },
+   {
+    "mean_ms": 89.50891808333334,
+    "n_samples": 36,
+    "restore_len": 1792
+   },
+   {
+    "mean_ms": 74.85335113888887,
+    "n_samples": 36,
+    "restore_len": 2048
+   },
+   {
+    "mean_ms": 60.25882775000001,
+    "n_samples": 36,
+    "restore_len": 2304
+   },
+   {
+    "mean_ms": 53.75978219444445,
+    "n_samples": 36,
+    "restore_len": 2560
+   }
+  ],
+  "case_id": "cal-11",
+  "prompt_len": 2800,
+  "tiers": [
+   "host",
+   "host",
+   "host",
+   "host",
+   "host",
+   "disk",
+   "disk",
+   "disk",
+   "disk",
+   "disk"
+  ]
+ },
+ {
+  "admitted_chunks": 1,
+  "candidates": [
+   {
+    "mean_ms": 84.99181855555555,
+    "n_samples": 36,
+    "restore_len": 0
+   },
+   {
+    "mean_ms": 84.1644188611111,
+    "n_samples": 36,
+    "restore_len": 256
+   },
+   {
+    "mean_ms": 69.81421074999999,
+    "n_samples": 36,
+    "restore_len": 512
+   },
+   {
+    "mean_ms": 59.09204041666666,
+    "n_samples": 36,
+    "restore_len": 768
+   },
+   {
+    "mean_ms": 55.025072805555546,
+    "n_samples": 36,
+    "restore_len": 1024
+   }
+  ],
+  "case_id": "cal-12",
+  "prompt_len": 1300,
+  "tiers": [
+   "disk",
+   "host",
+   "host",
+   "host"
+  ]
+ }
+]

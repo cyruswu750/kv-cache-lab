@@ -1,0 +1,9 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   6%|▌         | 21/338 [00:00<00:01, 182.13it/s]Loading weights:  12%|█▏        | 40/338 [00:00<00:01, 162.00it/s]Loading weights:  18%|█▊        | 62/338 [00:00<00:01, 179.79it/s]Loading weights:  26%|██▋       | 89/338 [00:00<00:01, 203.47it/s]Loading weights:  33%|███▎      | 110/338 [00:00<00:01, 200.06it/s]Loading weights:  39%|███▉      | 131/338 [00:00<00:01, 197.08it/s]Loading weights:  45%|████▌     | 153/338 [00:00<00:00, 200.52it/s]Loading weights:  52%|█████▏    | 176/338 [00:00<00:00, 203.56it/s]Loading weights:  60%|█████▉    | 202/338 [00:01<00:00, 214.60it/s]Loading weights:  66%|██████▋   | 224/338 [00:01<00:00, 211.48it/s]Loading weights:  73%|███████▎  | 246/338 [00:01<00:00, 210.88it/s]Loading weights: 100%|██████████| 338/338 [00:01<00:00, 257.04it/s]
+case ev-01: 2 candidates
+case ev-07: 14 candidates
+case ev-08: 4 candidates
+case ev-03: 4 candidates
+case ev-02: 3 candidates
+case ev-05: 6 candidates
+case ev-04: 3 candidates
+case ev-06: 11 candidates

@@ -1,0 +1,577 @@
+{
+ "analysis": {
+  "ambiguity_alpha": 0.05,
+  "block_len": 3,
+  "case_weight": "equal",
+  "level": 0.95,
+  "min_blocks_per_session": 2,
+  "min_sessions_per_half": 2,
+  "n_boot": 2000,
+  "partition": {
+   "A": [
+    "s01",
+    "s03"
+   ],
+   "B": [
+    "s02",
+    "s04"
+   ]
+  },
+  "partition_weights": {
+   "A": 0.5,
+   "B": 0.5
+  },
+  "seed": 7001
+ },
+ "budget": {
+  "deadline_s": 2400,
+  "estimate": {
+   "per_case_setup_s": 3.0,
+   "per_sample_s": 0.35,
+   "per_session_load_s": 30.0
+  },
+  "estimate_note": "planning estimate, not measured"
+ },
+ "calibration_case_ids": [
+  "cal-01",
+  "cal-02",
+  "cal-03",
+  "cal-04",
+  "cal-05",
+  "cal-06",
+  "cal-07",
+  "cal-08",
+  "cal-09",
+  "cal-10",
+  "cal-11",
+  "cal-12"
+ ],
+ "calibration_spec_sha256": "ab1a506ebf1440e46c9166712b3253e3b6ffadf0e52a8b099dae99199631812c",
+ "cases": [
+  {
+   "admitted": [],
+   "candidates": [
+    0,
+    256
+   ],
+   "capacities": {
+    "disk_files": 1,
+    "host_slots": 0
+   },
+   "case_id": "ev-01",
+   "chunks": [
+    "disk"
+   ],
+   "disk_lru": [
+    0
+   ],
+   "feasible_chunks": 1,
+   "feasible_tiers": [
+    "disk"
+   ],
+   "host_lru": [],
+   "limit_reason": "eligible_limit",
+   "prompt": {
+    "generator": "uniform_v1",
+    "length": 400,
+    "seed": 52001,
+    "sha256": "4210d0ed4bf35def9557e852572dd6cdb740072db8b4a0da1873392426fb03bb",
+    "vocab": [
+     10,
+     150000
+    ]
+   },
+   "signature": "f538dd6bd3d56ee1c101a850b4655c13271a94221740ad30367434801f70315d",
+   "source": {
+    "P": 256,
+    "method": "one full prefill of prompt[:P]; chunk bytes copied by the M1 store path"
+   },
+   "split": "evaluation"
+  },
+  {
+   "admitted": [],
+   "candidates": [
+    0,
+    256,
+    512
+   ],
+   "capacities": {
+    "disk_files": 0,
+    "host_slots": 2
+   },
+   "case_id": "ev-02",
+   "chunks": [
+    "host",
+    "host"
+   ],
+   "disk_lru": [],
+   "feasible_chunks": 2,
+   "feasible_tiers": [
+    "host",
+    "host"
+   ],
+   "host_lru": [
+    0,
+    1
+   ],
+   "limit_reason": "eligible_limit",
+   "prompt": {
+    "generator": "uniform_v1",
+    "length": 700,
+    "seed": 52002,
+    "sha256": "45ad71ab73afcc6ef9cb1a014f05318bae69891b532565017333de7d91cc8c53",
+    "vocab": [
+     10,
+     150000
+    ]
+   },
+   "signature": "7459ebdb49556a063835de6758d026336e104899679f88f5cc5b328be5316487",
+   "source": {
+    "P": 512,
+    "method": "one full prefill of prompt[:P]; chunk bytes copied by the M1 store path"
+   },
+   "split": "evaluation"
+  },
+  {
+   "admitted": [
+    3
+   ],
+   "candidates": [
+    0,
+    256,
+    512,
+    768
+   ],
+   "capacities": {
+    "disk_files": 2,
+    "host_slots": 2
+   },
+   "case_id": "ev-03",
+   "chunks": [
+    "disk",
+    "host",
+    "disk",
+    "absent"
+   ],
+   "disk_lru": [
+    0,
+    2
+   ],
+   "feasible_chunks": 3,
+   "feasible_tiers": [
+    "disk",
+    "host",
+    "disk"
+   ],
+   "host_lru": [
+    1
+   ],
+   "limit_reason": "absent",
+   "prompt": {
+    "generator": "uniform_v1",
+    "length": 1250,
+    "seed": 52003,
+    "sha256": "e3cf0841f37479d2b5beaa6285c0a77a71b99b80b46e031ed7f96f5818431806",
+    "vocab": [
+     10,
+     150000
+    ]
+   },
+   "signature": "5a24e0ad3c8bb5a439c4382f063dfbbd40bc63d11cd6e535a86f6b9526789e43",
+   "source": {
+    "P": 768,
+    "method": "one full prefill of prompt[:P]; chunk bytes copied by the M1 store path"
+   },
+   "split": "evaluation"
+  },
+  {
+   "admitted": [
+    2,
+    3,
+    4,
+    5
+   ],
+   "candidates": [
+    0,
+    256,
+    512
+   ],
+   "capacities": {
+    "disk_files": 1,
+    "host_slots": 5
+   },
+   "case_id": "ev-04",
+   "chunks": [
+    "host",
+    "disk",
+    "absent",
+    "absent",
+    "absent",
+    "absent"
+   ],
+   "disk_lru": [
+    1
+   ],
+   "feasible_chunks": 2,
+   "feasible_tiers": [
+    "host",
+    "disk"
+   ],
+   "host_lru": [
+    0
+   ],
+   "limit_reason": "absent",
+   "prompt": {
+    "generator": "uniform_v1",
+    "length": 1700,
+    "seed": 52004,
+    "sha256": "238fe9a47e7d42cb405b75ff49253ff1dc87aab2675b5f85c2b772fb9c4a9f55",
+    "vocab": [
+     10,
+     150000
+    ]
+   },
+   "signature": "bb19197bdc3bff9f1b50b04188d17a25e2ba789dcb8d3e60bf129e1cdbbbe9f2",
+   "source": {
+    "P": 512,
+    "method": "one full prefill of prompt[:P]; chunk bytes copied by the M1 store path"
+   },
+   "split": "evaluation"
+  },
+  {
+   "admitted": [
+    5,
+    6,
+    7,
+    8
+   ],
+   "candidates": [
+    0,
+    256,
+    512,
+    768,
+    1024,
+    1280
+   ],
+   "capacities": {
+    "disk_files": 2,
+    "host_slots": 7
+   },
+   "case_id": "ev-05",
+   "chunks": [
+    "host",
+    "host",
+    "host",
+    "disk",
+    "disk",
+    "absent",
+    "absent",
+    "absent",
+    "absent"
+   ],
+   "disk_lru": [
+    3,
+    4
+   ],
+   "feasible_chunks": 5,
+   "feasible_tiers": [
+    "host",
+    "host",
+    "host",
+    "disk",
+    "disk"
+   ],
+   "host_lru": [
+    0,
+    1,
+    2
+   ],
+   "limit_reason": "absent",
+   "prompt": {
+    "generator": "uniform_v1",
+    "length": 2400,
+    "seed": 52005,
+    "sha256": "7f8e161d62eec212c4dab1be7218b7b74d5ec786eda9c0b707b317a696b89a23",
+    "vocab": [
+     10,
+     150000
+    ]
+   },
+   "signature": "54d4204d2bc4bcf2a3e2c945d85627ce53ef321f7cf41d4a868b2f4606342048",
+   "source": {
+    "P": 1280,
+    "method": "one full prefill of prompt[:P]; chunk bytes copied by the M1 store path"
+   },
+   "split": "evaluation"
+  },
+  {
+   "admitted": [
+    10
+   ],
+   "candidates": [
+    0,
+    256,
+    512,
+    768,
+    1024,
+    1280,
+    1536,
+    1792,
+    2048,
+    2304,
+    2560
+   ],
+   "capacities": {
+    "disk_files": 4,
+    "host_slots": 7
+   },
+   "case_id": "ev-06",
+   "chunks": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "absent"
+   ],
+   "disk_lru": [
+    0,
+    1,
+    2,
+    3
+   ],
+   "feasible_chunks": 10,
+   "feasible_tiers": [
+    "disk",
+    "disk",
+    "disk",
+    "disk",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host"
+   ],
+   "host_lru": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "limit_reason": "absent",
+   "prompt": {
+    "generator": "uniform_v1",
+    "length": 3000,
+    "seed": 52006,
+    "sha256": "1b77f06353fcff4214e92cc42e34d60b3f183b6c3fecc99899e3f03a1150175d",
+    "vocab": [
+     10,
+     150000
+    ]
+   },
+   "signature": "851deb058b0e121562bfa38ed8d38adb379f0ba0e81d093ce214b668b80c96d6",
+   "source": {
+    "P": 2560,
+    "method": "one full prefill of prompt[:P]; chunk bytes copied by the M1 store path"
+   },
+   "split": "evaluation"
+  },
+  {
+   "admitted": [
+    13,
+    14
+   ],
+   "candidates": [
+    0,
+    256,
+    512,
+    768,
+    1024,
+    1280,
+    1536,
+    1792,
+    2048,
+    2304,
+    2560,
+    2816,
+    3072,
+    3328
+   ],
+   "capacities": {
+    "disk_files": 3,
+    "host_slots": 12
+   },
+   "case_id": "ev-07",
+   "chunks": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "disk",
+    "disk",
+    "disk",
+    "absent",
+    "absent"
+   ],
+   "disk_lru": [
+    10,
+    11,
+    12
+   ],
+   "feasible_chunks": 13,
+   "feasible_tiers": [
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "host",
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "host_lru": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+   ],
+   "limit_reason": "absent",
+   "prompt": {
+    "generator": "uniform_v1",
+    "length": 3850,
+    "seed": 52007,
+    "sha256": "f0844edc868c91d1e12c0c3b54e240ac50291e3f2698cb08180ed8e93bdc24cd",
+    "vocab": [
+     10,
+     150000
+    ]
+   },
+   "signature": "23264a579af01a5aef09d83956b3ad9a0848f4d078468538eadcfb52b635613f",
+   "source": {
+    "P": 3328,
+    "method": "one full prefill of prompt[:P]; chunk bytes copied by the M1 store path"
+   },
+   "split": "evaluation"
+  },
+  {
+   "admitted": [],
+   "candidates": [
+    0,
+    256,
+    512,
+    768
+   ],
+   "capacities": {
+    "disk_files": 3,
+    "host_slots": 0
+   },
+   "case_id": "ev-08",
+   "chunks": [
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "disk_lru": [
+    0,
+    1,
+    2
+   ],
+   "feasible_chunks": 3,
+   "feasible_tiers": [
+    "disk",
+    "disk",
+    "disk"
+   ],
+   "host_lru": [],
+   "limit_reason": "eligible_limit",
+   "prompt": {
+    "generator": "uniform_v1",
+    "length": 1000,
+    "seed": 52008,
+    "sha256": "ea0c504912d8f3ae4ade0dc1355e4b560e43e9da981f9282c28ab3752a6bc6cb",
+    "vocab": [
+     10,
+     150000
+    ]
+   },
+   "signature": "4b2e75bd936529a8e0f5fd059799d043fbb58d0a130d11d0b56ad0f748729346",
+   "source": {
+    "P": 768,
+    "method": "one full prefill of prompt[:P]; chunk bytes copied by the M1 store path"
+   },
+   "split": "evaluation"
+  }
+ ],
+ "chunk_size": 256,
+ "counts": {
+  "candidate_rows": 47,
+  "estimated_batch_s": 1408.8,
+  "estimated_session_s": 352.2,
+  "measured_samples_per_session": 710,
+  "measured_samples_total": 2840,
+  "runs_per_repetition": 71,
+  "samples_per_session": 852,
+  "samples_total": 3408,
+  "warmup_samples_per_session": 142
+ },
+ "fit": {
+  "row_contribution": "one row per (case, candidate) mean; a case with k+1 candidates contributes k+1 rows",
+  "weighting": "uniform"
+ },
+ "model": {
+  "attn_implementation": "sdpa",
+  "dtype": "bfloat16",
+  "id": "Qwen/Qwen2.5-1.5B-Instruct",
+  "revision": "989aa7980e4cf806f80c7fef2b1adb7bc71aa306"
+ },
+ "name": "M5_EVAL_V1",
+ "page_cache": {
+  "drop_pagecache": "must be unchanged from before the preparation to after the request",
+  "files": "disk files of the maximal feasible prefix (the union of all candidates' reads)",
+  "procedure": "kvlab.warm_disk.prepare/complete: one observation pass, at most one prewarm per candidate file, one final pass, no retry",
+  "required_outcome": {
+   "with_disk_files": "verified",
+   "without": "empty"
+  }
+ },
+ "restore_backend": "batched",
+ "restore_staging_chunks": 4,
+ "schedule": {
+  "reps": 10,
+  "sessions": {
+   "s01": 62001,
+   "s02": 62002,
+   "s03": 62003,
+   "s04": 62004
+  },
+  "warmup_reps": 2
+ },
+ "spec_version": "kvlab-m5-spec-v1",
+ "split": "evaluation",
+ "timed_region": "synchronize; t0 = perf_counter_ns(); engine.prefill_request(prompt); int(argmax(logits)); t1 = perf_counter_ns()  (gc disabled inside)"
+}

@@ -1,0 +1,98 @@
+{
+ "bindings": {
+  "cost_model_digest": "f9fe6543f09b893b3b2815da9664eac0560e4eada20ce3585a9772979fff5d76",
+  "predictions_sha256": "e0d5c335cc059088486b7b5925c334e1db7b1b34b42ab54c42fa40f868aa5741"
+ },
+ "budget_s": 2400,
+ "commands": [
+  {
+   "argv": [
+    "/home/cyrus/projects/kv-cache-lab/.venv/bin/python",
+    "scripts/m5_run.py",
+    "session",
+    "--split",
+    "evaluation",
+    "--run-dir",
+    "results/m5/M5_EVAL_V1_run",
+    "--session",
+    "s01",
+    "--cost-model",
+    "results/m5/M5_FIT_V1/cost_model.json",
+    "--predictions",
+    "results/m5/M5_FIT_V1/predictions.json"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "s01"
+  },
+  {
+   "argv": [
+    "/home/cyrus/projects/kv-cache-lab/.venv/bin/python",
+    "scripts/m5_run.py",
+    "session",
+    "--split",
+    "evaluation",
+    "--run-dir",
+    "results/m5/M5_EVAL_V1_run",
+    "--session",
+    "s02",
+    "--cost-model",
+    "results/m5/M5_FIT_V1/cost_model.json",
+    "--predictions",
+    "results/m5/M5_FIT_V1/predictions.json"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "s02"
+  },
+  {
+   "argv": [
+    "/home/cyrus/projects/kv-cache-lab/.venv/bin/python",
+    "scripts/m5_run.py",
+    "session",
+    "--split",
+    "evaluation",
+    "--run-dir",
+    "results/m5/M5_EVAL_V1_run",
+    "--session",
+    "s03",
+    "--cost-model",
+    "results/m5/M5_FIT_V1/cost_model.json",
+    "--predictions",
+    "results/m5/M5_FIT_V1/predictions.json"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "s03"
+  },
+  {
+   "argv": [
+    "/home/cyrus/projects/kv-cache-lab/.venv/bin/python",
+    "scripts/m5_run.py",
+    "session",
+    "--split",
+    "evaluation",
+    "--run-dir",
+    "results/m5/M5_EVAL_V1_run",
+    "--session",
+    "s04",
+    "--cost-model",
+    "results/m5/M5_FIT_V1/cost_model.json",
+    "--predictions",
+    "results/m5/M5_FIT_V1/predictions.json"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "s04"
+  }
+ ],
+ "created_unix": 1793925711.9857922,
+ "experiment": "M5_EVAL_V1",
+ "plan_version": "kvlab-m5-batch-plan-v1",
+ "run_dir": "results/m5/M5_EVAL_V1_run",
+ "spec_sha256": "5e6ecdc4c6b8bb503eaba3b62a1b956f5e9cbda05efe749bf3f5e636cc9675af"
+}

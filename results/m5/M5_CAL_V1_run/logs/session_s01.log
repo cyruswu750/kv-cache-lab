@@ -1,0 +1,13 @@
+Loading weights:   0%|          | 0/338 [00:00<?, ?it/s]Loading weights:   4%|▎         | 12/338 [00:00<00:02, 108.74it/s]Loading weights:   8%|▊         | 28/338 [00:00<00:02, 119.92it/s]Loading weights:  12%|█▏        | 42/338 [00:00<00:02, 125.06it/s]Loading weights:  20%|█▉        | 66/338 [00:00<00:01, 160.64it/s]Loading weights:  26%|██▌       | 87/338 [00:00<00:01, 176.49it/s]Loading weights:  31%|███       | 105/338 [00:00<00:01, 165.18it/s]Loading weights:  36%|███▌      | 122/338 [00:00<00:01, 162.74it/s]Loading weights:  42%|████▏     | 141/338 [00:00<00:01, 166.40it/s]Loading weights:  47%|████▋     | 158/338 [00:01<00:01, 143.24it/s]Loading weights:  52%|█████▏    | 175/338 [00:01<00:01, 149.12it/s]Loading weights:  58%|█████▊    | 195/338 [00:01<00:00, 157.46it/s]Loading weights:  63%|██████▎   | 214/338 [00:01<00:00, 163.03it/s]Loading weights:  70%|██████▉   | 235/338 [00:01<00:00, 173.49it/s]Loading weights: 100%|██████████| 338/338 [00:01<00:00, 227.29it/s]
+case cal-10: 15 candidates
+case cal-12: 5 candidates
+case cal-02: 3 candidates
+case cal-07: 6 candidates
+case cal-03: 4 candidates
+case cal-11: 11 candidates
+case cal-06: 1 candidates
+case cal-01: 2 candidates
+case cal-04: 3 candidates
+case cal-08: 13 candidates
+case cal-09: 13 candidates
+case cal-05: 5 candidates

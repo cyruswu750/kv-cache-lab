@@ -1,0 +1,62 @@
+{
+ "bindings": {},
+ "budget_s": 2400,
+ "commands": [
+  {
+   "argv": [
+    "/home/cyrus/projects/kv-cache-lab/.venv/bin/python",
+    "scripts/m5_run.py",
+    "session",
+    "--split",
+    "calibration",
+    "--run-dir",
+    "results/m5/M5_CAL_V1_run",
+    "--session",
+    "s01"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "s01"
+  },
+  {
+   "argv": [
+    "/home/cyrus/projects/kv-cache-lab/.venv/bin/python",
+    "scripts/m5_run.py",
+    "session",
+    "--split",
+    "calibration",
+    "--run-dir",
+    "results/m5/M5_CAL_V1_run",
+    "--session",
+    "s02"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "s02"
+  },
+  {
+   "argv": [
+    "/home/cyrus/projects/kv-cache-lab/.venv/bin/python",
+    "scripts/m5_run.py",
+    "session",
+    "--split",
+    "calibration",
+    "--run-dir",
+    "results/m5/M5_CAL_V1_run",
+    "--session",
+    "s03"
+   ],
+   "env": {
+    "HF_HUB_OFFLINE": "1"
+   },
+   "session": "s03"
+  }
+ ],
+ "created_unix": 1793923989.9461384,
+ "experiment": "M5_CAL_V1",
+ "plan_version": "kvlab-m5-batch-plan-v1",
+ "run_dir": "results/m5/M5_CAL_V1_run",
+ "spec_sha256": "ab1a506ebf1440e46c9166712b3253e3b6ffadf0e52a8b099dae99199631812c"
+}
