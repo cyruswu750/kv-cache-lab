@@ -1,26 +1,46 @@
-# M5 calibration and evaluation protocol — DRAFT (not frozen, not approved)
+# M5 calibration and evaluation protocol — executed once (stages A–F, 2026-11-05)
 
-**Status, 2026-11-05: DRAFT.**
-- **Implemented and tested on CPU only** (tiny random model, temporary stores, synthetic timings):
-  - the specification (`kvlab/m5_spec.py`);
-  - state preparation and reset (`kvlab/m5_state.py`);
-  - the session driver (`kvlab/m5_bench.py`);
-  - the validator (`kvlab/m5_validate.py`);
-  - fitting and predictions (`kvlab/m5_fit.py`);
-  - the analysis (`kvlab/m5_analysis.py`);
-  - the CLIs (`scripts/m5_run.py`, `m5_fit.py`, `m5_analyze.py`, `m5_gate.py`);
-  - the GPU correctness gate (`tests/gpu/test_m5_policy.py`).
-- **Executed once each (correctness and feasibility only):**
-  - the GPU correctness gate (stage A): PASS, 47 tests (M1 23, M3 17, M5 7);
-  - one diagnostic calibration-only pilot session (stage B, session s01 of `M5_CAL_V1`): it completed all
-    1,134 samples and passed the session-level validator.
+**Retrospective status and results update.** This header, the stage table (§2), the observed counts (§3) and
+§11 were updated after stage F. The file keeps its historical name.
 
-  The pilot is diagnostic only. It is excluded from fitting and from any formal evidence, and its timings are
-  not performance results.
-- **NOT RUN:** the formal calibration batch, fitting and prediction freezing, and held-out evaluation. Runtimes
-  below are planning estimates unless stated otherwise.
+**What is unchanged:**
+- the cases, prompts, seeds, schedules, state reset, timing boundaries, validity and failure rules, fit and
+  statistics (§3–§10), as they were declared before measurement;
+- the bound specification digests (calibration `ab1a506e…`, evaluation `5e6ecdc4…`).
 
-Every GPU stage needs its own authorization. Design: `docs/M5_DESIGN.md`. Decisions: D40–D43.
+**Approval:** this document was never frozen or approved as a whole, the way the M4 protocols were. Each stage
+was authorized separately. Before each formal batch, its execution conditions were declared, and before the
+evaluation batch they were recorded together with digests of the frozen inputs (the specification, cost model,
+predictions, source identity and analysis implementation). That record is kept privately and is not part of the
+repository. **This documentation update was written after the measurements and did not exist before them.**
+
+**Status, by stage** (each executed once, with no retry or replacement):
+- **A. GPU correctness gate** (source `9785c33`): PASS, 47 tests (M1 23, M3 17, M5 7). It covers correctness
+  only.
+- **B. Diagnostic pilot** (calibration session s01 only): it completed all 1,134 samples and passed the
+  session-level validator.
+  - **It is diagnostic only**: excluded from fitting and from every formal result, and its timings are not
+    performance results.
+  - **Its data:** never reused.
+- **C. Formal calibration batch `M5_CAL_V1`** (source `a3c6341`): succeeded, with full validation passed. 3
+  sessions, 3,402 samples, ≈ 773.7 s.
+- **D. Fit and frozen predictions `M5_FIT_V1`** (CPU): exit 0.
+  - **Model** `kvlab-restore-cost-v1`, digest `f9fe6543…`.
+  - **Predictions:** digest `e0d5c335…`, for all 47 evaluation candidates, frozen before stage E.
+- **E. Held-out evaluation batch `M5_EVAL_V1`** (source `a3c6341`): succeeded, with full validation passed. 4
+  sessions, 3,408 samples, ≈ 660.1 s.
+- **F. Analysis** (CPU): exit 0.
+
+**Executable code:** byte-identical across stages A–F. Between A (`9785c33`) and C (`a3c6341`), only
+documentation and the ignore rule of §11 item 6 changed.
+
+**The outcome** (details, intervals and limits: `docs/results.md`, M5):
+- on all 8 evaluation cases, CostAware chose the same restore length as AlwaysRestore;
+- an incremental benefit of CostAware over AlwaysRestore was **not demonstrated**.
+
+**Raw evidence:** retained locally in the ignored directories of §2. It is not published.
+
+Design: `docs/M5_DESIGN.md`. Decisions: D40–D43.
 
 ## 1. Questions
 On the declared grid, on this machine and stack (batch 1, synchronous first-token latency, a warm page cache):
@@ -32,16 +52,16 @@ On the declared grid, on this machine and stack (batch 1, synchronous first-toke
 No speedup, interior optimum, tail benefit or agreement threshold is required. A degenerate or unfavourable
 result is a valid outcome.
 
-## 2. Stages, commands and deadlines (A and B executed once; C–F NOT RUN)
+## 2. Stages, commands and deadlines (each executed once)
 
-| Stage | Command (from the repository root, `HF_HOME=<weights> HF_HUB_OFFLINE=1`) | Deadline |
-|---|---|---|
-| A. GPU correctness gate (executed once: PASS) | `.venv/bin/python scripts/m5_gate.py --out-dir local/m5_gate_<ts>` | 900 s (M1 + M3 + M5 GPU suites) |
-| B. Calibration-only feasibility pilot (executed once: session s01) | the unchanged s01 `session` command of `M5_CAL_V1`, run through `run_batch` in a separate ignored run directory; never used for fitting or evaluation | 900 s outer budget |
-| C. Calibration batch | `.venv/bin/python scripts/m5_run.py batch --split calibration --run-dir results/m5/M5_CAL_V1_run` | 2,400 s |
-| D. Fit and freeze (CPU) | `.venv/bin/python scripts/m5_fit.py --cal-run-dir results/m5/M5_CAL_V1_run --out-dir results/m5/M5_FIT_V1` | — |
-| E. Evaluation batch | `.venv/bin/python scripts/m5_run.py batch --split evaluation --run-dir results/m5/M5_EVAL_V1_run --cost-model results/m5/M5_FIT_V1/cost_model.json --predictions results/m5/M5_FIT_V1/predictions.json` | 2,400 s |
-| F. Analysis (CPU) | `.venv/bin/python scripts/m5_analyze.py --eval-run-dir results/m5/M5_EVAL_V1_run --fit-dir results/m5/M5_FIT_V1 --out-dir results/m5/M5_EVAL_V1_analysis` | — |
+| Stage | Command (from the repository root, `HF_HOME=<weights> HF_HUB_OFFLINE=1`) | Deadline | Executed |
+|---|---|---|---|
+| A. GPU correctness gate | `.venv/bin/python scripts/m5_gate.py --out-dir local/m5_gate_<ts>` | 900 s (M1 + M3 + M5 GPU suites) | once: PASS, 106.2 s |
+| B. Calibration-only feasibility pilot | the unchanged s01 `session` command of `M5_CAL_V1`, run through `run_batch` in a separate ignored run directory; never used for fitting or evaluation | 900 s outer budget | once: session s01, 262.4 s; diagnostic only |
+| C. Calibration batch | `.venv/bin/python scripts/m5_run.py batch --split calibration --run-dir results/m5/M5_CAL_V1_run` | 2,400 s | once: succeeded, 773.7 s; valid |
+| D. Fit and freeze (CPU) | `.venv/bin/python scripts/m5_fit.py --cal-run-dir results/m5/M5_CAL_V1_run --out-dir results/m5/M5_FIT_V1` | — | once: exit 0 |
+| E. Evaluation batch | `.venv/bin/python scripts/m5_run.py batch --split evaluation --run-dir results/m5/M5_EVAL_V1_run --cost-model results/m5/M5_FIT_V1/cost_model.json --predictions results/m5/M5_FIT_V1/predictions.json` | 2,400 s | once: succeeded, 660.1 s; valid |
+| F. Analysis (CPU) | `.venv/bin/python scripts/m5_analyze.py --eval-run-dir results/m5/M5_EVAL_V1_run --fit-dir results/m5/M5_FIT_V1 --out-dir results/m5/M5_EVAL_V1_analysis` | — | once: exit 0 |
 
 **`batch` refuses to start** unless:
 - the source tree is clean: an empty `git status --porcelain`, in which the git-ignored output directories of
@@ -129,6 +149,16 @@ k+1 candidates contributes k+1 rows. cal-10 is 15 of 81 rows; cal-06 is 1. The a
 
 The estimates assume 0.35 s per sample, 3 s per case setup and 30 s of model load per session.
 
+**Observed** (batch record, first launch to last exit; added retrospectively):
+
+| Batch | Elapsed | Samples |
+|---|---:|---|
+| calibration | 773.7 s | 3,402 = 486 warmup + 2,916 measured |
+| evaluation | 660.1 s | 3,408 = 568 warmup + 2,840 measured |
+
+Both were within the 2,400 s deadline. The estimates above were never validated, and the deadline was the only
+binding limit.
+
 **Pilot observation.** The stage-B session s01 took 262.4 s from process launch to exit, about 0.22 s per sample
 overall. Three sessions extrapolate to about 790 s. That is an estimate from a single session, not a confidence
 interval: session-to-session and thermal variation are unknown from one session.
@@ -143,6 +173,14 @@ interval: session-to-session and thermal variation are unknown from one session.
   are stored outside the formal run directory. Telemetry is context only; it is never a sample-exclusion rule.
 - **Samples:** slow and throttled samples are all kept. No retries, replacement sessions or filtering.
 - **Pilot data:** never reused.
+
+**Evaluation conditions** (recorded before the evaluation batch, as described in the header):
+- the same device, monitor, sample and failure rules as calibration, and the strict drop_pagecache rule (§11
+  item 2);
+- the four sessions run consecutively, with no cooling intervals and no evaluation pilot;
+- the ≈ 1,410 s estimate is unvalidated, and the 2,400 s deadline is authoritative;
+- the frozen choices were kept as they were. The model and grid were not changed after the predictions were
+  frozen, even though those predictions made CostAware choose the maximal length on every case.
 
 **Resources per case (planning):**
 - a pinned host slab of at most 13 chunks (≈ 95 MB);
@@ -333,9 +371,11 @@ report, whatever its direction.
 **Limits on claims.** Planning-overhead diagnostics stay separate from latency claims. There is no p95, TTFT,
 matched-memory, cold-NVMe or production claim.
 
-## 11. Remaining decisions before approval
+## 11. Decisions before execution, and their outcome
+The items below were open before execution. Each one now records how it was settled, added retrospectively.
 1. **The grid, counts and deadlines** above. Whether to run the stage-B pilot first, given that the per-sample
    time is an estimate.
+   - **Outcome:** the stage-B pilot ran first. The grid, counts and deadlines were then used unchanged.
 2. **The drop_pagecache rule:**
    - **The rule:** a cache drop inside any sample's window, from its preparation to the end of its request,
      invalidates the batch.
@@ -343,11 +383,20 @@ matched-memory, cold-NVMe or production claim.
      M4 work. Their future incidence during a batch is unknown. None occurred during the stage-B pilot.
    - **The alternative:** a per-sample rule with a predeclared replacement procedure.
    - **Status:** the strict rule is kept for calibration; no alternative is implemented.
+   - **Outcome:** the strict rule was kept for both formal batches, and neither batch had a drop. The counter was
+     constant within each batch: 54 throughout calibration and 55 throughout evaluation. It increased by one
+     between consecutive batches, outside every sample window.
 3. **GPU monitor:** the session code records none. For calibration, the external read-only monitor described in
    §3 is used as context.
+   - **Outcome:** the same external monitor covered both formal batches. Its records are context only, and no
+     sample was excluded or weighted by them.
 4. **Evidence location** (results/m5/) and its archival. The four declared output directories are git-ignored
    during execution (item 6). Archiving them into Git later is a separate, explicit decision.
+   - **Outcome:** all four directories exist locally and are ignored. Archiving or publishing them is still
+     open.
 5. **Sessions:** the number of sessions (3 and 4) limits interval precision, and whether that is acceptable.
+   - **Outcome:** 3 and 4 sessions were used. The limited precision, and the dependence between back-to-back
+     sessions, remain limitations of the results.
 6. **Generated output directories and source cleanliness** (blocker found 2026-11-05 before launch; resolved by
    ignore rules; the batch was not run before the fix):
    - **The conflict:** `scripts/m5_run.py batch` writes `spec.json` and `batch_plan.json` into the formal run
@@ -369,6 +418,8 @@ matched-memory, cold-NVMe or production claim.
 
      This is an ignore and documentation change only, so the GPU correctness gate (stage A, which passed on the
      same executable code) was not repeated.
+   - **Outcome:** this ignore commit (`a3c6341`) is the source of stages C–F. Every formal session recorded an
+     empty `git status --porcelain`.
 
 ## 12. Out of scope
 Trace-level replay with the policy, matched-resource or tail comparisons, cold NVMe, admission policy,
