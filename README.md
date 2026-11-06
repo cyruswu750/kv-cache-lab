@@ -32,7 +32,8 @@ M5 (branches `m5a-restore-policy` and `m5b-prep`; `docs/results.md`, M5):
 - **Restoration:** all M5 measurements used the opt-in `batched` restore backend, synchronous with bounded
   staging and no pipelining.
 - **Scope:** one machine, a warm page cache, batch 1, synchronous first-token latency.
-- **Evidence:** the raw evidence is kept locally and is not published.
+- **Evidence:** `results/m5/` holds the 27 original evidence files byte for byte, with `SHA256SUMS`. The fit and
+  the analysis reproduce offline from them with the recorded revision `a3c6341` (`docs/results.md`, M5).
 
 Not implemented yet: async pipelines, concurrency, service-level TTFT, and vLLM integration (scope:
 `docs/design.md` §1).
@@ -91,7 +92,7 @@ kvlab/restore_cost.py      M5a: versioned restore cost model: fit, artifact vali
 kvlab/m5_spec.py, m5_state.py, m5_bench.py, m5_validate.py, m5_fit.py, m5_analysis.py   M5b: spec, state reset, session, validator, fit, analysis
 scripts/                   m0_*, m0_1_audit, m1_run, m1_mutation_check, m2_measure, m2_fit_predict, m2_score, m2_spike_probe, m2_1_reanalyze, m2_1_diagnose, m2_1_analyze_diag, m2_1_regimes, m3_measure, m3_analyze, m3_mutation_check, m3_confirm, m3_confirm_reconstruct, m4_measure, m4_analyze, m4_eval, m4_gate, m4_reconstruct, m5_run, m5_fit, m5_analyze, m5_gate, env_report
 tests/                     CPU tests; tests/gpu/ GPU tests (markers: gpu + m0_strict | m0_1 | m1 | m3 | m4 | m5)
-results/m0/ (read-only), results/m0_1/, results/m1/, results/m1_1/, results/m1_2/, results/m2/, results/m2_1/, results/m3/, results/m3_confirm/, results/m4/   machine-readable evidence and logs
+results/m0/ (read-only), results/m0_1/, results/m1/, results/m1_1/, results/m1_2/, results/m2/, results/m2_1/, results/m3/, results/m3_confirm/, results/m4/, results/m5/   machine-readable evidence and logs
 ```
 
 ## Setup (no sudo; nothing outside the project is modified)
@@ -185,7 +186,8 @@ HF_HUB_OFFLINE=1 .venv/bin/python scripts/m3_measure.py --out-dir results/m3/eva
 cd <new dir> && <repo>/.venv/bin/python scripts/m4_analyze.py --spec M4_EVAL_V2 --run-dir results/m4/M4_EVAL_V2_run --out-dir <new out dir> --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a
 cd <repo> && .venv/bin/python scripts/m4_reconstruct.py compare --archived results/m4/M4_EVAL_V2_analysis --regenerated <new out dir> --archived-root /home/cyrus/projects/kv-cache-lab-m4v2 --regenerated-root <new dir>
 
-# M5 (stages C-F of docs/M5_PROTOCOL_DRAFT.md; each was run once; new output directories only, never overwritten)
+# M5 (stages C-F of docs/M5_PROTOCOL_DRAFT.md; each was run once; new output directories only, never overwritten).
+# To verify the archived evidence on CPU, use a3c6341's own scripts as described in docs/results.md (M5).
 HF_HUB_OFFLINE=1 .venv/bin/python scripts/m5_run.py batch --split calibration --run-dir results/m5/M5_CAL_V1_run
 .venv/bin/python scripts/m5_fit.py --cal-run-dir results/m5/M5_CAL_V1_run --out-dir results/m5/M5_FIT_V1
 HF_HUB_OFFLINE=1 .venv/bin/python scripts/m5_run.py batch --split evaluation --run-dir results/m5/M5_EVAL_V1_run --cost-model results/m5/M5_FIT_V1/cost_model.json --predictions results/m5/M5_FIT_V1/predictions.json

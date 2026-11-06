@@ -1050,13 +1050,58 @@ weights):
   - internal digest `e0d5c335cc059088486b7b5925c334e1db7b1b34b42ab54c42fa40f868aa5741`;
   - file sha256 `49440d341c3e249228785c0ba53aa905cc72f2630c8d20fca518ba662c67de3c`.
 - **Analysis:** `analysis.json` sha256 `b49e0af63097201c274c0489f4674ceee1ad38db3fa36485935e864d7782f682`.
-- **Raw artifacts:** retained locally and **not yet published**. They are git-ignored:
+- **Raw artifacts, published byte for byte** (D44):
   - `results/m5/M5_CAL_V1_run/`;
   - `results/m5/M5_FIT_V1/`;
   - `results/m5/M5_EVAL_V1_run/`;
-  - `results/m5/M5_EVAL_V1_analysis/`.
+  - `results/m5/M5_EVAL_V1_analysis/`;
+  - `results/m5/SHA256SUMS`, the original digests of all 27 files.
+- **Not published:** the private records of the execution conditions, the external GPU telemetry, the diagnostic
+  pilot and the gate logs. They are local only. The telemetry figures above cannot be checked from the
+  repository.
 
-  The private records of the execution conditions and the telemetry are local and not part of the repository.
+### Reproducing and verifying the M5 evidence (CPU only)
+The evidence was produced at source `a3c6341` and is published from later commits. Those commits change no
+executable file:
+- `git diff --stat a3c6341 HEAD -- kvlab scripts tests pyproject.toml requirements.txt` is empty at publication;
+- every session file records head `a3c6341`, a clean tree and the per-file hashes of that revision.
+
+Use that revision's own scripts, not whatever a later checkout contains. They need no GPU and no model weights;
+use an environment with the frozen package versions (`requirements.txt`).
+```bash
+(cd results/m5 && sha256sum -c SHA256SUMS)                         # the archived bytes
+mkdir <src> && git archive a3c63419b6504b20ce419eff62fea2c64f26fb3e | tar -x -C <src>
+cd <src>                                                            # recorded revision; no evidence inside
+<python> scripts/m5_fit.py --cal-run-dir <repo>/results/m5/M5_CAL_V1_run --out-dir <new fit dir>
+<python> scripts/m5_analyze.py --eval-run-dir <repo>/results/m5/M5_EVAL_V1_run \
+    --fit-dir <repo>/results/m5/M5_FIT_V1 --out-dir <new analysis dir>
+cmp <new analysis dir>/analysis.json <repo>/results/m5/M5_EVAL_V1_analysis/analysis.json   # and the others below
+```
+Both scripts refuse an existing output directory, so the archived outputs cannot be overwritten.
+
+**Result of one such run** (2026-11-05, from the files of the publication commit):
+
+| Output | Result |
+|---|---|
+| fit: `validation.json`, `calibration_means.json`, `cost_model.json` | byte-identical |
+| fit: `predictions.json` | differs only in `created_unix` and its own `sha256` |
+| analysis: `validation.json`, `analysis.json`, `analysis.md` | byte-identical; validation exit 0 |
+
+- **Why `predictions.json` differs:** it records the time it was created. The archived predictions were frozen
+  before the evaluation launch; recomputing them from the reproduced (byte-identical) model with the archived
+  `created_unix` gives the archived file exactly.
+- **The analysis validation:** it also recomputes the archived predictions from the archived model and checks
+  their bindings.
+- **The reproduced predictions:** they have a later creation time and a different digest. The evaluation
+  batch plan's binding would therefore reject them, and they must not replace the archived ones.
+
+**What this does not verify:**
+- **Latencies:** they are as recorded; checking them would need a new GPU measurement, which is a new
+  experiment.
+- **Strict comparisons:** the strict logit and byte comparisons ran on the GPU. The validator checks their
+  recorded results, not the tensors.
+- **Pre-launch checks:** they ran on the recording machine, before each batch.
+- **Model weights:** they are identified by the recorded blob hashes, and are not included.
 
 ## Reproducing
 Commands are in the README. Each evidence directory keeps its raw session JSON, logs and

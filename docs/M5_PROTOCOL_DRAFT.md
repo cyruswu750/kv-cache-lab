@@ -38,7 +38,8 @@ documentation and the ignore rule of §11 item 6 changed.
 - on all 8 evaluation cases, CostAware chose the same restore length as AlwaysRestore;
 - an incremental benefit of CostAware over AlwaysRestore was **not demonstrated**.
 
-**Raw evidence:** retained locally in the ignored directories of §2. It is not published.
+**Raw evidence:** the output directories of §2 are published byte for byte under `results/m5/`, with
+`results/m5/SHA256SUMS` (decision D44). The offline reproduction is described in `docs/results.md`, M5.
 
 Design: `docs/M5_DESIGN.md`. Decisions: D40–D43.
 
@@ -392,8 +393,8 @@ The items below were open before execution. Each one now records how it was sett
      sample was excluded or weighted by them.
 4. **Evidence location** (results/m5/) and its archival. The four declared output directories are git-ignored
    during execution (item 6). Archiving them into Git later is a separate, explicit decision.
-   - **Outcome:** all four directories exist locally and are ignored. Archiving or publishing them is still
-     open.
+   - **Outcome:** all four directories are published byte for byte (decision D44). They were force-added by
+     explicit path, and the ignore rules stay in place for new files.
 5. **Sessions:** the number of sessions (3 and 4) limits interval precision, and whether that is acceptable.
    - **Outcome:** 3 and 4 sessions were used. The limited precision, and the dependence between back-to-back
      sessions, remain limitations of the results.
