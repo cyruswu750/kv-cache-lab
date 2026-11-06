@@ -450,7 +450,8 @@ Mutation check on scratch copies under the ignored `local/`; the worktree was ne
     Markdown leniency and the required validation output.
 
 ## M5a restore-length policy and cost model (CPU only; `tests/test_restore_policy.py` 60 tests, `tests/test_restore_cost.py` 62 tests; tiny random Qwen2, temp stores, synthetic coefficients; correctness, not performance)
-GPU correctness, calibration and evaluation: **NOT RUN**. Results after the review corrections: focused run
+These CPU results predate the GPU stages. The GPU gate and the formal runs are recorded in the M5 GPU section
+below. Results after the review corrections: focused run
 122 passed; full CPU suite 1070 passed, 64 deselected (63 GPU tests and the `nvidia-smi` test
 `test_m3_confirm.py::test_run_refuses_without_a_matching_manifest`). Before the review the counts were 121 and
 1069.
@@ -510,7 +511,8 @@ An earlier ad-hoc run of 18 of these mutants edited the worktree files in place 
 found one survivor, an infeasible length within the eligible range, and the hole tests were then added.
 
 ## M5b preparation: specification, harness, validation, fit and analysis (CPU only; 90 tests in 5 files; tiny random Qwen2, temporary stores, FakeTiming synthetic latencies; correctness, not performance)
-GPU correctness gate, calibration and evaluation: **NOT RUN**. Results after the focused-review corrections:
+These CPU results predate the GPU stages; the GPU gate and the formal runs are in the M5 GPU section below.
+Results after the focused-review corrections:
 - **Focused M5a + M5b run:** 212 passed (122 + 90).
 - **Full CPU suite:** 1160 passed, 71 deselected (70 GPU tests, the 7 new M5 ones included, and the `nvidia-smi` test).
 
@@ -542,7 +544,7 @@ GPU correctness gate, calibration and evaluation: **NOT RUN**. Results after the
 | Warmup timings changed by a factor of 5 × 10^6; whole-repetition shifts | identical results; zero-width intervals for paired differences; strata never crossed | PASS (2) | `test_warmup_timings_never_affect_the_statistics`, `test_resampling_keeps_whole_repetitions_and_sessions` |
 | Ambiguity and adequacy; invalid or incomplete evidence | a noisy pair ambiguous, a clear case not; too few blocks gives "inadequate" with no interval; `ValueError` | PASS (3) | `test_ambiguity_uses_simultaneous_intervals_and_flags_inadequate_data`, `test_invalid_evidence_gets_no_analysis`, `test_incomplete_measured_repetitions_are_refused` |
 | Review regressions: `[]` or `null` in place of the batch record, batch plan or spec.json; a consistently recorded final nonzero exit; predictions not produced by the bound model (digest recomputed), also before launch; zero-page, out-of-order or late page-cache records and an inconsistent gap; missing identity fields (and `require_cuda` without a GPU identity); `cases: null` in the predictions; too few sessions per partition half | invalid (exit 3) with the matching reason, never a crash; no cross-evaluated interval ("inadequate") | PASS (11) | `test_review_*` in `tests/test_m5_pipeline.py` and `tests/test_m5_analysis.py` |
-| The GPU-gate bodies on CPU (forced 0/intermediate/maximal with a long suffix, CostAware with a synthetic artifact, truncation and no read beyond, the harness smoke sessions through the session validator), both backends; the GPU file calls exactly these bodies | PASS; on the GPU NOT RUN | PASS (8) | `tests/test_m5_gate_cpu.py` (GPU: `tests/gpu/test_m5_policy.py`, 7 collected, not run) |
+| The GPU-gate bodies on CPU (forced 0/intermediate/maximal with a long suffix, CostAware with a synthetic artifact, truncation and no read beyond, the harness smoke sessions through the session validator), both backends; the GPU file calls exactly these bodies | PASS on CPU; on the GPU, see the M5 GPU section | PASS (8) | `tests/test_m5_gate_cpu.py` (GPU: `tests/gpu/test_m5_policy.py`, 7 tests: 7 passed in the M5 gate) |
 
 Mutation check on a scratch copy under the ignored `local/` (the worktree was never modified). It ran in three
 stages:
@@ -555,3 +557,55 @@ stages:
   recomputation, identity requirement, batch success). The unmutated copy passed 90 tests, and 23/23 were
   killed. The copy was taken before the final tightening of the identity check (model-file and package
   entries), which is covered by its own regression test.
+
+## M5 GPU correctness gate and the strict checks of the formal runs (GPU, real model; correctness only)
+This section records correctness evidence only. It does not show that any selection is optimal, and it makes
+no latency or decision-quality claim. Those are reported, with their scope, in `docs/results.md` (M5).
+
+**GPU correctness gate** (`scripts/m5_gate.py`; source `9785c33`; executed once; PASS):
+- **Run:** 106.2 s of a 900 s deadline. pytest ran with `-x` per suite, the suites ran in order with a stop at
+  the first failing one, and each suite's process group was gone after it, with no signal needed.
+- **Pre-gate check:** one CPU regression test for the last review finding (missing model-file or package identity
+  counts as non-matching provenance) passed: 1 passed.
+- **Not in the gate:** the GPU M0.1 and M0 strict suites.
+
+| Suite (marker) | Tests | Result | What it covers |
+|---|---:|---|---|
+| `gpu and m1` | 23 | 23 passed | M1 integration on the policy=None engine path, both restore backends |
+| `gpu and m3` | 17 | 17 passed | batched-restore checks |
+| `gpu and m5` (`tests/gpu/test_m5_policy.py`, bodies in `tests/m5_gate_cases.py`) | 7 | 7 passed | below |
+
+**The 7 M5 GPU tests** (real pinned model, cuda, pinned host slab):
+
+| Check | Expected | Result | Test |
+|---|---|---|---|
+| Forced L = 0, an intermediate and the maximal length (`FixedChunks` 0/1/3/6 on a 6-chunk prompt with a disk×3 then host×3 prefix; k = 1 leaves a suffix of 5C + 3), both backends | selected = actual; the expected sources; no stores; restored bytes against the matching-provenance `ResidentReference`; a replay of the actual length; 1 prefill + 3 decode calls; no pins, busy staging or temp bytes; budgets held | PASS (2) | `test_forced_zero_intermediate_and_maximal_lengths` |
+| `CostAware` wiring with a **synthetic, correctness-only** artifact (never calibration or performance), both backends | a disk-heavy objective gives L = 0, a flat one the maximal length; the choice executed and recorded | PASS (2) | `test_cost_aware_wiring_with_a_synthetic_artifact` |
+| A CRC-corrupted chunk beyond a 1-chunk selection; corruption inside a 3-chunk selection; a missing file; both backends | the chunk beyond is never read and its file untouched; actual = C with `truncated`/`disk_payload_crc` and re-admission; actual = 0 with `disk_file_missing` | PASS (2) | `test_truncation_inside_and_no_read_beyond_the_selected_prefix` |
+| Harness smoke: one calibration-split and one evaluation-split session of `kvlab.m5_bench.run_session` (batched, staging group 2), with real CostAware/AlwaysRestore/Recompute runs fed by a synthetic artifact and predictions | every sample passes the session validator with `require_cuda=True`; the drop_pagecache rule holds | PASS | `test_harness_smoke_sessions_pass_the_session_validator` |
+
+**Strict checks inside the formal runs** (source `a3c6341`; part of the fail-closed evidence validation, not a
+pytest suite):
+- **Scope:** every sample of the calibration batch `M5_CAL_V1` (3 sessions, 3,402 samples) and of the
+  evaluation batch `M5_EVAL_V1` (4 sessions, 3,408 samples). Each batch ran once, on the batched backend with a
+  staging group of 4.
+- **The checks, untimed, after each sample:**
+  - the restored bytes equal the case's source bank;
+  - the first-token logits are bitwise equal to a reference seeded from the same bank at the sample's actual
+    split (same provenance, same split), and the first token equals the reference token;
+  - selected = actual length;
+  - plus the state fingerprint before every sample, the content hashes at case setup and end, the exact counter
+    deltas and the page-cache record.
+- **Result:** 0 strict problems and 0 validation problems in both batches. In the evaluation batch, every
+  policy sample executed its frozen choice.
+- **What these checks do not establish:**
+  - equality with full-prefill output (D10);
+  - optimal selection;
+  - performance.
+
+**Ignore rule for the M5 output directories** (`.gitignore`, commit `a3c6341`):
+- **The check:** verified once in a temporary Git fixture, using the project's own `source_identity`:
+  - the four declared output directories leave the recorded `git status --porcelain` empty;
+  - an unrelated untracked file, a tracked source modification and an untracked sibling directory still
+    appear.
+- **Not a test:** this is a one-off check. No repository test covers it.
