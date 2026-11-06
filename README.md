@@ -1,6 +1,6 @@
 # kv-cache-lab — Cost-Aware Tiered KV Cache for LLM Inference
 
-**Status: M0, M0.1, M1, M1.1, M1.2 (runner validation fix), M2 (performance calibration + offline cost model), M2.1 (measurement audit + slow-mode diagnosis) and M3 (batched KV restoration, opt-in; analysis validation fix VAL-006) done. M3_CONFIRM_V1 (preregistered confirmation of the batched backend) measured: confirmed; the default backend stays `baseline`. M4 (trace evaluation of C0 / C1-PA / C2; branches `m4a-trace-replay` and `m4-eval-v2`): M4_EVAL_V1 ran once and is invalid under its frozen warm-disk rule (no performance result); M4_EVAL_V2, with a request-scoped warm-disk preparation, ran once and is valid: of 15 primary comparisons, 5 "A faster", 5 "A slower" and 5 inconclusive under the predeclared joint rule, with stated statistical assumptions and scope (`docs/results.md`, M4). The default backend stays `baseline`.**
+**Status: M0, M0.1, M1, M1.1, M1.2 (runner validation fix), M2 (performance calibration + offline cost model), M2.1 (measurement audit + slow-mode diagnosis) and M3 (batched KV restoration, opt-in; analysis validation fix VAL-006) done. M3_CONFIRM_V1 (preregistered confirmation of the batched backend) measured: confirmed; the default backend stays `baseline`. M4 (trace evaluation of C0 / C1-PA / C2; branches `m4a-trace-replay` and `m4-eval-v2`): M4_EVAL_V1 ran once and is invalid under its frozen warm-disk rule (no performance result); M4_EVAL_V2, with a request-scoped warm-disk preparation, ran once and is valid: of 15 primary comparisons, 5 "A faster", 5 "A slower" and 5 inconclusive under the predeclared joint rule, with stated statistical assumptions and scope (`docs/results.md`, M4). M5 (opt-in runtime restore-length policies, a calibrated cost model and one held-out evaluation): valid; on all 8 evaluation cases CostAware made the same choices as AlwaysRestore, so no incremental benefit was demonstrated (`docs/results.md`, M5). The default backend stays `baseline`.**
 
 | Milestone | What it covers | Status |
 |---|---|---|
@@ -16,17 +16,26 @@
 | M4-A | Synthetic request traces T0–T3, a bounded GPU-only prefix cache (C1) and C0/C1/C2 trace replay (branch `m4a-trace-replay`) | done; verified on CPU (tiny random model). Its replay paths are exercised on the GPU by the M4-B correctness gate |
 | M4-B preparation | Prefix-aware GPU-only baseline C1-PA (D33), session runner, fail-closed validator, session-level analysis, batch control (`docs/M4B_PROTOCOL.md`, approved for freeze, D35) | CPU preparation done. GPU correctness gate (§9) **passed**: 46 tests, strict replays, with counters reconciled against the models. One timing-only feasibility pilot on calibration traces (D34). Protocol approved for freeze (D35). Formal evaluation **M4_EVAL_V1** executed once: **invalid** under its frozen whole-tier warm-disk rule (12 of 4,480 C2 requests not fully resident after the prewarm); **no performance result**, cause unresolved |
 | M4_EVAL_V2 | Request-scoped warm-disk preparation (`kvlab/warm_disk.py`) and a page-cache interference rule (`docs/M4_EVAL_V2_PROTOCOL.md`, D36–D38); evidence archived with V1's (D39) | done: one batch, 10 sessions, valid (11,200 strictly compared evaluation records, 0 mismatches). Primary family (15): 5 A faster, 5 A slower, 5 inconclusive; conditional on independent, approximately normal session differences; synthetic traces, this machine and stack only (`docs/results.md`, M4). No default change |
+| M5 | Opt-in runtime restore-length policies (`AlwaysRestore`, `Recompute`, `FixedChunks`, `CostAware`), a versioned cost model calibrated on 12 cases, and one held-out evaluation on 8 cases (branches `m5a-restore-policy`, `m5b-prep`) | done: GPU gate passed (47 tests); calibration (3,402 samples) and evaluation (3,408) each ran once and are valid. **CostAware chose the same length as AlwaysRestore on all 8 evaluation cases**: no incremental benefit demonstrated; CostAware − AlwaysRestore delivered latency +1.04 ms [−0.07, 2.15], inconclusive. Warm page cache, batch 1, this machine only (`docs/results.md`, M5). No default change |
 
-M5a (branch `m5a-restore-policy`, CPU only): an opt-in restore-length policy (`AlwaysRestore`, `Recompute`,
-`FixedChunks`, `CostAware`) and a separately versioned cost-model interface. GPU correctness, calibration and
-evaluation are **NOT RUN**: no calibrated model exists, and there is no decision-quality or performance result
-(`docs/M5_DESIGN.md`; next stage `docs/M5_PROTOCOL_DRAFT.md`, DRAFT). The default path is unchanged.
-M5b preparation (branch `m5b-prep`, CPU only): the declared calibration/evaluation grid, benchmark-only state
-reset, the candidate and policy measurement session, fail-closed validation, fitting and frozen predictions, the
-multi-candidate analysis and a GPU correctness gate. The gate, calibration and evaluation are **NOT RUN**.
+M5 (branches `m5a-restore-policy` and `m5b-prep`; `docs/results.md`, M5):
+- **The result:** on the declared 8-case held-out grid, **CostAware made the same restore-length choice as
+  AlwaysRestore on every case**, so it did **not demonstrate an incremental benefit** over always restoring.
+  - Their delivered-latency difference is inconclusive: +1.04 ms, interval [−0.07, 2.15].
+  - Both restoring policies were faster than Recompute in aggregate on this grid.
+- **The policies:**
+  - **Opt-in:** an engine policy chooses how many leading chunks to restore before prefill. The choices are
+    `AlwaysRestore` (the longest feasible prefix), `Recompute` (L = 0, with admissions still stored),
+    `FixedChunks` and `CostAware`. With `policy=None` the earlier flow is unchanged.
+  - **CostAware:** minimizes a versioned cost model (`kvlab/restore_cost.py`), fitted once on a separate
+    calibration grid and frozen with its predictions before the evaluation.
+- **Restoration:** all M5 measurements used the opt-in `batched` restore backend, synchronous with bounded
+  staging and no pipelining.
+- **Scope:** one machine, a warm page cache, batch 1, synchronous first-token latency.
+- **Evidence:** the raw evidence is kept locally and is not published.
 
-Not implemented yet: a calibrated runtime cost model and its held-out evaluation (M2's model is offline only),
-async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `docs/design.md` §1).
+Not implemented yet: async pipelines, concurrency, service-level TTFT, and vLLM integration (scope:
+`docs/design.md` §1).
 
 - Results, scope and limitations per milestone: `docs/results.md`
 - Design: `docs/design.md`
@@ -39,7 +48,7 @@ async pipelines, concurrency, service-level TTFT, and vLLM integration (scope: `
 - M3 design note: `docs/M3_DESIGN.md`; frozen comparison protocol: `docs/M3_PROTOCOL.md`
 - M3_CONFIRM_V1 confirmation protocol (frozen before measurement): `docs/M3_CONFIRM_PROTOCOL.md`; dated clarifications: `docs/M3_CONFIRM_CLARIFICATIONS.md`
 - M4 evaluation protocols (frozen): `docs/M4B_PROTOCOL.md` (M4_EVAL_V1) and `docs/M4_EVAL_V2_PROTOCOL.md` (M4_EVAL_V2)
-- M5a design: `docs/M5_DESIGN.md`; M5 calibration/evaluation protocol (DRAFT, not run): `docs/M5_PROTOCOL_DRAFT.md`
+- M5a design: `docs/M5_DESIGN.md`; M5 calibration/evaluation protocol (executed once; retrospective status update): `docs/M5_PROTOCOL_DRAFT.md`
 
 Reference harness: Hugging Face Transformers + PyTorch (decisions D1).
 Model: `Qwen/Qwen2.5-1.5B-Instruct@989aa7980e4cf806f80c7fef2b1adb7bc71aa306`, **bf16**, **SDPA**, chunk = 256 tokens.
@@ -111,6 +120,7 @@ snapshot_download('Qwen/Qwen2.5-1.5B-Instruct', revision='989aa7980e4cf806f80c7f
 # GPU suites (each selectable; `-m gpu` runs all of them)
 HF_HUB_OFFLINE=1 .venv/bin/python -m pytest -m "gpu and m1" -v          # M1 integration, both restore backends: 23 passed
 HF_HUB_OFFLINE=1 .venv/bin/python -m pytest -m "gpu and m3" -v          # M3 batched-restore checks: 17 passed
+HF_HUB_OFFLINE=1 .venv/bin/python -m pytest -m "gpu and m5" -v          # M5 policy checks: 7 passed (in the M5 gate, scripts/m5_gate.py)
 HF_HUB_OFFLINE=1 .venv/bin/python -m pytest -m "gpu and m0_1" -v        # M0.1 regressions: 6 passed
 HF_HUB_OFFLINE=1 .venv/bin/python -m pytest -m "gpu and m0_strict" -v   # original M0: 10 passed, 1 FAILED (known)
 
@@ -137,7 +147,7 @@ What the GPU acceptance checks mean (design §9):
   - the original M0 strict FAIL is kept as recorded.
 
   Restored output is **not** claimed to equal full-prefill output.
-- Performance numbers exist only for M2, M3 (with M3_CONFIRM_V1) and M4_EVAL_V2. They are synchronous, single-request,
+- Performance numbers exist only for M2, M3 (with M3_CONFIRM_V1), M4_EVAL_V2 and M5. They are synchronous, single-request,
   tokenized-input first-token latencies on one WSL2 laptop GPU, with platform
   drift documented in `docs/results.md` (M2). They are not service TTFT and
   not cold-NVMe or p99 figures. M2.1 qualifies the M2 decision claims (block-bootstrap
@@ -174,4 +184,10 @@ HF_HUB_OFFLINE=1 .venv/bin/python scripts/m3_measure.py --out-dir results/m3/eva
 .venv/bin/python scripts/m4_reconstruct.py build --spec M4_EVAL_V2 --out <new dir> --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a
 cd <new dir> && <repo>/.venv/bin/python scripts/m4_analyze.py --spec M4_EVAL_V2 --run-dir results/m4/M4_EVAL_V2_run --out-dir <new out dir> --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a
 cd <repo> && .venv/bin/python scripts/m4_reconstruct.py compare --archived results/m4/M4_EVAL_V2_analysis --regenerated <new out dir> --archived-root /home/cyrus/projects/kv-cache-lab-m4v2 --regenerated-root <new dir>
+
+# M5 (stages C-F of docs/M5_PROTOCOL_DRAFT.md; each was run once; new output directories only, never overwritten)
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/m5_run.py batch --split calibration --run-dir results/m5/M5_CAL_V1_run
+.venv/bin/python scripts/m5_fit.py --cal-run-dir results/m5/M5_CAL_V1_run --out-dir results/m5/M5_FIT_V1
+HF_HUB_OFFLINE=1 .venv/bin/python scripts/m5_run.py batch --split evaluation --run-dir results/m5/M5_EVAL_V1_run --cost-model results/m5/M5_FIT_V1/cost_model.json --predictions results/m5/M5_FIT_V1/predictions.json
+.venv/bin/python scripts/m5_analyze.py --eval-run-dir results/m5/M5_EVAL_V1_run --fit-dir results/m5/M5_FIT_V1 --out-dir results/m5/M5_EVAL_V1_analysis
 ```
