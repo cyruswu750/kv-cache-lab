@@ -468,9 +468,9 @@ The design choices in this section preceded all GPU work.
   are out of scope.
 
 ## 14. M5a: an opt-in restore-length policy and a versioned cost model (CPU only)
-Status 2026-11-05: implemented and tested on CPU only. GPU correctness, calibration and evaluation are
-**NOT RUN**, and no calibrated model exists. Details: `docs/M5_DESIGN.md`; decisions D40–D41; next stage
-`docs/M5_PROTOCOL_DRAFT.md` (DRAFT).
+Status 2026-11-05: implemented and CPU-tested. The GPU gate, one calibration and one held-out evaluation then ran
+and are valid: CostAware chose the same lengths as AlwaysRestore on all 8 evaluation cases (`docs/results.md`,
+M5). Details: `docs/M5_DESIGN.md`; decisions D40–D41; protocol `docs/M5_PROTOCOL_DRAFT.md`.
 - **Default unchanged:** `AlwaysRestoreEngine(model, tiered, *, policy=None)`; with `policy=None` the §8 flow
   is unchanged, and `allow_restore=False` never consults a policy.
 - **With a policy:** a side-effect-free plan (`kvlab/restore_policy.py`: index membership only, candidates
@@ -483,9 +483,9 @@ Status 2026-11-05: implemented and tested on CPU only. GPU correctness, calibrat
   M2 model, which nothing at runtime loads.
 - **Unchanged:** the storage format, tiers, eviction, budgets, counters' schema and the default backend.
 
-## 15. M5b preparation: the candidate-measurement harness (CPU only; NOT RUN on the GPU)
-Implemented and CPU-tested 2026-11-05. The GPU gate, calibration and evaluation are **NOT RUN**. Protocol:
-`docs/M5_PROTOCOL_DRAFT.md` (DRAFT); decisions D42–D43.
+## 15. M5b preparation: the candidate-measurement harness (CPU-tested; executed once on the GPU)
+Implemented and CPU-tested 2026-11-05. The GPU gate, calibration and evaluation then ran once each (protocol
+`docs/M5_PROTOCOL_DRAFT.md`, stages A–F; results `docs/results.md`, M5). Decisions D42–D43.
 - **Spec:** `kvlab/m5_spec.py` declares the grid (fully specified chunk states, every feasible candidate, admissions,
   capacities, provenance), the seeded schedule, the domain, the design check and the bounded counts.
 - **State:** `kvlab/m5_state.py` (benchmark only) builds a case's stores from one source bank and resets them after

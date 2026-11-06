@@ -1,10 +1,15 @@
 # M5a design: an opt-in restore-length policy and a versioned cost model
 
-**Status, 2026-11-05.** Implemented and tested on **CPU only**: a tiny random Qwen2, temporary stores
-and synthetic data. **GPU correctness, calibration and evaluation: NOT RUN.** No calibrated model
-exists, and nothing here makes a decision-quality or performance claim. The next stage is drafted in
-`docs/M5_PROTOCOL_DRAFT.md`. Decisions D40 and D41. The M5b preparation (harness, validation, fit, analysis
-and GPU gate; CPU only, NOT RUN on the GPU) is in that protocol and decisions D42–D43.
+**Status, 2026-11-05.** This design note was written when the code was implemented and tested on CPU only (a
+tiny random Qwen2, temporary stores and synthetic data), and nothing in it makes a decision-quality or
+performance claim.
+
+**Later the same day:** the GPU gate passed, and one calibration, fit and held-out evaluation ran and are valid
+(`docs/M5_PROTOCOL_DRAFT.md`; results in `docs/results.md`, M5). On all 8 evaluation cases CostAware chose the
+same length as AlwaysRestore, so no incremental benefit was demonstrated.
+
+Decisions D40 and D41. The M5b preparation (harness, validation, fit, analysis and GPU gate) is in that protocol
+and decisions D42–D43.
 
 ## 1. Scope
 **New:**
