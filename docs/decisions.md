@@ -819,3 +819,40 @@ Implemented on branch `m5b-prep` (child of `m5a-restore-policy`), 2026-11-05. Pr
   - "inadequate" instead of an interval when the data are too few.
 - **Primary practical report:** the paired delivered differences against AlwaysRestore and Recompute, in either
   direction. There are no tail, TTFT, matched-memory or cold-storage claims.
+
+## D44. (M5) Publish the executed M5 evidence byte for byte and integrate M5 into `main`
+Decided by the project owner on 2026-11-05, after stages A–F of `docs/M5_PROTOCOL_DRAFT.md` and the
+documentation closeout.
+
+**Completion note for D40–D43:** their "not run" status lines describe the state when they were written. The GPU
+gate (at `9785c33`), the diagnostic pilot, the calibration, the fit, the held-out evaluation and the analysis
+(at `a3c6341`) later each ran once (`docs/results.md`, M5). D40–D43 themselves are unchanged.
+
+- **What is committed, byte for byte, under `results/m5/`:**
+  - the four output directories written by stages C–F: `M5_CAL_V1_run`, `M5_FIT_V1`, `M5_EVAL_V1_run` and
+    `M5_EVAL_V1_analysis`, 27 files in all;
+  - `SHA256SUMS`, which lists their original digests.
+
+  The files were force-added by explicit path. The `.gitignore` rules for these directories stay, so a new file
+  there is still ignored.
+- **Unchanged:**
+  - no evidence file, recorded path or digest is edited;
+  - no experiment is refrozen, and no validator is relaxed.
+
+  The recorded interpreter path in the batch plans and records names the recording checkout, as in the M3 and
+  M4 evidence.
+- **Not published:**
+  - the private records of the execution conditions;
+  - the external GPU telemetry and the pilot;
+  - the gate logs and the review material.
+
+  The results cite them only as local records.
+- **Verification:**
+  - **Source binding:** the session files bind source `a3c6341` (recorded head, clean tree and per-file hashes).
+    The later publication commits change no executable file.
+  - **Offline reproduction:** the fit and the analysis are reproduced offline from the public package with that
+    revision's own scripts (`docs/results.md`, M5).
+  - **What it does not do:** it does not re-measure anything or re-establish the recording machine.
+- **Integration:** `m5b-prep`, which contains `m5a-restore-policy`, is fast-forwarded into `main`. No squash, rebase
+  or rewrite.
+- **Not authorized:** GPU runs, new experiments, refitting, tags, releases or a default change.
