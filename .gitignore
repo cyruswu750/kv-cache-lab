@@ -15,9 +15,9 @@ __pycache__/
 results/**/*.pt
 results/**/*.npy
 
-# M5 output directories, generated while the stages run (docs/M5_PROTOCOL_DRAFT.md §11 item 6). They are
-# ignored so that a running stage's own outputs do not appear in the source state its sessions record; the
-# source-cleanliness and evidence-integrity checks are unchanged. Ignoring them does not publish or archive them.
+# M5 output directories, written while a stage runs (docs/M5_PROTOCOL_DRAFT.md §11 item 6). They are ignored so
+# that a running stage's own outputs do not appear in the source state its sessions record. The executed
+# evidence in them is committed explicitly (decision D44).
 /results/m5/M5_CAL_V1_run/
 /results/m5/M5_FIT_V1/
 /results/m5/M5_EVAL_V1_run/
@@ -36,12 +36,10 @@ backups/
 # Project-owned disk KV cache payloads (never committed)
 .kvcache/
 
-# Local-only working documents (kept on disk, not published): agent instructions,
-# the original working plan, milestone reviews/handoffs and walkthroughs.
+# Local working notes (not part of the project)
 /CLAUDE.md
 /kv-cache-plan.md
 /docs/*_REVIEW.md
 /docs/*_WALKTHROUGH.md
 /docs/*_HANDOFF.md
-# Local notes, backups and handoff material
 /local/
