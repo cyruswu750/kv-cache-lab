@@ -1,31 +1,79 @@
 # Decisions
 
-Each entry: decision, reason, and whether it deviates from the original project plan (a
-working document, not published; the deviations are stated here).
-`docs/design.md` (created in M1) is the authoritative design; this file records why.
-Defects and their evidence are in `docs/BUGLOG.md`; entries here link to them
-instead of repeating them.
+Why the system is built the way it is. [design.md](design.md) describes what is implemented;
+this file records the alternatives and trade-offs behind it, in the order the decisions were made.
+Defects are in [BUGLOG.md](BUGLOG.md) and measured results in [results.md](results.md).
+
+Decision IDs are stable and are cited by code, tests and the archived protocols, so entries are
+never renumbered. An entry that a later decision replaced keeps its text, and the index marks it.
+Entries D31–D39 and D42–D44 govern the formal experiments (their protocols, execution and evidence
+handling) rather than the library.
+
+| ID | Decision | Status |
+|---|---|---|
+| D1 | HF Transformers + PyTorch as the reference harness | Active |
+| D2 | bf16 KV, not fp16 | Active |
+| D3 | SDPA attention, pinned | Active |
+| D4 | Restore through the public `DynamicCache` constructor | Active |
+| D5 | Explicit positions and masks | Active |
+| D6 | Chunk-granular CPU snapshot | Active |
+| D7 | Numerical tolerance fixed before any comparison | Active |
+| D8 | Calibration outcome | Record |
+| D9 | Fixture `nat_xlong` added | Record |
+| D10 | No tie rule; separate storage and full-prefill contracts | Active |
+| D11 | M0.1 gate; M0 strict suite kept | Superseded by D10 |
+| D12 | Storage correctness is bitwise, never atol | Active |
+| D13 | Identity: SHA-256 chain over a canonical namespace | Active |
+| D14 | Chunk file: LE header + raw payload + CRC32, no pickle | Active |
+| D15 | Exclusive tiers, no promotion | Active |
+| D16 | Pinned host slab allocated once | Active |
+| D17 | Disk directory ownership | Active |
+| D18 | Store after prefill, complete chunks only | Active |
+| D19 | Release disk bytes only after unlink succeeds | Active |
+| D20 | Validate the directory before touching it | Active |
+| D21 | Host accounting terms | Active |
+| D22 | Metric: synchronous first-token latency | Active |
+| D23 | Engine split instead of a benchmark copy | Active |
+| D24 | Interpretable offline cost model (M2) | Active |
+| D25 | Platform drift handling | Active |
+| D26 | Disk results labelled by page-cache state | Active |
+| D27 | Dependence-aware intervals; inconclusive, not tie | Active |
+| D28 | Named recompute baselines | Active |
+| D29 | Slow mode reported as unresolved | Active |
+| D30 | Batched restore backend (opt-in) | Active |
+| D31 | Preregistered confirmation with a premeasurement freeze | Experiment record |
+| D32 | Trace replay with a bounded GPU-only baseline | Experiment record |
+| D33 | Prefix-aware LRU GPU-only baseline (C1-PA) | Experiment record |
+| D34 | One timing-only feasibility pilot | Experiment record |
+| D35 | Proceed to the M4_EVAL_V1 freeze | Experiment record |
+| D36 | Request-scoped warm disk; page-cache interference rule | Experiment record |
+| D37 | One V2 calibration session | Experiment record |
+| D38 | Freeze V2 and run one batch | Experiment record |
+| D39 | Archive M4 evaluations; reproduce from frozen revisions | Experiment record |
+| D40 | Opt-in restore-length policy | Active |
+| D41 | Separately versioned cost model | Active |
+| D42 | Candidate-measurement harness with fail-closed evidence | Experiment record |
+| D43 | Multi-candidate statistics | Experiment record |
+| D44 | Publish the M5 evidence byte for byte | Experiment record |
 
 ## D1. HF Transformers + PyTorch as the M0 correctness reference harness
 - **Decision:** M0 uses `transformers` `DynamicCache` with plain PyTorch
   forward calls. vLLM was not installed or evaluated.
-- **Reason:** chosen for M0 by the project owner. HF lets us read and write per-layer K/V
+- **Reason:** HF lets us read and write per-layer K/V
   tensors directly and control positions and masks explicitly. That makes it a
   transparent reference for byte-exact and numerical checks.
-- **Not decided:** the production integration. The plan's vLLM KV-connector
-  option (time-boxed to 6–8 h) is still open for later.
-- **Plan deviation:** the plan listed vLLM as the first choice for Week 1; M0 used HF
-  instead.
+- **Alternative considered:** vLLM's KV-connector interface was the initial integration
+  candidate. It was not installed or evaluated; integration with a serving engine remains
+  future work.
 
-## D2. dtype = bfloat16 (plan says fp16)
+## D2. dtype = bfloat16, not fp16
 - **Decision:** load the model with an explicit `dtype=torch.bfloat16`.
 - **Reason:** the pinned checkpoint's `config.json` declares
   `"torch_dtype": "bfloat16"`, and the GPU supports bf16 (`torch.cuda.is_bf16_supported()` = True).
   bf16 avoids fp16 overflow risk on a bf16-trained model. KV size per token
-  is the same (2 bytes/element, 28 KiB/token), so the plan's memory figures
-  still hold.
-- **Plan deviation:** yes (fp16 → bf16). It is one constant (`kvlab/model.py: DTYPE`);
-  changing it requires recalibrating the tolerances.
+  is the same (2 bytes/element, 28 KiB/token).
+- **Cost:** the dtype is one constant (`kvlab/model.py: DTYPE`); changing it requires
+  recalibrating the tolerances.
 
 ## D3. Attention backend = SDPA (pinned explicitly)
 - `attn_implementation="sdpa"` is passed explicitly and checked after load.
@@ -74,8 +122,8 @@ chunked prefill (which has no CPU round trip).
   `max_abs_err` observed in the calibration run `scripts/m0_calibrate.py`.
   That run compares full prefill against GPU-resident chunked prefill
   (no CPU round trip) on `CALIBRATION_TEXT`, which is disjoint from the
-  acceptance fixtures. It is the plan's "partial prefill vs full prefill
-  shape difference", and the script also measures full-vs-full repeat
+  acceptance fixtures. It measures the partial-vs-full prefill
+  shape difference, and the script also measures full-vs-full repeat
   determinism. The 0.25 floor is 2 bf16 ulps at logit magnitude 16–32.
 - The resulting values are frozen in `kvlab/tolerances.py` before
   `scripts/m0_experiment.py` is run. If an acceptance case fails, the result
@@ -99,8 +147,8 @@ chunked prefill (which has no CPU round trip).
   was added for run2. Tolerances and PASS criteria were **not** changed.
   Run1's raw output is kept in `results/m0/run1/`.
 
-## D10. DECIDED (2026-11-03, project owner's decision, recorded in M1.1): no tie rule; standard argmax; separate contracts
-**Decision (recorded as stated by the project owner):**
+## D10. No tie rule; standard argmax; separate storage and full-prefill contracts
+**Decision:**
 - Preserve standard argmax and the original M0 strict test and its result.
 - No approximate-tie rule, no rounding, no tolerance inflation, no hidden xfail.
 - Storage correctness is established by byte identity and by strict
@@ -135,12 +183,12 @@ chunked prefill (which has no CPU round trip).
   the reference harness, or gate only on teacher-forced logits. Choose one
   before M1 acceptance runs.
 
-## D11. M0.1 gate passed; D10 left open (decided later, see D10); M0 strict suite kept as-is
+## D11. M0.1 gate passed; M0 strict suite kept as-is while D10 was open
 - The M0.1 audit (`docs/results.md`, M0.1) isolated the nat_long mismatch to a bf16
   rounding tie caused by execution shape. Restored and resident splits are
   bitwise equal.
 - The M0 strict suite is unchanged and still FAILs. No tie rule was adopted,
-  because D10 was still an open decision for the project owner.
+  because D10 was still open.
 - New suites get their own markers (`m0_1`, `m1`); `-m gpu` still runs all of them.
 
 ## D12. Storage correctness is proven strictly, not with atol
@@ -375,7 +423,7 @@ chunked prefill (which has no CPU round trip).
     (conflicts with D4). It remains a measured cost.
 - **Kept identical:** chunk format, identity, tiers, longest-valid-prefix, stop at the first
   invalid chunk, sources, counters, miss reasons, budgets, admission and LRU. The default
-  backend stays `baseline` until the batched backend is reviewed. Switching is one
+  backend stays `baseline`; changing it needs a separate decision. Switching is one
   constructor argument or attribute.
 - **Cost:** transient device memory of min(n, G) × 7,340,032 B (≤ 28 MiB) per restore. No new
   host memory.
@@ -404,7 +452,7 @@ chunked prefill (which has no CPU round trip).
     median of the plain e2e difference) are "batched faster";
   - the flag is `m3_confirm_v1_confirmed`. It does not change the M3 result and does not by
     itself authorize a default change.
-- **Freeze:** after review and before measurement, `scripts/m3_confirm.py freeze` writes a
+- **Freeze:** before measurement, `scripts/m3_confirm.py freeze` writes a
   manifest without a commit. It records the base HEAD, the diff, the actual bytes of every
   executable file (untracked included), the documents, the commands and the stack, which must
   equal the M3 stack. The launch, every session record, the batch record and the analysis are
@@ -416,8 +464,8 @@ chunked prefill (which has no CPU round trip).
   launch and before accepting a session's exit. No early stopping, retries, replacements or
   extensions.
   - **Stopping:** any nonzero session exit stops the batch: nothing further is launched,
-    whatever the session file says. The project owner chose this over a correctness-only
-    exception after the preparation review (2026-11-03).
+    whatever the session file says. This was chosen over a correctness-only exception
+    (2026-11-03).
   - **Execution status:** it is recorded separately from evidence completeness. The wrapper
     returns nonzero for every execution failure. The analysis judges the actual evidence:
     exit 3 for missing, inconsistent, timed-out, OOM-affected or excluded-sample evidence;
@@ -430,7 +478,7 @@ chunked prefill (which has no CPU round trip).
 - **Exact identities:** the runner draws all randomness from the session seed, so the
   validator replays the whole sample sequence, not only counts. The replay reproduces all
   6,480 M3 sample identities.
-- **Times as numbers** (preparation review 2, 2026-11-04): every compared time must be a JSON
+- **Times as numbers** (2026-11-04): every compared time must be a JSON
   number, not a boolean, that converts to a finite float (`kvlab/m3_confirm.py` `finite()`).
   - **Problem:** a JSON integer beyond the float range made the check itself raise
     `OverflowError`, so the analysis crashed (exit 1, no report) instead of rejecting the
@@ -485,8 +533,7 @@ from `858f952`) did not yet contain it; `main` was merged in afterwards.
   - GPU validation is deferred to M4-B.
 
 ## D33. (M4-B, CPU preparation) Prefix-aware LRU as the primary GPU-only baseline; plain LRU kept as an offline diagnostic
-Decided by the project owner on 2026-11-04, on the evidence of the M4-B draft review. The
-protocol is `docs/M4B_PROTOCOL.md` (DRAFT).
+Context: M4-B preparation, 2026-11-04; protocol `docs/M4B_PROTOCOL.md`.
 - **Problem:** the M4-A C1 uses plain chunk LRU, the same rule as the host tier (D32). Under a
   tight GPU cap, CPU probes on the unchanged class showed three failure modes:
   - a prompt with more new chunks than the capacity evicts its own leading chunks, and keeps an
@@ -498,7 +545,7 @@ protocol is `docs/M4B_PROTOCOL.md` (DRAFT).
   On the draft T1 trace at ⌈W/2⌉ = 3 chunks, plain LRU restores 0 tokens, against an oracle of
   96,768. Comparing the tiered cache with that baseline would compare it with a degenerate
   GPU-only cache.
-- **Choice:** C1-PA (`kvlab/prefix_aware_cache.py`), a separate subclass. The reviewed
+- **Choice:** C1-PA (`kvlab/prefix_aware_cache.py`), a separate subclass. The existing
   `GPUPrefixCache` is unchanged.
   - **Kept:** identity checks, lookup, owned storage and the byte budget.
   - **Admission:** keeps the cache prefix-closed. When full, it evicts the least recently used
@@ -511,9 +558,8 @@ protocol is `docs/M4B_PROTOCOL.md` (DRAFT).
     on any request there.
 - **Basis:** the choice rests on CPU mechanics and deterministic trace statistics only. No GPU
   timing informed it.
-- **Departure from the M4 planning note:** the note excluded prefix-aware eviction from M4.
-  This decision re-admits it for C1 only. C2's host and disk tiers keep plain chunk LRU,
-  unchanged.
+- **Scope:** prefix-aware eviction is used for C1 only, although it had originally been left
+  out of M4. C2's host and disk tiers keep plain chunk LRU, unchanged.
   - The asymmetry is disclosed.
   - No direction of latency bias is claimed: prefix maintenance and different
     restore/recompute splits have their own costs.
@@ -521,16 +567,15 @@ protocol is `docs/M4B_PROTOCOL.md` (DRAFT).
   - plain C1-LRU is an offline diagnostic (`kvlab.trace_models.lru_model`), not a timed arm;
   - both C2 backends run, explicitly selected: `baseline`, which remains the project default,
     and `batched`, opt-in;
-  - draft parameters: 10 sessions, a 2,700 s deadline and a 15-minute GPU correctness gate;
-  - GPU execution needs a later, separate approval.
+  - draft parameters: 10 sessions, a 2,700 s deadline and a 15-minute GPU correctness gate.
 - **Rejected:**
   - timing plain LRU as another arm: more GPU time for a baseline already known to be
     degenerate under these caps;
-  - changing the reviewed M4-A class in place: it would silently change reviewed behavior;
+  - changing the existing M4-A class in place: it would silently change tested behavior;
   - prefix-aware eviction in C2: it would change the measured engine.
 
 ## D34. (M4-B) One timing-only feasibility pilot on calibration traces
-Decided by the project owner on 2026-11-04, after the §9 correctness gate passed (attempt 3).
+Context: 2026-11-04, after the §9 GPU correctness gate passed (attempt 3).
 - **Problem:** protocol §9.5 requires that the evaluation batch be projected to finish within
   80% of its 2,700 s deadline. The existing evidence did not support such an estimate either
   way:
@@ -558,18 +603,17 @@ Decided by the project owner on 2026-11-04, after the §9 correctness gate passe
   - the batch's own deadline and stopping rule remain the protection.
 - **Not decided by it:** no policy, configuration, evaluation seed, budget, metric, threshold,
   statistical rule, session count or deadline was selected or changed. It is not performance
-  evidence, and it does not authorize the freeze.
+  evidence, and it is not by itself a basis for the freeze.
 
 ## D35. (M4-B) Proceed to the M4_EVAL_V1 freeze on the basis of the single pilot
-Decided by the project owner on 2026-11-04, after D34's pilot. D34 authorized only the pilot,
-for the feasibility decision; this is the separate decision to proceed to the freeze.
-- **Basis:** the owner accepts the single D34 pilot as the planning basis, with its documented
+Context: 2026-11-04, after D34's pilot, which served only the feasibility question.
+- **Basis:** the single D34 pilot is accepted as the planning basis, with its documented
   uncertainty:
   - **Gate attempt 3:** passed, with 46/46 tests.
   - **Pilot session:** one complete calibration session of 189.1 s, which passed validation.
   - **Projections:** the pre-declared ten-session projections are 1,891 s, 1,920 s and 1,935 s,
     all below the 2,160 s (80%) planning threshold.
-  - **Pilot outcome review:** it passed, with qualifications about extrapolation.
+  - **Pilot assessment:** passed, with qualifications about extrapolation.
 - **Accepted uncertainty:**
   - one pilot does not establish session-to-session variability;
   - the calibration-to-evaluation workload mapping is approximate;
@@ -577,13 +621,12 @@ for the feasibility decision; this is the separate decision to proceed to the fr
 - **Unchanged:**
   - 2,700 s remains the hard batch deadline. A timeout, or incomplete or inconsistent evidence,
     remains invalid (exit 3), with no performance verdict;
-  - no additional sessions, retries, extensions or parameter changes are authorized;
+  - no additional sessions, retries, extensions or parameter changes;
   - the workload, seeds, configurations, budgets, R = 10, statistics, the 15 primary comparisons,
     the validity checks and the stopping rules;
   - `baseline` stays the default.
-- **What it authorizes:** removing the protocol's DRAFT marker, then creating and verifying the
-  premeasurement freeze, in the manner of D31.
-- **What it does not authorize:** the evaluation batch, which needs separate approval.
+- **Scope:** removing the protocol's DRAFT marker, then creating and verifying the
+  premeasurement freeze, in the manner of D31. Running the evaluation batch was a separate step.
 
 ## D36. (M4_EVAL_V2, DRAFT; CPU only) A request-scoped warm-disk preparation and a batch page-cache interference rule
 Proposed on 2026-11-04 after M4_EVAL_V1 was executed once and its evidence was invalid under the frozen
@@ -604,18 +647,15 @@ a design change for a new spec. It does not correct, reinterpret or re-analyse V
   - V1's whole-tier condition covered files the request never reads. Its sequential, unpinned check could not be
     a simultaneous guarantee.
   - The request-scoped condition matches the direct disk reads more closely.
-  - Pinning, retries, system tuning and threshold relaxation are not justified by the evidence (diagnosis review).
+  - Pinning, retries, system tuning and threshold relaxation are not justified by the evidence.
 - **Unchanged:** V1's spec dict and digest, its protocol (byte-identical), its evidence and its invalid status;
   every V2 parameter other than the name, run directory, protocol document and `warm_disk`; the restore path;
   `baseline` as the default.
 - **Known risk:** WSL's `mini_init` dropped caches 18 times in about 6.7 h of uptime on this host, at gaps of
   42–4,291 s. A V2 batch that overlaps such an event is invalid by this rule.
-- **Not authorized by this entry:** approval of the protocol, removal of its DRAFT marker, any GPU session or
-  calibration run, the freeze, or the batch.
 
 ## D37. (M4_EVAL_V2, DRAFT) One bounded calibration session of the committed V2 implementation
-Authorized by the project owner on 2026-11-04, after the V2 implementation was reviewed and committed. It is
-separate from approval of the V2 protocol, which stays DRAFT.
+Context: 2026-11-04, after the V2 implementation was committed, while the V2 protocol was still a draft.
 - **Scope:**
   - exactly one session of a private calibration spec, not registered in `kvlab.m4_spec.SPECS`;
   - every experimental field of `M4_EVAL_V2`, including the request-scoped warm-disk preparation;
@@ -631,13 +671,10 @@ separate from approval of the V2 protocol, which stays DRAFT.
 - **Purpose:** execution correctness, V2 evidence validity, and a runtime-feasibility projection with D34's
   pre-declared formulas and mapping, compared with 2,160 s and 2,700 s.
 - **Not a basis for:** any performance, latency or backend conclusion.
-- **Not authorized:** protocol approval, removal of the DRAFT marker, the freeze, the formal batch, pushing,
-  merging, tagging and default changes.
 - **Records:** the calibration adapter and its evidence are kept locally, not in the repository.
 
-## D38. (M4_EVAL_V2) Approve the V2 protocol for freeze and one formal batch
-Decided by the project owner on 2026-11-05, after D37's single calibration session. It is separate from D37, which
-authorized only the calibration.
+## D38. (M4_EVAL_V2) Freeze the V2 protocol and run one formal batch
+Context: 2026-11-05, after D37's single calibration session.
 - **Basis:** the D37 calibration, a private spec with the calibration traces and session seed 45001.
   - Its launcher passed: 197.6 s of the 600 s cap, with the group reaped.
   - Its evidence was valid under the V2 rules:
@@ -646,7 +683,6 @@ authorized only the calibration.
     - `drop_pagecache` unchanged.
   - Its pre-declared ten-session projections were 1,976 s, 2,005 s and 2,021 s, all below the 2,160 s planning
     threshold.
-  - Its pre-run and outcome reviews were resolved.
   - It is not performance evidence and not a guarantee.
 - **Accepted uncertainty:**
   - the calibration-to-evaluation workload mapping is approximate;
@@ -662,21 +698,20 @@ authorized only the calibration.
   - the 2,700 s hard deadline and the stopping rules;
   - M4_EVAL_V1's protocol, its invalid result, its freeze and its evidence;
   - `baseline` as the default.
-- **What it authorizes:**
+- **Scope:**
   - removing the DRAFT marker from `docs/M4_EVAL_V2_PROTOCOL.md`;
   - freezing and verifying `M4_EVAL_V2`;
   - at most ONE formal ten-session batch;
   - the frozen validation and analysis of its evidence.
-- **What it does not authorize:**
+- **Excluded:**
   - retries, replacement sessions, a second batch, deadline extensions or parameter changes;
   - system or WSL setting changes, page pinning, cache drops, or relaxed checks;
-  - pushing, merging, tagging or default changes.
+  - default changes.
 
   A failed, timed-out or invalid batch is kept and reported, with no performance statement.
 
-## D39. (M4) Archive the executed M4 evaluations on `m4-eval-v2` and reproduce them from their frozen revisions
-Decided by the project owner on 2026-11-05, after the one M4_EVAL_V2 batch and its outcome review. It is separate from
-D38, which authorized only the freeze, the batch and its frozen analysis.
+## D39. (M4) Archive the executed M4 evaluations and reproduce them from their frozen revisions
+Context: 2026-11-05, after the one M4_EVAL_V2 batch.
 - **What is committed, byte for byte, under `results/m4/`:**
   - **M4_EVAL_V2:** the freeze manifest and its empty diff sidecar, the run directory and the frozen validation and
     analysis outputs. Until now they were untracked in this worktree.
@@ -698,10 +733,9 @@ D38, which authorized only the freeze, the batch and its frozen analysis.
     `scripts/m4_reconstruct.py` (`docs/results.md`, M4).
   - This does not re-establish the live stack. The batch records keep the pre-launch verification that ran on the
     recording machine.
-- **Not authorized:** GPU runs, new experiments, refreezing, pushing, merging, tagging or a default change.
 
 ## D40. (M5a; CPU only) An opt-in restore-length policy with side-effect-free planning
-Implemented on branch `m5a-restore-policy`, 2026-11-05 (`docs/M5_DESIGN.md`). No GPU run, calibration or measurement.
+Implemented 2026-11-05 (`docs/M5_DESIGN.md`), before any GPU run, calibration or measurement.
 - **Hook:** `AlwaysRestoreEngine(model, tiered, *, policy=None)`.
   - `policy=None` keeps the M1 operational flow unchanged; the only additions are a `decision = None` default and
     a policy check. A CPU differential test compares it with an adapted copy of the pre-M5a `prefill_request`
@@ -759,8 +793,7 @@ Implemented on branch `m5a-restore-policy`, 2026-11-05 (`docs/M5_DESIGN.md`). No
 - **Not done:** calibration, evaluation and GPU correctness. Tests use synthetic coefficients only.
 
 ## D42. (M5b preparation; CPU only) A bounded candidate-measurement harness with a declared grid and fail-closed evidence
-Implemented on branch `m5b-prep` (child of `m5a-restore-policy`), 2026-11-05. Protocol: `docs/M5_PROTOCOL_DRAFT.md`
-(DRAFT). **Not run:** the GPU gate, any pilot, calibration and evaluation.
+Implemented 2026-11-05, before the GPU gate, pilot, calibration and evaluation. Protocol: `docs/M5_PROTOCOL_DRAFT.md`.
 - **Specification** (`kvlab/m5_spec.py`):
   - **The grid:** 12 calibration and 8 evaluation cases are declared before any measurement (no timing chose
     them). Every case lists the state of each complete chunk; the candidates, admissions, capacities and
@@ -788,7 +821,7 @@ Implemented on branch `m5b-prep` (child of `m5a-restore-policy`), 2026-11-05. Pr
   - **What is reused:** `m3_confirm.run_batch` and `batch_problems` for execution (one deadline, stop on a nonzero
     exit, no retries).
   - **Exit codes:** 3 for any invalidity, 4 for a strict mismatch alone.
-  - **After the focused review:** non-object files are rejected, a fully successful batch is required, the frozen
+  - **Hardening:** non-object files are rejected, a fully successful batch is required, the frozen
     predictions are recomputed from the bound cost model (before launch and in validation), page-cache records
     are checked for schema, bounds and chronology, and identity fields are required.
 - **Rejected alternatives:**
@@ -820,9 +853,8 @@ Implemented on branch `m5b-prep` (child of `m5a-restore-policy`), 2026-11-05. Pr
 - **Primary practical report:** the paired delivered differences against AlwaysRestore and Recompute, in either
   direction. There are no tail, TTFT, matched-memory or cold-storage claims.
 
-## D44. (M5) Publish the executed M5 evidence byte for byte and integrate M5 into `main`
-Decided by the project owner on 2026-11-05, after stages A–F of `docs/M5_PROTOCOL_DRAFT.md` and the
-documentation closeout.
+## D44. (M5) Publish the executed M5 evidence byte for byte
+Context: 2026-11-05, after stages A–F of `docs/M5_PROTOCOL_DRAFT.md`.
 
 **Completion note for D40–D43:** their "not run" status lines describe the state when they were written. The GPU
 gate (at `9785c33`), the diagnostic pilot, the calibration, the fit, the held-out evaluation and the analysis
@@ -853,6 +885,4 @@ gate (at `9785c33`), the diagnostic pilot, the calibration, the fit, the held-ou
   - **Offline reproduction:** the fit and the analysis are reproduced offline from the public package with that
     revision's own scripts (`docs/results.md`, M5).
   - **What it does not do:** it does not re-measure anything or re-establish the recording machine.
-- **Integration:** `m5b-prep`, which contains `m5a-restore-policy`, is fast-forwarded into `main`. No squash, rebase
-  or rewrite.
-- **Not authorized:** GPU runs, new experiments, refitting, tags, releases or a default change.
+- **Integration:** the M5 commits were fast-forwarded into `main`, with no squash, rebase or rewrite.

@@ -1,15 +1,33 @@
-# Correctness matrix (M0, M0.1, M1, M1.1, M1.2, M2, M2.1, M3)
+# Correctness matrix
 
-Columns:
-- **Layer:** CPU = CPU-only unit test with synthetic tensors and real temp files.
-  GPU = real model on CUDA with real pinned memory and real files.
-  INJ = fault injected at a controlled I/O boundary (`write_fn` / `readinto_fn` /
-  monkeypatched `os.replace` / `os.unlink`), never by filling the real disk or
-  changing real permissions.
-- **Actual:**
-  - M0–M1 rows: the 2026-11-03 M1 runs (`results/m1/logs/*_20261103T024027.log`).
-  - Every row was re-run in M1.1 (`results/m1_1/logs/pytest_*_20261103T112801.log`) with the same results.
-  - The M1.1 rows are new.
+Which test establishes which property, with the observed result of the recorded runs. The summary
+lists the properties of the cache library first and the checks of the evaluation tooling after; the
+sections below give scenario-level rows. "PASS" in a row means the recorded run named in that section
+passed; current runs are listed in [results.md](results.md#test-runs).
+
+| Property | How it is checked | Where |
+|---|---|---|
+| Cache identity is collision-free across prefixes, namespaces and processes | determinism across processes and hash seeds; every namespace field changes the key | `tests/test_identity.py` |
+| Corrupt, truncated or foreign chunk files are never used | every truncation offset, every header bit flip, payload flips, wrong identity/namespace/layout, huge lengths rejected before allocation | `tests/test_chunk_format.py`, `tests/test_disk_store.py` |
+| Budgets hold and nothing is leaked or double-counted | slab allocated once; temp files reserved; undeletable files stay accounted; leases released on exceptions | `tests/test_host_store.py`, `tests/test_disk_store.py`, `tests/test_tiered_cpu.py` |
+| The disk store never writes outside its directory | a symlinked or non-regular marker is refused before any write; an existing regular marker, even a hard-linked one, is never rewritten; symlinked chunks are not followed | `tests/test_disk_store.py` (BUG-002) |
+| Only the verified prefix is restored; failures never repeat or abort inference | invalid middle chunk, missing file, ENOSPC, unlink failures; exactly one prefill and `steps − 1` decode calls | `tests/test_tiered_cpu.py`, `tests/test_engine_cpu.py`, GPU `-m "gpu and m1"` |
+| Restored output equals a resident replay of the same split, bitwise | strict replay against `ResidentReference` on the real model, both backends | GPU `-m "gpu and m1"`, `-m "gpu and m0_1"`; every formal experiment |
+| Both restore backends are interchangeable | twin stores with identical history, CPU differential; GPU A/B | `tests/test_restore_backends_cpu.py`, GPU `-m "gpu and m3"` |
+| Restore-length policies restore exactly the chosen prefix | planner, policies, truncation inside and no read beyond the selection | `tests/test_restore_policy.py`, `tests/test_restore_cost.py`, GPU `-m "gpu and m5"` |
+| Full-prefill comparison is reported, not gated | the original M0 strict suite keeps its criteria and its recorded FAIL on `nat_long` (D10) | GPU `-m "gpu and m0_strict"` |
+| Tests detect real bugs | mutation checks: 21/21 tiered-store mutants and 10/10 restore-backend mutants killed | `scripts/m1_mutation_check.py`, `scripts/m3_mutation_check.py` |
+| Evidence validators fail closed | missing, duplicate, substituted or stale-summary evidence is rejected (`scripts/m1_run.py --validate` exits 1; the M3, M4 and M5 analyzers exit 3) | `tests/test_m1_run_validation.py`, `tests/test_m3_analyze_validation.py`, `tests/test_m3_confirm.py`, `tests/test_m4_*`, `tests/test_m5_*` |
+| Statistics behave as specified | clustered series widen intervals; "inconclusive" is never a winner | `tests/test_perf_stats.py`, `tests/test_m3_stats.py`, `tests/test_m4_stats.py`, `tests/test_m5_analysis.py` |
+| Archived experiments can be rebuilt from their revisions | reconstruction on fixture repositories | `tests/test_m4_reconstruct.py`, `tests/test_m3_confirm.py` |
+
+Layer legend: CPU = CPU-only test with synthetic tensors or a tiny random Qwen2 model and real temp
+files; GPU = the real model on CUDA with real pinned memory and files; INJ = a fault injected at a
+controlled I/O boundary (`write_fn` / `readinto_fn` / monkeypatched `os.replace` / `os.unlink`),
+never by filling the real disk or changing real permissions.
+
+Recorded runs for the library sections: `results/m1/logs/*_20261103T024027.log`, rerun with the same
+results in `results/m1_1/logs/pytest_*_20261103T112801.log`.
 
 ## Identity and format (CPU)
 | Scenario | Injection | Expected | Actual | Test |
@@ -53,7 +71,7 @@ Columns:
 | Stale cleanup with a symlink pointing outside, plus a sibling outside the root | — | only own files removed; targets intact | PASS | `…stale_cleanup_only_touches_own_files…` |
 | Path validation (`..`, absolute, wrong pattern) | — | ValueError | PASS | `…child_paths_validated` |
 
-## Disk tier, M1.1 regressions (external review); all of these FAIL on the pre-fix code
+## Disk tier: deletion and marker regressions (BUG-001, BUG-002); all of these FAIL on the pre-fix code
 `results/m1_1/logs/regressions_vs_pre_fix_20261103T111458.log`: 19 fail on the
 pre-fix source.
 - 17 fail on behavior: `PermissionError` escapes, DID NOT RAISE, the marker is
@@ -105,14 +123,14 @@ Every row below is also checked strictly against a resident-GPU replay: all
 | M1.1: every GPU request makes exactly STEPS forward calls | asserted in `Harness.run` for all 12 tests | PASS | `-m "gpu and m1"` |
 | Mutants: LSB flip in restored K; K copied into V slot | strict check fails | KILLED (2/2) | `results/m1/gpu_mutation_check_*.txt` |
 
-## M0 / M0.1 (unchanged criteria)
+## Full-prefill comparison and the restored-vs-resident audit (M0, M0.1)
 | Scenario | Expected | Actual | Test |
 |---|---|---|---|
 | Original M0 strict suite (D7 criteria incl. greedy identical vs full) | as in M0 | **FAIL 1/11** (nat_long, bf16 tie) | `-m "gpu and m0_strict"` |
 | Restored == resident split, bitwise, repeated | equal | PASS 3/3 | `-m "gpu and m0_1"` |
 | Corrupted snapshot / wrong-prefix snapshot / position offset | detected by byte check / byte check / guard | PASS 3/3 | `-m "gpu and m0_1"` |
 
-## Full recomputation (report only, not gated; known limitation; D10 decided: no tie rule)
+## Full recomputation (report only, not gated; D10)
 In `m1_run`, 7 requests were restored. Greedy matched full recomputation on 3
 of them. The other 4 come from 2 distinct prompts, and all diverge at greedy
 step 4. At that step the full path's top-2 margin is 0.000 (exact tie) or
@@ -120,7 +138,7 @@ step 4. At that step the full path's top-2 margin is 0.000 (exact tie) or
 M1.1 rerun (`results/m1_1/m1_run_20261103T112930.json`): identical records and
 counters, and the same 4/7 divergences.
 
-## Evidence runner validation (CPU; M1.2, BUGLOG VAL-004)
+## Evidence runner validation (CPU; BUGLOG VAL-004)
 | Scenario | Expected | Actual | Test |
 |---|---|---|---|
 | Complete valid report (in memory and after JSON) | acceptance, exit 0, requests = strict records = 19 | PASS | `test_m1_run_validation::test_valid_complete_report…` |
