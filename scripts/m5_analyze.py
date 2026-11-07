@@ -8,7 +8,8 @@ Writes into a NEW directory:
 - validation.json, always;
 - analysis.json and analysis.md, only for valid evidence. Invalid evidence gets no performance analysis.
 
-Exit codes: the validator's (0 valid, 3 invalid, 4 strict mismatch). NOT RUN as of M5b preparation.
+Exit codes: the validator's (0 valid, 3 invalid, 4 strict mismatch).
+Executed once, for M5_EVAL_V1 (docs/results.md, M5).
 """
 import argparse
 import json

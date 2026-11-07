@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-"""M5 calibration / evaluation sessions and batches (docs/M5_PROTOCOL_DRAFT.md). NOT RUN as of M5b preparation.
+"""M5 calibration / evaluation sessions and batches (docs/M5_PROTOCOL_DRAFT.md).
+Each formal batch (M5_CAL_V1, M5_EVAL_V1) was executed once (docs/results.md, M5).
 
   .venv/bin/python scripts/m5_run.py plan --split calibration|evaluation          # CPU only: counts, design, domain
   HF_HOME=<weights> HF_HUB_OFFLINE=1 .venv/bin/python scripts/m5_run.py batch --split calibration \\

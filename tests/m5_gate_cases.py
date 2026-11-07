@@ -1,5 +1,5 @@
-"""M5 correctness-gate bodies, shared by the GPU gate (tests/gpu/test_m5_policy.py: the real pinned model, cuda;
-NOT RUN as of M5b preparation) and its CPU variant (tests/test_m5_gate_cpu.py: a tiny random model).
+"""M5 correctness-gate bodies, shared by the GPU gate (tests/gpu/test_m5_policy.py: the real pinned model, cuda)
+and its CPU variant (tests/test_m5_gate_cpu.py: a tiny random model).
 
 Every body takes (model, ns, root, ...) and derives its prompt lengths from the chunk size, so the same checks run
 at C = 256 on the GPU and at C = 4 on the CPU. The checks:

@@ -1,4 +1,4 @@
-"""M5 GPU correctness gate (real pinned model, cuda, pinned host slab). NOT RUN as of M5b preparation.
+"""M5 GPU correctness gate (real pinned model, cuda, pinned host slab).
 
 Run only through scripts/m5_gate.py (one 900 s deadline, fail-fast, after the M1 and M3 GPU suites):
   HF_HOME=<weights cache> HF_HUB_OFFLINE=1 .venv/bin/python scripts/m5_gate.py --out-dir local/m5_gate_<ts>

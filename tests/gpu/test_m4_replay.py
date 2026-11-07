@@ -1,7 +1,7 @@
 """M4-B bounded GPU correctness gate (docs/M4B_PROTOCOL.md §9).
 
-Run only with the owner's approval, exclusively on the GPU, once per reviewed version, before any
-timed session, and only through the bounded fail-fast wrapper (one 900 s deadline over the M1, M3
+Run exclusively on the GPU, once per reviewed version, before any timed session, and only through
+the bounded fail-fast wrapper (one 900 s deadline over the M1, M3
 and M4 GPU suites):
 
   HF_HOME=<weights cache> HF_HUB_OFFLINE=1 .venv/bin/python scripts/m4_gate.py --out-dir <new dir>

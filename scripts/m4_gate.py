@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""The bounded, fail-fast M4-B GPU correctness gate (docs/M4B_PROTOCOL.md §9). Each execution needs
-separate owner approval, runs exclusively on the GPU, once per reviewed version, under a new name.
+"""The bounded, fail-fast M4-B GPU correctness gate (docs/M4B_PROTOCOL.md §9). Each execution runs
+exclusively on the GPU, once per reviewed version, into a new output directory.
 
   HF_HOME=<weights cache> HF_HUB_OFFLINE=1 .venv/bin/python scripts/m4_gate.py --out-dir <new dir>
 

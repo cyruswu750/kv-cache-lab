@@ -1,7 +1,7 @@
 [project]
 name = "kvlab"
 version = "0.0.0"
-description = "Cost-Aware Tiered KV Cache for LLM Inference (M0 reference harness)"
+description = "Tiered prefix KV cache for Hugging Face LLM inference: pinned-host and disk tiers with verified restoration"
 requires-python = ">=3.12"
 
 [tool.pytest.ini_options]
