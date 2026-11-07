@@ -41,7 +41,7 @@ startup files were not changed. Weights are not stored in `~/.cache`. The
 only file outside the project is `get-pip.py`, downloaded to the session
 scratch directory.
 
-## Additions observed in M0.1 / M1 (2026-11-03)
+## Further observations (2026-11-03)
 - Re-checked: same torch/transformers/driver/GPU, and the GPU was idle at start.
 - Pinned host memory: the installed torch's `CachingHostAllocator.h` rounds
   `pin_memory=True` allocations up to a power of two (below
