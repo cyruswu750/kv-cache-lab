@@ -189,7 +189,8 @@ package stack.
   switching would need a separate decision (D31).
 
 ## Trace evaluation (M4)
-Protocols `docs/M4B_PROTOCOL.md` (V1) and `docs/M4_EVAL_V2_PROTOCOL.md` (V2); evidence `results/m4/`.
+Protocols `docs/M4B_PROTOCOL.md` (V1) and `docs/M4_EVAL_V2_PROTOCOL.md` (V2), maintained copies of the
+frozen texts (see [Evidence notes](#evidence-notes)); evidence `results/m4/`.
 
 **Design:**
 - **Traces:** four synthetic traces, evaluation seeds 42001–42004: T0 no reuse (a control), T1 a shared
@@ -340,28 +341,60 @@ evidence with the analysis code of the revision that produced it:
 
 | Experiment | Recorded source | Offline check |
 |---|---|---|
-| M3_CONFIRM_V1 | tree of `13afde2` (equals the frozen tree) | `scripts/m3_confirm_reconstruct.py --tree-rev 13afde2`, then that tree's `scripts/m3_analyze.py --spec M3_CONFIRM_V1` |
+| M3_CONFIRM_V1 | tree of `13afde2` (equals the frozen tree) | its analyzer in the current tree, or `scripts/m3_confirm_reconstruct.py --tree-rev 13afde2` and that tree's `scripts/m3_analyze.py` |
 | M4_EVAL_V2 (and V1) | `d2122d7` (V1: `b858d9e`) | `scripts/m4_reconstruct.py build`, that tree's `scripts/m4_analyze.py`, then `scripts/m4_reconstruct.py compare` |
 | M5 | `a3c6341` | `git archive a3c6341`, then that revision's `scripts/m5_fit.py` and `scripts/m5_analyze.py` |
 
-The exact commands are in the README. The analyzers of the M3_CONFIRM_V1 and M4_EVAL_V2 freezes also run
-directly in the current tree, because the files they bind are kept byte-identical; any change to those
-files makes them refuse the evidence (exit 3) by design. A previous reconstruction of each experiment
-reproduced every archived value; the only differences were recorded absolute paths and the creation
-time inside a regenerated `predictions.json`.
+**What the freeze manifests record.** Each M3_CONFIRM_V1 and M4 manifest records three kinds of hashes:
+- the whole source tree at freeze time (`files_sha256`), which the reconstruction tools check against the
+  rebuilt historical tree;
+- the analysis files (7 for M3_CONFIRM_V1, 13 for M4), which a frozen analyzer compares with the tree it
+  runs in;
+- the protocol documents (`documents_sha256`), compared the same way.
+
+So a frozen analyzer runs in the current tree only while its analysis files and documents keep their
+frozen bytes; otherwise it refuses the evidence (exit 3) by design, and the reconstruction is the way to
+reproduce. M3_CONFIRM_V1's files and documents are unchanged, so its analyzer runs in this tree. For M4,
+`kvlab/m4_spec.py` (docstring only) and the two M4 protocol documents were edited after the evaluations
+(see Evidence notes), so M4_EVAL_V1 and M4_EVAL_V2 are reproduced from their frozen trees.
+
+The README has the commands for M3_CONFIRM_V1, M4_EVAL_V2 and the M5 analysis. With the same variables
+(`REPO`, `PY`, `WORK`), the remaining two are:
+
+```bash
+# M4_EVAL_V1 (invalid evidence): its frozen analyzer is expected to exit 3 with the 12 residency problems
+$PY scripts/m4_reconstruct.py build --spec M4_EVAL_V1 --out $WORK/m4v1-tree \
+  --expect-freeze-sha256 137220aa1f40c9604fda983380f03d2e4f897cb2a8b6ad64ac97eabd3a3625b2
+(cd $WORK/m4v1-tree && $PY scripts/m4_analyze.py --spec M4_EVAL_V1 --run-dir results/m4/M4_EVAL_V1_run \
+  --out-dir $WORK/m4v1-out --expect-freeze-sha256 137220aa1f40c9604fda983380f03d2e4f897cb2a8b6ad64ac97eabd3a3625b2)
+ARCHIVED_ROOT=$($PY -c "import json; print(json.load(open('results/m4/M4_EVAL_V1_analysis/m4_validation.json'))['run_dir'].rsplit('/results/m4/', 1)[0])")
+$PY scripts/m4_reconstruct.py compare --archived results/m4/M4_EVAL_V1_analysis \
+  --regenerated $WORK/m4v1-out --archived-root "$ARCHIVED_ROOT" --regenerated-root $WORK/m4v1-tree
+
+# M5 fit, from the recorded revision extracted in the README's M5 step ($WORK/m5-src)
+(cd $WORK/m5-src && $PY scripts/m5_fit.py --cal-run-dir $REPO/results/m5/M5_CAL_V1_run --out-dir $WORK/m5-fit)
+for f in validation.json calibration_means.json cost_model.json; do cmp $WORK/m5-fit/$f results/m5/M5_FIT_V1/$f; done
+```
+
+A reconstruction of each experiment has reproduced every archived value. The only differences were
+recorded absolute paths (`out_dir` in the M3 analysis JSON; `run_dir` in `m4_validation.json`, the one
+path-only difference `compare` accepts) and, in a regenerated `predictions.json`, its creation time and
+its own digest; the archived predictions were frozen before the evaluation and must not be replaced.
 
 **What offline reproduction does not verify:** latencies (a new measurement would be a new experiment),
 the GPU tensors behind the strict checks (the validators check their recorded results), and the
 pre-launch environment checks, which ran on the recording machine.
 
 ## Evidence notes
-- Some recorded files contain absolute paths of the recording checkouts (for example a validator's
-  `run_dir`). They are kept byte for byte because manifests and analyzers hash them.
-- Earlier revisions also tracked local working notes (`CLAUDE.md`, `kv-cache-plan.md`,
-  `docs/*_REVIEW.md`, `docs/*_WALKTHROUGH.md`). They are no longer in the tree and are not inputs to any
-  script, test or analysis. Some preserved evidence still names them: the per-milestone snapshot
-  manifests of the working tree (`results/*/pre_*`, `post_*`, `change_inventory_*`, `review_archive*`),
-  the `git_status_porcelain` field of M3 session records, and the docstring of
-  `scripts/m2_1_reanalyze.py`.
-- `kvlab/boundaries.py` changed after the M3 evidence was recorded (one docstring line); hashes recorded
-  for it in M3 records refer to the earlier text.
+- Archived evidence keeps its original bytes, including absolute paths of the checkouts it was recorded
+  in (for example a validator's `run_dir`); manifests and analyzers hash these files, so they are never
+  edited.
+- Historical reproduction uses the recorded source revisions listed above, not the current tree.
+- Files edited after their hashes were recorded, so that recorded and current hashes differ:
+  - `kvlab/boundaries.py`: one docstring line changed after the M3 evidence was recorded;
+  - `kvlab/m4_spec.py`: its module docstring was revised after both M4 evaluations; the spec dictionaries,
+    and therefore the recorded `spec_sha256` values, are unchanged;
+  - `docs/M4B_PROTOCOL.md` and `docs/M4_EVAL_V2_PROTOCOL.md`: maintained copies whose status notes were
+    edited after the evaluations, with the rules unchanged. The frozen texts are at
+    [`b858d9e`](https://github.com/cyruswu750/kv-cache-lab/blob/b858d9e9f1ff78bd157b2af80720b54ae85cda84/docs/M4B_PROTOCOL.md) and
+    [`d2122d7`](https://github.com/cyruswu750/kv-cache-lab/blob/d2122d7672c327b9fb48ad595dff9d665ec614b8/docs/M4_EVAL_V2_PROTOCOL.md).

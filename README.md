@@ -3,8 +3,9 @@
 A prefix KV cache for Hugging Face Transformers inference that keeps attention K/V state in a bounded
 pinned-host tier and a bounded disk tier, restores the longest verified prefix of a new request, and
 recomputes only the rest. Restoration is checked bitwise against a GPU-resident replay. Each
-performance experiment's protocol was fixed before its measurements, and the formal evaluations (M3_CONFIRM_V1,
-M4, M5) were analysed by validators that fail closed on incomplete evidence.
+performance experiment's protocol was fixed before its measurements, and the formal evaluations (a
+confirmation experiment for batched restore, a trace evaluation and a restore-policy evaluation) were
+analysed by validators that fail closed on incomplete evidence.
 
 ```
  request tokens ──► chain keys: key_i = SHA-256(namespace ‖ key_{i-1} ‖ i ‖ tokens of chunk i)
@@ -98,28 +99,43 @@ required diagnostics into the gate's output directory, so it runs only through `
 
 ## Reproducing the analyses
 The analyses run on CPU from the archived evidence, with the analysis code of the revision that
-produced it. The original analysis outputs are committed next to the raw data.
+produced it; they need no GPU and no model weights, but an environment with the pinned package
+versions. The original analysis outputs are committed next to the raw data, and the analyzers refuse
+to overwrite outputs and exit 3 on any missing or altered evidence.
 
 ```bash
-# M3_CONFIRM_V1: the bound analysis files are unchanged, so the frozen analyzer runs in this tree
-python scripts/m3_analyze.py --spec M3_CONFIRM_V1 --run-dir results/m3_confirm/M3_CONFIRM_V1_run \
-  --out-dir <new dir> --expect-freeze-sha256 dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216
+REPO=$PWD                       # this checkout, with its Git history
+PY=$REPO/.venv/bin/python       # interpreter with the pinned versions (requirements.txt)
+WORK=$(mktemp -d)               # a new, empty working directory
 
-# M4_EVAL_V2: likewise
-python scripts/m4_analyze.py --spec M4_EVAL_V2 --run-dir results/m4/M4_EVAL_V2_run --out-dir <new dir> \
+# Confirmation experiment (M3_CONFIRM_V1). The 7 analysis files and 4 documents its freeze compares
+# with the current tree are byte-identical to the freeze, so its analyzer runs here directly.
+$PY scripts/m3_analyze.py --spec M3_CONFIRM_V1 --run-dir results/m3_confirm/M3_CONFIRM_V1_run \
+  --out-dir $WORK/m3c --expect-freeze-sha256 dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216
+cmp $WORK/m3c/samples_chronological.csv results/m3_confirm/M3_CONFIRM_V1_analysis/samples_chronological.csv
+
+# Trace evaluation (M4_EVAL_V2). Rebuild the frozen tree of d2122d7 (every hash is checked against the
+# freeze manifest), run that tree's own analyzer, then compare with the archived outputs.
+$PY scripts/m4_reconstruct.py build --spec M4_EVAL_V2 --out $WORK/m4v2-tree \
   --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a
+(cd $WORK/m4v2-tree && $PY scripts/m4_analyze.py --spec M4_EVAL_V2 --run-dir results/m4/M4_EVAL_V2_run \
+  --out-dir $WORK/m4v2-out --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a)
+ARCHIVED_ROOT=$($PY -c "import json; print(json.load(open('results/m4/M4_EVAL_V2_analysis/m4_validation.json'))['run_dir'].rsplit('/results/m4/', 1)[0])")
+$PY scripts/m4_reconstruct.py compare --archived results/m4/M4_EVAL_V2_analysis \
+  --regenerated $WORK/m4v2-out --archived-root "$ARCHIVED_ROOT" --regenerated-root $WORK/m4v2-tree
 
-# M5: run the recorded revision's own scripts against the archived evidence
+# Restore-policy evaluation (M5). Run the recorded revision's own scripts against the archived evidence.
 (cd results/m5 && sha256sum -c SHA256SUMS)
-mkdir <src> && git archive a3c63419b6504b20ce419eff62fea2c64f26fb3e | tar -x -C <src>
-(cd <src> && python scripts/m5_analyze.py --eval-run-dir <repo>/results/m5/M5_EVAL_V1_run \
-  --fit-dir <repo>/results/m5/M5_FIT_V1 --out-dir <new dir>)
-cmp <new dir>/analysis.json results/m5/M5_EVAL_V1_analysis/analysis.json
+mkdir $WORK/m5-src && git archive a3c63419b6504b20ce419eff62fea2c64f26fb3e | tar -x -C $WORK/m5-src
+(cd $WORK/m5-src && $PY scripts/m5_analyze.py --eval-run-dir $REPO/results/m5/M5_EVAL_V1_run \
+  --fit-dir $REPO/results/m5/M5_FIT_V1 --out-dir $WORK/m5-out)
+cmp $WORK/m5-out/analysis.json results/m5/M5_EVAL_V1_analysis/analysis.json
 ```
 
-The analyzers need the pinned package versions, refuse to overwrite outputs, and exit 3 on any
-missing or altered evidence. Rebuilding a frozen source tree for the other experiments, and what
-offline reproduction does not verify: [docs/results.md](docs/results.md#reproducing).
+The only expected differences are recorded paths: the `out_dir` field of the M3 analysis JSON, and
+the `run_dir` of `m4_validation.json`, which `compare` accepts as its one path-only difference. The
+M4_EVAL_V1 reconstruction, the fit of the M5 cost model, and what offline reproduction does not
+verify are in [docs/results.md](docs/results.md#reproducing).
 
 ## Limitations
 - One model and configuration (Qwen2.5-1.5B-Instruct, bf16, SDPA, full attention), batch 1, one

@@ -1,30 +1,29 @@
-# M4_EVAL_V2 protocol: M4-B trace evaluation with a request-scoped warm-disk preparation (approved for freeze 2026-11-05, decision D38)
+# M4_EVAL_V2 protocol: M4-B trace evaluation with a request-scoped warm-disk preparation
 
-> **Status: approved for freeze (2026-11-05, decision D38).**
-> - Until that approval this document was a DRAFT (decision D36). The approval changes no experimental rule.
-> - **Implementation:** reviewed, and committed in `2ec8151`..`29db781`.
-> - **Calibration (D37):** one private session on the calibration traces (session seed 45001, no evaluation seed),
->   run on 2026-11-05.
->   - Its launcher passed: 197.6 s of a 600 s cap.
->   - Its evidence was valid under the V2 rules:
->     - 0 strict mismatches;
->     - all 488 C2 records `verified` or `empty`, with 0 prewarms;
->     - `drop_pagecache` unchanged in every snapshot.
->   - Its pre-declared ten-session projections were 1,976 s, 2,005 s and 2,021 s, below the 2,160 s planning
->     threshold.
->   - It is not performance evidence and not a guarantee. It never needed a prewarm, so that branch has run only in
->     CPU tests. A WSL `drop_caches` event occurred about 120 s after it ended.
->   - Its evidence is kept locally, not committed.
-> - **Accepted uncertainty (D38):** the approximate workload mapping; the unmeasured overhead and variability between
->   sessions; possible ordinary reclaim and WSL `drop_pagecache` interference; and a formal batch that may be
->   invalid despite the calibration.
-> - **Authorized (D38):** the freeze and its verification, at most ONE formal ten-session batch, and its frozen
->   validation and analysis. The freeze manifest is created from the commit that contains this revision.
-> - **Not done when this revision was approved:** the freeze and the batch. No formal V2 session has run, and no V2
->   performance result exists.
+> **About this copy.** This is a maintained copy of the M4_EVAL_V2 protocol. After the evaluation ran, its status
+> notes and workflow wording were edited; no experimental rule, parameter or check was changed. The exact text
+> fixed before measurement, whose SHA-256 the M4_EVAL_V2 freeze manifest records, is the version at commit
+> [`d2122d7`](https://github.com/cyruswu750/kv-cache-lab/blob/d2122d7672c327b9fb48ad595dff9d665ec614b8/docs/M4_EVAL_V2_PROTOCOL.md). Results and their limits are in `docs/results.md` (M4).
+>
+> **Provenance.**
+> - **Design (D36):** written after M4_EVAL_V1 had run once and been found invalid; it does not reinterpret V1.
+> - **Implementation:** committed in `2ec8151`..`29db781`.
+> - **Calibration (D37):** one session on the calibration traces (session seed 45001, no evaluation seed), run on
+>   2026-11-05 before the freeze. Its launcher passed in 197.6 s of a 600 s cap, and its evidence was valid under
+>   the V2 rules: 0 strict mismatches; all 488 C2 records `verified` or `empty`, with 0 prewarms; `drop_pagecache`
+>   unchanged in every snapshot. Its pre-declared ten-session projections were 1,976 s, 2,005 s and 2,021 s, below
+>   the 2,160 s planning threshold. It is not performance evidence and not a guarantee; it never needed a prewarm,
+>   so that branch had run only in CPU tests. A WSL `drop_caches` event occurred about 120 s after it ended. Its
+>   evidence is kept outside the repository.
+> - **Freeze (D38):** the protocol was frozen with this uncertainty accepted: the approximate workload mapping; the
+>   unmeasured overhead and variability between sessions; possible ordinary reclaim and WSL `drop_pagecache`
+>   interference; and a formal batch that might be invalid despite the calibration. At most one formal
+>   ten-session batch was allowed, followed by its frozen validation and analysis.
+> - **Execution:** the batch ran once and its evidence is valid (`docs/results.md`, M4).
 
-This document amends `docs/M4B_PROTOCOL.md`, the frozen M4_EVAL_V1 protocol, which this branch keeps
-byte-identical (SHA-256 `adae50484edd35cb758b48080fba180a30f7bf1be9375fe19c79b37c951aec6f`, commit `b858d9e`).
+This document amends `docs/M4B_PROTOCOL.md`, the M4_EVAL_V1 protocol. Its frozen version, unchanged by the V2
+freeze, has SHA-256 `adae50484edd35cb758b48080fba180a30f7bf1be9375fe19c79b37c951aec6f` and is the version at commit
+[`b858d9e`](https://github.com/cyruswu750/kv-cache-lab/blob/b858d9e9f1ff78bd157b2af80720b54ae85cda84/docs/M4B_PROTOCOL.md); the copy in the current tree is a maintained copy with the same rules.
 Every rule of that protocol applies to M4_EVAL_V2 unless a section below replaces it. A V2 freeze binds both
 documents (`kvlab.m4_freeze.documents`).
 
@@ -47,7 +46,7 @@ documents (`kvlab.m4_freeze.documents`).
 **What V2 changes.** V2 changes an experimental *preparation condition*: which files are made warm and
 checked before each C2 request, and how. It is **not** a retroactive correction of V1, and it does not
 reinterpret V1's evidence: V1 remains executed and invalid. V2 needs its own spec name (§10 of the V1 protocol),
-its own documented reason (this section), owner approval and its own freeze.
+its own documented reason (this section), a recorded decision (D36–D38) and its own freeze.
 
 **What was not used:** no V1 measurement selects anything in V2. V1's timings, its failure locations and the
 diagnostic's latencies informed no parameter, configuration, seed, trace, comparison or threshold. V2 keeps all
@@ -199,9 +198,8 @@ themselves explain a failure.
 **Feasibility risk, known before any V2 run.** On this WSL2 host, WSL's init (`mini_init`) issued 18
 `drop_caches: 3` events between boot and 2026-11-04 22:40 (about 6.7 h), at gaps of 42 to 4,291 s. None fell in
 V1's 1,833 s batch window, and the nearest came about 120 s after it ended. Whether the events depend on idle
-time is not established. Under this rule, one such event during a V2 batch invalidates it. Whether to keep this
-rule unchanged, or to change the host configuration before a freeze, is an owner decision; this branch changes no
-system setting.
+time is not established. Under this rule, one such event during a V2 batch invalidates it. The rule was kept unchanged
+and no system setting was changed (D38).
 
 ## 6. Validity summary (amends V1 §8)
 V1 §8's item 4 ("`resident_fraction_before` = 1.0 for every C2 request") is replaced by §3's warm-disk rule.
@@ -234,15 +232,12 @@ definition. The analysis output states it with these limits (`kvlab.m4_analysis.
 - `tests/test_m4_v2_evidence_cpu.py`: V2 sessions, validator tampers, the interference rule, and the spec and
   freeze binding.
 
-**Done:** the one D37 calibration session (see the status note).
+**Done before the freeze:** the one D37 calibration session (see the provenance note).
 
-**Not done when this revision was approved (D38):** the freeze and the formal batch.
-
-## 9. Before any V2 batch (each step needs separate owner approval)
-1. Review and approve this protocol, including §5's feasibility risk. Then remove DRAFT from the first line.
-   **Done:** D38.
+## 9. Steps before the V2 batch (each completed once; the step 2 calibration ran before the step 1 review, D37 then D38)
+1. Review this protocol, including §5's feasibility risk, then remove DRAFT from the first line (D38).
 2. Recommended: one bounded calibration-input session under the V2 code (no evaluation seed), to check the new
-   records, the interference record and the runtime, before any freeze. It is no performance evidence.
-   **Done:** D37, one session.
-3. Freeze `M4_EVAL_V2` (D31 pattern) and verify it. **Authorized by D38.**
-4. The single V2 batch, then the frozen analysis. **Authorized by D38:** at most one batch.
+   records, the interference record and the runtime, before any freeze. It is no performance evidence
+   (D37, one session).
+3. Freeze `M4_EVAL_V2` (D31 pattern) and verify it (D38).
+4. The single V2 batch, then the frozen analysis: at most one batch (D38).

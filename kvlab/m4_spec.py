@@ -3,19 +3,21 @@
 `make_spec()` builds a spec dict. Tests build scaled-down specs (tiny traces, C = 4) through the same
 function, so the runner, validator and analysis are exercised on the same code paths. The freeze
 (kvlab/m4_freeze.py) refuses while the protocol's first line says DRAFT, and its manifest records these bytes.
+This docstring was revised after both evaluations; the frozen bytes of this file are those at b858d9e (V1)
+and d2122d7 (V2).
 
 - `M4_EVAL_V1`: frozen at b858d9e and executed once; its evidence is invalid (the whole-tier warm-disk
   rule). Its dict, and therefore its spec_sha256, are unchanged here. Its frozen tree remains the only
   place where its evidence can be re-verified.
 - `M4_EVAL_V2`: V1's workload, seeds, sessions, configurations, budgets, statistics, deadline and stopping
   rules, with the request-scoped warm-disk preparation (`warm_disk="request_candidates"`,
-  kvlab/warm_disk.py) and the batch drop_pagecache interference rule. Its protocol is a DRAFT; nothing for
-  it is frozen or run. A spec without a `warm_disk` key uses V1's whole-tier rule.
+  kvlab/warm_disk.py) and the batch drop_pagecache interference rule. Frozen at d2122d7 and executed once;
+  its evidence is valid. A spec without a `warm_disk` key uses V1's whole-tier rule.
 
 Roles of the trace seeds, fixed before any GPU run:
 - `calibration` (41001-41004): used ONLY by the bounded GPU correctness gate
   (tests/gpu/test_m4_replay.py) and by CPU tests. No timing from them is analysed. The one
-  exception is the owner-authorized feasibility pilot (decision D34), used solely for the
+  exception is the single timing-only feasibility pilot (decision D34), used solely for the
   runtime-feasibility decision. Nothing measured on them selects a policy, metric, trace, budget,
   threshold or comparison;
 - `evaluation` (42001-42004): the evaluation sessions only;
