@@ -1,195 +1,152 @@
-# kv-cache-lab — Cost-Aware Tiered KV Cache for LLM Inference
+# kv-cache-lab: a tiered prefix KV cache for LLM inference
 
-**Status: M0, M0.1, M1, M1.1, M1.2 (runner validation fix), M2 (performance calibration + offline cost model), M2.1 (measurement audit + slow-mode diagnosis) and M3 (batched KV restoration, opt-in; analysis validation fix VAL-006) done. M3_CONFIRM_V1 (preregistered confirmation of the batched backend) measured: confirmed; the default backend stays `baseline`. M4 (trace evaluation of C0 / C1-PA / C2; branches `m4a-trace-replay` and `m4-eval-v2`): M4_EVAL_V1 ran once and is invalid under its frozen warm-disk rule (no performance result); M4_EVAL_V2, with a request-scoped warm-disk preparation, ran once and is valid: of 15 primary comparisons, 5 "A faster", 5 "A slower" and 5 inconclusive under the predeclared joint rule, with stated statistical assumptions and scope (`docs/results.md`, M4). M5 (opt-in runtime restore-length policies, a calibrated cost model and one held-out evaluation): valid; on all 8 evaluation cases CostAware made the same choices as AlwaysRestore, so no incremental benefit was demonstrated (`docs/results.md`, M5). The default backend stays `baseline`.**
+A prefix KV cache for Hugging Face Transformers inference that keeps attention K/V state in a bounded
+pinned-host tier and a bounded disk tier, restores the longest verified prefix of a new request, and
+recomputes only the rest. Restoration is checked bitwise against a GPU-resident replay. Each
+performance experiment's protocol was fixed before its measurements, and the formal evaluations (M3_CONFIRM_V1,
+M4, M5) were analysed by validators that fail closed on incomplete evidence.
 
-| Milestone | What it covers | Status |
-|---|---|---|
-| M0 | Environment check plus one real GPU→CPU→GPU KV round trip | done; strict suite still **FAILs** on one case (`nat_long`, a bf16 tie) |
-| M0.1 | Audit of M0 and the progression gate | gate **PASS** |
-| M1 | Cache identity, validated chunk files, bounded pinned-host and disk tiers, synchronous always-restore | done; all M1 tests pass |
-| M1.1 | Fixes from external review: disk deletion accounting, marker symlink, host accounting terms; D10 recorded | done; all tests pass except the known M0 strict case |
-| M1.2 | Evidence-runner validation fix (BUGLOG VAL-004): strict ENOSPC record, forward-call acceptance, derived counts | done; corrected run `results/m1_2/m1_run_20261103T121800.json` |
-| M2 | Synchronous first-token latency for full / host / disk paths; cost model fitted on calibration, scored on held-out cases | done (no break-even established; model describes the baseline backend; claims qualified by M2.1) |
-| M2.1 | Audit of M2 timing/scoring; dependence-aware reanalysis (BUGLOG VAL-005); interleaved diagnosis of the restore slow mode | done (slow mode associated with higher host-side CUDA-call cost; root cause open) |
-| M3 | Opt-in `batched` restore backend: one contiguous H2D per chunk into bounded chunk-major device staging, one placement per group; strict A/B against the baseline; interleaved 5-session comparison | done (restore calls 896 → 16 memcpy at 16 chunks; median e2e 1.07–2.29× faster in this sample). `supports_adoption` is **false**: under the frozen rule, (1024, 1) is inconclusive (R3, measured stretch too short), so the default stays `baseline`. The analysis now validates evidence against the frozen spec first (BUGLOG VAL-006); the reanalysis reproduced every number and the verdict |
-| M3_CONFIRM_V1 | Preregistered confirmation of (1024, 1) and the fresh (1280, 96): own validator spec, premeasurement freeze manifest, budgeted batch wrapper | done: one batch, 8,640 measured samples, valid; all 8 primary verdicts batched faster (median paired d −14.0 to −16.8 ms), so `m3_confirm_v1_confirmed` is true. Restoration microbenchmark only; not pooled with M3, whose `supports_adoption` stays **false**; the default stays `baseline` (`docs/results.md`; D31) |
-| M4-A | Synthetic request traces T0–T3, a bounded GPU-only prefix cache (C1) and C0/C1/C2 trace replay (branch `m4a-trace-replay`) | done; verified on CPU (tiny random model). Its replay paths are exercised on the GPU by the M4-B correctness gate |
-| M4-B preparation | Prefix-aware GPU-only baseline C1-PA (D33), session runner, fail-closed validator, session-level analysis, batch control (`docs/M4B_PROTOCOL.md`, approved for freeze, D35) | CPU preparation done. GPU correctness gate (§9) **passed**: 46 tests, strict replays, with counters reconciled against the models. One timing-only feasibility pilot on calibration traces (D34). Protocol approved for freeze (D35). Formal evaluation **M4_EVAL_V1** executed once: **invalid** under its frozen whole-tier warm-disk rule (12 of 4,480 C2 requests not fully resident after the prewarm); **no performance result**, cause unresolved |
-| M4_EVAL_V2 | Request-scoped warm-disk preparation (`kvlab/warm_disk.py`) and a page-cache interference rule (`docs/M4_EVAL_V2_PROTOCOL.md`, D36–D38); evidence archived with V1's (D39) | done: one batch, 10 sessions, valid (11,200 strictly compared evaluation records, 0 mismatches). Primary family (15): 5 A faster, 5 A slower, 5 inconclusive; conditional on independent, approximately normal session differences; synthetic traces, this machine and stack only (`docs/results.md`, M4). No default change |
-| M5 | Opt-in runtime restore-length policies (`AlwaysRestore`, `Recompute`, `FixedChunks`, `CostAware`), a versioned cost model calibrated on 12 cases, and one held-out evaluation on 8 cases (branches `m5a-restore-policy`, `m5b-prep`) | done: GPU gate passed (47 tests); calibration (3,402 samples) and evaluation (3,408) each ran once and are valid. **CostAware chose the same length as AlwaysRestore on all 8 evaluation cases**: no incremental benefit demonstrated; CostAware − AlwaysRestore delivered latency +1.04 ms [−0.07, 2.15], inconclusive. Warm page cache, batch 1, this machine only (`docs/results.md`, M5). No default change |
-
-M5 (branches `m5a-restore-policy` and `m5b-prep`; `docs/results.md`, M5):
-- **The result:** on the declared 8-case held-out grid, **CostAware made the same restore-length choice as
-  AlwaysRestore on every case**, so it did **not demonstrate an incremental benefit** over always restoring.
-  - Their delivered-latency difference is inconclusive: +1.04 ms, interval [−0.07, 2.15].
-  - Both restoring policies were faster than Recompute in aggregate on this grid.
-- **The policies:**
-  - **Opt-in:** an engine policy chooses how many leading chunks to restore before prefill. The choices are
-    `AlwaysRestore` (the longest feasible prefix), `Recompute` (L = 0, with admissions still stored),
-    `FixedChunks` and `CostAware`. With `policy=None` the earlier flow is unchanged.
-  - **CostAware:** minimizes a versioned cost model (`kvlab/restore_cost.py`), fitted once on a separate
-    calibration grid and frozen with its predictions before the evaluation.
-- **Restoration:** all M5 measurements used the opt-in `batched` restore backend, synchronous with bounded
-  staging and no pipelining.
-- **Scope:** one machine, a warm page cache, batch 1, synchronous first-token latency.
-- **Evidence:** `results/m5/` holds the 27 original evidence files byte for byte, with `SHA256SUMS`. The fit and
-  the analysis reproduce offline from them with the recorded revision `a3c6341` (`docs/results.md`, M5).
-
-Not implemented yet: async pipelines, concurrency, service-level TTFT, and vLLM integration (scope:
-`docs/design.md` §1).
-
-- Results, scope and limitations per milestone: `docs/results.md`
-- Design: `docs/design.md`
-- Trade-offs: `docs/decisions.md`
-- Bugs found and fixed: `docs/BUGLOG.md`
-- Test-by-scenario table: `docs/correctness-matrix.md`
-- Environment and observed cache API: `docs/environment.md`
-- M2 performance protocol: `docs/M2_PROTOCOL.md`
-- M2.1 diagnostic plan: `docs/M2_1_DIAGNOSTIC_PLAN.md`
-- M3 design note: `docs/M3_DESIGN.md`; frozen comparison protocol: `docs/M3_PROTOCOL.md`
-- M3_CONFIRM_V1 confirmation protocol (frozen before measurement): `docs/M3_CONFIRM_PROTOCOL.md`; dated clarifications: `docs/M3_CONFIRM_CLARIFICATIONS.md`
-- M4 evaluation protocols (frozen): `docs/M4B_PROTOCOL.md` (M4_EVAL_V1) and `docs/M4_EVAL_V2_PROTOCOL.md` (M4_EVAL_V2)
-- M5a design: `docs/M5_DESIGN.md`; M5 calibration/evaluation protocol (executed once; retrospective status update): `docs/M5_PROTOCOL_DRAFT.md`
-
-Reference harness: Hugging Face Transformers + PyTorch (decisions D1).
-Model: `Qwen/Qwen2.5-1.5B-Instruct@989aa7980e4cf806f80c7fef2b1adb7bc71aa306`, **bf16**, **SDPA**, chunk = 256 tokens.
-
-## Environment (observed; details in `docs/environment.md`)
-- **OS/CPU:** WSL2 Ubuntu 26.04.1, Python 3.14.4, 7.4 GiB RAM.
-- **GPU:** RTX 4080 Laptop GPU, 12 GiB, Windows driver 596.49.
-- **Packages:** `torch==2.14.1+cu130` (official cu130 index), `transformers==5.22.1`, `pytest==9.2.0`.
-  The full list is in `results/m0/pip_freeze.txt`.
-
-## Layout
 ```
-kvlab/boundaries.py        restore-length rule: L % C == 0 and 0 < L <= N-1
-kvlab/model.py             pinned model loading; explicit-position prefill; greedy decode
-kvlab/kv_snapshot.py       M0: DynamicCache <-> chunked CPU snapshot, byte comparison
-kvlab/identity.py          M1: namespace (canonical JSON + SHA-256), chained chunk keys
-kvlab/chunk_format.py      M1: chunk file v1 (LE header, CRC32, raw payload), validated reads
-kvlab/host_store.py        M1: bounded pinned-host slab, LRU, leases
-kvlab/disk_store.py        M1: bounded owned disk dir, temp+rename, LRU, I/O injection points
-kvlab/tiered_cache.py      M1: store/restore across tiers, counters, budgets; M3: restore backends (baseline default, batched)
-kvlab/always_restore.py    M1: synchronous always-restore request flow
-kvlab/resident_reference.py  GPU-only replay used for strict (bitwise) verification
-kvlab/perf.py              M2: grid/split, sample checks, statistics, cost model, scoring (CPU)
-kvlab/perf_harness.py      M2: GPU benchmark harness (tier states, timed path, page-cache handling)
-kvlab/perf_stats.py        M2.1: block bootstrap, inconclusive classification, penalties, policy totals (CPU)
-kvlab/diag_harness.py      M2.1: diagnostic paths/modes (full_nocache, CUDA-event marks, probes); diagnostic only
-kvlab/m3_bench.py          M3: baseline vs batched benchmark harness on the unchanged M2 timed region
-kvlab/m3_stats.py          M3: stratified block bootstrap, R1-R3 verdicts, regime durations (CPU)
-kvlab/m3_validate.py       M3 / VAL-006: fail-closed evidence validation against explicit specs, incl. warmups (CPU)
-kvlab/m3_confirm.py        M3_CONFIRM_V1: premeasurement freeze manifest, budgeted batch wrapper, their checks (CPU, no torch)
-kvlab/traces.py            M4-A: synthetic traces T0-T3 and offline statistics (CPU)
-kvlab/gpu_prefix_cache.py  M4-A: C1, bounded GPU-only prefix cache, plain chunk LRU (offline diagnostic in M4-B)
-kvlab/trace_replay.py      M4-A: C0/C1/C2 replay with separate resource terms and the strict check
-kvlab/prefix_aware_cache.py M4-B: C1-PA, prefix-closed leaf-LRU GPU-only baseline (D33)
-kvlab/trace_models.py      M4-B: independent key-level models of C1-PA, C1-LRU and C2 (CPU)
-kvlab/m4_spec.py, m4_bench.py, m4_validate.py, m4_stats.py, m4_analysis.py, m4_freeze.py   M4-B: spec, session driver, validator, statistics, analysis, freeze
-kvlab/warm_disk.py         M4_EVAL_V2: request-scoped warm-disk planner and preparation
-kvlab/restore_policy.py    M5a: side-effect-free restore planner, opt-in policies, selection validation (CPU-tested)
-kvlab/restore_cost.py      M5a: versioned restore cost model: fit, artifact validation, domain, prediction (no torch; no artifact ships)
-kvlab/m5_spec.py, m5_state.py, m5_bench.py, m5_validate.py, m5_fit.py, m5_analysis.py   M5b: spec, state reset, session, validator, fit, analysis
-scripts/                   m0_*, m0_1_audit, m1_run, m1_mutation_check, m2_measure, m2_fit_predict, m2_score, m2_spike_probe, m2_1_reanalyze, m2_1_diagnose, m2_1_analyze_diag, m2_1_regimes, m3_measure, m3_analyze, m3_mutation_check, m3_confirm, m3_confirm_reconstruct, m4_measure, m4_analyze, m4_eval, m4_gate, m4_reconstruct, m5_run, m5_fit, m5_analyze, m5_gate, env_report
-tests/                     CPU tests; tests/gpu/ GPU tests (markers: gpu + m0_strict | m0_1 | m1 | m3 | m4 | m5)
-results/m0/ (read-only), results/m0_1/, results/m1/, results/m1_1/, results/m1_2/, results/m2/, results/m2_1/, results/m3/, results/m3_confirm/, results/m4/, results/m5/   machine-readable evidence and logs
+ request tokens ──► chain keys: key_i = SHA-256(namespace ‖ key_{i-1} ‖ i ‖ tokens of chunk i)
+                         │
+                         ▼
+   ┌───────────── longest contiguous run of present, valid chunks ──────────────┐
+   │  pinned host slab (LRU, leases)  ──spill on eviction──►  disk tier (LRU)   │
+   │  slots read directly                 CRC-checked files read via staging    │
+   └──────────────┬──────────────────────────────────────────────────────────────┘
+                  │ host-to-device copies: per layer (baseline, default) or one per chunk (batched)
+                  ▼
+        GPU: restored prefix [0, L)  +  prefill of [L, N)  ──►  first token, decode
+                  │
+                  └──► store every new complete prompt chunk back into the host tier
 ```
 
-## Setup (no sudo; nothing outside the project is modified)
-```bash
-cd ~/projects/kv-cache-lab
-python3 -m venv --without-pip .venv               # system python has no ensurepip
-curl -sSfL https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
-.venv/bin/python -I /tmp/get-pip.py
-.venv/bin/python -m pip install --index-url https://download.pytorch.org/whl/cu130 "torch==2.14.1+cu130"
-.venv/bin/python -m pip install "transformers==5.22.1" "pytest==9.2.0"
-HF_HOME=$PWD/.hf_cache .venv/bin/python -c "from huggingface_hub import snapshot_download; \
-snapshot_download('Qwen/Qwen2.5-1.5B-Instruct', revision='989aa7980e4cf806f80c7fef2b1adb7bc71aa306')"
-```
-- `kvlab/model.py` uses `HF_HOME=.hf_cache/` unless you set `HF_HOME` yourself.
-- The cache directories `.hf_cache/` and `.kvcache/` are git-ignored, as are `.venv/` and `backups/`.
-- After the download, prefix the commands below with `HF_HUB_OFFLINE=1`.
+## Key results
+One RTX 4080 Laptop GPU under WSL2, Qwen2.5-1.5B-Instruct in bf16, 256-token chunks, batch 1,
+synchronous first-token latency with a warm page cache for the disk tier. These are restoration and
+first-token measurements, not serving TTFT, decode throughput, cold-disk or tail-latency results.
 
-## Tests and reproduction
-```bash
-# CPU: boundaries, snapshots, identity, file format, host/disk stores, tiered logic (no GPU)
-.venv/bin/python -m pytest -q                                          # 408 passed at M3; 436 passed after the VAL-006 fix (last full CPU run)
-.venv/bin/python -m pytest -q tests/test_m3_analyze_validation.py tests/test_m3_stats.py   # 56 passed after the VAL-006 warmup follow-up (focused run; full suite not rerun)
-.venv/bin/python -m pytest -q tests/test_restore_policy.py tests/test_restore_cost.py   # M5a planner, policies, engine hook, cost model (CPU)
-.venv/bin/python -m pytest -q tests/test_m5_spec.py tests/test_m5_state.py tests/test_m5_pipeline.py tests/test_m5_analysis.py tests/test_m5_gate_cpu.py   # M5b (CPU)
+| Experiment | Result |
+|---|---|
+| **Batched restore** (preregistered confirmation, 8,640 samples) | Replacing 56 per-layer copies per chunk with one contiguous host-to-device copy cut median first-token latency **1.46–1.63×** (ratio of medians) on 4- and 5-chunk prefixes from host and warm disk; all 8 preregistered verdicts "batched faster". In the earlier exploratory M3 profiler session, a 16-chunk restore issued 16 instead of 896 copies for the same bytes. |
+| **Request traces** (10 sessions, 11,200 strictly checked requests) | With batched restore the tiered cache was faster than no caching on shared-prompt, multi-turn and document-reuse traces (−37.9, −16.4, −20.1 ms per request) and faster than a half-budget GPU-only prefix cache on the first two (−8.7, −15.1 ms). It was slower than that GPU cache on document reuse (+8.8 ms) and slower than no caching when nothing is reused (+60.5 ms: nothing to restore, every chunk still admitted). With the per-layer baseline backend, 5 of its 7 comparisons were inconclusive. |
+| **Cost-aware restore length** (held-out evaluation, 8 cases) | No incremental benefit demonstrated: the calibrated cost model chose exactly what always-restore chose on every case. Its predictions had 5.0% mean absolute relative error over 47 candidates, up to 31% on single candidates. |
 
-# GPU suites (each selectable; `-m gpu` runs all of them)
-HF_HUB_OFFLINE=1 .venv/bin/python -m pytest -m "gpu and m1" -v          # M1 integration, both restore backends: 23 passed
-HF_HUB_OFFLINE=1 .venv/bin/python -m pytest -m "gpu and m3" -v          # M3 batched-restore checks: 17 passed
-HF_HUB_OFFLINE=1 .venv/bin/python -m pytest -m "gpu and m5" -v          # M5 policy checks: 7 passed (in the M5 gate, scripts/m5_gate.py)
-HF_HUB_OFFLINE=1 .venv/bin/python -m pytest -m "gpu and m0_1" -v        # M0.1 regressions: 6 passed
-HF_HUB_OFFLINE=1 .venv/bin/python -m pytest -m "gpu and m0_strict" -v   # original M0: 10 passed, 1 FAILED (known)
+Details, intervals, statistical assumptions and the full verdict tables: [docs/results.md](docs/results.md).
 
-# Evidence scripts
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/m1_run.py --out results/m1_2/m1_run_<ts>.json [--restore-backend batched]  # exit 0 = acceptance (19 strict records)
-.venv/bin/python scripts/m1_run.py --validate results/m1_2/m1_run_<ts>.json                 # re-check a saved report
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/m0_1_audit.py --out results/m0_1/audit_bf16_<ts>.json
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/m0_1_audit.py --fp32-diagnostic --out results/m0_1/audit_fp32_<ts>.json
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/m0_experiment.py --smoke     # writes results/m0_reruns/<ts>/
-.venv/bin/python scripts/m1_mutation_check.py /tmp/kvlab-mutants       # CPU mutants: expect all 21 KILLED
-.venv/bin/python scripts/m3_mutation_check.py /tmp/kvlab-m3-mutants --gpu  # restore-backend mutants: expect 10/10 KILLED
-```
+## Correctness
+- **Storage is verified strictly.** Restored K/V bytes must equal what was written, and every step's
+  logits must be bitwise equal to a GPU-resident replay of the same request with the same restore
+  length. Both restore backends are also bitwise equal to each other. The trace evaluation compared
+  11,200 requests this way with 0 mismatches.
+- **Faults degrade to misses, never to wrong output or repeated inference.** Corrupt, truncated,
+  missing or foreign chunk files are rejected by identity checks and CRC32 before use; restoration
+  stops at the last verified chunk; a full disk skips the cache write. Every request makes exactly one
+  prefill and `steps − 1` decode calls. Mutation checks confirm that the tests catch deliberately
+  broken copies of the code.
+- **Not claimed: equality with full prefill.** In bf16, prefilling in chunks rounds differently from one
+  unchunked prefill, so an exact tie can flip a greedy token. One such case (`nat_long`) is kept as a
+  recorded FAIL of the original M0 suite, with its criteria unchanged ([D10](docs/decisions.md)).
+- **Evidence validation fails closed.** The first M3 analysis script could report a positive verdict
+  from incomplete evidence ([VAL-006](docs/BUGLOG.md)). The corrected M3 analysis and every later
+  formal analysis (M3_CONFIRM_V1, M4, M5) validate the evidence against a frozen specification first
+  and refuse to produce a verdict otherwise.
 
-What the GPU acceptance checks mean (design §9):
-- Storage is verified **strictly**: restored K/V bytes must match what was
-  written, and every step's logits must match a resident-GPU replay of the
-  same request sequence bitwise.
-- Every request makes exactly one prefill plus `steps − 1` decode forward
-  calls. Cache failures never repeat or abort inference.
-- Comparison with full recomputation is report-only. In bf16, exact ties can
-  flip greedy tokens; see `docs/results.md` (M0.1 and M1).
-- Decision D10 (2026-11-03):
-  - standard argmax; no tie rule, rounding, tolerance inflation or xfail;
-  - the original M0 strict FAIL is kept as recorded.
+## Design highlights
+- **Identity:** chunk keys chain SHA-256 over a canonical namespace (model, revision, dtype, layout,
+  attention backend, library versions) and the exact token ids, so equal tokens after a different
+  prefix or under a different model never alias.
+- **Chunk files:** a little-endian header with its own CRC32, the raw K/V bytes and a payload CRC32;
+  every field is validated before the payload is read, and no allocation is sized by a header field.
+- **Budgets and leases:** the host slab is allocated and pinned once; LRU eviction never touches a
+  leased chunk; disk bytes are released only after a file is really gone.
+- **Ownership:** the disk tier refuses any directory it does not own and never follows symlinks.
+- **Two restore backends:** the default `baseline` makes 2 × num_layers per-layer copies per chunk;
+  the opt-in `batched` backend makes one contiguous copy per chunk into bounded device staging (at most
+  4 chunks, 29.4 MB for this model), then one placement per group. The default stays `baseline`
+  ([D30, D31](docs/decisions.md)); the results above name the backend each experiment used.
+- **Optional restore-length policies:** always restore, recompute, a fixed length, or the
+  cost-model-driven choice evaluated above.
 
-  Restored output is **not** claimed to equal full-prefill output.
-- Performance numbers exist only for M2, M3 (with M3_CONFIRM_V1), M4_EVAL_V2 and M5. They are synchronous, single-request,
-  tokenized-input first-token latencies on one WSL2 laptop GPU, with platform
-  drift documented in `docs/results.md` (M2). They are not service TTFT and
-  not cold-NVMe or p99 figures. M2.1 qualifies the M2 decision claims (block-bootstrap
-  intervals; mean-based penalties) and shows that restore-path latency on this
-  platform switches between regimes of different CPU-side CUDA call cost.
-- M3 compares the baseline and batched restore backends within the same
-  sessions (`docs/M3_PROTOCOL.md`). Its numbers describe that sample only. The
-  slow mode remains, and its root cause is not established.
+More: [docs/design.md](docs/design.md).
+
+## Quick start
+Linux and Python 3.12 or newer (developed with 3.14). The pinned versions are in `requirements.txt`.
 
 ```bash
-# M2 (one GPU process at a time; new run directory each time)
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/m2_measure.py --split calibration --run-dir results/m2/run_<ts>
-.venv/bin/python scripts/m2_fit_predict.py --run-dir results/m2/run_<ts>          # freezes model + predictions
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/m2_measure.py --split evaluation --run-dir results/m2/run_<ts> --reps 40
-.venv/bin/python scripts/m2_score.py --run-dir results/m2/run_<ts>
-
-# M2.1 (CPU reanalysis of a saved M2 run; diagnostic sessions, one GPU process at a time)
-.venv/bin/python scripts/m2_1_reanalyze.py --m2-run results/m2/run_20261103T131543 --out results/m2_1/<dir>/reanalysis.json
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/m2_1_diagnose.py --out-dir results/m2_1/diag_<ts> --session s1 [--probes] [--no-monitor] [--profile]
-.venv/bin/python scripts/m2_1_analyze_diag.py --run-dir results/m2_1/diag_<ts>
-
-# M3 (one GPU process at a time; new run directory each time)
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/m3_measure.py --out-dir results/m3/eval_<ts> --session s1 --cases 256:32,1024:1,1536:128,3072:256,4096:64 --blocks 2 --warmup 2 --reps 12 --seed 31001
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/m3_measure.py --out-dir results/m3/eval_<ts> --session prof --profile --cases 256:32,1536:128,4096:64
-.venv/bin/python scripts/m3_analyze.py --run-dir results/m3/eval_<ts> [--out-dir <new dir>]   # validates first: 0 valid, 3 invalid evidence, 4 failed correctness check
-
-# M3_CONFIRM_V1 frozen analysis (CPU). Current tree, valid while the analysis files keep their frozen bytes:
-.venv/bin/python scripts/m3_analyze.py --spec M3_CONFIRM_V1 --run-dir results/m3_confirm/M3_CONFIRM_V1_run --out-dir <new dir> --expect-freeze-sha256 dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216
-# After later changes: reconstruct the frozen tree (verified against the manifest), then run its own analyzer (docs/results.md)
-.venv/bin/python scripts/m3_confirm_reconstruct.py --out <new dir> --tree-rev 13afde2 --expect-freeze-sha256 dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216
-
-# M4 (CPU): rebuild a frozen M4 tree from its manifest's base commit, run that tree's own analyzer, compare with the
-# archived outputs (V1: --spec M4_EVAL_V1, digest 137220aa1f40c9604fda983380f03d2e4f897cb2a8b6ad64ac97eabd3a3625b2; docs/results.md, M4)
-.venv/bin/python scripts/m4_reconstruct.py build --spec M4_EVAL_V2 --out <new dir> --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a
-cd <new dir> && <repo>/.venv/bin/python scripts/m4_analyze.py --spec M4_EVAL_V2 --run-dir results/m4/M4_EVAL_V2_run --out-dir <new out dir> --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a
-cd <repo> && .venv/bin/python scripts/m4_reconstruct.py compare --archived results/m4/M4_EVAL_V2_analysis --regenerated <new out dir> --archived-root /home/cyrus/projects/kv-cache-lab-m4v2 --regenerated-root <new dir>
-
-# M5 (stages C-F of docs/M5_PROTOCOL_DRAFT.md; each was run once; new output directories only, never overwritten).
-# To verify the archived evidence on CPU, use a3c6341's own scripts as described in docs/results.md (M5).
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/m5_run.py batch --split calibration --run-dir results/m5/M5_CAL_V1_run
-.venv/bin/python scripts/m5_fit.py --cal-run-dir results/m5/M5_CAL_V1_run --out-dir results/m5/M5_FIT_V1
-HF_HUB_OFFLINE=1 .venv/bin/python scripts/m5_run.py batch --split evaluation --run-dir results/m5/M5_EVAL_V1_run --cost-model results/m5/M5_FIT_V1/cost_model.json --predictions results/m5/M5_FIT_V1/predictions.json
-.venv/bin/python scripts/m5_analyze.py --eval-run-dir results/m5/M5_EVAL_V1_run --fit-dir results/m5/M5_FIT_V1 --out-dir results/m5/M5_EVAL_V1_analysis
+python -m venv .venv && . .venv/bin/activate
+pip install --index-url https://download.pytorch.org/whl/cu130 torch==2.14.1+cu130
+pip install transformers==5.22.1 pytest==9.2.0
+python -m pytest -q        # CPU suite: tiny random Qwen2 models, no GPU and no model download
 ```
+
+The GPU suites need CUDA and the pinned model revision, downloaded into the project-local cache:
+
+```bash
+HF_HOME=$PWD/.hf_cache python -c "from huggingface_hub import snapshot_download; \
+  snapshot_download('Qwen/Qwen2.5-1.5B-Instruct', revision='989aa7980e4cf806f80c7fef2b1adb7bc71aa306')"
+HF_HUB_OFFLINE=1 python -m pytest -m "gpu and m1" -v      # tiered cache, both restore backends
+HF_HUB_OFFLINE=1 python -m pytest -m "gpu and m3" -v      # restore backends
+HF_HUB_OFFLINE=1 python -m pytest -m "gpu and m5" -v      # restore-length policies
+HF_HUB_OFFLINE=1 python -m pytest -m "gpu and m0_1" -v    # restored-vs-resident audit
+HF_HUB_OFFLINE=1 python -m pytest -m "gpu and m0_strict" -v  # original M0 suite: 1 known FAIL (nat_long)
+HF_HUB_OFFLINE=1 python scripts/m4_gate.py --out-dir <new dir>  # M1 + M3 + M4 trace-replay gate
+```
+
+`kvlab/model.py` uses `HF_HOME=.hf_cache/` unless `HF_HOME` is set. The M4 trace-replay suite writes
+required diagnostics into the gate's output directory, so it runs only through `scripts/m4_gate.py`.
+
+## Reproducing the analyses
+The analyses run on CPU from the archived evidence, with the analysis code of the revision that
+produced it. The original analysis outputs are committed next to the raw data.
+
+```bash
+# M3_CONFIRM_V1: the bound analysis files are unchanged, so the frozen analyzer runs in this tree
+python scripts/m3_analyze.py --spec M3_CONFIRM_V1 --run-dir results/m3_confirm/M3_CONFIRM_V1_run \
+  --out-dir <new dir> --expect-freeze-sha256 dd58b894ebc9fc5d8d4e3c5bdc837d88637f3b2a224f1a1ce6e316f3e98b8216
+
+# M4_EVAL_V2: likewise
+python scripts/m4_analyze.py --spec M4_EVAL_V2 --run-dir results/m4/M4_EVAL_V2_run --out-dir <new dir> \
+  --expect-freeze-sha256 150f232ef11040ef1bcaf095a3f9beb341e708c59fc91de244f78e848d4cc83a
+
+# M5: run the recorded revision's own scripts against the archived evidence
+(cd results/m5 && sha256sum -c SHA256SUMS)
+mkdir <src> && git archive a3c63419b6504b20ce419eff62fea2c64f26fb3e | tar -x -C <src>
+(cd <src> && python scripts/m5_analyze.py --eval-run-dir <repo>/results/m5/M5_EVAL_V1_run \
+  --fit-dir <repo>/results/m5/M5_FIT_V1 --out-dir <new dir>)
+cmp <new dir>/analysis.json results/m5/M5_EVAL_V1_analysis/analysis.json
+```
+
+The analyzers need the pinned package versions, refuse to overwrite outputs, and exit 3 on any
+missing or altered evidence. Rebuilding a frozen source tree for the other experiments, and what
+offline reproduction does not verify: [docs/results.md](docs/results.md#reproducing).
+
+## Limitations
+- One model and configuration (Qwen2.5-1.5B-Instruct, bf16, SDPA, full attention), batch 1, one
+  process, sequential requests. No concurrency, no asynchronous copies or overlap with compute.
+- Measurements come from one laptop GPU under WSL2, where restore latency also shows an unexplained
+  slow mode of more expensive CUDA calls; the disk tier was measured only with a warm page cache.
+- The disk tier is a cache, not storage: no fsync, no recovery across restarts, CRC32 is not
+  authentication, and the directory must be trusted.
+- Restored output equals a resident replay, not full-prefill output (see Correctness).
+- The trace evaluation uses synthetic traces and compares against this project's own GPU-only prefix
+  cache, not vLLM or SGLang, with unequal total resources (the tiered cache uses pinned host memory,
+  disk and the page cache instead of GPU memory).
+- Not integrated with a serving engine.
+
+## Repository layout
+```
+kvlab/            cache library (identity, chunk_format, host_store, disk_store, tiered_cache,
+                  always_restore, restore_policy, restore_cost) and evaluation tooling
+                  (benchmarks, trace replay, validators, statistics; docs/README.md has the map)
+tests/            CPU tests (default); tests/gpu/ real-model tests (-m gpu)
+scripts/          experiment runners, analyzers, gates and reconstruction tools
+results/          raw evidence and analysis outputs, per experiment
+docs/             design, results, decisions, bug log, correctness matrix, experiment protocols
+```
+
+Documentation index: [docs/README.md](docs/README.md).
+
+## License
+MIT; see [LICENSE](LICENSE). Model weights are not part of this repository; they are downloaded from
+Hugging Face under their own license.
