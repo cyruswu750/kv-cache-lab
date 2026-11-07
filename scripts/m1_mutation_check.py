@@ -4,7 +4,7 @@ Usage: .venv/bin/python scripts/m1_mutation_check.py <empty scratch dir>
 """
 import shutil, subprocess, sys
 from pathlib import Path
-SRC = Path("/home/cyrus/projects/kv-cache-lab")
+SRC = Path(__file__).resolve().parent.parent  # the repository root (this file is scripts/m1_mutation_check.py)
 WORK = Path(sys.argv[1])
 MUTANTS = [
  ("header CRC not checked", "kvlab/chunk_format.py", "    if zlib.crc32(rest, zlib.crc32(head[:FIXED.size])) != header_crc:\n        raise ChunkReadError(\"header_crc\")", "    pass", "tests/test_chunk_format.py"),

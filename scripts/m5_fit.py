@@ -9,7 +9,7 @@ Writes into a NEW directory (never overwrites):
 
 The predictions are computed from the cost model as reloaded from disk, so the evaluation sessions decide with
 exactly those bytes. Exit 0 = fitted; 3 = invalid evidence (nothing fitted); 4 = strict mismatch (nothing fitted).
-NOT RUN as of M5b preparation: there is no calibration evidence yet.
+Executed once, for M5_FIT_V1 (docs/results.md, M5).
 """
 import argparse
 import json

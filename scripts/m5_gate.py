@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""The bounded M5 GPU correctness gate (docs/M5_PROTOCOL_DRAFT.md §2 A). NOT RUN as of M5b preparation; each
-execution needs separate owner approval and runs exclusively on the GPU.
+"""The bounded M5 GPU correctness gate (docs/M5_PROTOCOL_DRAFT.md §2 A). Each execution runs
+exclusively on the GPU, into a new output directory. It passed once before the M5 calibration (docs/results.md, M5).
 
   HF_HOME=<weights cache> HF_HUB_OFFLINE=1 .venv/bin/python scripts/m5_gate.py --out-dir local/m5_gate_<ts>
 

@@ -11,10 +11,13 @@
 | [environment.md](environment.md) | Machine, packages, model, and the observed `transformers` cache API |
 
 ## Experiment protocols
-Each formal experiment was specified before it was measured. These documents are kept as records
-of what was fixed in advance; status notes inside them describe the state when they were written.
-Files marked **bound** are hashed by a freeze manifest and must stay byte-identical, so they are never
-edited.
+Each formal experiment was specified before it was measured. These documents record what was fixed in
+advance; the bound ones keep their status notes exactly as written, and the others say what was
+updated afterwards.
+Files marked **bound** are hashed by the M3_CONFIRM_V1 freeze manifest and are kept byte-identical,
+so the frozen analyzer still runs in the current tree. The two M4 protocols are maintained copies whose
+status notes were edited after the evaluations; each links to its frozen text, and the M4 evaluations
+are reproduced from their frozen trees ([results.md](results.md#reproducing)).
 
 | Experiment | Protocol | Scripts | Evidence |
 |---|---|---|---|
@@ -22,9 +25,9 @@ edited.
 | M1: tiered cache evidence runs | (in [design.md](design.md)) | `m1_run`, `m1_mutation_check`, `m1_1_repro_review_issues` | `results/m1*/` |
 | M2: latency and offline cost model | [M2_PROTOCOL.md](M2_PROTOCOL.md) | `m2_measure`, `m2_fit_predict`, `m2_score`, `m2_spike_probe` | `results/m2/` |
 | M2.1: measurement audit, slow mode | [M2_1_DIAGNOSTIC_PLAN.md](M2_1_DIAGNOSTIC_PLAN.md) | `m2_1_reanalyze`, `m2_1_diagnose`, `m2_1_analyze_diag`, `m2_1_regimes` | `results/m2_1/` |
-| M3: baseline vs batched restore | [M3_DESIGN.md](M3_DESIGN.md), [M3_PROTOCOL.md](M3_PROTOCOL.md) (bound) | `m3_measure`, `m3_analyze`, `m3_mutation_check` | `results/m3/` |
+| M3: baseline vs batched restore | [M3_DESIGN.md](M3_DESIGN.md) (bound), [M3_PROTOCOL.md](M3_PROTOCOL.md) (bound) | `m3_measure`, `m3_analyze`, `m3_mutation_check` | `results/m3/` |
 | M3_CONFIRM_V1: preregistered confirmation | [M3_CONFIRM_PROTOCOL.md](M3_CONFIRM_PROTOCOL.md) (bound), [M3_CONFIRM_CLARIFICATIONS.md](M3_CONFIRM_CLARIFICATIONS.md) | `m3_confirm`, `m3_analyze --spec M3_CONFIRM_V1`, `m3_confirm_reconstruct` | `results/m3_confirm/` |
-| M4: trace evaluation (V1 invalid, V2 valid) | [M4B_PROTOCOL.md](M4B_PROTOCOL.md), [M4_EVAL_V2_PROTOCOL.md](M4_EVAL_V2_PROTOCOL.md) (bound) | `m4_gate`, `m4_eval`, `m4_measure`, `m4_analyze`, `m4_reconstruct` | `results/m4/` |
+| M4: trace evaluation (V1 invalid, V2 valid) | [M4B_PROTOCOL.md](M4B_PROTOCOL.md), [M4_EVAL_V2_PROTOCOL.md](M4_EVAL_V2_PROTOCOL.md) (maintained copies) | `m4_gate`, `m4_eval`, `m4_measure`, `m4_analyze`, `m4_reconstruct` | `results/m4/` |
 | M5: restore-length policy and cost model | [M5_DESIGN.md](M5_DESIGN.md), [M5_PROTOCOL_DRAFT.md](M5_PROTOCOL_DRAFT.md) | `m5_gate`, `m5_run`, `m5_fit`, `m5_analyze` | `results/m5/` |
 
 Scripts live in `scripts/`. GPU scripts run one process at a time; analysis scripts are CPU-only and

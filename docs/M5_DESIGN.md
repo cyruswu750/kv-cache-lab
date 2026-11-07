@@ -235,8 +235,8 @@ NaN/Infinity tokens. `save_artifact` never overwrites. Malformed or tampered art
   restore, prefill or counter change.
 
 ## 7. Limitations
-- **Not run:** no GPU execution, calibration or evaluation. Whether any candidate other than the extremes
-  is ever best on this platform is unknown. The M2/M3 numbers suggest the choice may often be degenerate
+- **Not run when this note was written:** no GPU execution, calibration or evaluation (they ran later;
+  see the status note above). Whether any candidate other than the extremes was ever best was then unknown. The M2/M3 numbers suggest the choice may often be degenerate
   (always-restore), and that is an acceptable outcome.
 - **Single process:** sequential requests, batch 1, synchronous restores; no async, pipelining,
   concurrency or vLLM.

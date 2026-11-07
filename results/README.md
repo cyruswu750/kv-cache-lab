@@ -19,6 +19,5 @@ directories are pipeline checks and are not used for any claim.
 | `m5/` | Restore-length policy: calibration, fit, held-out evaluation | valid; no incremental benefit demonstrated | `M5_EVAL_V1_analysis/`, `M5_FIT_V1/`, `SHA256SUMS` |
 
 Some files record absolute paths of the checkout they were produced in; those paths are part of the
-recorded evidence. The `pre_*`, `post_*`, `change_inventory_*`, `review_archive*` and `CHECKPOINT.txt`
-files in the milestone directories are snapshot manifests and checkpoints of the working tree, kept as
-recorded; they are bookkeeping, and no script, test or analysis reads them.
+recorded evidence. The milestone directories also keep bookkeeping records of the working tree made at
+the time; no script, test or analysis reads them.

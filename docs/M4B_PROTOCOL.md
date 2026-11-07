@@ -1,63 +1,38 @@
-# M4-B protocol: trace evaluation of C0 / C1 / C2 (approved for freeze 2026-11-04, decision D35; CPU preparation implemented; GPU correctness gate passed; one feasibility timing pilot; formal evaluation not run)
+# M4-B protocol: trace evaluation of C0 / C1 / C2
 
-> **Status: approved for freeze (2026-11-04, decision D35).**
-> - Until that approval this document was a DRAFT.
-> - The owner approved the design decisions and the draft parameters below on 2026-11-04
->   (decision D33).
-> - The approval for freeze changes no experimental rule: the workload, seeds, configurations,
->   budgets, R, statistics, comparisons, validity checks, deadline and stopping rules are those
->   of the reviewed draft.
-> - The CPU preparation is implemented and tested (§11).
+> **About this copy.** This is a maintained copy of the M4-B protocol. After both evaluations ran,
+> its status notes and workflow wording were edited; no experimental rule, parameter or check was
+> changed. The exact text fixed before measurement, whose SHA-256 the M4_EVAL_V1 and M4_EVAL_V2
+> freeze manifests record, is the version at commit
+> [`b858d9e`](https://github.com/cyruswu750/kv-cache-lab/blob/b858d9e9f1ff78bd157b2af80720b54ae85cda84/docs/M4B_PROTOCOL.md). Results and their limits are in `docs/results.md` (M4).
 >
-> **GPU correctness gate status (2026-11-04)**, each attempt separately approved:
-> - **Attempt 1** failed: a harness defect in the wrapper's pytest temporary directories, since
->   fixed.
-> - **Attempt 2** passed its tests. Its review found three coverage gaps against §9:
->   - C1 and C2 counters were not fully reconciled with the models;
->   - restored bytes were not compared directly with the C1 entries;
->   - the per-request memory diagnostics were not retained.
-> - **The current gate test** closes those gaps. The detailed gate evidence is retained locally.
-> - **Attempt 3** ran the strengthened gate and passed: 46 tests, 311 s of the 900 s cap.
->
-> **Timing pilot (D34):** the owner separately authorized one timing-only session on the
-> calibration traces, solely to inform the §9.5 runtime-feasibility decision.
-> - **Workload:** the full calibration traces plus the warmup and the full session workload, with
->   no evaluation seed.
-> - **Result:** 189 s for the session. Ten-session projections are 1,891–1,935 s, below the
->   2,160 s (80%) threshold.
-> - **What it selected:** no policy, configuration, evaluation seed, success criterion,
->   statistical rule, session count or deadline.
-> - **What it does not establish:** a single session does not measure run-to-run variability and
->   does not guarantee that ten sessions complete in time.
-> - **No formal performance conclusion** and no freeze authorization follow from it.
-> - **Evidence:** kept locally, not committed.
->
-> **Decision to proceed to freeze (D35, 2026-11-04):** the owner accepts the single D34 pilot
-> as the planning basis for the freeze, with its documented uncertainty:
-> - its ten-session projections (1,891–1,935 s) are below the 2,160 s planning threshold;
-> - one pilot does not establish session-to-session variability. The calibration-to-evaluation
->   workload mapping is approximate, and the batch's overhead between sessions may differ;
-> - 2,700 s remains the hard batch deadline (§10). A timeout, or incomplete evidence, remains
->   invalid (exit 3), with no performance verdict;
-> - no additional sessions, retries, extensions or parameter changes are authorized.
->
-> D35 approves the freeze only, not the evaluation batch.
->
-> No gate or pilot time informed any design choice: every choice below preceded both.
->
-> No formal evaluation session has run, and no performance result exists. The freeze manifest is
-> created from the commit that contains this revision. The manifest records this document's
-> bytes, and its digest is kept outside the repository. Every number below, apart from the dated
-> status notes above, is either:
-> - a deterministic offline trace statistic, computed on the CPU from the generator alone; or
-> - a parameter value set in the reviewed draft and unchanged since.
->
-> No GPU timing informed any choice. Before an evaluation, each of these needs separate owner
-> approval:
-> - the bounded GPU correctness gate (§9): approved, and passed in attempt 3;
-> - the premeasurement freeze, in the manner of D31: approved (D35). `scripts/m4_eval.py freeze`
->   refuses while the first line of this document says DRAFT;
-> - the one evaluation batch: not yet approved.
+> **Provenance.**
+> - **Fixed before any GPU timing:** the design choices of decision D33 and every parameter below
+>   (workload, seeds, configurations, budgets, R, statistics, comparisons, validity checks, deadline
+>   and stopping rules). Every number below, apart from the dated notes in this box, is either a
+>   deterministic offline trace statistic computed on the CPU from the generator alone, or a
+>   parameter value fixed then.
+> - **GPU correctness gate (§9), 2026-11-04:** attempt 1 failed on a defect in the wrapper's pytest
+>   temporary directories, since fixed; attempt 2 passed its tests, but three coverage gaps against
+>   §9 were found afterwards (C1 and C2 counters not fully reconciled with the models, restored bytes
+>   not compared directly with the C1 entries, per-request memory diagnostics not retained);
+>   attempt 3 ran the strengthened gate and passed: 46 tests, 311 s of the 900 s cap. Detailed gate
+>   evidence is kept outside the repository.
+> - **Timing pilot (D34):** one timing-only session on the calibration traces plus the warmup, with
+>   no evaluation seed, solely to inform the §9.5 runtime-feasibility decision. It took 189 s;
+>   ten-session projections were 1,891–1,935 s, below the 2,160 s (80%) threshold. It selected no
+>   policy, configuration, evaluation seed, success criterion, statistical rule, session count or
+>   deadline; one session measures no run-to-run variability and does not guarantee that ten
+>   sessions complete in time. Its evidence is kept outside the repository.
+> - **Freeze (D35):** the single pilot was accepted as the planning basis, with its documented
+>   uncertainty (one session; an approximate calibration-to-evaluation workload mapping; unmeasured
+>   overhead between sessions). 2,700 s stayed the hard deadline, with no additional sessions,
+>   retries, extensions or parameter changes. The freeze records this document's bytes, and the
+>   manifest digest was recorded outside the repository. No gate or pilot time informed any design
+>   choice.
+> - **Execution:** M4_EVAL_V1 ran once under this protocol and is invalid under its whole-tier
+>   warm-disk rule (no performance result). M4_EVAL_V2 ran once under
+>   `docs/M4_EVAL_V2_PROTOCOL.md`, which amends only the warm-disk preparation.
 
 Context: `docs/design.md` §12 (M4-A) and §13 (M4-B preparation), decisions D32–D35. The
 reviewed M4-A code is unchanged. C1-PA is a separate class, and the plain-LRU C1 is kept for the
@@ -135,7 +110,7 @@ All configurations run in every session, on every trace, with fresh state per tr
 
 **Not timed:** C1-LRU(W/2), the reviewed M4-A plain LRU, is reported **offline only**, as
 key-level restored tokens and dead entries (§5). It is an offline diagnostic, not a timed arm
-(owner decision, D33). The gate (§9) still checks its correctness on the GPU.
+(decision D33). The gate (§9) still checks its correctness on the GPU.
 
 **Budgets per trace** (capacities in chunks; bytes = chunks × 7,340,032):
 
@@ -241,9 +216,8 @@ key-level restored tokens and dead entries (§5). It is an offline diagnostic, n
   - That does not guarantee lower C1 latency: prefix maintenance and different
     restore/recompute splits have their own costs. No direction of latency bias is claimed.
 
-**Departure from the M4 planning note.** The note excluded prefix-aware eviction from M4. This
-draft re-admits it for C1 only, because of findings 1–3. The owner approved it as decision D33.
-C2's policies are not changed.
+**Scope note.** Prefix-aware eviction had originally been left out of M4. This protocol re-admits
+it for C1 only, because of findings 1–3 (decision D33). C2's policies are not changed.
 
 ## 6. Sessions, order and state
 - **Session:** one fresh process. It runs all four evaluation traces, in a seeded random trace
@@ -535,20 +509,21 @@ enforced as one monotonic deadline by the bounded, fail-fast wrapper `scripts/m4
      - A missing or incomplete file fails the gate.
 3. **Pass criterion:** every item passes, with no CUDA error.
 4. **On failure:** the gate stops. It is reported as FAIL, and no performance session runs. A
-   fix needs a new review, and the gate is rerun under a new name.
+   fix is reviewed, and the gate is rerun into a new output directory; the failed run is kept.
 5. **Time projection:**
    - The gate records the wall time of its replay as a **feasibility diagnostic**, not as
      performance evidence.
-   - If it projects the evaluation beyond 80% of the deadline (§10), the work returns to the
-     owner. R, the traces and the deadline are never adjusted automatically.
-   - For M4_EVAL_V1, the gate's own wall time was supplemented by the one D34 timing pilot. The
-     owner's decision on that basis is D35. Nothing was adjusted.
+   - If it projects the evaluation beyond 80% of the deadline (§10), the batch does not start
+     until a recorded decision resolves it. R, the traces and the deadline are never adjusted
+     automatically.
+   - For M4_EVAL_V1, the gate's own wall time was supplemented by the one D34 timing pilot; the
+     decision on that basis is D35. Nothing was adjusted.
 
 The M0 strict suite (known `nat_long` FAIL) is not part of the gate. It stays as recorded.
 
 ## 10. Execution budget, stopping and failure handling
 - **Attempts:** exactly one evaluation batch of R = 10 sessions. It is launched only after the
-  gate passes, the protocol is frozen and the owner approves.
+  gate passes and the protocol is frozen.
 - **Deadline:** 2,700 s monotonic for the batch, rechecked before every launch. The planning
   estimate is ≈ 3 min per session, which includes untimed reference checks; it is not a
   measurement.
@@ -561,14 +536,15 @@ The M0 strict suite (known `nat_long` FAIL) is not part of the gate. It stays as
   - a correctness failure in complete evidence → exit 4, with no performance analysis;
   - missing, inconsistent or timed-out evidence, or a caught OOM → exit 3, with no statement
     either way.
-- **Rerun:** a rerun needs a new spec name, a documented reason and owner approval.
+- **Rerun:** a rerun needs a new spec name, a documented reason and a new freeze. It never
+  replaces or re-analyses part of a recorded batch.
 - **Exclusivity:** GPU work runs exclusively, never concurrently with any other GPU job.
   - WSL2's `nvidia-smi` cannot list Windows host processes, so exclusivity is recorded as
     "no competing process observable", not as proven.
   - The preflight records GPU memory and utilization, and the runner records them during the
     batch, as in M3.
 
-## 11. Implementation status (CPU preparation done; GPU correctness gate passed and one D34 feasibility pilot, see the status note at the top; formal evaluation not run)
+## 11. Implementation
 **Implemented and tested on CPU** (tiny random bf16 Qwen2, C = 4, and key-level checks at
 C = 256; `docs/correctness-matrix.md`, M4-B section):
 1. **`kvlab/prefix_aware_cache.py`:** `PrefixAwareGPUPrefixCache`, a subclass of the unchanged
@@ -594,8 +570,9 @@ C = 256; `docs/correctness-matrix.md`, M4-B section):
    - per request: residency, logical copy traffic, storage terms, allocator observations
      (CUDA only), and C1 growth and fault counters.
 
-   Any exception propagates. **`scripts/m4_measure.py`** runs one GPU session. It has not run;
-   the D34 pilot used a private local mirror of it with an isolated pilot spec.
+   Any exception propagates. **`scripts/m4_measure.py`** runs one GPU session; formal sessions run
+   only inside the batch. The D34 pilot used a private local mirror of it with an isolated pilot
+   spec.
 5. **`kvlab/m4_validate.py`:** the fail-closed validator (§8, §10).
    - It runs a schema pass before any semantic check, reconciles counters and storage, and
      reconciles each session's exit with its recomputed strict result.
@@ -612,30 +589,25 @@ C = 256; `docs/correctness-matrix.md`, M4-B section):
 7. **`kvlab/m4_freeze.py` and `scripts/m4_eval.py`:** freeze, verify and run.
    - `run` reuses `kvlab.m3_confirm.run_batch` unchanged.
    - The freeze refuses a protocol whose first line says DRAFT.
-   - When this revision was approved (D35), none of these commands had yet been executed
-     against the real tree.
 8. **`tests/gpu/test_m4_replay.py` and `scripts/m4_gate.py`:** the gate (§9) and its bounded,
    fail-fast wrapper.
    - The wrapper is tested on CPU with dummy suites (pass, fail-fast, deadline) and with real
      pytest children.
    - The gate's check helpers and per-case driver are tested on CPU with a tiny model,
      including targeted counter and byte mismatches (`tests/test_m4_gate_checks_cpu.py`).
-   - GPU executions are listed in the status note at the top.
+   - GPU executions are listed in the provenance note at the top.
 
 **The role of calibration (fixed):**
 - The calibration seeds feed only the GPU correctness gate and the CPU tests. The one exception
-  is the owner-authorized D34 feasibility pilot.
+  is the D34 feasibility pilot.
 - No timing from them is analysed, except in that pilot, which was used solely for the §9.5
   runtime-feasibility decision.
 - Nothing measured on them, or on the evaluation sessions, selects a policy, metric, trace,
   budget, threshold, comparison or session count.
 
-**Already done:** a passing gate run of the current gate version (attempt 3; status note
-above).
-
-**Remaining before any evaluation:**
-- the protocol freeze: approved (D35). It is created from the commit containing this revision;
-- the batch: needs separate owner approval.
+**Before the evaluation:** a passing gate run of the current gate version (attempt 3), then the
+protocol freeze (D35) from the commit containing this protocol, then the one batch. All three
+took place; see the provenance note at the top.
 
 **Not implemented, by decision:** runtime restore-length policy, cost-model refit,
 asynchronous restoration, and any additional benchmark arm.
@@ -681,10 +653,10 @@ would need:
    chosen backend;
 2. a per-request headroom estimate on **calibration** traces: the established saving of an
    oracle choice over always-restore, with an interval excluding 0;
-3. a headroom of at least an owner-set threshold, for example 5% of the trace-mean, set before
-   that calibration;
-4. a separate, approved task.
+3. a headroom of at least a threshold, for example 5% of the trace-mean, fixed before that
+   calibration;
+4. a separate, declared experiment.
 
 **Cost-model refit:** the M2 model describes the baseline backend and stays as recorded. A refit
-is justified only by an approved policy task, only on the backend that the policy would use, and
+is justified only by a declared policy experiment, only on the backend that the policy would use, and
 only with fresh calibration sessions, never with M4 evaluation data.

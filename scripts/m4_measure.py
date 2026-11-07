@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""One M4-B evaluation session (GPU). GPU work needs separate approval; a session normally runs
-only through `scripts/m4_eval.py run` after the freeze.
+"""One M4-B evaluation session (GPU, exclusive). A formal session runs only through
+`scripts/m4_eval.py run`, after the freeze and inside the batch's deadline.
 
   HF_HOME=<weights cache> HF_HUB_OFFLINE=1 .venv/bin/python scripts/m4_measure.py \\
       --spec M4_EVAL_V1 --out-dir results/m4/M4_EVAL_V1_run --session e01 --seed 44001

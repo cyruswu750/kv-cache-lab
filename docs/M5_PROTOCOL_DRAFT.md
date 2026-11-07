@@ -8,11 +8,14 @@
   statistics (§3–§10), as they were declared before measurement;
 - the bound specification digests (calibration `ab1a506e…`, evaluation `5e6ecdc4…`).
 
-**Approval:** this document was never frozen or approved as a whole, the way the M4 protocols were. Each stage
-was authorized separately. Before each formal batch, its execution conditions were declared, and before the
-evaluation batch they were recorded together with digests of the frozen inputs (the specification, cost model,
-predictions, source identity and analysis implementation). That record is kept privately and is not part of the
-repository. **This documentation update was written after the measurements and did not exist before them.**
+**Provenance:** unlike the M4 protocols, this document was never frozen as a whole, and it is not a
+preregistration. What was fixed before measurement is the specification itself (the cases, schedules, rules and
+analysis, bound by the specification digests above and by the source revision `a3c6341`). Each stage ran as a
+separate, single step. Before each formal batch its execution conditions were declared, and before the evaluation
+batch they were recorded together with digests of the frozen inputs (the specification, cost model, predictions,
+source identity and analysis implementation); that record is kept outside the repository. The text of this
+document as it stood at the experiment revision is the version at commit [`a3c6341`](https://github.com/cyruswu750/kv-cache-lab/blob/a3c63419b6504b20ce419eff62fea2c64f26fb3e/docs/M5_PROTOCOL_DRAFT.md). **This
+documentation update was written after the measurements and did not exist before them.**
 
 **Status, by stage** (each executed once, with no retry or replacement):
 - **A. GPU correctness gate** (source `9785c33`): PASS, 47 tests (M1 23, M3 17, M5 7). It covers correctness
