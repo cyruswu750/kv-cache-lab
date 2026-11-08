@@ -380,6 +380,9 @@ A reconstruction of each experiment has reproduced every archived value. The onl
 recorded absolute paths (`out_dir` in the M3 analysis JSON; `run_dir` in `m4_validation.json`, the one
 path-only difference `compare` accepts) and, in a regenerated `predictions.json`, its creation time and
 its own digest; the archived predictions were frozen before the evaluation and must not be replaced.
+These reproductions ran on the recording machine. On a CPU with a different BLAS kernel, values computed
+through BLAS can differ in their last bits: for the M3 analysis's `ar1_effective_n`, the observed
+difference is 1 ULP, and the tests accept up to 4 ULPs ([D45](decisions.md)).
 
 **What offline reproduction does not verify:** latencies (a new measurement would be a new experiment),
 the GPU tensors behind the strict checks (the validators check their recorded results), and the
