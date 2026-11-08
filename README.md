@@ -1,5 +1,7 @@
 # kv-cache-lab: a tiered prefix KV cache for LLM inference
 
+[![CPU tests](https://github.com/cyruswu750/kv-cache-lab/actions/workflows/cpu-tests.yml/badge.svg?branch=main)](https://github.com/cyruswu750/kv-cache-lab/actions/workflows/cpu-tests.yml)
+
 A prefix KV cache for Hugging Face Transformers inference that keeps attention K/V state in a bounded
 pinned-host tier and a bounded disk tier, restores the longest verified prefix of a new request, and
 recomputes only the rest. Restoration is checked bitwise against a GPU-resident replay. Each
