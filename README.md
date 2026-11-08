@@ -97,6 +97,20 @@ HF_HUB_OFFLINE=1 python scripts/m4_gate.py --out-dir <new dir>  # M1 + M3 + M4 t
 `kvlab/model.py` uses `HF_HOME=.hf_cache/` unless `HF_HOME` is set. The M4 trace-replay suite writes
 required diagnostics into the gate's output directory, so it runs only through `scripts/m4_gate.py`.
 
+### Continuous integration
+[`.github/workflows/cpu-tests.yml`](.github/workflows/cpu-tests.yml) runs the CPU suite on GitHub Actions
+for pull requests, pushes to `main` and manual dispatch: one Ubuntu job, Python 3.14.4, the CPU build of
+torch 2.14.1 and the other recorded package versions (`requirements-ci.txt`), with Hugging Face offline.
+The GPU suites (`tests/gpu/`, marker `gpu`) are deselected; CI downloads no model weights, runs no
+experiments or benchmarks and does not reproduce the archived analyses. The same run locally, in a new
+environment:
+
+```bash
+python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu torch==2.14.1+cpu
+python -m pip install -r requirements-ci.txt
+HF_HUB_OFFLINE=1 TRANSFORMERS_OFFLINE=1 python -m pytest -q -ra -m "not gpu"
+```
+
 ## Reproducing the analyses
 The analyses run on CPU from the archived evidence, with the analysis code of the revision that
 produced it; they need no GPU and no model weights, but an environment with the pinned package

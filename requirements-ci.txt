@@ -1,0 +1,49 @@
+# CPU-only test environment for CI (.github/workflows/cpu-tests.yml).
+#
+# These are the package versions recorded for the M0 environment (results/m0/pip_freeze.txt), with one
+# CI-only change: torch is the CPU build of the same release (2.14.1+cpu instead of 2.14.1+cu130), so the
+# CUDA-only wheels (cuda-*, nvidia-*, triton) are left out. requirements.txt, which records the GPU
+# experiment environment, is unchanged.
+#
+# torch comes from the PyTorch CPU index, so install it first, then the rest from PyPI:
+#   python -m pip install --no-deps --index-url https://download.pytorch.org/whl/cpu torch==2.14.1+cpu
+#   python -m pip install -r requirements-ci.txt
+torch==2.14.1+cpu
+transformers==5.22.1
+pytest==9.2.0
+
+# Recorded versions of their dependencies
+annotated-doc==0.0.5
+anyio==4.16.0
+click==8.5.0
+filelock==4.2.4
+fsspec==2026.9.0
+h11==0.16.0
+hf-xet==1.8.0
+httpcore2==2.16.0
+httpx2==2.16.0
+huggingface_hub==2.4.0
+idna==3.20
+iniconfig==2.3.1
+Jinja2==3.1.6
+markdown-it-py==4.2.0
+MarkupSafe==3.0.3
+mdurl==0.1.2
+mpmath==1.3.0
+networkx==3.7
+numpy==2.5.4
+packaging==26.3
+pluggy==1.7.0
+Pygments==2.21.0
+PyYAML==6.0.3
+regex==2026.9.29
+rich==15.0.0
+safetensors==0.8.0
+setuptools==78.1.0
+shellingham==1.5.4
+sympy==1.14.0
+tokenizers==0.23.3
+tqdm==4.70.1
+truststore==0.10.5
+typer==0.27.3
+typing_extensions==4.16.0
