@@ -55,6 +55,7 @@ handling) rather than the library.
 | D42 | Candidate-measurement harness with fail-closed evidence | Experiment record |
 | D43 | Multi-candidate statistics | Experiment record |
 | D44 | Publish the M5 evidence byte for byte | Experiment record |
+| D45 | Cross-CPU tolerance for one derived statistic in historical-analysis tests | Active |
 
 ## D1. HF Transformers + PyTorch as the M0 correctness reference harness
 - **Decision:** M0 uses `transformers` `DynamicCache` with plain PyTorch
@@ -886,3 +887,36 @@ gate (at `9785c33`), the diagnostic pilot, the calibration, the fit, the held-ou
     revision's own scripts (`docs/results.md`, M5).
   - **What it does not do:** it does not re-measure anything or re-establish the recording machine.
 - **Integration:** the M5 commits were fast-forwarded into `main`, with no squash, rebase or rewrite.
+
+## D45. (CI) Compare the archived M3 `ar1_effective_n` across CPUs within 4 ULPs
+Context: 2026-11-07, a CPU CI run (Actions run 42458240422) whose values match a non-AVX-512 OpenBLAS kernel.
+
+- **Problem:** two tests in `tests/test_m3_analyze_validation.py` rerun the M3 analysis on the preserved
+  evidence and compared its JSON with the archived `m3_analysis.json` exactly. R3's `ar1_effective_n` comes
+  from `np.dot` (`lag1_autocorr` in `kvlab/perf_stats.py`), and numpy's bundled OpenBLAS picks its dot
+  kernel by CPU. The archive was written with the AVX-512 (SkylakeX) kernel; other kernels sum in a
+  different order.
+- **Observed** on the recording machine, with the kernel set by `OPENBLAS_CORETYPE` before each process
+  (Haswell also with numpy's AVX-512 dispatch disabled):
+  - with the Haswell, Sandybridge, Nehalem and Katmai kernels, 6 of the 40 `ar1_effective_n` values
+    differ, each by exactly 1 ULP (absolute 1.42e-14, relative 1.5e-16 to 2.0e-16). Which 6 depends
+    on the kernel;
+  - every other archived value, and `samples_chronological.csv`, is unchanged. The comparison leaves
+    out only the recorded paths and the fields the analysis has added since VAL-006, as the tests do.
+    The CI runner's values equal the Haswell kernel's.
+- **Decision:** those two comparisons accept each of the 40 `ar1_effective_n` values within 4 ULPs of
+  the archived value. Each must still be present and a finite float. Everything else is compared
+  exactly, as before: structure, keys, list lengths, all other numbers, verdicts, R3 pass flags, the
+  decision, counts, the CSV bytes and the Markdown report.
+  - 4 ULPs is the observed 1 ULP plus headroom for kernels that cannot be reproduced here.
+  - At these magnitudes (71 to 113) that is under 6e-14. This is far from R3's `n_eff >= 10` threshold
+    and far below the one decimal the report prints.
+- **Unchanged:**
+  - the analysis code, the frozen M3 files, the archived evidence and outputs, and every GPU check;
+  - D12: storage correctness stays bitwise, and restored K/V and logits are still compared bitwise.
+
+  The tolerance concerns cross-machine comparison of a derived statistic, not the cache's correctness
+  contract.
+- **Consequence:** on the recording machine, the regenerated analysis reproduces every archived value
+  exactly, apart from the recorded paths and the fields added since VAL-006. That does not necessarily
+  hold on every CPU: a value computed through BLAS can differ in its last bits elsewhere.

@@ -148,8 +148,10 @@ mkdir $WORK/m5-src && git archive a3c63419b6504b20ce419eff62fea2c64f26fb3e | tar
 cmp $WORK/m5-out/analysis.json results/m5/M5_EVAL_V1_analysis/analysis.json
 ```
 
-The only expected differences are recorded paths: the `out_dir` field of the M3 analysis JSON, and
-the `run_dir` of `m4_validation.json`, which `compare` accepts as its one path-only difference. The
+On the recording machine, the only differences are recorded paths: the `out_dir` field of the M3
+analysis JSON, and the `run_dir` of `m4_validation.json`, which `compare` accepts as its one path-only
+difference. On a CPU with a different BLAS kernel, values computed through BLAS can also differ in their
+last bits ([D45](docs/decisions.md)). The
 M4_EVAL_V1 reconstruction, the fit of the M5 cost model, and what offline reproduction does not
 verify are in [docs/results.md](docs/results.md#reproducing).
 

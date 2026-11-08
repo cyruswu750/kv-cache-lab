@@ -9,9 +9,11 @@ results/m3/eval_20261103T173632, which is only read.
 import copy
 import importlib.util
 import json
+import math
 import os
 import re
 import shutil
+import struct
 import subprocess
 import sys
 from pathlib import Path
@@ -95,6 +97,38 @@ def case_index(records, case, key=lambda x: (x["L"], x["S"])):
 
 def corr_index(rep, case):
     return case_index(rep["correctness"], case, key=lambda c: (c["baseline"]["L"], c["baseline"]["S"]))
+
+
+# Cross-CPU comparison of one derived statistic (docs/decisions.md D45). R3's ar1_effective_n comes from np.dot
+# (kvlab/perf_stats.py lag1_autocorr); numpy's OpenBLAS picks its dot kernel by CPU. The archive was computed
+# with the AVX-512 kernel; the other kernels reproduced on the recording machine differ by at most 1 ULP.
+AR1_MAX_ULPS = 4
+
+
+def ulp_distance(a: float, b: float) -> int:
+    """How many representable doubles lie between a and b (0 if equal; 0.0 and -0.0 are equal)."""
+    def key(x):
+        i = struct.unpack("<q", struct.pack("<d", x))[0]
+        return i if i >= 0 else -(i & 0x7FFF_FFFF_FFFF_FFFF)
+    return abs(key(a) - key(b))
+
+
+def with_archived_ar1(new_cases: dict, hist_cases: dict) -> dict:
+    """A copy of `new_cases` whose 40 R3 ar1_effective_n values are replaced by the archived ones, after
+    asserting that each is present, a finite float and within AR1_MAX_ULPS of the archived value. Nothing else
+    is touched, so the caller's exact comparison still covers the structure and every other field."""
+    out, n = copy.deepcopy(new_cases), 0
+    for case, c in hist_cases.items():
+        for tier in c["tiers"]:
+            for metric in ("e2e", "restore_phase"):
+                for stat in ("median_d", "mean_d"):
+                    r3, want = out[case]["tiers"][tier][metric][stat]["R3"], c["tiers"][tier][metric][stat]["R3"]
+                    a, b, where = r3["ar1_effective_n"], want["ar1_effective_n"], (case, tier, metric, stat)
+                    assert type(a) is float and type(b) is float and math.isfinite(a) and math.isfinite(b), (where, a, b)
+                    assert ulp_distance(a, b) <= AR1_MAX_ULPS, (where, a, b, ulp_distance(a, b))
+                    r3["ar1_effective_n"], n = b, n + 1
+    assert n == 40  # 5 cases x 2 tiers x 2 metrics x 2 statistics
+    return out
 
 
 # ---------------------------------------------------------------------------------------------
@@ -318,7 +352,7 @@ def test_complete_valid_report_reproduces_the_historical_analysis(tmp_path, text
     assert d["all_correctness_and_ab_checks_pass"] is True and d["established_regressions"] == []
     assert d["required_but_not_established"] == hist["decision"]["required_but_not_established"] == [
         f"1024:1 {t} {s}: inconclusive" for t in ("host", "disk") for s in ("median_d", "mean_d")]
-    # every historical number and verdict is unchanged; the fix only adds keys
+    # every historical number and verdict is unchanged (ar1_effective_n within AR1_MAX_ULPS, D45); the fix only adds keys
     for k in ("run_dir", "out_dir", "validation"):
         new.pop(k, None)
         hist.pop(k, None)
@@ -326,6 +360,7 @@ def test_complete_valid_report_reproduces_the_historical_analysis(tmp_path, text
         new["decision"].pop(k)
     for s in new["sessions"].values():
         assert s.pop("correctness_all_recomputed") is True
+    new["cases"] = with_archived_ar1(new["cases"], hist["cases"])
     assert new == hist
     assert (out / "samples_chronological.csv").read_bytes() == (EVAL / "samples_chronological.csv").read_bytes()
     old_md = (EVAL / "m3_analysis.md").read_text().splitlines()
@@ -459,7 +494,8 @@ def test_all_warmups_removed_is_rejected_by_the_real_cli_subprocess(tmp_path, te
 
 def test_warmup_timings_never_enter_the_statistics(tmp_path, texts):
     """Well-formed warmups with 100x inflated timings: the evidence stays valid, and every
-    statistic, verdict and the decision equal the historical analysis."""
+    statistic, verdict and the decision equal the historical analysis (ar1_effective_n within
+    AR1_MAX_ULPS, D45)."""
     def inflate(rep):
         for s in rep["samples"]:
             if s.get("warmup"):
@@ -470,6 +506,100 @@ def test_warmup_timings_never_enter_the_statistics(tmp_path, texts):
     code, val = cli(run, out)
     assert code == 0 and val["status"] == "valid"
     new, hist = json.loads((out / "m3_analysis.json").read_text()), json.loads((EVAL / "m3_analysis.json").read_text())
-    assert new["cases"] == hist["cases"]
+    assert with_archived_ar1(new["cases"], hist["cases"]) == hist["cases"]
     assert {k: new["decision"][k] for k in hist["decision"]} == hist["decision"]
     assert new["decision"]["supports_adoption"] is False
+
+
+# ---------------------------------------------------------------------------------------------
+# D45: the cross-CPU tolerance for ar1_effective_n, checked on the archived analysis itself.
+# Values the non-AVX-512 OpenBLAS kernels produced (CI run 42458240422; OPENBLAS_CORETYPE=Haswell locally) for
+# restore_phase, both statistics; each is 1 ULP from the archived value.
+REPRODUCED_AR1 = {("1024:1", "disk"): 87.4541460416616, ("1536:128", "disk"): 92.63623167879113,
+                  ("1536:128", "host"): 97.12929599580367}
+
+
+@pytest.fixture
+def hist_cases():
+    return json.loads((EVAL / "m3_analysis.json").read_text())["cases"]
+
+
+def _r3(cases, case="1024:1", tier="disk", stat="median_d"):
+    return cases[case]["tiers"][tier]["restore_phase"][stat]["R3"]
+
+
+def _shift(x, ulps):
+    for _ in range(abs(ulps)):
+        x = math.nextafter(x, math.copysign(math.inf, ulps))
+    return x
+
+
+def test_ar1_tolerance_accepts_the_reproduced_rounding_and_the_bound(hist_cases):
+    new = copy.deepcopy(hist_cases)
+    for (case, tier), v in REPRODUCED_AR1.items():
+        for stat in ("median_d", "mean_d"):
+            assert ulp_distance(_r3(new, case, tier, stat)["ar1_effective_n"], v) == 1
+            _r3(new, case, tier, stat)["ar1_effective_n"] = v
+    edge = _r3(new, "4096:64", "host", "mean_d")
+    edge["ar1_effective_n"] = _shift(edge["ar1_effective_n"], -AR1_MAX_ULPS)
+    assert new != hist_cases and with_archived_ar1(new, hist_cases) == hist_cases
+
+
+@pytest.mark.parametrize("value", ["bound+1", "-(bound+1)", "nan", "inf", "-inf", "str", "null", "missing",
+                                   "int=archived", "nan=archived", "inf=archived"])
+def test_ar1_tolerance_rejects_values_beyond_the_bound_or_of_another_kind(hist_cases, value):
+    """The `x=archived` cases also set the archived value to x (an integral float for int), so the ULP
+    distance is 0 and only the type or finiteness check can reject them."""
+    new, hist = copy.deepcopy(hist_cases), copy.deepcopy(hist_cases)
+    r3, archived = _r3(new), _r3(hist_cases)["ar1_effective_n"]
+    bad = {"bound+1": _shift(archived, AR1_MAX_ULPS + 1), "-(bound+1)": _shift(archived, -(AR1_MAX_ULPS + 1)),
+           "nan": math.nan, "inf": math.inf, "-inf": -math.inf, "str": str(archived), "null": None}
+    if value == "missing":
+        del r3["ar1_effective_n"]
+    elif value.endswith("=archived"):
+        x = {"int": round(archived), "nan": math.nan, "inf": math.inf}[value.split("=")[0]]
+        r3["ar1_effective_n"], _r3(hist)["ar1_effective_n"] = x, float(x)
+    else:
+        r3["ar1_effective_n"] = bad[value]
+    with pytest.raises((AssertionError, KeyError)):
+        with_archived_ar1(new, hist)
+
+
+def _verdict(c):
+    c["1024:1"]["tiers"]["disk"]["restore_phase"]["median_d"]["verdict"] = "batched_faster"
+
+
+def _r3_pass(c):
+    _r3(c)["pass"] = True
+
+
+def _sibling_float_1_ulp(c):  # exact, unlike ar1_effective_n
+    _r3(c)["span_s"] = _shift(_r3(c)["span_s"], 1)
+
+
+def _sample_count(c):
+    c["1024:1"]["tiers"]["disk"]["restore_phase"]["n_pairs"] += 1
+
+
+def _extra_key(c):
+    _r3(c)["extra"] = 0
+
+
+def _missing_key(c):
+    del _r3(c)["longest_slow_regime_s"]
+
+
+def _list_length(c):
+    c["1024:1"]["tiers"]["disk"]["restore_phase"]["median_d"]["per_session_range"].append(0.0)
+
+
+PROTECTED_EDITS = {f.__name__.lstrip("_"): f for f in (_verdict, _r3_pass, _sibling_float_1_ulp, _sample_count,
+                                                      _extra_key, _missing_key, _list_length)}
+
+
+@pytest.mark.parametrize("name", list(PROTECTED_EDITS))
+def test_ar1_tolerance_leaves_every_other_field_exact(hist_cases, name):
+    new = copy.deepcopy(hist_cases)
+    _r3(new)["ar1_effective_n"] = REPRODUCED_AR1[("1024:1", "disk")]  # an accepted rounding next to the edit
+    PROTECTED_EDITS[name](new)
+    assert with_archived_ar1(new, hist_cases) != hist_cases
